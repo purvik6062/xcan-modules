@@ -329,6 +329,15 @@ export default function ClientChallenge({
               onChange={handleEditorChange}
               onMount={handleEditorDidMount}
               theme={isDarkMode ? "vs-dark" : "light"}
+              beforeMount={(monaco) => {
+                // Disable TypeScript validation
+                monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
+                  {
+                    noSemanticValidation: true,
+                    noSyntaxValidation: true,
+                  }
+                );
+              }}
               options={{
                 minimap: { enabled: false },
                 fontSize: 14,
