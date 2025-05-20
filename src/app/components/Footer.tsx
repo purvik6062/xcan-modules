@@ -13,25 +13,25 @@ export default function Footer() {
 
           <div className="flex flex-wrap justify-center gap-4 md:gap-6">
             <Link
-              href="/about"
+              href="/"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             >
               About
             </Link>
             <Link
-              href="/privacy"
+              href="/"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             >
               Privacy
             </Link>
             <Link
-              href="/terms"
+              href="/"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             >
               Terms
             </Link>
             <Link
-              href="/contact"
+              href="/"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
             >
               Contact

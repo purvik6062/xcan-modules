@@ -84,16 +84,6 @@ export default function Navigation() {
                   Profile
                 </Link>
               </li>
-              <li>
-                <a
-                  href="https://docs.arbitrum.io/build-on-arbitrum/precompiles"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-blue-200"
-                >
-                  Docs
-                </a>
-              </li>
             </ul>
           </nav>
         </div>
@@ -134,17 +124,6 @@ export default function Navigation() {
                 >
                   Profile
                 </Link>
-              </li>
-              <li>
-                <a
-                  href="https://docs.arbitrum.io/build-on-arbitrum/precompiles"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Docs
-                </a>
               </li>
             </ul>
           </nav>

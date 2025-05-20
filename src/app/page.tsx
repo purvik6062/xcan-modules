@@ -1,12 +1,8 @@
 import Link from "next/link";
-import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navigation />
-
       <main className="flex-grow container mx-auto px-4 py-8">
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">
@@ -110,8 +106,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }
