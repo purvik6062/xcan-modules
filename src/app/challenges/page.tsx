@@ -126,7 +126,7 @@ export default function ChallengesPage() {
         Arbitrum Precompile Challenges
       </h1>
       <p className="text-gray-600 dark:text-gray-300 mb-6">
-        Learn how to interact with Arbitrum's precompiles through practical
+        Learn how to interact with Arbitrum&apos;s precompiles through practical
         coding challenges
       </p>
 
