@@ -33,7 +33,7 @@ export default function Home() {
             <h3 className="text-xl font-bold mb-3">Web3 Focused</h3>
             <p>
               Solve real-world smart contract integration challenges using
-              Arbitrum's powerful precompiles.
+              Arbitrum&apos;s powerful precompiles.
             </p>
           </div>
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
