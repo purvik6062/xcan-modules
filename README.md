@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeQuest - Interactive Coding Challenge Platform
+
+CodeQuest is a web-based platform for learning and improving coding skills through interactive challenges. Similar to platforms like CryptoZombies and Agora, CodeQuest provides a gamified learning experience with an in-browser IDE, challenge management system, and user progress tracking.
+
+## Features
+
+- **In-browser Code Editor**: Write and execute code directly in your browser to solve challenges
+- **Challenge Management**: Browse challenges by difficulty level and category
+- **Progress Tracking**: Track completed challenges, points earned, and achievements
+- **Leaderboard**: Compete with other users and see top performers
+- **User Profile**: View your progress, stats, and achievements
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript, TailwindCSS 4
+- **UI Components**: Custom components with responsive design
+- **State Management**: React hooks for local state management
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18.0 or higher
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/your-username/codequest.git
+   cd codequest/frontend
+   ```
+
+2. Install dependencies
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Start the development server
+
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application
+
+## Development
+
+### Project Structure
+
+```
+frontend/
+├── src/
+│   ├── app/
+│   │   ├── challenges/
+│   │   │   ├── [slug]/
+│   │   │   │   └── page.tsx      # Individual challenge page with code editor
+│   │   │   ├── layout.tsx        # Layout for challenges section
+│   │   │   └── page.tsx          # Challenges listing page
+│   │   ├── leaderboard/
+│   │   │   ├── layout.tsx        # Layout for leaderboard section
+│   │   │   └── page.tsx          # Leaderboard page
+│   │   ├── profile/
+│   │   │   ├── layout.tsx        # Layout for profile section
+│   │   │   └── page.tsx          # User profile page
+│   │   ├── globals.css          # Global CSS
+│   │   ├── layout.tsx           # Root layout
+│   │   └── page.tsx             # Home page
+├── public/                      # Static assets
+├── next.config.ts               # Next.js configuration
+├── tsconfig.json                # TypeScript configuration
+└── package.json                 # Dependencies and scripts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Key Components
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Challenge Editor**: In-browser code editor where users can write and test solutions
+- **Challenge Listing**: Filterable grid of available challenges
+- **User Profile**: Dashboard showing user progress and achievements
+- **Leaderboard**: Ranking system for users based on points and completed challenges
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Future Enhancements
 
-## Learn More
+- **Authentication**: User registration and login system
+- **Backend Integration**: API service for challenge data and user management
+- **Code Execution Engine**: Secure sandbox for running user code
+- **Challenge Creation**: Interface for creating and publishing new challenges
+- **Community Features**: Discussion forums, comments, and sharing solutions
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Acknowledgments
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Inspired by educational coding platforms like CryptoZombies and Agora
+- Developed as a learning tool for programmers of all levels
