@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Editor from "@monaco-editor/react";
 import axios from "axios";
+import "../../styles/gamify.css";
 
 interface TestCase {
   input: any[];

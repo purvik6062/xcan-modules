@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Tektur:wght@400..900&display=swap');
+body, html {
+  font-family: 'Tektur', 'Segoe UI', Arial, sans-serif;
+  /* background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #e0e0e0; */
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.glow-effect {
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.neon-border {
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.code-editor {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.resizable-y {
+  resize: vertical;
+  overflow: auto;
+}
+
+.resizable-x {
+  resize: horizontal;
+  overflow: auto;
+}
+
+.terminal-bg {
+  background: #0d1117;
+}
+
+.challenge-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.text-neon-green { color: #39ff14; }
+.border-neon-cyan { border-color: #00fff7; }
+.bg-dark-panel { background: rgba(20, 20, 40, 0.98); }
+.badge-xp, .badge-level, .badge-category {
+  background: #222;
+  color: #39ff14;
+  border: 2px solid #00fff7;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: bold;
+  margin-right: 8px;
+  box-shadow: 0 0 8px #00fff7, 0 0 2px #39ff14;
+}
+.drop-shadow-glow {
+  text-shadow: 0 0 8px #39ff14, 0 0 2px #00fff7;
+} 

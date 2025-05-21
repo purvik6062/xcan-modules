@@ -2,6 +2,7 @@
 import Link from "next/link";
 import ClientChallenge from "./client-page";
 import { useParams } from "next/navigation";
+import "../../styles/gamify.css";
 
 // Define proper types for our challenge data
 interface TestCase {

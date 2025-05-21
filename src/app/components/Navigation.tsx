@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ConnectKitButton } from "connectkit";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -52,40 +53,41 @@ export default function Navigation() {
           </button>
 
           {/* Desktop navigation */}
-          <nav className="hidden md:block">
-            <ul className="flex space-x-6">
-              <li>
-                <Link
-                  href="/challenges"
-                  className={`text-white hover:text-blue-200 ${
-                    isActive("/challenges") ? "font-semibold" : ""
-                  }`}
-                >
-                  Challenges
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/leaderboard"
-                  className={`text-white hover:text-blue-200 ${
-                    isActive("/leaderboard") ? "font-semibold" : ""
-                  }`}
-                >
-                  Leaderboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/profile"
-                  className={`text-white hover:text-blue-200 ${
-                    isActive("/profile") ? "font-semibold" : ""
-                  }`}
-                >
-                  Profile
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <div className="flex items-center space-x-4">
+            <nav className="hidden md:block">
+              <ul className="flex space-x-6">
+                <li>
+                  <Link
+                    href="/challenges"
+                    className={`text-white hover:text-blue-200 ${isActive("/challenges") ? "font-semibold" : ""
+                      }`}
+                  >
+                    Challenges
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/leaderboard"
+                    className={`text-white hover:text-blue-200 ${isActive("/leaderboard") ? "font-semibold" : ""
+                      }`}
+                  >
+                    Leaderboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/profile"
+                    className={`text-white hover:text-blue-200 ${isActive("/profile") ? "font-semibold" : ""
+                      }`}
+                  >
+                    Profile
+                  </Link>
+                </li>
+
+              </ul>
+            </nav>
+            <ConnectKitButton />
+          </div>
         </div>
 
         {/* Mobile navigation */}
@@ -95,9 +97,8 @@ export default function Navigation() {
               <li>
                 <Link
                   href="/challenges"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${
-                    isActive("/challenges") ? "bg-blue-700" : ""
-                  }`}
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/challenges") ? "bg-blue-700" : ""
+                    }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Challenges
@@ -106,9 +107,8 @@ export default function Navigation() {
               <li>
                 <Link
                   href="/leaderboard"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${
-                    isActive("/leaderboard") ? "bg-blue-700" : ""
-                  }`}
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/leaderboard") ? "bg-blue-700" : ""
+                    }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Leaderboard
@@ -117,9 +117,8 @@ export default function Navigation() {
               <li>
                 <Link
                   href="/profile"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${
-                    isActive("/profile") ? "bg-blue-700" : ""
-                  }`}
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/profile") ? "bg-blue-700" : ""
+                    }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Profile
