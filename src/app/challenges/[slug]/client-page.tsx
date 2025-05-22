@@ -2,35 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Editor from "@monaco-editor/react";
-
-interface TestCase {
-  input: any[];
-  expectedOutput: any;
-  description: string;
-}
-
-interface Challenge {
-  id: number;
-  title: string;
-  level: string;
-  description: string;
-  category: string;
-  points: number;
-  instructions: string;
-  testCases: TestCase[];
-  startingCode: string;
-  solution: string;
-  precompileUsed: string;
-}
-
-interface TestResult {
-  description: string;
-  input: string;
-  expected: string;
-  actual: string;
-  passed: boolean;
-}
+import CodeEditor from "../../components/CodeEditor";
+import ChallengeDetails from "../../components/ChallengeDetails";
+import InstructionsPanel from "../../components/InstructionsPanel";
+import TestResults from "../../components/TestResults";
+import { Challenge, TestResult } from "../../types/challenge";
 
 export default function ClientChallenge({
   challenge,
@@ -43,25 +19,14 @@ export default function ClientChallenge({
   const [output, setOutput] = useState("");
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("instructions"); // instructions, code, tests
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [editorReady, setEditorReady] = useState(false);
+  const [activeTab, setActiveTab] = useState("instructions"); // instructions, tests
 
-  // Set the initial code and detect dark mode when the component mounts
+  // Set the initial code when the component mounts
   useEffect(() => {
     if (challenge) {
       setCode(challenge.startingCode);
     }
-
-    // Check for dark mode preference
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(isDark);
   }, [challenge]);
-
-  // Handle editor mounting
-  function handleEditorDidMount() {
-    setEditorReady(true);
-  }
 
   // Handle code changes
   function handleEditorChange(value: string | undefined) {
@@ -166,58 +131,32 @@ export default function ClientChallenge({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{challenge.title}</h1>
-        <div className="flex items-center space-x-2">
-          <span
-            className={`text-xs px-2 py-1 rounded ${
-              challenge.level === "Beginner"
-                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                : challenge.level === "Intermediate"
-                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-            }`}
-          >
-            {challenge.level}
-          </span>
-          <span className="bg-gray-100 dark:bg-gray-700 rounded px-2 py-1 text-xs">
-            {challenge.category}
-          </span>
-          <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded px-2 py-1 text-xs">
-            {challenge.precompileUsed}
-          </span>
-          <span className="font-semibold text-sm">
-            {challenge.points} points
-          </span>
-        </div>
-      </div>
-
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        {challenge.description}
-      </p>
+      <ChallengeDetails challenge={challenge} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left panel: Instructions/Tests */}
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
           <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <div className="flex space-x-2">
               <button
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded-md transition-colors ${
                   activeTab === "instructions"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-200 dark:bg-gray-700"
+                    : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
                 }`}
                 onClick={() => setActiveTab("instructions")}
+                aria-label="Show instructions"
               >
                 Instructions
               </button>
               <button
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded-md transition-colors ${
                   activeTab === "tests"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-200 dark:bg-gray-700"
+                    : "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
                 }`}
                 onClick={() => setActiveTab("tests")}
+                aria-label="Show tests"
               >
                 Tests
               </button>
@@ -226,90 +165,33 @@ export default function ClientChallenge({
 
           <div className="p-4 h-[600px] overflow-y-auto">
             {activeTab === "instructions" ? (
-              <div className="prose dark:prose-invert max-w-none">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: challenge.instructions
-                      .replace(
-                        /^#{1,6}\s+(.*)$/gm,
-                        '<h3 class="font-bold text-xl mb-2">$1</h3>'
-                      )
-                      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                      .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                      .replace(
-                        /```(?:js|javascript)\n([\s\S]*?)```/g,
-                        '<pre class="bg-gray-100 dark:bg-gray-800 p-3 rounded my-3 overflow-x-auto"><code>$1</code></pre>'
-                      )
-                      .replace(
-                        /`(.*?)`/g,
-                        '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">$1</code>'
-                      )
-                      .replace(/\n\n/g, "<br/><br/>"),
-                  }}
-                />
-              </div>
+              <InstructionsPanel instructions={challenge.instructions} />
             ) : (
-              <div>
-                <h3 className="font-bold text-lg mb-4">Test Cases</h3>
-                <div className="space-y-4">
-                  {challenge.testCases.map((test, index) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 dark:border-gray-700 rounded-lg p-3"
-                    >
-                      <div className="font-medium">{test.description}</div>
-                      <div className="text-sm mt-1">
-                        <span className="text-gray-500">Input:</span>{" "}
-                        {JSON.stringify(test.input)}
-                      </div>
-                      <div className="text-sm">
-                        <span className="text-gray-500">Expected:</span>{" "}
-                        {test.expectedOutput.type === "bigint"
-                          ? "BigInt value"
-                          : test.expectedOutput.hasProperties
-                          ? `Array with indices: ${test.expectedOutput.hasProperties.join(
-                              ", "
-                            )}`
-                          : test.expectedOutput.value
-                          ? test.expectedOutput.value.toString()
-                          : JSON.stringify(test.expectedOutput)}
-                      </div>
-
-                      {testResults[index] && (
-                        <div
-                          className={`mt-2 text-sm ${
-                            testResults[index].passed
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }`}
-                        >
-                          {testResults[index].passed
-                            ? "✓ Passed"
-                            : `✗ Failed - Got: ${testResults[index].actual}`}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <TestResults
+                testCases={challenge.testCases}
+                testResults={testResults}
+                isLoading={isLoading}
+                output={output}
+                runTests={runTests}
+              />
             )}
           </div>
         </div>
 
         {/* Right panel: Code editor */}
-        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
           <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <div className="flex justify-between items-center">
               <h3 className="font-semibold">Code Editor</h3>
               <div className="flex space-x-2">
                 <button
-                  className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded text-sm"
+                  className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded text-sm transition-colors"
                   onClick={() => setCode(challenge.startingCode)}
                 >
                   Reset
                 </button>
                 <button
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded transition-colors"
                   onClick={runTests}
                   disabled={isLoading}
                 >
@@ -320,48 +202,10 @@ export default function ClientChallenge({
           </div>
 
           <div className="h-[500px] overflow-hidden">
-            {/* Using Monaco Editor with enhanced options */}
-            <Editor
-              height="500px"
-              defaultLanguage="typescript"
-              defaultValue={code}
+            <CodeEditor
+              defaultValue={challenge.startingCode}
               value={code}
               onChange={handleEditorChange}
-              onMount={handleEditorDidMount}
-              theme={isDarkMode ? "vs-dark" : "light"}
-              beforeMount={(monaco) => {
-                // Disable TypeScript validation
-                monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
-                  {
-                    noSemanticValidation: true,
-                    noSyntaxValidation: true,
-                  }
-                );
-              }}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                scrollBeyondLastLine: false,
-                wordWrap: "on",
-                formatOnPaste: true,
-                formatOnType: true,
-                automaticLayout: true,
-                tabSize: 2,
-                lineNumbers: "on",
-                glyphMargin: true,
-                folding: true,
-                suggest: {
-                  showInlineDetails: true,
-                },
-                parameterHints: {
-                  enabled: true,
-                },
-              }}
-              loading={
-                <div className="flex justify-center items-center h-full text-gray-500">
-                  Loading Editor...
-                </div>
-              }
             />
           </div>
 
