@@ -11,7 +11,8 @@ export async function POST(request: Request) {
       process.env.RAPID_API_KEY2,
       process.env.RAPID_API_KEY3, 
       process.env.RAPID_API_KEY4,
-      process.env.RAPID_API_KEY5
+      process.env.RAPID_API_KEY5,
+      process.env.RAPID_API_KEY6,
     ]
     .filter(key => key && key.trim() !== '') // Filter out undefined or empty keys
     .map(key => key?.trim().replace(/;$/, '')); // Remove any whitespace and trailing semicolons
