@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { challengesData } from "../../data/challenges";
 import { ethers } from "ethers";
 
-// Add this helper function at the top of the file
+// Improved helper function for BigInt serialization
 function serializeBigInt(obj: any): any {
   if (obj === null || obj === undefined) {
     return obj;
@@ -17,11 +17,15 @@ function serializeBigInt(obj: any): any {
   }
 
   if (typeof obj === "object") {
-    const result: Record<string, any> = {};
-    for (const key in obj) {
-      result[key] = serializeBigInt(obj[key]);
+    try {
+      const result: Record<string, any> = {};
+      for (const key in obj) {
+        result[key] = serializeBigInt(obj[key]);
+      }
+      return result;
+    } catch (error) {
+      return "[Complex Object]";
     }
-    return result;
   }
 
   return obj;
@@ -43,27 +47,57 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
     const customConsole = {
       log: (...args: any[]) => {
         const logMessage = args
-          .map((arg) =>
-            typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-          )
+          .map((arg) => {
+            try {
+              if (typeof arg === "bigint") {
+                return arg.toString();
+              } else if (typeof arg === "object") {
+                return JSON.stringify(serializeBigInt(arg));
+              } else {
+                return String(arg);
+              }
+            } catch (error) {
+              return "[Unable to serialize]";
+            }
+          })
           .join(" ");
         logs.push(logMessage);
         console.log(...args); // Also log to server console
       },
       error: (...args: any[]) => {
         const logMessage = `ERROR: ${args
-          .map((arg) =>
-            typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-          )
+          .map((arg) => {
+            try {
+              if (typeof arg === "bigint") {
+                return arg.toString();
+              } else if (typeof arg === "object") {
+                return JSON.stringify(serializeBigInt(arg));
+              } else {
+                return String(arg);
+              }
+            } catch (error) {
+              return "[Unable to serialize]";
+            }
+          })
           .join(" ")}`;
         logs.push(logMessage);
         console.error(...args); // Also log to server console
       },
       warn: (...args: any[]) => {
         const logMessage = `WARN: ${args
-          .map((arg) =>
-            typeof arg === "object" ? JSON.stringify(arg) : String(arg)
-          )
+          .map((arg) => {
+            try {
+              if (typeof arg === "bigint") {
+                return arg.toString();
+              } else if (typeof arg === "object") {
+                return JSON.stringify(serializeBigInt(arg));
+              } else {
+                return String(arg);
+              }
+            } catch (error) {
+              return "[Unable to serialize]";
+            }
+          })
           .join(" ")}`;
         logs.push(logMessage);
         console.warn(...args); // Also log to server console
@@ -76,16 +110,27 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
       .replace(/export\s+default\s+[^;]+;?/g, "")
       .trim();
 
-    // Extract the function name from the slug
-    // Convert kebab-case to camelCase
-    const functionName = slug
-      .split("-")
-      .map((part, index) =>
-        index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)
-      )
-      .join("");
+    // Find the actual function call at the end of the code
+    // This regex extracts the name of the function being executed at the end of the user's code
+    const functionCallMatch = cleanedCode.match(/([a-zA-Z0-9_]+)\(\);?\s*$/);
 
-    console.log(`Extracted function name: ${functionName}`);
+    if (!functionCallMatch) {
+      return testCases.map((testCase) => ({
+        description: testCase.description,
+        input: JSON.stringify(testCase.input),
+        expected: JSON.stringify(serializeBigInt(testCase.expectedOutput)),
+        actual:
+          "Error: No function call found in your code. Make sure you call your function at the end.",
+        passed: false,
+        duration: 0,
+        gasUsed: 0,
+        logs: [],
+      }));
+    }
+
+    // Extract the actual called function name from the code
+    const functionName = functionCallMatch[1];
+    console.log(`Detected function call: ${functionName}`);
 
     // Dynamically evaluate the code in a controlled environment
     // This is simplified - a real implementation would use VM2 or a container
@@ -93,7 +138,8 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
       async function () {}
     ).constructor;
 
-    // Create the function to evaluate
+    // Create the function to evaluate - we execute the whole user code as is
+    // but wrap it in a function that will return the result of the function call
     const userFunction = new AsyncFunction(
       "ethers",
       "provider",
@@ -102,7 +148,12 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
       `
         ${cleanedCode}
         
-        // Return the result of calling the function
+        // Define the function we want to test if it exists
+        if (typeof ${functionName} !== 'function') {
+          throw new Error('Function ${functionName} is not defined in your code');
+        }
+        
+        // Return the result of calling the function with test input
         return await ${functionName}(...testInput);
       `
     );

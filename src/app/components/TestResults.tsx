@@ -233,7 +233,7 @@ export default function TestResults({
                   )}
                 </div>
 
-                {/* Console logs for this test - if any */}
+                {/* Console logs for this test - if any
                 {result.logs && result.logs.length > 0 && (
                   <div className="mt-2 bg-gray-800 border border-gray-700 p-2 rounded text-xs">
                     <h4 className="font-medium text-gray-300 mb-1">
@@ -256,7 +256,7 @@ export default function TestResults({
                       ))}
                     </pre>
                   </div>
-                )}
+                )} */}
 
                 {/* Error details - only shown if test failed */}
                 {!result.passed &&
