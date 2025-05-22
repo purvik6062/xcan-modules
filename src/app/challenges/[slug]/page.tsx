@@ -38,8 +38,8 @@ export default function ChallengePage() {
         <div className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-2">Challenge Not Found</h2>
           <p className="mb-4">
-            The challenge you're looking for doesn't exist or may have been
-            removed.
+            The challenge you&apos;re looking for doesn&apos;t exist or may have
+            been removed.
           </p>
           <Link
             href="/challenges"

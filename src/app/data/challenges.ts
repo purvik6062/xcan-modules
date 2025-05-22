@@ -405,7 +405,7 @@ export const challengesData: Record<string, Challenge> = {
   export default getArbOSVersion;`,
   },
   "os-version-checker": {
-    id: 4,
+    id: 6,
     title: "OS Version Checker",
     level: "Beginner",
     description: "Get the current version of Arbitrum OS",
@@ -482,7 +482,7 @@ export const challengesData: Record<string, Challenge> = {
   export default getArbOSVersion;`,
   },
   "l2-to-l1-message": {
-    id: 5,
+    id: 7,
     title: "L2-to-L1 Message Sending",
     level: "Intermediate",
     description: "Send a message from L2 to L1 using ArbSys",
