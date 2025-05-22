@@ -54,7 +54,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default calculateL1Fee;`,
+calculateL1Fee();`,
     solution: `import { ethers } from 'ethers';
   
   async function calculateL1Fee() {
@@ -79,7 +79,14 @@ export const challengesData: Record<string, Challenge> = {
     return prices[1];
   }
   
-  export default calculateL1Fee;`,
+calculateL1Fee();`,
+    hints: [
+      'First, create a provider that connects to Arbitrum Sepolia network using `new ethers.JsonRpcProvider("https://sepolia-rollup.arbitrum.io/rpc")`.',
+      "The ArbGasInfo precompile is at address 0x000000000000000000000000000000000000006c. You'll need to create a contract instance to interact with it.",
+      "To call the contract, you need to define the correct ABI. The `getPricesInWei()` function returns 6 values, all of type uint256.",
+      "When you call `getPricesInWei()`, it returns an array of values. The L1 data cost is at index 1 (the second item in the array).",
+      "Make sure your function actually returns the value. Just calling the function without returning won't work in the tests.",
+    ],
   },
   "block-number-check": {
     id: 2,
@@ -132,7 +139,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default getCurrentBlockNumber;`,
+getCurrentBlockNumber();`,
     solution: `import { ethers } from 'ethers';
   
   async function getCurrentBlockNumber() {
@@ -156,7 +163,7 @@ export const challengesData: Record<string, Challenge> = {
     return blockNumber;
   }
   
-  export default getCurrentBlockNumber;`,
+getCurrentBlockNumber();`,
   },
   "chain-id-verification": {
     id: 3,
@@ -208,7 +215,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default getChainId;`,
+getChainId();`,
     solution: `import { ethers } from 'ethers';
   
   async function getChainId() {
@@ -232,7 +239,7 @@ export const challengesData: Record<string, Challenge> = {
     return chainId;
   }
   
-  export default getChainId;`,
+getChainId();`,
   },
   "gas-price-components": {
     id: 4,
@@ -296,7 +303,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default getGasPriceComponents;`,
+getGasPriceComponents();`,
     solution: `import { ethers } from 'ethers';
   
   async function getGasPriceComponents() {
@@ -326,7 +333,7 @@ export const challengesData: Record<string, Challenge> = {
     };
   }
   
-  export default getGasPriceComponents;`,
+getGasPriceComponents();`,
   },
   "arbos-version": {
     id: 5,
@@ -378,7 +385,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default getArbOSVersion;`,
+getArbOSVersion();`,
     solution: `import { ethers } from 'ethers';
   
   async function getArbOSVersion() {
@@ -402,7 +409,7 @@ export const challengesData: Record<string, Challenge> = {
     return version;
   }
   
-  export default getArbOSVersion;`,
+getArbOSVersion();`,
   },
   "os-version-checker": {
     id: 6,
@@ -454,7 +461,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default getArbOSVersion;`,
+getArbOSVersion();`,
     solution: `import { ethers } from 'ethers';
   
   async function getArbOSVersion() {
@@ -479,7 +486,7 @@ export const challengesData: Record<string, Challenge> = {
     return [version[0], version[1], version[2]];
   }
   
-  export default getArbOSVersion;`,
+getArbOSVersion();`,
   },
   "l2-to-l1-message": {
     id: 7,
@@ -538,7 +545,7 @@ export const challengesData: Record<string, Challenge> = {
     
   }
   
-  export default sendL2ToL1Message;`,
+sendL2ToL1Message();`,
     solution: `import { ethers } from 'ethers';
   
   async function sendL2ToL1Message(message) {
@@ -575,7 +582,7 @@ export const challengesData: Record<string, Challenge> = {
     return receipt;
   }
   
-  export default sendL2ToL1Message;`,
+sendL2ToL1Message();`,
   },
 };
 

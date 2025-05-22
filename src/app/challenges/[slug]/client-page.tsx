@@ -5,6 +5,7 @@ import Link from "next/link";
 import CodeEditor from "../../components/CodeEditor";
 import InstructionsPanel from "../../components/InstructionsPanel";
 import TestResults from "../../components/TestResults";
+import HintsPanel from "../../components/HintsPanel";
 import { Challenge, TestResult } from "../../types/challenge";
 
 export default function ClientChallenge({
@@ -18,10 +19,12 @@ export default function ClientChallenge({
   const [output, setOutput] = useState("");
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("instructions"); // instructions, tests
+  const [activeTab, setActiveTab] = useState("instructions"); // instructions, hints, tests
+  const [bottomPanelTab, setBottomPanelTab] = useState("tests"); // tests, console
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [editorReady, setEditorReady] = useState(false);
+  const [verificationStage, setVerificationStage] = useState(0); // 0: none, 1: syntax, 2: execution, 3: analysis
 
   // Set the initial code when the component mounts
   useEffect(() => {
@@ -52,98 +55,81 @@ export default function ClientChallenge({
     }
   }
 
-  // Run the tests
-  const runTests = () => {
+  // Run the tests using our API endpoint
+  const runTests = async () => {
     setIsLoading(true);
     setTestResults([]);
     setOutput("");
+    setVerificationStage(1); // Start with syntax verification
 
-    // In a real implementation, this would connect to Arbitrum and execute the code
-    // For demonstration, we're simulating with simplified checks
-    setTimeout(() => {
-      try {
-        // IMPORTANT: In a real implementation, we would:
-        // 1. Send the code to a backend for safe execution
-        // 2. The backend would run the code against Arbitrum Sepolia
-        // 3. Return the results securely
+    try {
+      // Save the code to localStorage before running tests
+      localStorage.setItem(`${slug}_code`, code);
 
-        // For the demo, we'll do some simple validation
-        const results = challenge.testCases.map((testCase) => {
-          // Simple check for type-based expectations
-          let passed = false;
-          let actual = "Not evaluated (simulation)";
+      // Start syntax verification
+      setTimeout(() => {
+        setVerificationStage(2); // Move to test execution after a brief delay
 
-          if (testCase.expectedOutput.type === "bigint") {
-            // Check if the code attempts to return a BigInt
-            passed =
-              code.includes("return") &&
-              (code.includes("BigInt") ||
-                code.includes("await") ||
-                code.includes(".arbBlockNumber()") ||
-                code.includes(".arbChainID()") ||
-                code.includes(".arbOSVersion()") ||
-                code.includes(".getPricesInWei()"));
-            actual = `${passed ? "Valid" : "Invalid"} BigInt return`;
-          } else if (testCase.expectedOutput.hasProperties) {
-            // Check if the code attempts to return an object with required properties
-            const props = testCase.expectedOutput.hasProperties;
-            passed =
-              code.includes("return") &&
-              code.includes("[") &&
-              props.every(
-                (prop: string) =>
-                  code.includes(`version[${prop}]`) || code.includes("return [")
+        // Process code and execute tests
+        const executeTests = async () => {
+          try {
+            // Modify the code to remove export statements for testing
+            const modifiedCode = code.replace(
+              /export\s+default\s+[^;]+;?/g,
+              ""
+            );
+
+            // Send the code to our backend API for execution
+            const response = await fetch("/api/execute-challenge", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                code: modifiedCode,
+                slug,
+              }),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "Failed to execute tests");
+            }
+
+            const data = await response.json();
+
+            // Move to results analysis
+            setVerificationStage(3);
+
+            // Short delay before showing final results
+            setTimeout(() => {
+              // Update the UI with the test results
+              setTestResults(data.testResults);
+              setOutput(data.summary);
+              setIsLoading(false);
+
+              // If there are console logs, switch to the console tab
+              const hasLogs = data.testResults.some(
+                (result: TestResult) => result.logs && result.logs.length > 0
               );
-            actual = `Array with ${passed ? "valid" : "missing"} properties`;
-          } else if (testCase.expectedOutput.value) {
-            // Check for specific expected value
-            passed =
-              code.includes(testCase.expectedOutput.value.toString()) ||
-              code.includes(".arbChainID()");
-            actual = passed
-              ? "Likely correct implementation"
-              : "Implementation may not return correct value";
-          } else if (testCase.expectedOutput.type === "object") {
-            // Check if it returns a transaction receipt
-            passed =
-              code.includes("return receipt") ||
-              (code.includes("return") && code.includes("tx.wait()"));
-            actual = passed
-              ? "Valid transaction receipt return"
-              : "Missing transaction receipt return";
+              if (hasLogs) {
+                setBottomPanelTab("console");
+              }
+            }, 500);
+          } catch (error: any) {
+            console.error("Error running tests:", error);
+            setOutput(`Error: ${error.message}`);
+            setIsLoading(false);
           }
+        };
 
-          return {
-            description: testCase.description,
-            input: JSON.stringify(testCase.input),
-            expected: JSON.stringify(testCase.expectedOutput),
-            actual,
-            passed,
-          };
-        });
-
-        setTestResults(results);
-
-        // Calculate summary
-        const passedCount = results.filter((r) => r.passed).length;
-        const totalCount = results.length;
-
-        // Set output message
-        if (passedCount === totalCount) {
-          setOutput(
-            `Tests: ${passedCount}/${totalCount} passed! Note: This is a simulation. In production, your code would be executed against the actual Arbitrum network.`
-          );
-        } else {
-          setOutput(
-            `Tests: ${passedCount}/${totalCount} passed. Review your implementation and try again.`
-          );
-        }
-      } catch (error: any) {
-        setOutput(`Error: ${error.message}`);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 1000);
+        executeTests();
+      }, 1000);
+    } catch (error: any) {
+      console.error("Error running tests:", error);
+      setOutput(`Error: ${error.message}`);
+      setIsLoading(false);
+    }
   };
 
   const getLevelBadgeStyle = (level: string) => {
@@ -162,6 +148,21 @@ export default function ClientChallenge({
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
   };
+
+  // Get default hints if not provided
+  const defaultHints = [
+    "Check the instructions carefully. What specific precompile address are you supposed to use?",
+    "Remember to define the correct ABI for the function you're trying to call.",
+    "The return value structure matters. Make sure you're returning exactly what the test expects.",
+    "If you're struggling with a specific function, try reading the Arbitrum documentation for that precompile.",
+    "Double-check your parameter types. Blockchain functions are very sensitive to exact data types.",
+  ];
+
+  // Use challenge hints if available, otherwise use default hints
+  const hints = challenge.hints || defaultHints;
+
+  // Collect all logs from test results for display in console tab
+  const allLogs = testResults.flatMap((result) => result.logs || []);
 
   return (
     <div className="flex h-screen">
@@ -218,7 +219,7 @@ export default function ClientChallenge({
         <div className="bg-gray-800 px-6 py-3">
           <div className="flex space-x-2">
             <button
-              className={`px-3 py-2 rounded-md transition-colors ${
+              className={`px-3 py-2 rounded-md transition-colors cursor-pointer ${
                 activeTab === "instructions"
                   ? "bg-gray-700 text-white"
                   : "text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -227,8 +228,9 @@ export default function ClientChallenge({
             >
               Instructions
             </button>
+
             <button
-              className={`px-3 py-2 rounded-md transition-colors ${
+              className={`px-3 py-2 rounded-md transition-colors cursor-pointer ${
                 activeTab === "tests"
                   ? "bg-gray-700 text-white"
                   : "text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -236,6 +238,16 @@ export default function ClientChallenge({
               onClick={() => setActiveTab("tests")}
             >
               Tests
+            </button>
+            <button
+              className={`ml-auto px-3 py-2 rounded-md transition-colors cursor-pointer ${
+                activeTab === "hints"
+                  ? "bg-gray-700 text-white"
+                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+              }`}
+              onClick={() => setActiveTab("hints")}
+            >
+              💡
             </button>
           </div>
         </div>
@@ -248,6 +260,8 @@ export default function ClientChallenge({
 
           {activeTab === "instructions" ? (
             <InstructionsPanel instructions={challenge.instructions} />
+          ) : activeTab === "hints" ? (
+            <HintsPanel hints={hints} />
           ) : (
             <TestResults
               testCases={challenge.testCases}
@@ -255,6 +269,7 @@ export default function ClientChallenge({
               isLoading={isLoading}
               output={output}
               runTests={runTests}
+              verificationStage={verificationStage}
             />
           )}
         </div>
@@ -312,7 +327,7 @@ export default function ClientChallenge({
         </div>
 
         {/* Editor Area */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden h-[60%]">
           <CodeEditor
             defaultValue={challenge.startingCode}
             value={code}
@@ -322,9 +337,33 @@ export default function ClientChallenge({
         </div>
 
         {/* Bottom Panel */}
-        <div className="bg-[#252526] border-t border-[#3c3c3c] p-4">
+        <div className="bg-[#252526] border-t border-[#3c3c3c] p-4 h-[40%]">
           <div className="flex items-center justify-between mb-3">
-            <div className="text-sm font-medium text-gray-300">Tests</div>
+            <div className="flex space-x-4">
+              <button
+                className={`text-sm font-medium ${
+                  bottomPanelTab === "tests"
+                    ? "text-white border-b-2 border-blue-500"
+                    : "text-gray-400 hover:text-gray-300"
+                }`}
+                onClick={() => setBottomPanelTab("tests")}
+              >
+                Tests
+              </button>
+              <button
+                className={`text-sm font-medium ${
+                  bottomPanelTab === "console"
+                    ? "text-white border-b-2 border-blue-500"
+                    : "text-gray-400 hover:text-gray-300"
+                } flex items-center`}
+                onClick={() => setBottomPanelTab("console")}
+              >
+                Console
+                {allLogs.length > 0 && bottomPanelTab !== "console" && (
+                  <span className="ml-2 w-2 h-2 bg-blue-500 rounded-full"></span>
+                )}
+              </button>
+            </div>
             <div className="flex space-x-2">
               <button
                 className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors"
@@ -384,27 +423,54 @@ export default function ClientChallenge({
             </div>
           </div>
 
-          <div className="bg-[#1e1e1e] p-3 rounded-md h-24 overflow-y-auto text-sm font-mono">
-            {output ? (
-              <div
-                className={
-                  output.includes("Error")
-                    ? "text-red-400"
-                    : output.includes("0/")
-                    ? "text-red-400"
-                    : "text-green-400"
-                }
-              >
-                {output}
-              </div>
-            ) : (
-              <div className="text-gray-400">
-                {isLoading
-                  ? "Running tests..."
-                  : "Complete the exercise and submit your solution."}
-              </div>
-            )}
-          </div>
+          {bottomPanelTab === "tests" ? (
+            <div className="bg-[#1e1e1e] p-3 rounded-md overflow-y-auto h-full max-h-[calc(100%-40px)] text-sm font-mono">
+              {output ? (
+                <div
+                  className={
+                    output.includes("Error")
+                      ? "text-red-400"
+                      : output.includes("❌")
+                      ? "text-red-400"
+                      : "text-green-400"
+                  }
+                >
+                  {output}
+                </div>
+              ) : (
+                <div className="text-gray-400">
+                  {isLoading
+                    ? "Running tests..."
+                    : "Complete the exercise and submit your solution."}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-[#1e1e1e] p-3 rounded-md overflow-y-auto h-full max-h-[calc(100%-40px)]">
+              {allLogs.length > 0 ? (
+                <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap">
+                  {allLogs.map((log, index) => (
+                    <div
+                      key={index}
+                      className={
+                        log.startsWith("ERROR:")
+                          ? "text-red-400"
+                          : log.startsWith("WARN:")
+                          ? "text-yellow-400"
+                          : "text-green-400"
+                      }
+                    >
+                      {log}
+                    </div>
+                  ))}
+                </pre>
+              ) : (
+                <div className="text-gray-400 text-sm">
+                  No console output yet. Run your code to see logs here.
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

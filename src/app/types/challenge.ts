@@ -17,6 +17,7 @@ export interface Challenge {
   solution: string;
   precompileUsed: string;
   slug?: string;
+  hints?: string[]; // Array of hints to guide users without giving direct solutions
 }
 
 export interface TestResult {
@@ -25,6 +26,9 @@ export interface TestResult {
   expected: string;
   actual: string;
   passed: boolean;
+  duration?: number; // execution time in ms
+  gasUsed?: number; // estimated gas used
+  logs?: string[]; // console logs captured during execution
 }
 
 export interface ChallengePreview {
