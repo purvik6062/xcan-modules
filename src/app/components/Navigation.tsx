@@ -83,7 +83,15 @@ export default function Navigation() {
                     Profile
                   </Link>
                 </li>
-
+                <li>
+                  <Link
+                    href="/playground"
+                    className={`text-white hover:text-blue-200 ${isActive("/playground") ? "font-semibold" : ""
+                      }`}
+                  >
+                    Playground
+                  </Link>
+                </li>
               </ul>
             </nav>
             <ConnectKitButton />
@@ -122,6 +130,16 @@ export default function Navigation() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/playground"
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/playground") ? "bg-blue-700" : ""
+                    }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Playground
                 </Link>
               </li>
             </ul>
