@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import Providers from "./Providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Use next/font/google if the font is available on Google Fonts
+import { Tektur } from "next/font/google";
+
+const tektur = Tektur({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-tektur",
 });
 
 const geistMono = Geist_Mono({
@@ -29,11 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${tektur.variable} ${geistMono.variable} flex flex-col min-h-screen antialiased`}
       >
         <Providers>
           <Navigation />
-          {children}
+          <div className="flex-1">{children}</div>
           <Footer />
         </Providers>
       </body>
