@@ -14,7 +14,7 @@ export default function Navigation() {
   };
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 to-purple-600 py-6">
+    <header className="bg-gradient-to-r from-[#010229] to-[#01056b] py-4">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <Link
