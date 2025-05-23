@@ -22,16 +22,18 @@ export default function ChallengesPage() {
   useEffect(() => {
     const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(isDark);
-    
+
     // Add event listener for changes to color scheme preference
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeMediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
     const handleChange = (e: MediaQueryListEvent) => {
       setIsDarkMode(e.matches);
     };
-    
-    darkModeMediaQuery.addEventListener('change', handleChange);
+
+    darkModeMediaQuery.addEventListener("change", handleChange);
     return () => {
-      darkModeMediaQuery.removeEventListener('change', handleChange);
+      darkModeMediaQuery.removeEventListener("change", handleChange);
     };
   }, []);
 
@@ -61,7 +63,7 @@ export default function ChallengesPage() {
 
     setFilteredChallenges(filtered);
   };
-  
+
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
@@ -73,7 +75,8 @@ export default function ChallengesPage() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
           <div>
             <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">
-              <span className="text-blue-600 dark:text-blue-400">Arbitrum</span> Precompile Challenges
+              <span className="text-blue-600 dark:text-blue-400">Arbitrum</span>{" "}
+              Precompile Challenges
             </h1>
             <p className="text-gray-600 dark:text-gray-300">
               Learn how to interact with Arbitrum&apos;s precompiles through
@@ -81,12 +84,21 @@ export default function ChallengesPage() {
             </p>
           </div>
           <div className="mt-4 md:mt-0 flex items-center space-x-3">
-            <button 
-              onClick={toggleSidebar} 
+            <button
+              onClick={toggleSidebar}
               className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition-all duration-200 flex items-center space-x-2 md:hidden"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  clipRule="evenodd"
+                />
               </svg>
               <span>Filters</span>
             </button>
@@ -98,13 +110,35 @@ export default function ChallengesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
           {/* Sidebar for filters - hidden on mobile by default */}
-          <div className={`${showSidebar ? 'block fixed inset-0 z-40 bg-black bg-opacity-50 md:bg-opacity-0 md:relative md:inset-auto' : 'hidden md:block'} md:col-span-1`}>
+          <div
+            className={`${
+              showSidebar
+                ? "block fixed inset-0 z-40 bg-black bg-opacity-50 md:bg-opacity-0 md:relative md:inset-auto"
+                : "hidden md:block"
+            } md:col-span-1`}
+          >
             <div className="h-full overflow-y-auto bg-white dark:bg-gray-800 p-5 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 md:border-0 md:shadow-none max-w-xs w-full md:w-auto">
               <div className="flex justify-between items-center mb-4 md:hidden">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Filters</h3>
-                <button onClick={toggleSidebar} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  Filters
+                </h3>
+                <button
+                  onClick={toggleSidebar}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -136,8 +170,19 @@ export default function ChallengesPage() {
               </div>
             ) : (
               <div className="bg-white dark:bg-gray-800 rounded-lg p-10 text-center shadow-md border border-gray-200 dark:border-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500 mb-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-500 mb-2">
                   No challenges match your filters
@@ -145,12 +190,22 @@ export default function ChallengesPage() {
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
                   Try adjusting your filter settings to see more challenges.
                 </p>
-                <button 
-                  onClick={() => handleFilterChange({
-                    levels: { Beginner: true, Intermediate: true, Advanced: true },
-                    categories: Object.fromEntries(categories.map(c => [c, true])),
-                    precompiles: Object.fromEntries(precompiles.map(p => [p, true]))
-                  })}
+                <button
+                  onClick={() =>
+                    handleFilterChange({
+                      levels: {
+                        Beginner: true,
+                        Intermediate: true,
+                        Advanced: true,
+                      },
+                      categories: Object.fromEntries(
+                        categories.map((c) => [c, true])
+                      ),
+                      precompiles: Object.fromEntries(
+                        precompiles.map((p) => [p, true])
+                      ),
+                    })
+                  }
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
                 >
                   Reset Filters

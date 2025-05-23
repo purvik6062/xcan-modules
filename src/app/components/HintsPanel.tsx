@@ -57,6 +57,7 @@ export default function HintsPanel({ hints }: HintsPanelProps) {
           <div className={`p-3 ${!revealedHints[index] && "hidden"}`}>
             <div className="prose prose-sm prose-invert max-w-none">
               <ReactMarkdown>{hint}</ReactMarkdown>
+              
             </div>
           </div>
         </div>
