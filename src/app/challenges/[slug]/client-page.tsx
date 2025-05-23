@@ -162,7 +162,16 @@ export default function ClientChallenge({
   const hints = challenge.hints || defaultHints;
 
   // Collect all logs from test results for display in console tab
-  const allLogs = testResults.flatMap((result) => result.logs || []);
+  const allLogs = testResults.reduce((logs, result) => {
+    // If we've already printed this exact result's logs in another test case, don't duplicate
+    if (!result.logs || !result.logs.length) return logs;
+
+    // Use a Set to eliminate duplicates
+    const uniqueLogs = new Set([...logs]);
+    result.logs.forEach((log) => uniqueLogs.add(log));
+
+    return Array.from(uniqueLogs);
+  }, [] as string[]);
 
   return (
     <div className="flex h-screen">

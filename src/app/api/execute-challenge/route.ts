@@ -40,78 +40,14 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
     // Create a mock provider that mimics Arbitrum Sepolia responses
     const mockProvider = createMockProvider(slug);
 
-    // Array to capture console logs
-    const logs: string[] = [];
-
-    // Create a custom console object to capture logs
-    const customConsole = {
-      log: (...args: any[]) => {
-        const logMessage = args
-          .map((arg) => {
-            try {
-              if (typeof arg === "bigint") {
-                return arg.toString();
-              } else if (typeof arg === "object") {
-                return JSON.stringify(serializeBigInt(arg));
-              } else {
-                return String(arg);
-              }
-            } catch (error) {
-              return "[Unable to serialize]";
-            }
-          })
-          .join(" ");
-        logs.push(logMessage);
-        console.log(...args); // Also log to server console
-      },
-      error: (...args: any[]) => {
-        const logMessage = `ERROR: ${args
-          .map((arg) => {
-            try {
-              if (typeof arg === "bigint") {
-                return arg.toString();
-              } else if (typeof arg === "object") {
-                return JSON.stringify(serializeBigInt(arg));
-              } else {
-                return String(arg);
-              }
-            } catch (error) {
-              return "[Unable to serialize]";
-            }
-          })
-          .join(" ")}`;
-        logs.push(logMessage);
-        console.error(...args); // Also log to server console
-      },
-      warn: (...args: any[]) => {
-        const logMessage = `WARN: ${args
-          .map((arg) => {
-            try {
-              if (typeof arg === "bigint") {
-                return arg.toString();
-              } else if (typeof arg === "object") {
-                return JSON.stringify(serializeBigInt(arg));
-              } else {
-                return String(arg);
-              }
-            } catch (error) {
-              return "[Unable to serialize]";
-            }
-          })
-          .join(" ")}`;
-        logs.push(logMessage);
-        console.warn(...args); // Also log to server console
-      },
-    };
-
+    // Find the actual function call at the end of the code
+    // This regex extracts the name of the function being executed at the end of the user's code
     // Clean the code - remove imports and exports to avoid errors
     const cleanedCode = code
       .replace(/import\s+{\s*ethers\s*}\s+from\s+['"]ethers['"];?/g, "")
       .replace(/export\s+default\s+[^;]+;?/g, "")
       .trim();
 
-    // Find the actual function call at the end of the code
-    // This regex extracts the name of the function being executed at the end of the user's code
     const functionCallMatch = cleanedCode.match(/([a-zA-Z0-9_]+)\(\);?\s*$/);
 
     if (!functionCallMatch) {
@@ -138,29 +74,92 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
       async function () {}
     ).constructor;
 
-    // Create the function to evaluate - we execute the whole user code as is
-    // but wrap it in a function that will return the result of the function call
-    const userFunction = new AsyncFunction(
-      "ethers",
-      "provider",
-      "testInput",
-      "console",
-      `
-        ${cleanedCode}
-        
-        // Define the function we want to test if it exists
-        if (typeof ${functionName} !== 'function') {
-          throw new Error('Function ${functionName} is not defined in your code');
-        }
-        
-        // Return the result of calling the function with test input
-        return await ${functionName}(...testInput);
-      `
-    );
-
     // Execute against each test case
     const results = await Promise.all(
       testCases.map(async (testCase) => {
+        // Create a separate logs array for each test case
+        const logs: string[] = [];
+
+        // Create a custom console object to capture logs
+        const customConsole = {
+          log: (...args: any[]) => {
+            const logMessage = args
+              .map((arg) => {
+                try {
+                  if (typeof arg === "bigint") {
+                    return arg.toString();
+                  } else if (typeof arg === "object") {
+                    return JSON.stringify(serializeBigInt(arg));
+                  } else {
+                    return String(arg);
+                  }
+                } catch (error) {
+                  return "[Unable to serialize]";
+                }
+              })
+              .join(" ");
+            logs.push(logMessage);
+            console.log(...args); // Also log to server console
+          },
+          error: (...args: any[]) => {
+            const logMessage = `ERROR: ${args
+              .map((arg) => {
+                try {
+                  if (typeof arg === "bigint") {
+                    return arg.toString();
+                  } else if (typeof arg === "object") {
+                    return JSON.stringify(serializeBigInt(arg));
+                  } else {
+                    return String(arg);
+                  }
+                } catch (error) {
+                  return "[Unable to serialize]";
+                }
+              })
+              .join(" ")}`;
+            logs.push(logMessage);
+            console.error(...args); // Also log to server console
+          },
+          warn: (...args: any[]) => {
+            const logMessage = `WARN: ${args
+              .map((arg) => {
+                try {
+                  if (typeof arg === "bigint") {
+                    return arg.toString();
+                  } else if (typeof arg === "object") {
+                    return JSON.stringify(serializeBigInt(arg));
+                  } else {
+                    return String(arg);
+                  }
+                } catch (error) {
+                  return "[Unable to serialize]";
+                }
+              })
+              .join(" ")}`;
+            logs.push(logMessage);
+            console.warn(...args); // Also log to server console
+          },
+        };
+
+        // Create the function to evaluate for this test case
+        const userFunction = new AsyncFunction(
+          "ethers",
+          "provider",
+          "testInput",
+          "console",
+          `
+            ${cleanedCode}
+            
+            // Define the function we want to test if it exists
+            if (typeof ${functionName} !== 'function') {
+              throw new Error('Function ${functionName} is not defined in your code');
+            }
+            
+            // Return the result of calling the function with test input
+            return await ${functionName}(...testInput);
+          `
+        );
+
         try {
           const start = performance.now();
           const result = await userFunction(
@@ -182,7 +181,7 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
             passed,
             duration: Math.round(duration),
             gasUsed: estimateGasUsed(code, slug),
-            logs: [...logs], // Include captured logs
+            logs: logs, // Include only this test case's logs
           };
         } catch (error: any) {
           console.error("Test case execution error:", error);
@@ -194,7 +193,7 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
             passed: false,
             duration: 0,
             gasUsed: 0,
-            logs: [...logs], // Include captured logs
+            logs: logs, // Include only this test case's logs
           };
         }
       })
