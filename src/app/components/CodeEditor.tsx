@@ -15,7 +15,7 @@ export default function CodeEditor({
   defaultValue,
   value,
   onChange,
-  height = "500px",
+  height = "100%",
   isLoading = false,
 }: CodeEditorProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -44,38 +44,45 @@ export default function CodeEditor({
   };
 
   return (
-    <Editor
-      height={height}
-      defaultLanguage="typescript"
-      defaultValue={defaultValue}
-      value={value}
-      onChange={onChange}
-      onMount={handleEditorDidMount}
-      theme={isDarkMode ? "vs-dark" : "light"}
-      options={{
-        minimap: { enabled: false },
-        fontSize: 14,
-        scrollBeyondLastLine: false,
-        wordWrap: "on",
-        formatOnPaste: true,
-        formatOnType: true,
-        automaticLayout: true,
-        tabSize: 2,
-        lineNumbers: "on",
-        glyphMargin: true,
-        folding: true,
-        suggest: {
-          showInlineDetails: true,
-        },
-        parameterHints: {
-          enabled: true,
-        },
-      }}
-      loading={
-        <div className="flex justify-center items-center h-full text-gray-500">
-          Loading Editor...
-        </div>
-      }
-    />
+    <div className="h-full overflow-hidden">
+      <Editor
+        height={height}
+        defaultLanguage="typescript"
+        defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
+        onMount={handleEditorDidMount}
+        theme={isDarkMode ? "vs-dark" : "light"}
+        options={{
+          minimap: { enabled: false },
+          fontSize: 14,
+          scrollBeyondLastLine: false,
+          wordWrap: "on",
+          formatOnPaste: true,
+          formatOnType: true,
+          automaticLayout: true,
+          tabSize: 2,
+          lineNumbers: "on",
+          glyphMargin: true,
+          folding: true,
+          scrollbar: {
+            vertical: "visible",
+            verticalScrollbarSize: 14,
+            horizontalScrollbarSize: 14
+          },
+          suggest: {
+            showInlineDetails: true,
+          },
+          parameterHints: {
+            enabled: true,
+          },
+        }}
+        loading={
+          <div className="flex justify-center items-center h-full text-gray-500">
+            Loading Editor...
+          </div>
+        }
+      />
+    </div>
   );
 }

@@ -36,11 +36,11 @@ export default function ChallengePage() {
             <div className="flex justify-center">
               <Link
                 href="/challenges"
-                className="inline-flex items-center px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors shadow-md hover:shadow-lg"
+                className="inline-flex items-center px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors shadow-md hover:shadow-lg cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
+                  className="h-5 w-5 mr-2 cursor-pointer"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >

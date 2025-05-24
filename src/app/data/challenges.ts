@@ -283,6 +283,7 @@ getChainId();`,
       {
         input: [],
         expectedOutput: {
+          type: "object",
           hasProperties: [
             "l2TransactionFee",
             "l1DataFee",
@@ -407,83 +408,6 @@ getArbOSVersion();`,
     const version = await arbSys.arbOSVersion();
     
     return version;
-  }
-  
-getArbOSVersion();`,
-  },
-  "os-version-checker": {
-    id: 6,
-    title: "OS Version Checker",
-    level: "Beginner",
-    description: "Get the current version of Arbitrum OS",
-    category: "System",
-    points: 20,
-    precompileUsed: "ArbSys",
-    instructions: `
-        # OS Version Checker Challenge
-        
-        In this challenge, you'll retrieve the current version of Arbitrum OS using the ArbSys precompile.
-        
-        ## Task
-        
-        Create a function called \`getArbOSVersion\` that:
-        1. Connects to the ArbSys precompile on Arbitrum Sepolia
-        2. Calls the appropriate method to get the current Arbitrum OS version
-        3. Returns the version as a tuple of [major, minor, patch]
-        
-        ## Example
-        
-        \`\`\`js
-        // This should return the current Arbitrum OS version
-        getArbOSVersion() // Example return: [11, 0, 0]
-        \`\`\`
-        
-        ## Notes
-        
-        - Use the ethers.js library which is already imported for you
-        - The ArbSys precompile is located at: 0x0000000000000000000000000000000000000064
-        - Arbitrum OS follows semantic versioning (major.minor.patch)
-      `,
-    testCases: [
-      {
-        input: [],
-        expectedOutput: { hasProperties: ["0", "1", "2"] },
-        description: "Should return an array with three version components",
-      },
-    ],
-    startingCode: `import { ethers } from 'ethers';
-  
-  async function getArbOSVersion() {
-    // Write your code here
-    // 1. Connect to the Arbitrum Sepolia provider
-    // 2. Create a contract instance for ArbSys
-    // 3. Call the appropriate method to get the Arbitrum OS version
-    
-  }
-  
-getArbOSVersion();`,
-    solution: `import { ethers } from 'ethers';
-  
-  async function getArbOSVersion() {
-    // Connect to Arbitrum Sepolia
-    const provider = new ethers.JsonRpcProvider("https://sepolia-rollup.arbitrum.io/rpc");
-    
-    // ArbSys precompile address
-    const arbSysAddress = "0x0000000000000000000000000000000000000064";
-    
-    // Define ABI for ArbSys
-    const arbSysAbi = [
-      "function arbOSVersion() view returns (uint256, uint256, uint256)"
-    ];
-    
-    // Create contract instance
-    const arbSys = new ethers.Contract(arbSysAddress, arbSysAbi, provider);
-    
-    // Call arbOSVersion to get the current version
-    const version = await arbSys.arbOSVersion();
-    
-    // Return as an array with the major, minor, and patch versions
-    return [version[0], version[1], version[2]];
   }
   
 getArbOSVersion();`,
