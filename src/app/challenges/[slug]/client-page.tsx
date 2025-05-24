@@ -24,15 +24,21 @@ export default function ClientChallenge({
   // Find adjacent challenges for navigation
   const { prevChallenge, nextChallenge } = useMemo(() => {
     // Get all challenge slugs sorted by ID
-    const sortedChallenges = challengePreviews.sort((a, b) => a.id - b.id).map(c => c.slug);
-    
+    const sortedChallenges = challengePreviews
+      .sort((a, b) => a.id - b.id)
+      .map((c) => c.slug);
+
     // Find the index of the current challenge
     const currentIndex = sortedChallenges.indexOf(slug);
-    
+
     // Get previous and next challenges
-    const prevChallenge = currentIndex > 0 ? sortedChallenges[currentIndex - 1] : null;
-    const nextChallenge = currentIndex < sortedChallenges.length - 1 ? sortedChallenges[currentIndex + 1] : null;
-    
+    const prevChallenge =
+      currentIndex > 0 ? sortedChallenges[currentIndex - 1] : null;
+    const nextChallenge =
+      currentIndex < sortedChallenges.length - 1
+        ? sortedChallenges[currentIndex + 1]
+        : null;
+
     return { prevChallenge, nextChallenge };
   }, [slug]);
   const [code, setCode] = useState("");
@@ -67,10 +73,13 @@ export default function ClientChallenge({
     if (savedCode) {
       setCode(savedCode);
     }
-    
+
     // Add click event listener for closing sidebar when clicking outside
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         setSidebarOpen(false);
       }
     };
@@ -205,7 +214,7 @@ export default function ClientChallenge({
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
   };
-  
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -223,7 +232,16 @@ export default function ClientChallenge({
   const hints = challenge.hints || defaultHints;
 
   // Collect all logs from test results for display in console tab
-  const allLogs = testResults.flatMap((result) => result.logs || []);
+  const allLogs = testResults.reduce((logs, result) => {
+    // If we've already printed this exact result's logs in another test case, don't duplicate
+    if (!result.logs || !result.logs.length) return logs;
+
+    // Use a Set to eliminate duplicates
+    const uniqueLogs = new Set([...logs]);
+    result.logs.forEach((log) => uniqueLogs.add(log));
+
+    return Array.from(uniqueLogs);
+  }, [] as string[]);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-br from-[#070d1b] to-[#102247] text-white">
@@ -250,8 +268,17 @@ export default function ClientChallenge({
               onClick={toggleSidebar}
               className="text-gray-400 hover:cursor-pointer hover:text-white bg-[#1d315e] hover:bg-[#2a407a] p-2 rounded-full transition-all duration-200 cursor-pointer"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
           </div>
@@ -398,22 +425,22 @@ export default function ClientChallenge({
             <div className="h-1 w-20 bg-blue-700 rounded-full mt-2 mb-6"></div>
           </div>
 
-          {activeTab === "instructions" ? (
-            <InstructionsPanel instructions={challenge.instructions} />
-          ) : activeTab === "hints" ? (
-            <HintsPanel hints={hints} />
-          ) : (
-            <TestResults
-              testCases={challenge.testCases}
-              testResults={testResults}
-              isLoading={isLoading}
-              output={output}
-              runTests={runTests}
-              verificationStage={verificationStage}
-            />
-          )}
+            {activeTab === "instructions" ? (
+              <InstructionsPanel instructions={challenge.instructions} />
+            ) : activeTab === "hints" ? (
+              <HintsPanel hints={hints} />
+            ) : (
+              <TestResults
+                testCases={challenge.testCases}
+                testResults={testResults}
+                isLoading={isLoading}
+                output={output}
+                runTests={runTests}
+                verificationStage={verificationStage}
+              />
+            )}
+          </div>
         </div>
-      </div>
 
       {/* Right Side - Code Editor */}
       <div

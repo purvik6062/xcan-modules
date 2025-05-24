@@ -58,18 +58,40 @@ export default function Navigation() {
               <ul className="flex space-x-6">
                 <li>
                   <Link
+                    href="/#modules"
+                    className={`text-white hover:text-blue-200 transition-colors ${
+                      isActive("/#modules") ? "font-semibold" : ""
+                    }`}
+                  >
+                    Modules
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/challenges"
-                    className={`text-white hover:text-blue-200 ${isActive("/challenges") ? "font-semibold" : ""
-                      }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${
+                      isActive("/challenges") ? "font-semibold" : ""
+                    }`}
                   >
                     Challenges
                   </Link>
                 </li>
                 <li>
                   <Link
+                    href="/playground"
+                    className={`text-white hover:text-blue-200 transition-colors ${
+                      isActive("/playground") ? "font-semibold" : ""
+                    }`}
+                  >
+                    Playground
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/leaderboard"
-                    className={`text-white hover:text-blue-200 ${isActive("/leaderboard") ? "font-semibold" : ""
-                      }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${
+                      isActive("/leaderboard") ? "font-semibold" : ""
+                    }`}
                   >
                     Leaderboard
                   </Link>
@@ -77,19 +99,11 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/profile"
-                    className={`text-white hover:text-blue-200 ${isActive("/profile") ? "font-semibold" : ""
-                      }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${
+                      isActive("/profile") ? "font-semibold" : ""
+                    }`}
                   >
                     Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/playground"
-                    className={`text-white hover:text-blue-200 ${isActive("/playground") ? "font-semibold" : ""
-                      }`}
-                  >
-                    Playground
                   </Link>
                 </li>
               </ul>
@@ -104,9 +118,21 @@ export default function Navigation() {
             <ul className="flex flex-col space-y-2">
               <li>
                 <Link
+                  href="/#modules"
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                    isActive("/#modules") ? "bg-blue-700" : ""
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Modules
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/challenges"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/challenges") ? "bg-blue-700" : ""
-                    }`}
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                    isActive("/challenges") ? "bg-blue-700" : ""
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Challenges
@@ -114,9 +140,21 @@ export default function Navigation() {
               </li>
               <li>
                 <Link
+                  href="/playground"
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                    isActive("/playground") ? "bg-blue-700" : ""
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Playground
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/leaderboard"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/leaderboard") ? "bg-blue-700" : ""
-                    }`}
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                    isActive("/leaderboard") ? "bg-blue-700" : ""
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Leaderboard
@@ -125,21 +163,12 @@ export default function Navigation() {
               <li>
                 <Link
                   href="/profile"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/profile") ? "bg-blue-700" : ""
-                    }`}
+                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                    isActive("/profile") ? "bg-blue-700" : ""
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Profile
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/playground"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded ${isActive("/playground") ? "bg-blue-700" : ""
-                    }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Playground
                 </Link>
               </li>
             </ul>

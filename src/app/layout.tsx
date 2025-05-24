@@ -3,7 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
-import Providers from "./Providers";
+import { Providers } from "./Providers";
 
 // Use next/font/google if the font is available on Google Fonts
 import { Tektur } from "next/font/google";
@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CodeQuest - Interactive Coding Challenges",
+  title: "ArbitrumQuest - Master Arbitrum Development",
   description:
-    "Learn coding through interactive challenges and track your progress",
+    "Comprehensive learning platform for Arbitrum development. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
 };
 
 export default function RootLayout({

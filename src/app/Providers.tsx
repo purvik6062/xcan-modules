@@ -3,30 +3,31 @@
 import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, arbitrumSepolia } from 'wagmi/chains'
+import { mainnet, arbitrumSepolia } from "wagmi/chains";
 import { ConnectKitProvider, getDefaultConfig } from "connectkit";
-import { useEffect, useState } from 'react'
-import type { Storage } from 'wagmi';
+import { useEffect, useState } from "react";
+import type { Storage } from "wagmi";
+import { ThemeProvider } from "next-themes";
 
 const storage = {
   getItem: (key: string) => {
-    if (typeof window !== 'undefined') {
-      const item = window.localStorage.getItem(key)
-      return item
+    if (typeof window !== "undefined") {
+      const item = window.localStorage.getItem(key);
+      return item;
     }
-    return null
+    return null;
   },
   setItem: (key: string, value: string) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(key, value)
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(key, value);
     }
   },
   removeItem: (key: string) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(key)
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(key);
     }
-  }
-} as Storage
+  },
+} as Storage;
 
 const config = createConfig(
   getDefaultConfig({
@@ -39,12 +40,12 @@ const config = createConfig(
     },
 
     // Required API Keys
-    walletConnectProjectId: '39c1a2d05362a52a43d5431230eb2f10',
+    walletConnectProjectId: "39c1a2d05362a52a43d5431230eb2f10",
 
     // Required App Info
     appName: "arbitrum nitro stylus",
-    storage
-  }),
+    storage,
+  })
 );
 
 // Create the query client
@@ -57,7 +58,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -69,10 +70,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider>{mounted && children}</ConnectKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <ConnectKitProvider>{mounted && children}</ConnectKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </ThemeProvider>
   );
 }
