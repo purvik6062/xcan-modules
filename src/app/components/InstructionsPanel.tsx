@@ -206,7 +206,7 @@ export default function InstructionsPanel({
                   />
                 </h3>
               )}
-              <div className="h-1 w-16 bg-blue-700 rounded-full mt-1"></div>
+              <div className="h-1 w-24 bg-blue-700 rounded-full mt-1"></div>
             </div>
           );
         }

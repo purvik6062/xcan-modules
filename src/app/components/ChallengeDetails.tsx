@@ -11,13 +11,13 @@ export default function ChallengeDetails({ challenge }: ChallengeDetailsProps) {
   const getLevelBadgeStyle = (level: string) => {
     switch (level) {
       case "Beginner":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-green-100 text-green-800 bg-green-900 text-green-200";
       case "Intermediate":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+        return "bg-yellow-100 text-yellow-800 bg-yellow-900 text-yellow-200";
       case "Advanced":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        return "bg-red-100 text-red-800 bg-red-900 text-red-200";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800 bg-gray-900 text-gray-200";
     }
   };
 
@@ -26,7 +26,7 @@ export default function ChallengeDetails({ challenge }: ChallengeDetailsProps) {
       <div className="mb-6">
         <Link
           href="/challenges"
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 mb-4 transition-colors"
+          className="inline-flex items-centertext-blue-400 hover:text-blue-300 mb-4 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -54,10 +54,10 @@ export default function ChallengeDetails({ challenge }: ChallengeDetailsProps) {
           >
             {challenge.level}
           </span>
-          <span className="bg-gray-100 dark:bg-gray-700 rounded px-2 py-1 text-xs">
+          <span className=" bg-gray-700 rounded px-2 py-1 text-xs">
             {challenge.category}
           </span>
-          <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded px-2 py-1 text-xs">
+          <span className=" bg-blue-900  text-blue-200 rounded px-2 py-1 text-xs">
             {challenge.precompileUsed}
           </span>
           <span className="font-semibold text-sm">
@@ -66,7 +66,7 @@ export default function ChallengeDetails({ challenge }: ChallengeDetailsProps) {
         </div>
       </div>
 
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
+      <p className=" text-gray-300 mb-6">
         {challenge.description}
       </p>
     </div>

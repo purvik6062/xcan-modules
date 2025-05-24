@@ -6,11 +6,11 @@ import {
 
 export default function FeaturedChallengesSection() {
   return (
-    <section className="py-16 bg-gray-50 dark:bg-gray-900">
+    <section className="py-16 bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Featured Challenges</h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
+          <p className="text-lg text-gray-300">
             Get started with these popular challenges from our Arbitrum
             Precompiles module
           </p>
@@ -21,29 +21,35 @@ export default function FeaturedChallengesSection() {
             <Link
               key={challenge.slug}
               href={`/challenges/${challenge.slug}`}
-              className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg transition-all duration-300 group"
+              className="block bg-gray-800 border border-gray-700 rounded-lg p-6 hover:shadow-lg transition-all duration-300 group h-full flex flex-col"
             >
               <div className="flex justify-between items-start mb-3">
                 <h3 className="text-lg font-bold group-hover:text-blue-600 transition-colors">
                   {challenge.title}
                 </h3>
                 <span
-                  className={`text-xs px-2 py-1 rounded-full ${
+                  className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${
                     challenge.level === "Beginner"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                      ? "bg-green-900 text-green-200"
                       : challenge.level === "Intermediate"
-                      ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      ? "bg-yellow-900 text-yellow-200"
+                      : "bg-red-900 text-red-200"
                   }`}
                 >
                   {challenge.level}
                 </span>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                {challenge.description}
-              </p>
-              <div className="flex items-center justify-between">
-                <div className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full px-3 py-1">
+              
+              {/* Description with fixed height to ensure consistency */}
+              <div className="flex-grow mb-4">
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  {challenge.description}
+                </p>
+              </div>
+              
+              {/* Bottom section - always at the bottom */}
+              <div className="flex items-center justify-between mt-auto">
+                <div className="text-xs bg-blue-900 text-blue-200 rounded-full px-3 py-1">
                   {challenge.precompile}
                 </div>
                 <div className="text-blue-600 text-sm font-medium group-hover:text-blue-700">

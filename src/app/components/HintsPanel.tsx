@@ -47,7 +47,7 @@ export default function HintsPanel({ hints }: HintsPanelProps) {
             {!revealedHints[index] && (
               <button
                 onClick={() => revealHint(index)}
-                className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors"
+                className="text-xs cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors"
               >
                 Reveal Hint
               </button>

@@ -85,7 +85,7 @@ console.log("Hello from JavaScript!");`;
 export default function Playground() {
   const [code, setCode] = useState(javascriptBoilerplateCode);
   const [output, setOutput] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  
   const [editorReady, setEditorReady] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [isRunning, setIsRunning] = useState(false);
@@ -100,12 +100,8 @@ export default function Playground() {
     csharp: '1',
   };
 
-  // Set dark mode when the component mounts
+  // Set initial component state
   useEffect(() => {
-    // Check for dark mode preference
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(isDark);
-
     // Check if there's a saved language preference
     const savedLanguage = localStorage.getItem("playground_language");
     if (savedLanguage) {
@@ -220,20 +216,20 @@ export default function Playground() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Code Playground</h1>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-gray-300">
           Test and run code in different languages using the Stylus APIs
         </p>
       </div>
 
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-        <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+      <div className="border border-gray-700 rounded-lg overflow-hidden">
+        <div className="bg-gray-800 px-4 py-3 border-b border-gray-700">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <h3 className="font-semibold">Code Editor</h3>
               <select
                 value={selectedLanguage}
                 onChange={handleLanguageChange}
-                className="ml-2 px-2 py-1 text-sm rounded bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600"
+                className="ml-2 px-2 py-1 text-sm rounded bg-gray-700 border border-gray-600"
               >
                 <option value="javascript">JavaScript</option>
                 <option value="python">Python</option>
@@ -245,7 +241,7 @@ export default function Playground() {
             </div>
             <div className="flex space-x-2">
               <button
-                className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded text-sm"
+                className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded text-sm"
                 onClick={handleReset}
               >
                 Reset
@@ -272,7 +268,7 @@ export default function Playground() {
             value={code}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme={isDarkMode ? "vs-dark" : "light"}
+            theme="vs-dark"
             beforeMount={(monaco) => {
               // Disable TypeScript validation
               monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
@@ -309,7 +305,7 @@ export default function Playground() {
           />
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-800 p-3 border-t border-gray-200 dark:border-gray-700 h-[200px] overflow-auto">
+        <div className=" bg-gray-800 p-3 border-t border-gray-700 h-[200px] overflow-auto">
           <div className="font-mono text-sm whitespace-pre-wrap">
             {output ? (
               <div

@@ -15,27 +15,7 @@ import "../styles/gamify.css";
 export default function ChallengesPage() {
   const [filteredChallenges, setFilteredChallenges] =
     useState<ChallengePreview[]>(challengePreviews);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-
-  // Check for dark mode preference
-  useEffect(() => {
-    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(isDark);
-
-    // Add event listener for changes to color scheme preference
-    const darkModeMediaQuery = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    );
-    const handleChange = (e: MediaQueryListEvent) => {
-      setIsDarkMode(e.matches);
-    };
-
-    darkModeMediaQuery.addEventListener("change", handleChange);
-    return () => {
-      darkModeMediaQuery.removeEventListener("change", handleChange);
-    };
-  }, []);
 
   // Extract unique categories and precompiles for filters
   const categories = [
@@ -69,16 +49,16 @@ export default function ChallengesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header Section with improved styling */}
-        <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">
-              <span className="text-blue-600 dark:text-blue-400">Arbitrum</span>{" "}
+            <h1 className="text-3xl font-bold mb-2 text-white">
+              <span className="text-blue-400">Arbitrum</span>{" "}
               Precompile Challenges
             </h1>
-            <p className="text-gray-600 dark:text-gray-300">
+            <p className="text-gray-300">
               Learn how to interact with Arbitrum&apos;s precompiles through
               practical coding challenges
             </p>
@@ -117,14 +97,14 @@ export default function ChallengesPage() {
                 : "hidden md:block"
             } md:col-span-1`}
           >
-            <div className="h-full overflow-y-auto bg-white dark:bg-gray-800 p-5 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 md:border-0 md:shadow-none max-w-xs w-full md:w-auto">
+            <div className="h-full overflow-y-auto bg-gray-800 p-5 rounded-lg shadow-lg border border-gray-700 md:border-0 md:shadow-none max-w-xs w-full md:w-auto">
               <div className="flex justify-between items-center mb-4 md:hidden">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                <h3 className="text-lg font-bold text-white">
                   Filters
                 </h3>
                 <button
                   onClick={toggleSidebar}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className=" text-gray-400 hover:text-gray-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -169,10 +149,10 @@ export default function ChallengesPage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-10 text-center shadow-md border border-gray-200 dark:border-gray-700">
+              <div className=" bg-gray-800 rounded-lg p-10 text-center shadow-md border border-gray-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500 mb-4"
+                  className="h-16 w-16 mx-auto text-gray-500 mb-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -184,10 +164,10 @@ export default function ChallengesPage() {
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-500 mb-2">
+                <h3 className="text-lg font-medium  text-gray-500 mb-2">
                   No challenges match your filters
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                <p className=" text-gray-400 mb-4">
                   Try adjusting your filter settings to see more challenges.
                 </p>
                 <button

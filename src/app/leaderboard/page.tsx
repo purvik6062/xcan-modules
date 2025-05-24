@@ -114,35 +114,35 @@ export default function LeaderboardPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Leaderboard</h1>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+      <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-100 dark:bg-gray-700 text-left">
-                <th className="px-6 py-3 text-gray-600 dark:text-gray-300 font-semibold">
+              <tr className="bg-gray-700 text-left">
+                <th className="px-6 py-3 text-gray-300 font-semibold">
                   Rank
                 </th>
-                <th className="px-6 py-3 text-gray-600 dark:text-gray-300 font-semibold">
+                <th className="px-6 py-3 text-gray-300 font-semibold">
                   User
                 </th>
-                <th className="px-6 py-3 text-gray-600 dark:text-gray-300 font-semibold">
+                <th className="px-6 py-3 text-gray-300 font-semibold">
                   Level
                 </th>
-                <th className="px-6 py-3 text-gray-600 dark:text-gray-300 font-semibold">
+                <th className="px-6 py-3 text-gray-300 font-semibold">
                   Challenges
                 </th>
-                <th className="px-6 py-3 text-gray-600 dark:text-gray-300 font-semibold">
+                <th className="px-6 py-3 text-gray-300 font-semibold">
                   Points
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="divide-y divide-gray-700">
               {leaderboardData.map((user) => (
                 <tr
                   key={user.id}
                   className={`
-                    ${user.rank <= 3 ? "bg-blue-50 dark:bg-blue-900/20" : ""}
-                    hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors
+                    ${user.rank <= 3 ? "bg-blue-900/20" : ""}
+                    hover:bg-gray-700/50 transition-colors
                   `}
                 >
                   <td className="px-6 py-4">
@@ -155,7 +155,7 @@ export default function LeaderboardPage() {
                           ? "bg-gray-300 text-gray-700"
                           : user.rank === 3
                           ? "bg-amber-600 text-amber-100"
-                          : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                          : "bg-gray-700 text-gray-300"
                       }
                       w-8 h-8 rounded-full flex items-center justify-center font-bold
                     `}
@@ -181,10 +181,10 @@ export default function LeaderboardPage() {
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
                         user.level === "Beginner"
-                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          ? "bg-green-900 text-green-200"
                           : user.level === "Intermediate"
-                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-                          : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                          ? "bg-yellow-900 text-yellow-200"
+                          : "bg-red-900 text-red-200"
                       }`}
                     >
                       {user.level}
@@ -203,7 +203,7 @@ export default function LeaderboardPage() {
 
       <div className="mt-10">
         <h2 className="text-2xl font-bold mb-4">How Points are Calculated</h2>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="bg-gray-800 rounded-lg shadow-md p-6">
           <p className="mb-4">
             Points are awarded based on the difficulty of challenges completed
             and the efficiency of your solutions.
