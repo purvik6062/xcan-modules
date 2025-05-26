@@ -230,7 +230,7 @@ export default function ClientChallenge({
                   <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                 </svg>
               </Link>
-              <h1 className="text-2xl font-bold text-white">{challenge.title}</h1>
+              <h1 className="text-2xl font-semibold text-gray-100">{challenge.title}</h1>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
               <span className={`text-xs text-indigo-200 px-3 py-1.5 rounded-full flex items-center ${getLevelBadgeStyle(challenge.level)}`}>
@@ -255,32 +255,39 @@ export default function ClientChallenge({
           </div>
           <div className="bg-gradient-to-r from-[#0a142a] to-[#0f1d3a] px-6 py-4 border-b border-[#152241]">
             <div className="flex space-x-3">
-              <button className={`px-4 py-2.5 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "instructions" ? "bg-blue-700/30 border border-blue-700/50 text-blue-300 shadow-md shadow-blue-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("instructions")}>
+              <button className={`px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "instructions" ? "bg-blue-700/30 border border-blue-700/50 text-blue-300 shadow-md shadow-blue-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("instructions")}>
                 <FiBookOpen className="mr-2 cursor-pointer" />
                 Instructions
               </button>
-              <button className={`px-4 py-2.5 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "tests" ? "bg-teal-700/30 border border-teal-700/50 text-teal-300 shadow-md shadow-teal-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("tests")}>
+              <button className={`px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "tests" ? "bg-teal-700/30 border border-teal-700/50 text-teal-300 shadow-md shadow-teal-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("tests")}>
                 <FiTerminal className="mr-2" />
                 Test Cases
               </button>
-              <button className={`ml-auto px-4 py-2.5 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "hints" ? "bg-yellow-700/30 border border-yellow-700/50 text-yellow-300 shadow-md shadow-yellow-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("hints")}>
+              <button className={`ml-auto px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "hints" ? "bg-yellow-700/30 border border-yellow-700/50 text-yellow-300 shadow-md shadow-yellow-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("hints")}>
                 <FiHelpCircle className="mr-2 cursor-pointer" />
                 Hints
               </button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto p-6 bg-[#0a142a]">
-            <div className="mb-6">
-              <p className="text-gray-300 mb-4 leading-relaxed">{challenge.description}</p>
-            </div>
-            {activeTab === "instructions" ? (
-              <InstructionsPanel instructions={challenge.instructions} />
-            ) : activeTab === "hints" ? (
-              <HintsPanel hints={hints} />
-            ) : (
-              <TestResults testCases={challenge.testCases} testResults={testResults} isLoading={isLoading} output={output} runTests={runTests} verificationStage={verificationStage} />
-            )}
+          <div className="flex-1 overflow-y-auto p-[1.5rem] bg-[#0a142a]">
+          <div className="mb-6">
+            <p className="text-gray-300 mb-4 leading-relaxed">{challenge.description}</p>
           </div>
+          {activeTab === "instructions" ? (
+            <InstructionsPanel instructions={challenge.instructions} />
+          ) : activeTab === "hints" ? (
+            <HintsPanel hints={hints} />
+          ) : (
+            <TestResults
+              testCases={challenge.testCases}
+              testResults={testResults}
+              isLoading={isLoading}
+              output={output}
+              runTests={runTests}
+              verificationStage={verificationStage}
+            />
+          )}
+        </div>
         </div>
 
         {/* Right Side - Code Editor */}
@@ -307,7 +314,7 @@ export default function ClientChallenge({
             </div>
           </div>
           {/* Editor Area with fixed height for 25 lines */}
-          <div className="overflow-hidden" style={{ height: "500px" }}>
+          <div className="overflow-hidden h-[49vh] 2xl:h-[58vh]">
             <CodeEditor defaultValue={challenge.startingCode} value={code} onChange={handleEditorChange} />
           </div>
           {/* Bottom Panel with fixed height */}
@@ -326,7 +333,20 @@ export default function ClientChallenge({
                   )}
                 </button>
               </div>
-              <button className={`bg-gradient-to-r cursor-pointer ${isLoading ? 'from-blue-700 to-indigo-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center px-6 py-2.5 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={runTests} disabled={isLoading}>
+              <div className="flex justify-between items-center gap-3">
+              {prevChallenge ? (
+                <Link href={`/challenges/${prevChallenge}`} className="bg-[#152241] hover:bg-[#1c2c52] text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer text-white border border-[#2c3e69] shadow-md shadow-blue-900/10 group">
+                  <FiChevronLeft className="mr-2 group-hover:animate-pulse" />
+                  Previous Quest
+                </Link>
+              ) : (<div></div>)}
+              {nextChallenge ? (
+                <Link href={`/challenges/${nextChallenge}`} className="text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white border border-blue-500/30 shadow-md shadow-blue-900/20 group">
+                  Next Quest
+                  <FiChevronRight className="ml-2 group-hover:animate-pulse" />
+                </Link>
+              ) : (<div></div>)}
+              <button className={`bg-gradient-to-r cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center ${isLoading ? 'from-blue-700 to-indigo-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center py-2 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={runTests} disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -342,23 +362,10 @@ export default function ClientChallenge({
                   </>
                 )}
               </button>
-            </div>
-            <div className="flex justify-between mt-4 mb-2">
-              {prevChallenge ? (
-                <Link href={`/challenges/${prevChallenge}`} className="bg-[#152241] hover:bg-[#1c2c52] text-white flex items-center px-5 py-2.5 rounded-md transition-all duration-200 border border-[#2c3e69] shadow-md shadow-blue-900/10 group">
-                  <FiChevronLeft className="mr-2 group-hover:animate-pulse" />
-                  Previous Quest
-                </Link>
-              ) : (<div></div>)}
-              {nextChallenge ? (
-                <Link href={`/challenges/${nextChallenge}`} className="bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white flex items-center px-5 py-2.5 rounded-md transition-all duration-200 border border-blue-500/30 shadow-md shadow-blue-900/20 group">
-                  Next Quest
-                  <FiChevronRight className="ml-2 group-hover:animate-pulse" />
-                </Link>
-              ) : (<div></div>)}
+              </div>
             </div>
             {bottomPanelTab === "tests" ? (
-              <div className="bg-[#0a142a] p-4 rounded-lg overflow-y-auto h-full max-h-[calc(100%-40px)] text-sm font-mono border border-[#1c2c52] shadow-inner shadow-blue-900/10">
+              <div className="bg-[#0a142a] p-4 rounded-lg overflow-y-auto h-full max-h-[calc(100%)] text-sm font-mono border border-[#1c2c52] shadow-inner shadow-blue-900/10">
                 {output ? (
                   <div className={output.includes("Error") ? "text-red-400 p-3 border border-red-900/50 bg-red-900/20 rounded-md" : output.includes("❌") ? "text-red-400 p-3 border border-red-900/50 bg-red-900/20 rounded-md" : "text-green-400 p-3 border border-green-900/50 bg-green-900/20 rounded-md"}>
                     {output.includes("Error") && "🚫 "}
@@ -385,7 +392,7 @@ export default function ClientChallenge({
                 )}
               </div>
             ) : (
-              <div className="bg-[#0a142a] p-4 rounded-lg overflow-y-auto h-full max-h-[calc(100%-40px)] border border-[#1c2c52] shadow-inner shadow-purple-900/10">
+              <div className="bg-[#0a142a] p-4 rounded-lg overflow-y-auto h-full max-h-[calc(100%)] border border-[#1c2c52] shadow-inner shadow-purple-900/10">
                 {allLogs.length > 0 ? (
                   <pre className="text-sm text-gray-300 font-mono whitespace-pre-wrap">
                     {allLogs.map((log, index) => (

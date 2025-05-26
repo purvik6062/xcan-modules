@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ConnectKitButton } from "connectkit";
 
@@ -21,10 +22,14 @@ export default function Navigation() {
             href="/"
             className="text-white text-2xl font-bold flex items-center"
           >
-            <span>Arbitrum</span>
-            <span className="ml-1 bg-white text-blue-600 px-2 py-0.5 rounded text-sm font-bold">
-              Quest
-            </span>
+            <Image 
+              src="/ArbQuest.svg" 
+              alt="Arbitrum Quest Logo" 
+              width={150} 
+              height={40} 
+              className="h-auto" 
+              priority
+            />
           </Link>
 
           {/* Mobile menu button */}

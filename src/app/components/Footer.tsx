@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import "../styles/gamify.css";
 
 export default function Footer() {
@@ -8,12 +9,15 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <div className="flex items-center justify-center md:justify-start mb-2">
-              <span className="text-white text-xl font-bold">Arbitrum</span>
-              <span className="ml-1 bg-[#152241] text-blue-400 px-2 py-0.5 rounded text-xs font-bold">
-                Quest
-              </span>
+              <Image 
+                src="/ArbQuest.svg" 
+                alt="Arbitrum Quest Logo" 
+                width={120} 
+                height={32} 
+                className="h-auto" 
+              />
             </div>
-            <p className="text-center md:text-left text-gray-400 text-sm">
+            <p className="text-center md:text-left text-gray-400 text-sm ml-[9.5px]">
               © {new Date().getFullYear()} CodeQuest. All rights reserved.
             </p>
           </div>

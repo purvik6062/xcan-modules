@@ -184,7 +184,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, challenge 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white py-2 sm:py-3 px-4 sm:px-6 md:px-8 rounded-lg text-xs sm:text-sm md:text-base font-medium shadow-lg shadow-blue-900/30 flex items-center justify-center mx-auto cursor-pointer"
+                  className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white py-2 sm:py-3 px-4 sm:px-6 md:px-8 rounded-lg text-xs sm:text-sm md:text-base font-medium shadow-lg shadow-blue-900/30 flex items-center justify-center mx-auto cursor-pointer"
                   onClick={onClose}
                 >
                   <FiZap className="mr-1 sm:mr-2 text-sm sm:text-base cursor-pointer" />

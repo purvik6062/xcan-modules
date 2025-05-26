@@ -7,9 +7,9 @@ import { ChallengePreview } from "../types/challenge";
 import "../styles/gamify.css";
 
 // export const metadata = {
-//   title: "Arbitrum Precompile Challenges - CodeQuest",
+//   title: "Stylus Code Concepts Challenges - CodeQuest",
 //   description:
-//     "Learn how to use Arbitrum precompiles through interactive coding challenges",
+//     "Learn how to use Stylus Code Conceptss through interactive coding challenges",
 // };
 
 export default function ChallengesPage() {
@@ -55,8 +55,8 @@ export default function ChallengesPage() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
           <div>
             <h1 className="text-3xl font-bold mb-2 text-white">
-              <span className="text-blue-400">Arbitrum</span>{" "}
-              Precompile Challenges
+              <span className="text-blue-400">Stylus</span>{" "}
+              Code Concepts
             </h1>
             <p className="text-gray-300">
               Learn how to interact with Arbitrum&apos;s precompiles through

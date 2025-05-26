@@ -138,7 +138,7 @@ export interface LearningModule {
 export const learningModules: LearningModule[] = [
   {
     id: "arbitrum-precompiles",
-    title: "Arbitrum Precompiles",
+    title: "Stylus Code Conceptss",
     description:
       "Master Arbitrum's powerful precompiles through interactive coding challenges",
     icon: CodeBracketIcon,
