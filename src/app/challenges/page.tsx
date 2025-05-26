@@ -49,10 +49,10 @@ export default function ChallengesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="container mx-auto px-4 py-8">
         {/* Header Section with improved styling */}
-        <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-[#0D1221] p-6 rounded-lg shadow-md border border-gray-700">
           <div>
             <h1 className="text-3xl font-bold mb-2 text-white">
               <span className="text-blue-400">Stylus</span>{" "}
@@ -97,7 +97,7 @@ export default function ChallengesPage() {
                 : "hidden md:block"
             } md:col-span-1`}
           >
-            <div className="h-full overflow-y-auto bg-gray-800 p-5 rounded-lg shadow-lg border border-gray-700 md:border-0 md:shadow-none max-w-xs w-full md:w-auto">
+            <div className="h-full overflow-y-auto bg-[#0D1221] p-5 rounded-lg shadow-lg border border-gray-700 md:border-0 md:shadow-none max-w-xs w-full md:w-auto">
               <div className="flex justify-between items-center mb-4 md:hidden">
                 <h3 className="text-lg font-bold text-white">
                   Filters
@@ -149,7 +149,7 @@ export default function ChallengesPage() {
                 ))}
               </div>
             ) : (
-              <div className=" bg-gray-800 rounded-lg p-10 text-center shadow-md border border-gray-700">
+              <div className=" bg-[#0D1221] rounded-lg p-10 text-center shadow-md border border-gray-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-16 w-16 mx-auto text-gray-500 mb-4"

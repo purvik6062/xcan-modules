@@ -20,51 +20,51 @@ const userData = {
   completedChallenges: [
     {
       id: 1,
-      title: "Hello World",
+      title: "L1 Fee Calculation",
       completedOn: "October 16, 2023",
       points: 10,
       level: "Beginner",
-      slug: "hello-world",
+      slug: "l1-fee-calculation",
     },
     {
       id: 2,
-      title: "String Manipulation",
+      title: "Block Number Check",
       completedOn: "October 17, 2023",
       points: 15,
       level: "Beginner",
-      slug: "string-manipulation",
+      slug: "block-number-check",
     },
     {
       id: 3,
-      title: "Array Manipulation",
+      title: "Chain ID Verification",
       completedOn: "October 20, 2023",
-      points: 25,
-      level: "Intermediate",
-      slug: "array-manipulation",
+      points: 15,
+      level: "Beginner",
+      slug: "chain-id-verification",
     },
     {
       id: 4,
-      title: "Object Operations",
+      title: "Gas Price Components",
       completedOn: "October 25, 2023",
-      points: 30,
+      points: 25,
       level: "Intermediate",
-      slug: "object-operations",
+      slug: "gas-price-components",
     },
   ],
   inProgressChallenges: [
     {
       id: 5,
-      title: "Algorithmic Thinking",
+      title: "ArbOS Version",
       progress: 60,
-      level: "Advanced",
-      slug: "algorithmic-thinking",
+      level: "Intermediate",
+      slug: "arbos-version",
     },
     {
-      id: 6,
-      title: "Asynchronous Operations",
+      id: 7,
+      title: "L2-to-L1 Message Sending",
       progress: 25,
-      level: "Advanced",
-      slug: "async-operations",
+      level: "Intermediate",
+      slug: "l2-to-l1-message",
     },
   ],
   achievements: [
@@ -113,7 +113,7 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile sidebar */}
         <div className="lg:col-span-1">
-          <div className=" bg-gray-800 rounded-lg shadow-md p-6">
+          <div className=" bg-[#0A142A] rounded-lg shadow-md p-6">
             <div className="flex flex-col items-center text-center">
               <img
                 src={userData.avatar}
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <button className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="mt-6 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
                 Edit Profile
               </button>
             </div>
@@ -179,10 +179,10 @@ export default function ProfilePage() {
             <ul className="flex flex-wrap -mb-px">
               <li className="mr-2">
                 <button
-                  className={`inline-block py-4 px-4 border-b-2 font-medium text-sm ${
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
                     activeTab === "overview"
-                      ? "  text-blue-500 border-blue-500"
-                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent"
+                      ? "  text-blue-300 border-blue-300"
+                      : "text-gray-500 hover:text-gray-400 hover:border-gray-300 border-transparent"
                   }`}
                   onClick={() => setActiveTab("overview")}
                 >
@@ -191,10 +191,10 @@ export default function ProfilePage() {
               </li>
               <li className="mr-2">
                 <button
-                  className={`inline-block py-4 px-4 border-b-2 font-medium text-sm ${
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
                     activeTab === "challenges"
-                      ? "  text-blue-500 border-blue-500"
-                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent"
+                      ? "  text-blue-300 border-blue-300"
+                      : "text-gray-500 hover:text-gray-400 hover:border-gray-300 border-transparent"
                   }`}
                   onClick={() => setActiveTab("challenges")}
                 >
@@ -203,10 +203,10 @@ export default function ProfilePage() {
               </li>
               <li>
                 <button
-                  className={`inline-block py-4 px-4 border-b-2 font-medium text-sm ${
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
                     activeTab === "achievements"
-                      ? " text-blue-500 border-blue-500"
-                      : "text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent"
+                      ? " text-blue-300 border-blue-300"
+                      : "text-gray-500 hover:text-gray-400 hover:border-gray-300 border-transparent"
                   }`}
                   onClick={() => setActiveTab("achievements")}
                 >
@@ -222,24 +222,24 @@ export default function ProfilePage() {
             {activeTab === "overview" && (
               <div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <div className=" bg-gray-800 rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-600">
+                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
+                    <div className="text-3xl font-bold text-blue-300">
                       {totalPoints}
                     </div>
                     <div className=" text-gray-300">
                       Total Points
                     </div>
                   </div>
-                  <div className=" bg-gray-800 rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-600">
+                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
+                    <div className="text-3xl font-bold text-blue-300">
                       {completedCount}
                     </div>
                     <div className=" text-gray-300">
                       Completed Challenges
                     </div>
                   </div>
-                  <div className=" bg-gray-800 rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-600">
+                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
+                    <div className="text-3xl font-bold text-blue-300">
                       {userData.achievements.length}
                     </div>
                     <div className=" text-gray-300">
@@ -248,7 +248,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className=" bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+                <div className=" bg-[#0A142A] rounded-lg shadow-md p-6 mb-6">
                   <h2 className="text-lg font-bold mb-4">Challenge Progress</h2>
                   <div className="flex h-10 mb-4">
                     {beginnerCount > 0 && (
@@ -297,7 +297,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className=" bg-gray-800 rounded-lg shadow-md p-6">
+                <div className=" bg-[#0A142A] rounded-lg shadow-md p-6">
                   <h2 className="text-lg font-bold mb-4">Recent Activity</h2>
                   <div className="space-y-4">
                     {userData.completedChallenges
@@ -325,7 +325,7 @@ export default function ProfilePage() {
                               Completed{" "}
                               <Link
                                 href={`/challenges/${challenge.slug}`}
-                                className="text-blue-600 hover:underline"
+                                className="text-blue-300 hover:underline"
                               >
                                 {challenge.title}
                               </Link>
@@ -368,12 +368,12 @@ export default function ProfilePage() {
                   {userData.completedChallenges.map((challenge) => (
                     <div
                       key={challenge.id}
-                      className=" bg-gray-800 rounded-lg shadow-md p-4 flex justify-between items-center"
+                      className=" bg-[#0A142A] rounded-lg shadow-md p-4 flex justify-between items-center"
                     >
                       <div>
                         <Link
                           href={`/challenges/${challenge.slug}`}
-                          className="font-medium hover:text-blue-600 hover:underline"
+                          className="font-medium hover:text-blue-300 hover:underline"
                         >
                           {challenge.title}
                         </Link>
@@ -409,12 +409,12 @@ export default function ProfilePage() {
                   {userData.inProgressChallenges.map((challenge) => (
                     <div
                       key={challenge.id}
-                      className=" bg-gray-800 rounded-lg shadow-md p-4"
+                      className=" bg-[#0A142A] rounded-lg shadow-md p-4"
                     >
                       <div className="flex justify-between mb-2">
                         <Link
                           href={`/challenges/${challenge.slug}`}
-                          className="font-medium hover:text-blue-600 hover:underline"
+                          className="font-medium hover:text-blue-300 hover:underline"
                         >
                           {challenge.title}
                         </Link>
@@ -430,9 +430,9 @@ export default function ProfilePage() {
                           {challenge.level}
                         </span>
                       </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2.5">
+                      <div className="w-full bg-[#0A142A] rounded-full h-2.5">
                         <div
-                          className="bg-blue-600 h-2.5 rounded-full"
+                          className="bg-blue-300 h-2.5 rounded-full"
                           style={{ width: `${challenge.progress}%` }}
                         ></div>
                       </div>
@@ -453,7 +453,7 @@ export default function ProfilePage() {
                   {userData.achievements.map((achievement) => (
                     <div
                       key={achievement.id}
-                      className=" bg-gray-800 rounded-lg shadow-md p-6 flex items-center"
+                      className=" bg-[#0A142A] rounded-lg shadow-md p-6 flex items-center"
                     >
                       <div className="flex-shrink-0  bg-yellow-900 p-3 rounded-full text-center">
                         <span className="text-2xl">{achievement.icon}</span>
@@ -471,8 +471,8 @@ export default function ProfilePage() {
                   ))}
 
                   {/* Locked achievements */}
-                  <div className="bg-gray-800 rounded-lg shadow-md p-6 flex items-center opacity-50">
-                    <div className="flex-shrink-0  bg-gray-700 p-3 rounded-full text-center">
+                  <div className="bg-[#0A142A] rounded-lg shadow-md p-6 flex items-center opacity-50">
+                    <div className="flex-shrink-0  bg-[#0A142A] p-3 rounded-full text-center">
                       <span className="text-2xl">🏆</span>
                     </div>
                     <div className="ml-4">
@@ -484,8 +484,8 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  <div className=" bg-gray-800 rounded-lg shadow-md p-6 flex items-center opacity-50">
-                    <div className="flex-shrink-0 bg-gray-700 p-3 rounded-full text-center">
+                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-6 flex items-center opacity-50">
+                    <div className="flex-shrink-0 bg-[#0A142A] p-3 rounded-full text-center">
                       <span className="text-2xl">⚡</span>
                     </div>
                     <div className="ml-4">

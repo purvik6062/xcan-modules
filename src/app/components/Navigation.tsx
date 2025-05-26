@@ -73,6 +73,16 @@ export default function Navigation() {
                 </li>
                 <li>
                   <Link
+                    href="https://stylus-university.vercel.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-blue-200 transition-colors"
+                  >
+                    University
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/challenges"
                     className={`text-white hover:text-blue-200 transition-colors ${
                       isActive("/challenges") ? "font-semibold" : ""
@@ -130,6 +140,17 @@ export default function Navigation() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Modules
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="https://stylus-university.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  University
                 </Link>
               </li>
               <li>

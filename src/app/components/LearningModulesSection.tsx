@@ -8,7 +8,7 @@ export default function LearningModulesSection() {
         <h2 className="text-4xl font-bold mb-4">Learning Modules</h2>
         <p className="text-xl  text-gray-300 max-w-2xl mx-auto">
           Comprehensive learning paths designed to take you from beginner to
-          expert in Arbitrum development
+          expert in Stylus Code Concepts
         </p>
       </div>
 
@@ -28,7 +28,7 @@ export default function LearningModulesSection() {
                 className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-10 group-hover:opacity-20 transition-opacity`}
               ></div>
 
-              <div className="relative bg-gray-800 border  border-gray-700 rounded-xl p-6 h-full">
+              <div className="relative bg-[#12182b] border  border-gray-700 rounded-xl p-6 h-full">
                 {/* Status Badge */}
                 {module.status === "coming-soon" && (
                   <div className="absolute top-4 right-4 flex items-center  bg-yellow-900  text-yellow-200 px-2 py-1 rounded-full text-xs font-medium">
@@ -98,7 +98,7 @@ export default function LearningModulesSection() {
                 ) : (
                   <button
                     disabled
-                    className="w-full text-center  bg-gray-700  text-gray-400 font-semibold py-3 px-4 rounded-lg cursor-not-allowed"
+                    className="w-full text-center  bg-[#1f3064]  text-gray-400 font-semibold py-3 px-4 rounded-lg cursor-not-allowed"
                   >
                     Coming Soon
                   </button>

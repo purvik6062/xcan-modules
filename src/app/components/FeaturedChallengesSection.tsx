@@ -21,10 +21,10 @@ export default function FeaturedChallengesSection() {
             <Link
               key={challenge.slug}
               href={`/challenges/${challenge.slug}`}
-              className="block bg-gray-800 border border-gray-700 rounded-lg p-6 hover:shadow-lg transition-all duration-300 group h-full flex flex-col"
-            >
+                className="bg-[#0A142A] border border-gray-700 rounded-lg p-6 hover:shadow-lg transition-all duration-300 group h-full flex flex-col"
+              >
               <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-bold group-hover:text-blue-600 transition-colors">
+                <h3 className="text-lg font-bold group-hover:text-blue-200 transition-colors">
                   {challenge.title}
                 </h3>
                 <span
@@ -52,7 +52,7 @@ export default function FeaturedChallengesSection() {
                 <div className="text-xs bg-blue-900 text-blue-200 rounded-full px-3 py-1">
                   {challenge.precompile}
                 </div>
-                <div className="text-blue-600 text-sm font-medium group-hover:text-blue-700">
+                <div className="text-blue-400 text-sm font-medium group-hover:text-blue-300">
                   Try Challenge →
                 </div>
               </div>

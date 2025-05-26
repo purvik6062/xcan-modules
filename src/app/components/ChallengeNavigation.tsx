@@ -9,8 +9,8 @@ export default function ChallengeNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-gradient-to-r from-[#010229] to-[#01056b] py-4">
-      <div className="container mx-auto px-4">
+    <header className="bg-gradient-to-r from-[#010229] to-[#191F52] py-1">
+      <div className="px-4">
         <div className="flex justify-between items-center">
           <Link
             href="/"
@@ -19,7 +19,7 @@ export default function ChallengeNavigation() {
             <Image 
               src="/ArbQuest.svg" 
               alt="Arbitrum Quest Logo" 
-              width={150} 
+              width={170} 
               height={40} 
               className="h-auto" 
               priority

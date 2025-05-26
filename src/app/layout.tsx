@@ -1,9 +1,9 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
 import { Providers } from "./Providers";
+import ConditionalLayout from "./components/ConditionalLayout";
 
 // Use next/font/google if the font is available on Google Fonts
 import { Tektur } from "next/font/google";
@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ArbitrumQuest - Master Arbitrum Development",
+  title: "ArbitrumQuest - Master Stylus Code Concepts",
   description:
-    "Comprehensive learning platform for Arbitrum development. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
+    "Comprehensive learning platform for Stylus Code Concepts. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
 };
 
 export default function RootLayout({
@@ -36,9 +36,7 @@ export default function RootLayout({
         className={`${tektur.variable} ${geistMono.variable} flex flex-col min-h-screen antialiased`}
       >
         <Providers>
-          <Navigation />
-          <div className="flex-1">{children}</div>
-          <Footer />
+          <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>
       </body>
     </html>

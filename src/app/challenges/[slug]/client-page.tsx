@@ -198,7 +198,7 @@ export default function ClientChallenge({
                       href={`/challenges/${key}`}
                       className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${slug === key ? 'bg-gradient-to-r from-blue-900 to-indigo-900 text-white shadow-lg shadow-blue-900/20' : 'hover:bg-blue-800 text-gray-300'}`}
                     >
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${slug === key ? 'bg-blue-700' : 'bg-[#1d315e]'}`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${slug === key ? 'bg-blue-[#010335]' : 'bg-[#1d315e]'}`}>
                         {index + 1}
                       </div>
                       <div>
@@ -243,7 +243,7 @@ export default function ClientChallenge({
                 <FiCpu className="mr-1.5" />
                 {challenge.category}
               </span>
-              <span className="bg-blue-900/50 border border-blue-700 rounded-full px-3 py-1.5 text-xs flex items-center text-blue-200">
+              <span className="bg-blue-900/50 border border-blue-[#010335] rounded-full px-3 py-1.5 text-xs flex items-center text-blue-200">
                 <FiCode className="mr-1.5" />
                 {challenge.precompileUsed}
               </span>
@@ -255,7 +255,7 @@ export default function ClientChallenge({
           </div>
           <div className="bg-gradient-to-r from-[#0a142a] to-[#0f1d3a] px-6 py-4 border-b border-[#152241]">
             <div className="flex space-x-3">
-              <button className={`px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "instructions" ? "bg-blue-700/30 border border-blue-700/50 text-blue-300 shadow-md shadow-blue-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("instructions")}>
+              <button className={`px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "instructions" ? "bg-blue-[#010335]/30 border border-blue-[#010335]/50 text-blue-300 shadow-md shadow-blue-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("instructions")}>
                 <FiBookOpen className="mr-2 cursor-pointer" />
                 Instructions
               </button>
@@ -269,7 +269,7 @@ export default function ClientChallenge({
               </button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto p-[1.5rem] bg-[#0a142a]">
+          <div className="flex-1 overflow-y-auto h-[100vh] p-[1.5rem] bg-[#0a142a]">
           <div className="mb-6">
             <p className="text-gray-300 mb-4 leading-relaxed">{challenge.description}</p>
           </div>
@@ -321,7 +321,7 @@ export default function ClientChallenge({
           <div className="bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] border-t border-[#1c2c52] p-4" style={{ height: "200px" }}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex space-x-1">
-                <button className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${bottomPanelTab === "tests" ? "bg-blue-800/30 text-blue-300 border border-blue-700/50" : "text-gray-400 hover:text-gray-300 border border-transparent hover:bg-[#152241]"}`} onClick={() => setBottomPanelTab("tests")}>
+                <button className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${bottomPanelTab === "tests" ? "bg-blue-800/30 text-blue-300 border border-blue-[#010335]/50" : "text-gray-400 hover:text-gray-300 border border-transparent hover:bg-[#152241]"}`} onClick={() => setBottomPanelTab("tests")}>
                   <FiPlayCircle className="mr-2 cursor-pointer" />
                   Test Results
                 </button>
@@ -346,7 +346,7 @@ export default function ClientChallenge({
                   <FiChevronRight className="ml-2 group-hover:animate-pulse" />
                 </Link>
               ) : (<div></div>)}
-              <button className={`bg-gradient-to-r cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center ${isLoading ? 'from-blue-700 to-indigo-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center py-2 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={runTests} disabled={isLoading}>
+              <button className={`bg-gradient-to-r cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center ${isLoading ? 'from-blue-[#010335] to-indigo-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center py-2 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={runTests} disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

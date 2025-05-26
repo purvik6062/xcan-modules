@@ -114,11 +114,11 @@ export default function LeaderboardPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Leaderboard</h1>
 
-      <div className="bg-gray-800 rounded-lg shadow-md overflow-hidden">
+      <div className="bg-[#0A142A] rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-700 text-left">
+              <tr className="bg-[#0A142A] text-left">
                 <th className="px-6 py-3 text-gray-300 font-semibold">
                   Rank
                 </th>
@@ -203,7 +203,7 @@ export default function LeaderboardPage() {
 
       <div className="mt-10">
         <h2 className="text-2xl font-bold mb-4">How Points are Calculated</h2>
-        <div className="bg-gray-800 rounded-lg shadow-md p-6">
+        <div className="bg-[#0A142A] rounded-lg shadow-md p-6">
           <p className="mb-4">
             Points are awarded based on the difficulty of challenges completed
             and the efficiency of your solutions.

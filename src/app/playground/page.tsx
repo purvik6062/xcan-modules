@@ -222,14 +222,14 @@ export default function Playground() {
       </div>
 
       <div className="border border-gray-700 rounded-lg overflow-hidden">
-        <div className="bg-gray-800 px-4 py-3 border-b border-gray-700">
+        <div className="bg-[#0A142A] px-4 py-3 border-b border-gray-700">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <h3 className="font-semibold">Code Editor</h3>
               <select
                 value={selectedLanguage}
                 onChange={handleLanguageChange}
-                className="ml-2 px-2 py-1 text-sm rounded bg-gray-700 border border-gray-600"
+                className="ml-2 px-2 py-1 text-sm rounded bg-[#0A142A] border border-gray-600"
               >
                 <option value="javascript">JavaScript</option>
                 <option value="python">Python</option>
@@ -241,7 +241,7 @@ export default function Playground() {
             </div>
             <div className="flex space-x-2">
               <button
-                className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded text-sm"
+                className="bg-[#0A142A] hover:bg-[#0A142A] px-3 py-1 rounded text-sm"
                 onClick={handleReset}
               >
                 Reset
@@ -305,7 +305,7 @@ export default function Playground() {
           />
         </div>
 
-        <div className=" bg-gray-800 p-3 border-t border-gray-700 h-[200px] overflow-auto">
+        <div className=" bg-[#0A142A] p-3 border-t border-gray-700 h-[200px] overflow-auto">
           <div className="font-mono text-sm whitespace-pre-wrap">
             {output ? (
               <div

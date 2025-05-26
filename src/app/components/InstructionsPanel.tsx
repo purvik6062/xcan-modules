@@ -188,7 +188,7 @@ export default function InstructionsPanel({
           return (
             <div key={`heading-${index}`} className="mb-4">
               {section.level === 1 ? (
-                <h1 className="text-xl font-semibold text-gray-100 mb-2 flex items-center">
+                <h1 className="text-lg font-semibold text-gray-300 mb-2 flex items-center">
                   <FiInfo className="mr-2 text-blue-400" />
                   <span
                     dangerouslySetInnerHTML={{
@@ -197,7 +197,7 @@ export default function InstructionsPanel({
                   />
                 </h1>
               ) : (
-                <h3 className="text-xl font-semibold text-blue-300 mb-3 flex items-center">
+                <h3 className="text-lg font-semibold text-blue-300 mb-3 flex items-center">
                   <GoLightBulb className="mr-2 text-yellow-400" />
                   <span
                     dangerouslySetInnerHTML={{
@@ -225,7 +225,7 @@ export default function InstructionsPanel({
                     key={`num-item-${itemIndex}`}
                     className="flex items-center bg-[#0f1d3a]/50 p-3 rounded-lg border border-[#1d315e]/50"
                   >
-                    <div className="bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                       <span className="text-sm font-semibold">
                         {item.number}
                       </span>
@@ -320,7 +320,7 @@ export default function InstructionsPanel({
       })}
 
       <div className="mt-6 pt-4 border-t border-[#1d315e]">
-        <div className="flex items-center text-blue-400 font-medium">
+        <div className="flex items-center text-blue-200 font-normal">
           <GoChecklist className="mr-2" />
           <span>Complete all the steps above to solve the challenge!</span>
         </div>

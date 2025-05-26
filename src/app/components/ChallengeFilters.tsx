@@ -74,7 +74,7 @@ export default function ChallengeFilters({
   };
 
   return (
-    <div className="sticky top-6 bg-gray-800 rounded-lg shadow p-6">
+    <div className="sticky top-6 bg-[#12182b] rounded-lg shadow p-6">
       <h2 className="text-xl font-bold mb-4">Filters</h2>
 
       <div className="mb-6">

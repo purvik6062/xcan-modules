@@ -40,7 +40,7 @@ export default function TestCase({ test, result, index }: TestCaseProps) {
     <div className="bg-[#0f1d3a]/50 border border-[#1d315e]/50 rounded-lg p-4 text-gray-300">
       {/* Test case header with number */}
       <div className="flex items-start mb-3">
-        <div className="bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+        <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
           <span className="text-sm font-semibold">{index + 1}</span>
         </div>
         <div className="flex-1">

@@ -5,7 +5,7 @@ export default function HeroSection() {
     <section className="bg-gradient-to-br from-[#010229] via-[#01056b] to-[#1e40af] text-white py-20">
       <div className="container mx-auto px-4 text-center">
         <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-          Master Arbitrum Development
+          Master Stylus Code Concepts
         </h1>
         <p className="text-xl mb-8 text-blue-100 max-w-3xl mx-auto">
           Learn, build, and master Arbitrum through comprehensive learning
@@ -24,6 +24,14 @@ export default function HeroSection() {
             className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 px-8 rounded-lg transition-colors"
           >
             Explore Modules
+          </Link>
+          <Link
+            href="https://stylus-university.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-orange-500 text-white hover:bg-pink-600 font-bold py-3 px-8 rounded-lg transition-colors"
+          >
+            Explore University
           </Link>
         </div>
       </div>
