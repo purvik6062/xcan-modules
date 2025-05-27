@@ -18,7 +18,7 @@ export default function HintsPanel({ hints }: HintsPanelProps) {
 
   if (!hints || hints.length === 0) {
     return (
-      <div className="bg-gray-800 rounded-md p-4">
+      <div className="bg-[#141d36] rounded-md p-4">
         <p className="text-gray-400 italic">
           No hints available for this challenge.
         </p>
@@ -38,9 +38,9 @@ export default function HintsPanel({ hints }: HintsPanelProps) {
       {hints.map((hint, index) => (
         <div
           key={index}
-          className="bg-gray-800 rounded-md overflow-hidden border border-gray-700"
+          className="bg-[#141d36] rounded-md overflow-hidden border border-gray-700"
         >
-          <div className="p-3 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+          <div className="p-3 bg-[#141d36] border-b border-gray-700 flex justify-between items-center">
             <h3 className="text-sm font-medium text-gray-300">
               Hint {index + 1} {revealedHints[index] ? "" : "(Hidden)"}
             </h3>
@@ -62,7 +62,7 @@ export default function HintsPanel({ hints }: HintsPanelProps) {
         </div>
       ))}
 
-      <div className="mt-6 p-4 bg-gray-800 rounded-md border-l-4 border-yellow-500">
+      <div className="mt-6 p-4 bg-[#141d36] rounded-md border-l-4 border-yellow-500">
         <h3 className="text-sm font-medium text-gray-200 mb-1">
           Challenge yourself!
         </h3>

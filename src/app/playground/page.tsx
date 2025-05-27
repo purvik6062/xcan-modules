@@ -229,25 +229,25 @@ export default function Playground() {
               <select
                 value={selectedLanguage}
                 onChange={handleLanguageChange}
-                className="ml-2 px-2 py-1 text-sm rounded bg-[#0A142A] border border-gray-600"
+                className="ml-2 cursor-pointer px-2 py-1 text-sm rounded bg-[#0A142A] border border-gray-600"
               >
-                <option value="javascript">JavaScript</option>
-                <option value="python">Python</option>
-                <option value="c_cpp">C++</option>
-                <option value="rust">Rust</option>
-                <option value="c">C</option>
-                <option value="csharp">C#</option>
+                <option value="javascript " className="cursor-pointer">JavaScript</option>
+                <option value="python" className="cursor-pointer">Python</option>
+                <option value="c_cpp" className="cursor-pointer">C++</option>
+                <option value="rust" className="cursor-pointer">Rust</option>
+                <option value="c" className="cursor-pointer">C</option>
+                <option value="csharp" className="cursor-pointer">C#</option>
               </select>
             </div>
             <div className="flex space-x-2">
               <button
-                className="bg-[#0A142A] hover:bg-[#0A142A] px-3 py-1 rounded text-sm"
+                className="bg-[#0A142A] cursor-pointer hover:bg-[#0A142A] px-3 py-1 rounded text-sm"
                 onClick={handleReset}
               >
                 Reset
               </button>
               <button
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
+                className="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-1 rounded"
                 onClick={handleRunCode}
                 disabled={isRunning}
               >

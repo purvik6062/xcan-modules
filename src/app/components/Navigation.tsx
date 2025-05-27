@@ -73,7 +73,7 @@ export default function Navigation() {
                 </li>
                 <li>
                   <Link
-                    href="https://stylus-university.vercel.app/"
+                    href="https://arbitrum-university.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-blue-200 transition-colors"
@@ -144,7 +144,7 @@ export default function Navigation() {
               </li>
               <li>
                 <Link
-                  href="https://stylus-university.vercel.app/"
+                  href="https://arbitrum-university.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors"

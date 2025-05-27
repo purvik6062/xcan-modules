@@ -18,18 +18,18 @@ export const featuredChallenges: FeaturedChallenge[] = [
     precompile: "ArbGasInfo",
   },
   {
+    title: "Gas Price Components",
+    level: "Intermediate",
+    description: "Calculate gas price components for a transaction",
+    slug: "gas-price-components",
+    precompile: "ArbGasInfo",
+  },
+  {
     title: "Block Number Check",
     level: "Beginner",
     description: "Retrieve the current Arbitrum block number",
     slug: "block-number-check",
     precompile: "ArbSys",
-  },
-  {
-    title: "Retryable Ticket Creation",
-    level: "Intermediate",
-    description: "Create a retryable ticket to execute a transaction",
-    slug: "retryable-ticket-creation",
-    precompile: "ArbRetryableTx",
   },
 ];
 

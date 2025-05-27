@@ -33,30 +33,23 @@ function serializeBigInt(obj: any): any {
 
 // Secure sandbox for executing code
 async function executeInSandbox(code: string, testCases: any[], slug: string) {
-  // In production, this would use a secure serverless function or isolated container
-  // For now, we're implementing a more robust but still simulated testing environment
   console.log("slug::", slug);
   try {
-    // Create a mock provider that mimics Arbitrum Sepolia responses
     const mockProvider = createMockProvider(slug);
 
-    // Find the actual function call at the end of the code
-    // This regex extracts the name of the function being executed at the end of the user's code
-    // Clean the code - remove imports and exports to avoid errors
+    // Clean the code
     const cleanedCode = code
       .replace(/import\s+{\s*ethers\s*}\s+from\s+['"]ethers['"];?/g, "")
       .replace(/export\s+default\s+[^;]+;?/g, "")
       .trim();
 
     const functionCallMatch = cleanedCode.match(/([a-zA-Z0-9_]+)\(\);?\s*$/);
-
     if (!functionCallMatch) {
       return testCases.map((testCase) => ({
         description: testCase.description,
         input: JSON.stringify(testCase.input),
         expected: JSON.stringify(serializeBigInt(testCase.expectedOutput)),
-        actual:
-          "Error: No function call found in your code. Make sure you call your function at the end.",
+        actual: "Error: No function call found in your code. Make sure you call your function at the end.",
         passed: false,
         duration: 0,
         gasUsed: 0,
@@ -64,113 +57,58 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
       }));
     }
 
-    // Extract the actual called function name from the code
     const functionName = functionCallMatch[1];
     console.log(`Detected function call: ${functionName}`);
 
-    // Dynamically evaluate the code in a controlled environment
-    // This is simplified - a real implementation would use VM2 or a container
-    const AsyncFunction = Object.getPrototypeOf(
-      async function () {}
-    ).constructor;
+    // Define the user's function once
+    const defineFunction = new Function(
+      "ethers",
+      "provider",
+      `
+        ${cleanedCode}
+        if (typeof ${functionName} !== 'function') {
+          throw new Error('Function ${functionName} is not defined in your code');
+        }
+        return ${functionName};
+      `
+    );
 
-    // Execute against each test case
+    const userFunc = defineFunction(ethers, mockProvider);
+
+    // Execute the function for each test case with log capture
     const results = await Promise.all(
       testCases.map(async (testCase) => {
-        // Create a separate logs array for each test case
         const logs: string[] = [];
 
-        // Create a custom console object to capture logs
-        const customConsole = {
-          log: (...args: any[]) => {
-            const logMessage = args
-              .map((arg) => {
-                try {
-                  if (typeof arg === "bigint") {
-                    return arg.toString();
-                  } else if (typeof arg === "object") {
-                    return JSON.stringify(serializeBigInt(arg));
-                  } else {
-                    return String(arg);
-                  }
-                } catch (error) {
-                  return "[Unable to serialize]";
+        // Custom log function
+        const customLog = (...args: any[]) => {
+          const logMessage = args
+            .map((arg) => {
+              try {
+                if (typeof arg === "bigint") {
+                  return arg.toString();
+                } else if (typeof arg === "object") {
+                  return JSON.stringify(serializeBigInt(arg));
+                } else {
+                  return String(arg);
                 }
-              })
-              .join(" ");
-            logs.push(logMessage);
-            console.log(...args); // Also log to server console
-          },
-          error: (...args: any[]) => {
-            const logMessage = `ERROR: ${args
-              .map((arg) => {
-                try {
-                  if (typeof arg === "bigint") {
-                    return arg.toString();
-                  } else if (typeof arg === "object") {
-                    return JSON.stringify(serializeBigInt(arg));
-                  } else {
-                    return String(arg);
-                  }
-                } catch (error) {
-                  return "[Unable to serialize]";
-                }
-              })
-              .join(" ")}`;
-            logs.push(logMessage);
-            console.error(...args); // Also log to server console
-          },
-          warn: (...args: any[]) => {
-            const logMessage = `WARN: ${args
-              .map((arg) => {
-                try {
-                  if (typeof arg === "bigint") {
-                    return arg.toString();
-                  } else if (typeof arg === "object") {
-                    return JSON.stringify(serializeBigInt(arg));
-                  } else {
-                    return String(arg);
-                  }
-                } catch (error) {
-                  return "[Unable to serialize]";
-                }
-              })
-              .join(" ")}`;
-            logs.push(logMessage);
-            console.warn(...args); // Also log to server console
-          },
+              } catch (error) {
+                return "[Unable to serialize]";
+              }
+            })
+            .join(" ");
+          logs.push(logMessage);
         };
 
-        // Create the function to evaluate for this test case
-        const userFunction = new AsyncFunction(
-          "ethers",
-          "provider",
-          "testInput",
-          "console",
-          `
-            ${cleanedCode}
-            
-            // Define the function we want to test if it exists
-            if (typeof ${functionName} !== 'function') {
-              throw new Error('Function ${functionName} is not defined in your code');
-            }
-            
-            // Return the result of calling the function with test input
-            return await ${functionName}(...testInput);
-          `
-        );
+        // Override global console.log
+        const originalLog = console.log;
+        console.log = customLog;
 
         try {
           const start = performance.now();
-          const result = await userFunction(
-            ethers,
-            mockProvider,
-            testCase.input || [],
-            customConsole
-          );
+          const result = await userFunc(...(testCase.input || []));
           const duration = performance.now() - start;
 
-          // Verify the result matches expected output
           const passed = verifyResult(result, testCase.expectedOutput);
 
           return {
@@ -181,7 +119,7 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
             passed,
             duration: Math.round(duration),
             gasUsed: estimateGasUsed(code, slug),
-            logs: logs, // Include only this test case's logs
+            logs,
           };
         } catch (error: any) {
           console.error("Test case execution error:", error);
@@ -193,8 +131,11 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
             passed: false,
             duration: 0,
             gasUsed: 0,
-            logs: logs, // Include only this test case's logs
+            logs,
           };
+        } finally {
+          // Restore original console.log
+          console.log = originalLog;
         }
       })
     );

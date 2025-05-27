@@ -144,7 +144,7 @@ export const learningModules: LearningModule[] = [
     icon: CodeBracketIcon,
     level: "Beginner to Advanced",
     duration: "2-4 weeks",
-    challenges: 7,
+    challenges: 6,
     status: "available",
     href: "/challenges",
     gradient: "from-blue-500 to-indigo-600",

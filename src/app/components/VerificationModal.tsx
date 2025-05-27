@@ -218,7 +218,7 @@ function StageItem({ number, label, isActive, isComplete }: StageItemProps) {
           {label}
         </span>
         {isActive && !isComplete && (
-          <span className="ml-3 text-xs text-gray-500">Processing...</span>
+          <span className="ml-3 text-xs text-gray-300">Processing...</span>
         )}
         {isComplete && (
           <span className="ml-3 text-xs text-green-500">Complete</span>

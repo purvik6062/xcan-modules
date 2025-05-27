@@ -15,18 +15,18 @@ export default function HeroSection() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/challenges"
-            className="bg-white text-blue-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg transition-colors"
+            className="bg-white text-blue-600 hover:bg-gray-800 hover:text-white font-bold py-3 px-8 rounded-lg transition-colors"
           >
             Start Learning
           </Link>
           <Link
             href="#modules"
-            className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 px-8 rounded-lg transition-colors"
+            className="border-2 border-white text-white hover:bg-green-500 hover:text-white font-bold py-3 px-8 rounded-lg transition-colors"
           >
             Explore Modules
           </Link>
           <Link
-            href="https://stylus-university.vercel.app/"
+            href="https://arbitrum-university.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-orange-500 text-white hover:bg-pink-600 font-bold py-3 px-8 rounded-lg transition-colors"

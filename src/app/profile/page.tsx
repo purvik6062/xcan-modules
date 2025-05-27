@@ -12,7 +12,7 @@ const userData = {
   email: "alex@example.com",
   avatar:
     "https://api.dicebear.com/7.x/bottts/svg?seed=codeExplorer&backgroundColor=c1e5c1",
-  joinDate: "October 15, 2023",
+  joinDate: "May 15, 2025",
   level: "Intermediate",
   points: 285,
   rank: 12,
@@ -21,7 +21,7 @@ const userData = {
     {
       id: 1,
       title: "L1 Fee Calculation",
-      completedOn: "October 16, 2023",
+      completedOn: "May 16, 2025",
       points: 10,
       level: "Beginner",
       slug: "l1-fee-calculation",
@@ -29,7 +29,7 @@ const userData = {
     {
       id: 2,
       title: "Block Number Check",
-      completedOn: "October 17, 2023",
+      completedOn: "May 17, 2025",
       points: 15,
       level: "Beginner",
       slug: "block-number-check",
@@ -37,7 +37,7 @@ const userData = {
     {
       id: 3,
       title: "Chain ID Verification",
-      completedOn: "October 20, 2023",
+      completedOn: "May 20, 2025",
       points: 15,
       level: "Beginner",
       slug: "chain-id-verification",
@@ -45,7 +45,7 @@ const userData = {
     {
       id: 4,
       title: "Gas Price Components",
-      completedOn: "October 25, 2023",
+      completedOn: "May 25, 2025",
       points: 25,
       level: "Intermediate",
       slug: "gas-price-components",
@@ -72,21 +72,21 @@ const userData = {
       id: 1,
       name: "First Steps",
       description: "Complete your first challenge",
-      date: "October 16, 2023",
+      date: "May 16, 2025",
       icon: "🏆",
     },
     {
       id: 2,
       name: "Quick Learner",
       description: "Complete 3 challenges in a week",
-      date: "October 20, 2023",
+      date: "May 20, 2025",
       icon: "🚀",
     },
     {
       id: 3,
       name: "Consistent Coder",
       description: "Achieve a 7-day streak",
-      date: "October 22, 2023",
+      date: "May 22, 2025",
       icon: "📅",
     },
   ],
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <button className="mt-6 w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
+              <button className="mt-6 w-full cursor-pointer bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
                 Edit Profile
               </button>
             </div>

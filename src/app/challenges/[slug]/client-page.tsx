@@ -105,6 +105,7 @@ export default function ClientChallenge({
               throw new Error(errorData.error || "Failed to execute tests");
             }
             const data = await response.json();
+            console.log("Raw testResults logs:", data.testResults.map((r: any) => r.logs)); // Debug log
             setVerificationStage(3);
             setTimeout(() => {
               setTestResults(data.testResults);
@@ -159,9 +160,8 @@ export default function ClientChallenge({
 
   const allLogs = testResults.reduce((logs, result) => {
     if (!result.logs || !result.logs.length) return logs;
-    const uniqueLogs = new Set([...logs]);
-    result.logs.forEach((log) => uniqueLogs.add(log));
-    return Array.from(uniqueLogs);
+    result.logs.forEach((log) => logs.push(log));
+    return logs;
   }, [] as string[]);
 
   return (
@@ -179,7 +179,7 @@ export default function ClientChallenge({
             <div className="p-5 border-b border-[#1d315e] flex items-center justify-between bg-[#0a142a]">
               <div className="flex items-center">
                 <GoTrophy className="text-yellow-400 text-2xl mr-2" />
-                <h3 className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-cyan-500 bg-clip-text text-transparent">Challenge Quest</h3>
+                <h3 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-[#86BEF9] bg-clip-text text-transparent">Challenge Quest</h3>
               </div>
               <button
                 onClick={toggleSidebar}
@@ -196,7 +196,7 @@ export default function ClientChallenge({
                   <li key={key}>
                     <Link
                       href={`/challenges/${key}`}
-                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${slug === key ? 'bg-gradient-to-r from-blue-900 to-indigo-900 text-white shadow-lg shadow-blue-900/20' : 'hover:bg-blue-800 text-gray-300'}`}
+                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${slug === key ? 'bg-gradient-to-r from-blue-900 to-blue-900 text-white shadow-lg shadow-blue-900/20' : 'hover:bg-blue-800 text-gray-300'}`}
                     >
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${slug === key ? 'bg-blue-[#010335]' : 'bg-[#1d315e]'}`}>
                         {index + 1}
@@ -216,30 +216,58 @@ export default function ClientChallenge({
       </AnimatePresence>
 
       <div className="flex flex-1 overflow-hidden">
+    {/* New Vertical Navigation Sidebar */}
+    <div className="w-16 bg-[#040e24] border-r border-[#1D315E] flex flex-col items-center py-4 space-y-4">
+      {/* Menu Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="w-8 h-8 bg-[#152241] hover:bg-[#1c2c52] rounded-lg flex items-center justify-center transition-all duration-200 group border border-[#2c3e69] hover:border-blue-500/50 cursor-pointer"
+        title="Toggle Challenge List"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-4 w-4 text-gray-400 group-hover:text-blue-400 transition-colors" 
+          viewBox="0 0 20 20" 
+          fill="currentColor"
+        >
+          <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {/* Back to Challenges Button */}
+      <Link 
+        href="/challenges"
+        className="w-8 h-8 bg-[#152241] hover:bg-[#1c2c52] rounded-lg flex items-center justify-center transition-all duration-200 group border border-[#2c3e69] hover:border-purple-500/50"
+        title="Back to Challenges"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className="h-4 w-4 text-gray-400 group-hover:text-purple-400 transition-colors" 
+          viewBox="0 0 20 20" 
+          fill="currentColor"
+        >
+          <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+        </svg>
+      </Link>
+
+      {/* Decorative separator */}
+      <div className="w-6 h-px bg-gradient-to-r from-transparent via-[#2c3e69] to-transparent"></div>
+    </div>
+
         {/* Left Sidebar - Instructions Panel */}
         <div className={`${isFullScreen ? "hidden" : "w-2/5 lg:w-2/5"} bg-[#101828] text-white border-r border-[#152241] flex flex-col overflow-hidden h-full`}>
           <div className="p-6 border-b border-[#152241] bg-[#0c111e]">
             <div className="flex items-center mb-4">
-              <button onClick={toggleSidebar} className="inline-flex items-center text-gray-400 hover:text-white transition-colors mr-2 cursor-pointer" aria-label="Show challenge list">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-                </svg>
-              </button>
-              <Link href="/challenges" className="inline-flex items-center text-gray-400 hover:text-white transition-colors mr-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
               <h1 className="text-2xl font-semibold text-gray-100">{challenge.title}</h1>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className={`text-xs text-indigo-200 px-3 py-1.5 rounded-full flex items-center ${getLevelBadgeStyle(challenge.level)}`}>
+              <span className={`text-xs text-blue-200 px-3 py-1.5 rounded-full flex items-center ${getLevelBadgeStyle(challenge.level)}`}>
                 {challenge.level === "Beginner" && <GoFlame className="mr-1.5" />}
                 {challenge.level === "Intermediate" && <GoPulse className="mr-1.5" />}
                 {challenge.level === "Advanced" && <GoBeaker className="mr-1.5" />}
                 {challenge.level}
               </span>
-              <span className="bg-indigo-900/50 border border-indigo-700 rounded-full px-3 py-1.5 text-xs flex items-center text-indigo-200">
+              <span className="bg-blue-900/50 border border-blue-700 rounded-full px-3 py-1.5 text-xs flex items-center text-blue-200">
                 <FiCpu className="mr-1.5" />
                 {challenge.category}
               </span>
@@ -294,7 +322,7 @@ export default function ClientChallenge({
         <div className={`${isFullScreen ? "w-full" : "w-3/5 lg:w-3/5"} flex flex-col bg-[#0c1425] overflow-hidden h-full`}>
           <div className="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
             <div className="absolute top-20 right-10 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl"></div>
-            <div className="absolute bottom-40 right-20 w-60 h-60 bg-indigo-600 rounded-full filter blur-3xl"></div>
+            <div className="absolute bottom-40 right-20 w-60 h-60 bg-blue-600 rounded-full filter blur-3xl"></div>
             <div className="absolute bottom-10 left-10 w-40 h-40 bg-purple-700 rounded-full filter blur-3xl"></div>
           </div>
           <div className="bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] px-4 flex items-center h-12 border-b border-[#1c2c52]">
@@ -341,12 +369,12 @@ export default function ClientChallenge({
                 </Link>
               ) : (<div></div>)}
               {nextChallenge ? (
-                <Link href={`/challenges/${nextChallenge}`} className="text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-600 hover:to-indigo-600 text-white border border-blue-500/30 shadow-md shadow-blue-900/20 group">
+                <Link href={`/challenges/${nextChallenge}`} className="text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer bg-gradient-to-r from-blue-700 to-blue-700 hover:from-blue-600 hover:to-blue-600 text-white border border-blue-500/30 shadow-md shadow-blue-900/20 group">
                   Next Quest
                   <FiChevronRight className="ml-2 group-hover:animate-pulse" />
                 </Link>
               ) : (<div></div>)}
-              <button className={`bg-gradient-to-r cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center ${isLoading ? 'from-blue-[#010335] to-indigo-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center py-2 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={runTests} disabled={isLoading}>
+              <button className={`bg-gradient-to-r cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center ${isLoading ? 'from-blue-[#010335] to-blue-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center py-2 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={runTests} disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

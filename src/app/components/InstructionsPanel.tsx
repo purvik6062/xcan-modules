@@ -272,7 +272,7 @@ export default function InstructionsPanel({
         if (section.type === "code-block") {
           return (
             <div key={`code-${index}`} className="relative my-4">
-              <div className="absolute top-0 right-0 bg-black text-xs text-green-400 px-2 py-1 rounded-bl font-mono">
+              <div className="absolute top-0 right-0 bg-[#030919] text-xs text-green-400 px-2 py-1 rounded-bl font-mono">
                 JavaScript
               </div>
               <pre className="bg-[#0f1d3a] p-4 pt-6 rounded-md overflow-x-auto border border-[#1d315e] font-mono text-sm text-blue-300">

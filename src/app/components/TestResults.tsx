@@ -100,14 +100,8 @@ export default function TestResults({
 
   // Collect all logs from test results
   const allTestLogs = testResults.reduce((logs, result) => {
-    // If we've already printed this exact result's logs in another test case, don't duplicate
     if (!result.logs || !result.logs.length) return logs;
-
-    // Use a Set to eliminate duplicates
-    const uniqueLogs = new Set([...logs]);
-    result.logs.forEach((log) => uniqueLogs.add(log));
-
-    return Array.from(uniqueLogs);
+    return [...logs, ...result.logs];
   }, [] as string[]);
 
   return (
@@ -116,7 +110,7 @@ export default function TestResults({
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium">Test Cases</h2>
           <button
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white text-sm px-4 py-2 rounded transition-colors"
             onClick={runTests}
             disabled={isLoading}
           >
@@ -126,7 +120,7 @@ export default function TestResults({
 
         {/* Verification Status - Only shown when testing is in progress */}
         {isLoading && (
-          <div className="bg-gray-800 rounded-md p-4 mb-4">
+          <div className="bg-[#151c34] rounded-md p-4 mb-4">
             <h3 className="font-medium text-gray-200 mb-3">
               Verification Status
             </h3>
@@ -158,7 +152,7 @@ export default function TestResults({
             {testCases.map((testCase, index) => (
               <div
                 key={index}
-                className="p-4 bg-gray-800 rounded-md border border-gray-700"
+                className="p-4 bg-[#141d36] rounded-md border border-gray-300"
               >
                 <h3 className="font-medium text-gray-200 mb-2">
                   {testCase.description}
@@ -225,7 +219,7 @@ export default function TestResults({
                   {/* Performance metrics - only shown if test passed */}
                   {result.passed && result.duration && (
                     <div className="bg-gray-800 p-2 rounded text-xs">
-                      <h4 className="font-medium text-gray-300 mb-1">
+                      <h4 className="font-medium text-gray-200 mb-1">
                         Performance Metrics
                       </h4>
                       <p className="text-gray-400">
@@ -427,7 +421,7 @@ function VerificationStage({
           {label}
         </span>
         {isActive && !isComplete && (
-          <span className="ml-2 text-xs text-gray-500">Processing...</span>
+          <span className="ml-2 text-xs text-gray-300">Processing...</span>
         )}
       </div>
     </div>
