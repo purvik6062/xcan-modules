@@ -116,8 +116,24 @@ export default function Playground() {
   }, []);
 
   // Handle editor mounting
-  function handleEditorDidMount() {
+  function handleEditorDidMount(editor: any, monaco: any) {
     setEditorReady(true);
+    monaco.editor.defineTheme("myCustomTheme", {
+      base: "vs-dark", // Base theme: 'vs', 'vs-dark', or 'hc-black'
+      inherit: true, // Inherit styles from the base theme
+      rules: [
+        { token: "comment", foreground: "658218", fontStyle: "italic" }, // Orange italic comments
+        { token: "keyword", foreground: "569cd6" }, // Green keywords
+      ],
+      colors: {
+        "editor.background": "#0E1B37",
+        "editor.foreground": "#d4d4d4",
+        "editorLineNumber.foreground": "#5c6b99", // Lighter shade for line numbers
+      },
+    });
+
+    // Set the custom theme
+    monaco.editor.setTheme("myCustomTheme");
   }
 
   // Handle code changes
@@ -222,14 +238,14 @@ export default function Playground() {
       </div>
 
       <div className="border border-gray-700 rounded-lg overflow-hidden">
-        <div className="bg-[#0A142A] px-4 py-3 border-b border-gray-700">
+        <div className="bg-[#0E1B37] px-4 py-3 border-b border-gray-700">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <h3 className="font-semibold">Code Editor</h3>
               <select
                 value={selectedLanguage}
                 onChange={handleLanguageChange}
-                className="ml-2 cursor-pointer px-2 py-1 text-sm rounded bg-[#0A142A] border border-gray-600"
+                className="ml-2 cursor-pointer px-2 py-1 text-sm rounded bg-[#0E1B37] border border-gray-600"
               >
                 <option value="javascript " className="cursor-pointer">JavaScript</option>
                 <option value="python" className="cursor-pointer">Python</option>
@@ -241,7 +257,7 @@ export default function Playground() {
             </div>
             <div className="flex space-x-2">
               <button
-                className="bg-[#0A142A] cursor-pointer hover:bg-[#0A142A] px-3 py-1 rounded text-sm"
+                className="bg-[#0E1B37] cursor-pointer hover:bg-[#0E1B37] px-3 py-1 rounded text-sm"
                 onClick={handleReset}
               >
                 Reset
@@ -268,7 +284,7 @@ export default function Playground() {
             value={code}
             onChange={handleEditorChange}
             onMount={handleEditorDidMount}
-            theme="vs-dark"
+            theme="myCustomTheme"
             beforeMount={(monaco) => {
               // Disable TypeScript validation
               monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
@@ -305,7 +321,7 @@ export default function Playground() {
           />
         </div>
 
-        <div className=" bg-[#0A142A] p-3 border-t border-gray-700 h-[200px] overflow-auto">
+        <div className=" bg-[#0E1B37] p-3 border-t border-gray-700 h-[200px] overflow-auto">
           <div className="font-mono text-sm whitespace-pre-wrap">
             {output ? (
               <div

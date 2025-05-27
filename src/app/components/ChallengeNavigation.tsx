@@ -19,9 +19,9 @@ export default function ChallengeNavigation() {
             <Image 
               src="/ArbQuest.svg" 
               alt="Arbitrum Quest Logo" 
-              width={170} 
+              width={190} 
               height={40} 
-              className="h-auto" 
+              className="h-[62px]" 
               priority
             />
           </Link>

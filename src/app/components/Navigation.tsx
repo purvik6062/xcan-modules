@@ -25,7 +25,7 @@ export default function Navigation() {
             <Image 
               src="/ArbQuest.svg" 
               alt="Arbitrum Quest Logo" 
-              width={150} 
+              width={180} 
               height={40} 
               className="h-auto" 
               priority

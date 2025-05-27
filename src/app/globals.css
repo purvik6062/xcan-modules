@@ -19,3 +19,21 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px !important; 
+}
+
+::-webkit-scrollbar-track {
+  background: #7b8089; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6b99ee; 
+  border-radius: 9999px;  
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #84acf5; 
+}

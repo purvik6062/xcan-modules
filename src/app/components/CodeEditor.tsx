@@ -17,13 +17,30 @@ export default function CodeEditor({
   height = "100%",
   isLoading = false,
 }: CodeEditorProps) {
-
   const handleEditorDidMount: OnMount = (editor, monaco) => {
     // Disable TypeScript validation for better performance
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: true,
       noSyntaxValidation: true,
     });
+
+    // Define custom theme
+    monaco.editor.defineTheme("myCustomTheme", {
+      base: "vs-dark", // Base theme: 'vs', 'vs-dark', or 'hc-black'
+      inherit: true, // Inherit styles from the base theme
+      rules: [
+        { token: "comment", foreground: "658218", fontStyle: "italic" }, // Orange italic comments
+        { token: "keyword", foreground: "569cd6" }, // Green keywords
+      ],
+      colors: {
+        "editor.background": "#0A142A",
+        "editor.foreground": "#d4d4d4",
+        "editorLineNumber.foreground": "#5c6b99", // Lighter shade for line numbers
+      },
+    });
+
+    // Set the custom theme
+    monaco.editor.setTheme("myCustomTheme");
   };
 
   return (
@@ -35,11 +52,11 @@ export default function CodeEditor({
         value={value}
         onChange={onChange}
         onMount={handleEditorDidMount}
-        theme="vs-dark"
+        theme="myCustomTheme" // Updated to use the custom theme explicitly
         options={{
           minimap: { enabled: false },
           fontSize: 14,
-          lineHeight: 20, // Added to set line height to 20px
+          lineHeight: 20,
           scrollBeyondLastLine: false,
           wordWrap: "on",
           formatOnPaste: true,
@@ -51,8 +68,8 @@ export default function CodeEditor({
           folding: true,
           scrollbar: {
             vertical: "visible",
-            verticalScrollbarSize: 14,
-            horizontalScrollbarSize: 14,
+            verticalScrollbarSize: 10,
+            horizontalScrollbarSize: 6,
           },
           suggest: { showInlineDetails: true },
           parameterHints: { enabled: true },
