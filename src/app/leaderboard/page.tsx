@@ -112,7 +112,7 @@ const leaderboardData = [
 export default function LeaderboardPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Leaderboard</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Leaderboard</h1>
 
       <div className="bg-[#0A142A] rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">

@@ -12,12 +12,12 @@ export default function Footer() {
               <Image 
                 src="/ArbQuest.svg" 
                 alt="Arbitrum Quest Logo" 
-                width={120} 
+                width={150} 
                 height={32} 
                 className="h-auto" 
               />
             </div>
-            <p className="text-center md:text-left text-gray-400 text-sm ml-[9.5px]">
+            <p className="text-center md:text-left text-gray-400 text-sm ml-[7px]">
               © {new Date().getFullYear()} CodeQuest. All rights reserved.
             </p>
           </div>

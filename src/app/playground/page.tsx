@@ -229,113 +229,110 @@ export default function Playground() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Code Playground</h1>
-        <p className="text-gray-300">
-          Test and run code in different languages using the Stylus APIs
-        </p>
-      </div>
-
-      <div className="border border-gray-700 rounded-lg overflow-hidden">
-        <div className="bg-[#0E1B37] px-4 py-3 border-b border-gray-700">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <h3 className="font-semibold">Code Editor</h3>
-              <select
-                value={selectedLanguage}
-                onChange={handleLanguageChange}
-                className="ml-2 cursor-pointer px-2 py-1 text-sm rounded bg-[#0E1B37] border border-gray-600"
-              >
-                <option value="javascript " className="cursor-pointer">JavaScript</option>
-                <option value="python" className="cursor-pointer">Python</option>
-                <option value="c_cpp" className="cursor-pointer">C++</option>
-                <option value="rust" className="cursor-pointer">Rust</option>
-                <option value="c" className="cursor-pointer">C</option>
-                <option value="csharp" className="cursor-pointer">C#</option>
-              </select>
-            </div>
-            <div className="flex space-x-2">
-              <button
-                className="bg-[#0E1B37] cursor-pointer hover:bg-[#0E1B37] px-3 py-1 rounded text-sm"
-                onClick={handleReset}
-              >
-                Reset
-              </button>
-              <button
-                className="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-1 rounded"
-                onClick={handleRunCode}
-                disabled={isRunning}
-              >
-                {isRunning ? "Running..." : "Run Code"}
-              </button>
-            </div>
-          </div>
+    <div className="w-full min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex flex-col items-center p-4">
+      <div className="w-full max-w-6xl flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Code Playground</h1>
+          <p className="text-gray-300 text-sm sm:text-base">Test and run code in different languages using the Stylus APIs</p>
         </div>
-
-        <div className="h-[600px] overflow-hidden">
-          <Editor
-            height="600px"
-            defaultLanguage="typescript"
-            language={
-              selectedLanguage === "c_cpp" ? "cpp" : selectedLanguage
-            }
-            defaultValue={code}
-            value={code}
-            onChange={handleEditorChange}
-            onMount={handleEditorDidMount}
-            theme="myCustomTheme"
-            beforeMount={(monaco) => {
-              // Disable TypeScript validation
-              monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
-                {
-                  noSemanticValidation: true,
-                  noSyntaxValidation: true,
-                }
-              );
-            }}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 14,
-              scrollBeyondLastLine: false,
-              wordWrap: "on",
-              formatOnPaste: true,
-              formatOnType: true,
-              automaticLayout: true,
-              tabSize: 2,
-              lineNumbers: "on",
-              glyphMargin: true,
-              folding: true,
-              suggest: {
-                showInlineDetails: true,
-              },
-              parameterHints: {
-                enabled: true,
-              },
-            }}
-            loading={
-              <div className="flex justify-center items-center h-full text-gray-500">
-                Loading Editor...
+        <div className="w-full flex flex-col lg:flex-row gap-4">
+          <div className="w-full flex flex-col bg-[#0E1B37] border border-gray-700 rounded-lg overflow-hidden">
+            <div className="px-2 sm:px-4 py-2 sm:py-3 border-b border-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex items-center space-x-2">
+                <h3 className="font-semibold text-white text-base sm:text-lg">Code Editor</h3>
+                <select
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+                  className="ml-2 cursor-pointer px-2 py-1 text-xs sm:text-sm rounded bg-[#0E1B37] border border-gray-600 text-white"
+                >
+                  <option value="javascript" className="cursor-pointer">JavaScript</option>
+                  <option value="python" className="cursor-pointer">Python</option>
+                  <option value="c_cpp" className="cursor-pointer">C++</option>
+                  <option value="rust" className="cursor-pointer">Rust</option>
+                  <option value="c" className="cursor-pointer">C</option>
+                  <option value="csharp" className="cursor-pointer">C#</option>
+                </select>
               </div>
-            }
-          />
-        </div>
-
-        <div className=" bg-[#0E1B37] p-3 border-t border-gray-700 h-[200px] overflow-auto">
-          <div className="font-mono text-sm whitespace-pre-wrap">
-            {output ? (
-              <div
-                className={
-                  output.includes("Error")
-                    ? "text-red-600"
-                    : "text-green-600"
-                }
-              >
-                {output}
+              <div className="flex space-x-2 w-full sm:w-auto">
+                <button
+                  className="bg-[#0E1B37] cursor-pointer hover:bg-[#0E1B37] px-3 py-1 rounded text-xs sm:text-sm border border-gray-600 text-white w-1/2 sm:w-auto"
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+                <button
+                  className="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-1 rounded text-xs sm:text-sm w-1/2 sm:w-auto"
+                  onClick={handleRunCode}
+                  disabled={isRunning}
+                >
+                  {isRunning ? "Running..." : "Run Code"}
+                </button>
               </div>
-            ) : (
-              <div className="text-gray-500">Run code to see results</div>
-            )}
+            </div>
+            <div className="w-full h-[300px] xs:h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
+              <Editor
+                height="100%"
+                defaultLanguage="typescript"
+                language={
+                  selectedLanguage === "c_cpp" ? "cpp" : selectedLanguage
+                }
+                defaultValue={code}
+                value={code}
+                onChange={handleEditorChange}
+                onMount={handleEditorDidMount}
+                theme="myCustomTheme"
+                beforeMount={(monaco) => {
+                  // Disable TypeScript validation
+                  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions(
+                    {
+                      noSemanticValidation: true,
+                      noSyntaxValidation: true,
+                    }
+                  );
+                }}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 13,
+                  scrollBeyondLastLine: false,
+                  wordWrap: "on",
+                  formatOnPaste: true,
+                  formatOnType: true,
+                  automaticLayout: true,
+                  tabSize: 2,
+                  lineNumbers: "on",
+                  glyphMargin: true,
+                  folding: true,
+                  suggest: {
+                    showInlineDetails: true,
+                  },
+                  parameterHints: {
+                    enabled: true,
+                  },
+                }}
+                loading={
+                  <div className="flex justify-center items-center h-full text-gray-500">
+                    Loading Editor...
+                  </div>
+                }
+              />
+            </div>
+            <div className="bg-[#0E1B37] p-2 sm:p-3 border-t border-gray-700 h-[120px] xs:h-[150px] sm:h-[180px] md:h-[200px] overflow-auto">
+              <div className="font-mono text-xs sm:text-sm whitespace-pre-wrap">
+                {output ? (
+                  <div
+                    className={
+                      output.includes("Error")
+                        ? "text-red-600"
+                        : "text-green-600"
+                    }
+                  >
+                    {output}
+                  </div>
+                ) : (
+                  <div className="text-gray-500">Run code to see results</div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

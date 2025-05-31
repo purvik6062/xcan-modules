@@ -18,9 +18,10 @@ export default function Navigation() {
     <header className="bg-gradient-to-r from-[#010229] to-[#01056b] py-4">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
+          {/* Logo (always visible) */}
           <Link
             href="/"
-            className="text-white text-2xl font-bold flex items-center"
+            className="text-white text-2xl font-bold flex items-center pl-2 md:pl-0"
           >
             <Image 
               src="/ArbQuest.svg" 
@@ -32,9 +33,9 @@ export default function Navigation() {
             />
           </Link>
 
-          {/* Mobile menu button */}
+          {/* Hamburger (mobile only) */}
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-white pr-2"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <svg
@@ -57,9 +58,9 @@ export default function Navigation() {
             </svg>
           </button>
 
-          {/* Desktop navigation */}
-          <div className="flex items-center space-x-4">
-            <nav className="hidden md:block">
+          {/* Desktop navigation (hidden on mobile) */}
+          <div className="hidden md:flex items-center space-x-4">
+            <nav>
               <ul className="flex space-x-6">
                 <li>
                   <Link
@@ -123,81 +124,88 @@ export default function Navigation() {
                 </li>
               </ul>
             </nav>
-            <ConnectKitButton />
+            <div>
+              <ConnectKitButton />
+            </div>
           </div>
         </div>
 
         {/* Mobile navigation */}
         {isMobileMenuOpen && (
           <nav className="mt-4 md:hidden">
-            <ul className="flex flex-col space-y-2">
-              <li>
-                <Link
-                  href="/#modules"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                    isActive("/#modules") ? "bg-blue-700" : ""
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Modules
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://arbitrum-university.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  University
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/challenges"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                    isActive("/challenges") ? "bg-blue-700" : ""
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Challenges
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/playground"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                    isActive("/playground") ? "bg-blue-700" : ""
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Playground
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/leaderboard"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                    isActive("/leaderboard") ? "bg-blue-700" : ""
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Leaderboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/profile"
-                  className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                    isActive("/profile") ? "bg-blue-700" : ""
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Profile
-                </Link>
-              </li>
-            </ul>
+            <div className={`rounded-lg p-4 shadow-lg ${pathname === '/' ? 'bg-[#0a0a2a] bg-opacity-95' : 'bg-gradient-to-b from-[#010229] to-[#01056b]'}`}> 
+              <ul className="flex flex-col space-y-2">
+                <li>
+                  <Link
+                    href="/#modules"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                      isActive("/#modules") ? "bg-blue-700" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Modules
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="https://arbitrum-university.vercel.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    University
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/challenges"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                      isActive("/challenges") ? "bg-blue-700" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Challenges
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/playground"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                      isActive("/playground") ? "bg-blue-700" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Playground
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/leaderboard"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                      isActive("/leaderboard") ? "bg-blue-700" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Leaderboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/profile"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                      isActive("/profile") ? "bg-blue-700" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                </li>
+              </ul>
+              <div className="mt-4 flex justify-start">
+                <ConnectKitButton />
+              </div>
+            </div>
           </nav>
         )}
       </div>

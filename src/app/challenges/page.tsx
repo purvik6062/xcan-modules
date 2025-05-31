@@ -63,10 +63,10 @@ export default function ChallengesPage() {
               practical coding challenges
             </p>
           </div>
-          <div className="mt-4 md:mt-0 flex items-center space-x-3">
+          <div className="mt-4 md:mt-0 flex flex-col xs:flex-row xs:items-center xs:space-x-3 space-y-2 xs:space-y-0 w-full max-w-xs md:flex-row md:items-center md:space-x-3 md:space-y-0">
             <button 
               onClick={toggleSidebar} 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition-all duration-200 flex items-center space-x-2 md:hidden cursor-pointer"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition-all duration-200 flex items-center space-x-2 md:hidden cursor-pointer w-full xs:w-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@ export default function ChallengesPage() {
               </svg>
               <span>Filters</span>
             </button>
-            <span className="badge-category neon-border">
+            <span className="badge-category neon-border whitespace-nowrap text-sm xs:text-base w-full xs:w-auto text-center !px-[12px] !py-[8px] !mt-[6px]">
               {filteredChallenges.length} Challenges Available
             </span>
           </div>
