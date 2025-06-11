@@ -9,7 +9,7 @@ import "../styles/gamify.css";
 // export const metadata = {
 //   title: "Stylus Code Concepts Challenges - CodeQuest",
 //   description:
-//     "Learn how to use Stylus Code Conceptss through interactive coding challenges",
+//     "Learn how to use Stylus Code Concepts through interactive coding challenges",
 // };
 
 export default function ChallengesPage() {
