@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="mb-4 md:mb-0">
             <div className="flex items-center justify-center md:justify-start mb-2">
               <Image 
-                src="/ArbQuest.svg" 
+                src="/inorbit.svg" 
                 alt="Arbitrum Quest Logo" 
                 width={150} 
                 height={32} 

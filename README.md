@@ -1,6 +1,6 @@
-# InOrbit - Interactive Coding Challenge Platform
+# Inorbit - Interactive Coding Challenge Platform
 
-InOrbit is a web-based platform for learning and improving coding skills through interactive challenges. Similar to platforms like CryptoZombies and Agora, InOrbit provides a gamified learning experience with an in-browser IDE, challenge management system, and user progress tracking.
+Inorbit is a web-based platform for learning and improving coding skills through interactive challenges. Similar to platforms like CryptoZombies and Agora, Inorbit provides a gamified learning experience with an in-browser IDE, challenge management system, and user progress tracking.
 
 ## Features
 

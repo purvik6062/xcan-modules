@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InOrbit",
+  title: "Inorbit",
   description:
     "Comprehensive learning platform for Arbitrum concepts. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
 };
