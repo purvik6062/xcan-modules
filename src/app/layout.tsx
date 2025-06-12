@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ArbitrumQuest - Master Stylus Core Concepts",
+  title: "InOrbit",
   description:
-    "Comprehensive learning platform for Stylus Core Concepts. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
+    "Comprehensive learning platform for Arbitrum concepts. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
 };
 
 export default function RootLayout({
