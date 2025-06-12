@@ -17,7 +17,7 @@ export default function ChallengeNavigation() {
             className="text-white text-2xl font-bold flex items-center"
           >
             <Image 
-              src="/inorbit.svg" 
+              src="/inorbit2.svg" 
               alt="Arbitrum Quest Logo" 
               width={190} 
               height={40} 

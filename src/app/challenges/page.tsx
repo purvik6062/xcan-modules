@@ -56,7 +56,7 @@ export default function ChallengesPage() {
           <div>
             <h1 className="text-3xl font-bold mb-2 text-white">
               <span className="text-blue-400">Stylus</span>{" "}
-              Code Concepts
+              Core Concepts
             </h1>
             <p className="text-gray-300">
               Learn how to interact with Arbitrum&apos;s precompiles through

@@ -24,9 +24,9 @@ export default function Navigation() {
             className="text-white text-2xl font-bold flex items-center pl-2 md:pl-0"
           >
             <Image 
-              src="/inorbit.svg" 
+              src="/inorbit2.svg" 
               alt="Arbitrum Quest Logo" 
-              width={180} 
+              width={100} 
               height={40} 
               className="h-auto" 
               priority
