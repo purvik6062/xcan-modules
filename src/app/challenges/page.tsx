@@ -7,9 +7,9 @@ import { ChallengePreview } from "../types/challenge";
 import "../styles/gamify.css";
 
 // export const metadata = {
-//   title: "Stylus Code Concepts Challenges - CodeQuest",
+//   title: "Stylus Core Concepts Challenges - CodeQuest",
 //   description:
-//     "Learn how to use Stylus Code Concepts through interactive coding challenges",
+//     "Learn how to use Stylus Core Concepts through interactive coding challenges",
 // };
 
 export default function ChallengesPage() {

@@ -8,7 +8,7 @@ export default function LearningModulesSection() {
         <h2 className="text-4xl font-bold mb-4">Learning Modules</h2>
         <p className="text-xl  text-gray-300 max-w-2xl mx-auto">
           Comprehensive learning paths designed to take you from beginner to
-          expert in Stylus Code Concepts
+          expert in Stylus Core Concepts
         </p>
       </div>
 

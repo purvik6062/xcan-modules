@@ -4,7 +4,7 @@ export default function WhyChooseSection() {
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold mb-4">Why Choose ArbitrumQuest?</h2>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          The most comprehensive platform for learning Stylus Code Concepts
+          The most comprehensive platform for learning Stylus Core Concepts
         </p>
       </div>
 
@@ -56,7 +56,7 @@ export default function WhyChooseSection() {
           <h3 className="text-xl font-bold mb-3">Progressive Curriculum</h3>
           <p className="text-gray-300">
             Structured learning paths that take you from basics to advanced
-            Stylus Code Concepts concepts.
+            Stylus Core Concepts concepts.
           </p>
         </div>
         <div className="text-center">
