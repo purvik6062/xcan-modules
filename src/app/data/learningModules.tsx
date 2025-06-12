@@ -119,6 +119,22 @@ const ClockIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const DocumentIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+    />
+  </svg>
+);
+
 // Type definition for a learning module
 export interface LearningModule {
   id: string;
@@ -126,35 +142,17 @@ export interface LearningModule {
   description: string;
   icon: (props: { className?: string }) => React.ReactElement;
   level: string;
-  duration: string;
-  challenges: number;
+  duration?: string;
+  challenges?: number;
   status: "available" | "coming-soon";
   href: string;
+  target: string;
   gradient: string;
   features: string[];
 }
 
 // Learning modules data
 export const learningModules: LearningModule[] = [
-  {
-    id: "arbitrum-precompiles",
-    title: "Stylus Code Concepts",
-    description:
-      "Master Arbitrum's powerful precompiles through interactive coding challenges",
-    icon: CodeBracketIcon,
-    level: "Beginner to Advanced",
-    duration: "2-4 weeks",
-    challenges: 6,
-    status: "available",
-    href: "/challenges",
-    gradient: "from-blue-500 to-indigo-600",
-    features: [
-      "Interactive Challenges",
-      "Real-world Examples",
-      "Gas Optimization",
-      "L1-L2 Messaging",
-    ],
-  },
   {
     id: "arbitrum-stylus",
     title: "Arbitrum Stylus",
@@ -163,15 +161,36 @@ export const learningModules: LearningModule[] = [
     icon: CpuChipIcon,
     level: "Intermediate to Advanced",
     duration: "3-5 weeks",
-    challenges: 12,
-    status: "coming-soon",
-    href: "#",
+    challenges: 11,
+    status: "available",
+    href: "https://www.speedrunstylus.com/",
+    target: "_blank",
     gradient: "from-purple-500 to-pink-600",
     features: [
       "Rust Development",
       "WebAssembly",
       "Performance Optimization",
       "Multi-language Support",
+    ],
+  },
+  {
+    id: "arbitrum-precompiles",
+    title: "Stylus Core Concepts",
+    description:
+      "Master Arbitrum's powerful precompiles through interactive coding challenges",
+    icon: CodeBracketIcon,
+    level: "Beginner to Advanced",
+    duration: "2-4 weeks",
+    challenges: 6,
+    status: "available",
+    href: "/challenges",
+    target: "_self",
+    gradient: "from-blue-500 to-indigo-600",
+    features: [
+      "Interactive Challenges",
+      "Real-world Examples",
+      "Gas Optimization",
+      "L1-L2 Messaging",
     ],
   },
   {
@@ -185,31 +204,13 @@ export const learningModules: LearningModule[] = [
     challenges: 10,
     status: "coming-soon",
     href: "#",
+    target: "_self",
     gradient: "from-emerald-500 to-teal-600",
     features: [
       "Chain Deployment",
       "Custom Gas Tokens",
       "Validator Setup",
       "Bridge Configuration",
-    ],
-  },
-  {
-    id: "nitro-fundamentals",
-    title: "Nitro Fundamentals",
-    description:
-      "Deep dive into Arbitrum Nitro's architecture and optimization techniques",
-    icon: CommandLineIcon,
-    level: "Intermediate",
-    duration: "2-3 weeks",
-    challenges: 6,
-    status: "coming-soon",
-    href: "#",
-    gradient: "from-orange-500 to-red-600",
-    features: [
-      "Nitro Architecture",
-      "Fraud Proofs",
-      "State Transitions",
-      "Rollup Mechanics",
     ],
   },
   {
@@ -223,6 +224,7 @@ export const learningModules: LearningModule[] = [
     challenges: 15,
     status: "coming-soon",
     href: "#",
+    target: "_self",
     gradient: "from-cyan-500 to-blue-600",
     features: [
       "DeFi Protocols",
@@ -242,6 +244,7 @@ export const learningModules: LearningModule[] = [
     challenges: 8,
     status: "coming-soon",
     href: "#",
+    target: "_self",
     gradient: "from-violet-500 to-purple-600",
     features: [
       "Bridge Development",
@@ -249,6 +252,19 @@ export const learningModules: LearningModule[] = [
       "Token Transfers",
       "Security Patterns",
     ],
+  },
+  {
+    id: "project-submission",
+    title: "Project Submission",
+    description:
+      "Built something cool with Stylus? Submit your project to get featured and reviewed by the community. Highlight your skills, gain visibility, and inspire others in the ecosystem.",
+    icon: DocumentIcon,
+    level: "All Levels",
+    status: "coming-soon",
+    href: "#",
+    target: "_self",
+    gradient: "from-orange-500 to-red-600",
+    features: [],
   },
 ];
 

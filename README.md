@@ -1,6 +1,6 @@
-# ArbDevQuest - Interactive Coding Challenge Platform
+# InOrbit - Interactive Coding Challenge Platform
 
-ArbDevQuest is a web-based platform for learning and improving coding skills through interactive challenges. Similar to platforms like CryptoZombies and Agora, ArbDevQuest provides a gamified learning experience with an in-browser IDE, challenge management system, and user progress tracking.
+InOrbit is a web-based platform for learning and improving coding skills through interactive challenges. Similar to platforms like CryptoZombies and Agora, InOrbit provides a gamified learning experience with an in-browser IDE, challenge management system, and user progress tracking.
 
 ## Features
 

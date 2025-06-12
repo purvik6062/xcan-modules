@@ -4,7 +4,12 @@ import ClientChallenge from "./client-page";
 import { useParams } from "next/navigation";
 import "../../styles/gamify.css";
 import { challengesData } from "../../data/challenges";
-import { FiSmartphone, FiMonitor, FiArrowRight, FiXCircle } from "react-icons/fi";
+import {
+  FiSmartphone,
+  FiMonitor,
+  FiArrowRight,
+  FiXCircle,
+} from "react-icons/fi";
 
 // Define proper types for our challenge data
 interface TestCase {
@@ -16,7 +21,7 @@ interface TestCase {
 // Add a simple footer for mobile
 const MobileFooter = () => (
   <footer className="w-full py-4 text-center text-xs text-blue-300 bg-gradient-to-br from-[#010229] to-[#01056b] border-t border-blue-900 opacity-90">
-    © {new Date().getFullYear()} ArbDevQuest. All rights reserved.
+    © {new Date().getFullYear()} InOrbit. All rights reserved.
   </footer>
 );
 
@@ -38,10 +43,18 @@ export default function ChallengePage() {
           <FiArrowRight className="text-3xl text-blue-400" />
           <FiMonitor className="text-5xl text-blue-400" />
         </div>
-        <h2 className="text-2xl font-bold text-blue-100 mb-2 text-center">Mobile Experience Coming Soon</h2>
+        <h2 className="text-2xl font-bold text-blue-100 mb-2 text-center">
+          Mobile Experience Coming Soon
+        </h2>
         <div className="w-24 h-1 bg-blue-500 rounded-full mb-4" />
-        <p className="text-blue-200 text-center mb-2 text-base font-medium">This page is being upgraded for a great mobile experience.<br />Please use a desktop or laptop for now.</p>
-        <p className="text-blue-400 text-center text-sm">Switch to a larger device to access all features.</p>
+        <p className="text-blue-200 text-center mb-2 text-base font-medium">
+          This page is being upgraded for a great mobile experience.
+          <br />
+          Please use a desktop or laptop for now.
+        </p>
+        <p className="text-blue-400 text-center text-sm">
+          Switch to a larger device to access all features.
+        </p>
       </div>
       <MobileFooter />
     </div>
@@ -56,14 +69,28 @@ export default function ChallengePage() {
         <div className="hidden md:flex min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 items-center justify-center p-2 sm:p-4">
           <div className="w-full max-w-xl bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden flex flex-col items-center">
             <div className="w-full bg-red-900/30 p-4 border-b border-red-900/50 flex flex-col items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-12 sm:w-12 text-red-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-10 w-10 sm:h-12 sm:w-12 text-red-400 mb-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
-              <h2 className="text-lg sm:text-2xl font-bold text-center text-red-200 mb-2">Challenge Not Found</h2>
+              <h2 className="text-lg sm:text-2xl font-bold text-center text-red-200 mb-2">
+                Challenge Not Found
+              </h2>
             </div>
             <div className="p-4 sm:p-6 w-full">
               <p className="text-gray-300 text-center mb-4 sm:mb-6 text-sm sm:text-base">
-                The challenge you&apos;re looking for doesn&apos;t exist or may have been removed.
+                The challenge you&apos;re looking for doesn&apos;t exist or may
+                have been removed.
               </p>
               <div className="flex justify-center">
                 <Link
