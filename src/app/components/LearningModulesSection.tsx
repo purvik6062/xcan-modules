@@ -6,10 +6,18 @@ export default function LearningModulesSection() {
     <section id="modules" className="py-16 container mx-auto px-4">
       <div className="text-center mb-12">
         <h2 className="text-4xl font-bold mb-4">Learning Modules</h2>
-        <p className="text-xl  text-gray-300 max-w-2xl mx-auto">
-          Comprehensive learning paths designed to take you from beginner to
-          expert in Stylus Core Concepts
+        <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          Comprehensive learning paths covering DeFi fundamentals on Arbitrum
+          and advanced Stylus development
         </p>
+        <div className="mt-6">
+          <Link
+            href="/learn-defi"
+            className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transition-all duration-300 mr-4"
+          >
+            🎓 Learn DeFi on Arbitrum
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

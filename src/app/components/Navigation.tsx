@@ -23,12 +23,12 @@ export default function Navigation() {
             href="/"
             className="text-white text-2xl font-bold flex items-center pl-2 md:pl-0"
           >
-            <Image 
-              src="/inorbit2.svg" 
-              alt="Arbitrum Quest Logo" 
-              width={100} 
-              height={40} 
-              className="h-auto" 
+            <Image
+              src="/inorbit2.svg"
+              alt="Arbitrum Quest Logo"
+              width={100}
+              height={40}
+              className="h-auto"
               priority
             />
           </Link>
@@ -70,6 +70,16 @@ export default function Navigation() {
                     }`}
                   >
                     Modules
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/learn-defi"
+                    className={`text-white hover:text-blue-200 transition-colors ${
+                      isActive("/learn-defi") ? "font-semibold" : ""
+                    }`}
+                  >
+                    Learn DeFi
                   </Link>
                 </li>
                 <li>
@@ -133,7 +143,13 @@ export default function Navigation() {
         {/* Mobile navigation */}
         {isMobileMenuOpen && (
           <nav className="mt-4 md:hidden">
-            <div className={`rounded-lg p-4 shadow-lg ${pathname === '/' ? 'bg-[#0a0a2a] bg-opacity-95' : 'bg-gradient-to-b from-[#010229] to-[#01056b]'}`}> 
+            <div
+              className={`rounded-lg p-4 shadow-lg ${
+                pathname === "/"
+                  ? "bg-[#0a0a2a] bg-opacity-95"
+                  : "bg-gradient-to-b from-[#010229] to-[#01056b]"
+              }`}
+            >
               <ul className="flex flex-col space-y-2">
                 <li>
                   <Link
@@ -144,6 +160,17 @@ export default function Navigation() {
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Modules
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/learn-defi"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
+                      isActive("/learn-defi") ? "bg-blue-700" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Learn DeFi
                   </Link>
                 </li>
                 <li>

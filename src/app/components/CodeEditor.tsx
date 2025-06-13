@@ -3,18 +3,24 @@
 import Editor, { OnMount } from "@monaco-editor/react";
 
 interface CodeEditorProps {
-  defaultValue: string;
-  value: string;
-  onChange: (value: string | undefined) => void;
+  initialCode?: string;
+  defaultValue?: string;
+  value?: string;
+  onChange?: (value: string | undefined) => void;
   height?: string;
+  language?: string;
+  readOnly?: boolean;
   isLoading?: boolean;
 }
 
 export default function CodeEditor({
+  initialCode,
   defaultValue,
   value,
   onChange,
   height = "100%",
+  language = "typescript",
+  readOnly = false,
   isLoading = false,
 }: CodeEditorProps) {
   const handleEditorDidMount: OnMount = (editor, monaco) => {
@@ -47,8 +53,8 @@ export default function CodeEditor({
     <div className="h-full overflow-hidden">
       <Editor
         height={height}
-        defaultLanguage="typescript"
-        defaultValue={defaultValue}
+        defaultLanguage={language}
+        defaultValue={initialCode || defaultValue}
         value={value}
         onChange={onChange}
         onMount={handleEditorDidMount}
@@ -66,6 +72,7 @@ export default function CodeEditor({
           lineNumbers: "on",
           glyphMargin: true,
           folding: true,
+          readOnly: readOnly,
           scrollbar: {
             vertical: "visible",
             verticalScrollbarSize: 10,

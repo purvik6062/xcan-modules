@@ -222,8 +222,8 @@ export const learningModules: LearningModule[] = [
     level: "Intermediate to Advanced",
     duration: "3-4 weeks",
     challenges: 15,
-    status: "coming-soon",
-    href: "#",
+    status: "available",
+    href: "/learn-defi",
     target: "_self",
     gradient: "from-cyan-500 to-blue-600",
     features: [
