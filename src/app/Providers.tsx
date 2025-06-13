@@ -1,81 +1,67 @@
 "use client";
 
-import * as React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, arbitrumSepolia } from "wagmi/chains";
-import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import React from "react";
 import { useEffect, useState } from "react";
-import type { Storage } from "wagmi";
 import { ThemeProvider } from "next-themes";
 
-const storage = {
-  getItem: (key: string) => {
-    if (typeof window !== "undefined") {
-      const item = window.localStorage.getItem(key);
-      return item;
-    }
-    return null;
-  },
-  setItem: (key: string, value: string) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(key, value);
-    }
-  },
-  removeItem: (key: string) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem(key);
-    }
-  },
-} as Storage;
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { PrivyClientConfig } from "@privy-io/react-auth";
+import { PrivyProvider } from "@privy-io/react-auth";
+import { http } from "viem";
+import {
+  mainnet,
+  optimism,
+  arbitrum,
+  arbitrumSepolia,
+  optimismSepolia,
+} from "viem/chains";
+import { createConfig, WagmiProvider } from "wagmi";
 
-const config = createConfig(
-  getDefaultConfig({
-    // Your dApps chains
-    chains: [arbitrumSepolia],
+interface Web3ProviderProps {
+  children: React.ReactNode;
+  autoConnect?: boolean;
+}
 
-    transports: {
-      // [mainnet.id]: http(),
-      [arbitrumSepolia.id]: http(),
-    },
-
-    // Required API Keys
-    walletConnectProjectId: "39c1a2d05362a52a43d5431230eb2f10",
-
-    // Required App Info
-    appName: "arbitrum nitro stylus",
-    storage,
-  })
-);
-
-// Create the query client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
-    },
+// Wagmi configuration
+const wagmiConfig = createConfig({
+  chains: [optimism, arbitrum, arbitrumSepolia, optimismSepolia, mainnet],
+  transports: {
+    [mainnet.id]: http(),
+    [optimism.id]: http(),
+    [arbitrum.id]: http(),
+    [arbitrumSepolia.id]: http(),
+    [optimismSepolia.id]: http(),
   },
 });
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
+// Privy configuration
+const privyConfig: PrivyClientConfig = {
+  embeddedWallets: {
+    createOnLogin: "users-without-wallets",
+    requireUserPasswordOnCreate: true,
+  },
+  loginMethods: ["wallet"],
+  appearance: {
+    showWalletLoginFirst: true,
+  },
+  defaultChain: optimism,
+};
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+const queryClient = new QueryClient();
 
-  if (!mounted) {
-    return null;
-  }
-
+export default function Providers({ children }: Web3ProviderProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-      <WagmiProvider config={config}>
+      <PrivyProvider
+        appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID as string}
+        config={privyConfig}
+      >
         <QueryClientProvider client={queryClient}>
-          <ConnectKitProvider>{mounted && children}</ConnectKitProvider>
+          <WagmiProvider config={wagmiConfig} reconnectOnMount={true}>
+            {children}
+          </WagmiProvider>
         </QueryClientProvider>
-      </WagmiProvider>
+      </PrivyProvider>
     </ThemeProvider>
   );
 }

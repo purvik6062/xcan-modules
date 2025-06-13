@@ -13,12 +13,12 @@
     "@codemirror/theme-one-dark": "^6.1.2",
     "@heroicons/react": "^2.2.0",
     "@monaco-editor/react": "^4.7.0",
-    "@tanstack/react-query": "^5.62.8",
+    "@privy-io/react-auth": "^2.14.1",
+    "@tanstack/react-query": "^5.80.7",
     "@types/canvas-confetti": "^1.9.0",
     "@uiw/react-codemirror": "^4.23.12",
     "axios": "^1.9.0",
     "canvas-confetti": "^1.9.3",
-    "connectkit": "^1.8.2",
     "ethers": "^6.14.1",
     "framer-motion": "^12.12.2",
     "next": "15.3.2",
@@ -27,8 +27,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
-    "viem": "^2.21.57",
-    "wagmi": "^2.14.4"
+    "wagmi": "^2.15.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

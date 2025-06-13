@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ConnectKitButton } from "connectkit";
+import ConnectWallet from "./ConnectWallet";
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -135,7 +135,7 @@ export default function Navigation() {
               </ul>
             </nav>
             <div>
-              <ConnectKitButton />
+              <ConnectWallet />
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ export default function Navigation() {
                 </li>
               </ul>
               <div className="mt-4 flex justify-start">
-                <ConnectKitButton />
+                <ConnectWallet />
               </div>
             </div>
           </nav>
