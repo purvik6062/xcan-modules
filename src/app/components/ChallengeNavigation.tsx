@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ConnectKitButton } from "connectkit";
+import ConnectWallet from "./ConnectWallet";
 
 export default function ChallengeNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -40,7 +40,7 @@ export default function ChallengeNavigation() {
                 </li>
               </ul>
             </nav>
-            <ConnectKitButton />
+            <ConnectWallet />
           </div>
         </div>
 

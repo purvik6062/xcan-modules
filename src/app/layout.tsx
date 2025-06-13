@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./Providers";
+import Providers from "./Providers";
 import ConditionalLayout from "./components/ConditionalLayout";
 
 // Use next/font/google if the font is available on Google Fonts
