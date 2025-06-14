@@ -9,6 +9,10 @@ import SectionNavigation from "../../components/SectionNavigation";
 import ProgressBar from "../../components/ProgressBar";
 import QuizComponent from "../../components/QuizComponent";
 import ChallengeComponent from "../../components/ChallengeComponent";
+import InteractiveLearningDashboard from "../../components/InteractiveLearningDashboard";
+import ContentProgressTracker from "../../components/ContentProgressTracker";
+import { getChapterGlossary } from "../../data/defiGlossary";
+import { getTheoryContent } from "../../data/defiContent";
 
 export default function ChapterPage() {
   const params = useParams();
@@ -17,6 +21,8 @@ export default function ChapterPage() {
   const chapter = defiChapters.find((c) => c.id === chapterId);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [completedSections, setCompletedSections] = useState<string[]>([]);
+  const [currentSubSection, setCurrentSubSection] = useState(0);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     // Load progress from localStorage or API
@@ -46,6 +52,19 @@ export default function ChapterPage() {
     (s) => s.status === "available"
   );
   const progress = (completedSections.length / availableSections.length) * 100;
+
+  // Get theory content for progress tracking
+  const theoryContent =
+    currentSection.type === "theory"
+      ? getTheoryContent(chapterId, currentSection.id)
+      : null;
+
+  // Get chapter-specific glossary and concepts
+  const chapterGlossary = getChapterGlossary(chapterId);
+  const chapterConcepts = Object.keys(chapterGlossary);
+
+  // Calculate time spent (mock data for now)
+  const timeSpentMinutes = completedSections.length * 15;
 
   const handleSectionComplete = (sectionId: string) => {
     if (!completedSections.includes(sectionId)) {
@@ -109,19 +128,25 @@ export default function ChapterPage() {
           />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="flex gap-8">
           {/* Section Navigation */}
-          <div className="lg:col-span-1">
+          <div
+            className={`flex-shrink-0 transition-all duration-400 ease-in-out ${
+              isSidebarCollapsed ? "w-16" : "w-80"
+            }`}
+          >
             <SectionNavigation
               sections={chapter.sections}
               currentIndex={currentSectionIndex}
               completedSections={completedSections}
               onSectionSelect={setCurrentSectionIndex}
+              isCollapsed={isSidebarCollapsed}
+              onToggleCollapse={setIsSidebarCollapsed}
             />
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="flex-1 min-w-0">
             <motion.div
               key={currentSection.id}
               initial={{ opacity: 0, x: 20 }}
@@ -254,14 +279,58 @@ export default function ChapterPage() {
                   You've completed the {chapter.title} chapter!
                 </p>
                 <div className="bg-white bg-opacity-20 rounded-xl p-4 inline-block">
-                  <p className="text-sm mb-1">You've earned:</p>
-                  <p className="text-xl font-bold">{chapter.badge.title}</p>
-                  <p className="text-sm opacity-90">
+                  <p className="text-sm text-black mb-1">You've earned:</p>
+                  <p className="text-xl text-black font-bold">{chapter.badge.title}</p>
+                  <p className="text-sm text-black opacity-90">
                     {chapter.badge.description}
                   </p>
                 </div>
               </motion.div>
             )}
+          </div>
+
+          {/* Interactive Learning Dashboard - Right Sidebar */}
+          <div className="w-80 flex-shrink-0">
+            <InteractiveLearningDashboard
+              chapterId={chapterId}
+              sectionId={currentSection.id}
+              concepts={chapterConcepts}
+              glossary={Object.fromEntries(
+                Object.entries(chapterGlossary).map(([key, value]) => [
+                  key,
+                  value.definition,
+                ])
+              )}
+              progressData={{
+                completed: completedSections.length,
+                total: availableSections.length,
+                timeSpent: timeSpentMinutes,
+              }}
+            />
+
+            {/* Content Progress Tracker for theory sections */}
+            {/* {currentSection.type === "theory" && theoryContent && (
+              <div className="mt-6">
+                <ContentProgressTracker
+                  sectionId={currentSection.id}
+                  totalSubsections={theoryContent.sections.length}
+                  currentSubsection={currentSubSection}
+                  estimatedReadTime={currentSection.estimatedTime}
+                  onNavigate={(direction) => {
+                    if (direction === "next") {
+                      setCurrentSubSection(
+                        Math.min(
+                          theoryContent.sections.length - 1,
+                          currentSubSection + 1
+                        )
+                      );
+                    } else {
+                      setCurrentSubSection(Math.max(0, currentSubSection - 1));
+                    }
+                  }}
+                />
+              </div>
+            )} */}
           </div>
         </div>
       </div>

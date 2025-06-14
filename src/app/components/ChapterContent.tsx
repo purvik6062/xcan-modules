@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Section } from "../data/defiChapters";
+import { getTheoryContent, TheoryContent } from "../data/defiContent";
 import CodeEditor from "./CodeEditor";
 
 interface ChapterContentProps {
@@ -17,132 +18,327 @@ export default function ChapterContent({
   onComplete,
 }: ChapterContentProps) {
   const [completed, setCompleted] = useState(false);
+  const [currentSubSection, setCurrentSubSection] = useState(0);
 
   const handleComplete = () => {
     setCompleted(true);
     onComplete();
   };
 
-  // Sample content for demonstration
-  const getSampleContent = () => {
-    switch (section.id) {
-      case "what-is-defi":
-        return {
-          title: "Understanding Decentralized Finance",
-          content: `DeFi represents a paradigm shift from traditional, centralized financial systems to peer-to-peer finance enabled by decentralized technologies built on blockchains.
+  // Get comprehensive theory content
+  const theoryContent = getTheoryContent(chapterId, section.id);
 
-Key characteristics include:
-• Accessibility - Open to anyone with an internet connection
-• Permissionless - No need for approval from centralized authorities
-• Transparency - All transactions are publicly verifiable
-• Self-Custody - Users maintain control of their assets`,
-          codeExample: `// Simple DeFi interaction example
+  // Fallback content for sections without comprehensive content
+  const getFallbackContent = () => {
+    return {
+      title: section.title,
+      introduction:
+        "This section is currently being developed and will be available soon with comprehensive educational content.",
+      sections: [
+        {
+          id: "coming-soon",
+          title: "Coming Soon",
+          content: `We're working hard to bring you high-quality educational content for this section. 
+
+This will include:
+• Detailed explanations and concepts
+• Real-world examples and case studies  
+• Interactive code examples
+• Practical exercises and challenges
+• Key takeaways and best practices
+
+Check back soon for updates!`,
+        },
+      ],
+      keyTakeaways: [
+        "Comprehensive content is being developed for this section",
+        "Will include theory, examples, and practical applications",
+        "Part of our commitment to high-quality DeFi education",
+      ],
+    };
+  };
+
+  const content = theoryContent || getFallbackContent();
+
+  const renderTheoryContent = (content: TheoryContent) => {
+    return (
+      <div className="max-w-4xl mx-auto">
+        {/* Content Header */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            {content.title}
+          </h2>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-700">
+            <p className="text-lg text-blue-800 dark:text-blue-200 leading-relaxed">
+              {content.introduction}
+            </p>
+          </div>
+        </div>
+
+        {/* Theory Sections Navigation */}
+        {content.sections.length > 1 && (
+          <div className="mb-8">
+            <div className="flex flex-wrap gap-2">
+              {content.sections.map((subsection, index) => (
+                <button
+                  key={subsection.id}
+                  onClick={() => setCurrentSubSection(index)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    currentSubSection === index
+                      ? "bg-blue-600 text-white shadow-lg"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
+                  }`}
+                >
+                  {index + 1}. {subsection.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Current Theory Section */}
+        <motion.div
+          key={currentSubSection}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-8"
+        >
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+              <h3 className="text-2xl font-bold mb-2">
+                {content.sections[currentSubSection].title}
+              </h3>
+            </div>
+
+            <div className="p-8">
+              <div className="prose prose-lg dark:prose-invert max-w-none">
+                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed text-base">
+                  {content.sections[currentSubSection].content}
+                </div>
+              </div>
+
+              {/* Code Example */}
+              {content.sections[currentSubSection].codeExample && (
+                <div className="mt-8">
+                  <div className="bg-gray-800 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-4">
+                      Code Example
+                    </h4>
+                    <div className="h-64">
+                      <CodeEditor
+                        defaultValue={
+                          content.sections[currentSubSection].codeExample
+                        }
+                        language="javascript"
+                        readOnly={true}
+                        height="100%"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Navigation between sections */}
+        {content.sections.length > 1 && (
+          <div className="flex justify-between items-center mb-8">
+            <button
+              onClick={() =>
+                setCurrentSubSection(Math.max(0, currentSubSection - 1))
+              }
+              disabled={currentSubSection === 0}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                currentSubSection === 0
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  : "bg-gray-600 hover:bg-gray-700 text-white"
+              }`}
+            >
+              ← Previous
+            </button>
+
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              {currentSubSection + 1} of {content.sections.length}
+            </span>
+
+            <button
+              onClick={() =>
+                setCurrentSubSection(
+                  Math.min(content.sections.length - 1, currentSubSection + 1)
+                )
+              }
+              disabled={currentSubSection === content.sections.length - 1}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                currentSubSection === content.sections.length - 1
+                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  : "bg-gray-600 hover:bg-gray-700 text-white"
+              }`}
+            >
+              Next →
+            </button>
+          </div>
+        )}
+
+        {/* Key Takeaways */}
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 mb-8 border border-green-200 dark:border-green-700">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="text-2xl">🎯</span>
+            <h4 className="text-xl font-bold text-green-900 dark:text-green-100">
+              Key Takeaways
+            </h4>
+          </div>
+          <ul className="space-y-2">
+            {content.keyTakeaways.map((takeaway, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-3 text-green-800 dark:text-green-200"
+              >
+                <span className="text-green-600 dark:text-green-400 mt-1">
+                  ✓
+                </span>
+                <span>{takeaway}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Additional Resources */}
+        {content.additionalResources &&
+          content.additionalResources.length > 0 && (
+            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 mb-8 border border-purple-200 dark:border-purple-700">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-2xl">📚</span>
+                <h4 className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                  Additional Resources
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {content.additionalResources.map((resource, index) => (
+                  <a
+                    key={index}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-purple-200 dark:border-purple-700 hover:border-purple-400 dark:hover:border-purple-500 transition-colors duration-200"
+                  >
+                    <span className="text-xl">
+                      {resource.type === "tool"
+                        ? "🛠️"
+                        : resource.type === "documentation"
+                        ? "📖"
+                        : resource.type === "video"
+                        ? "🎥"
+                        : "📄"}
+                    </span>
+                    <div>
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {resource.title}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                        {resource.type}
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+      </div>
+    );
+  };
+
+  const renderHandsOnContent = () => (
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-2xl">🔧</span>
+          <h3 className="text-xl font-bold text-green-900 dark:text-green-100">
+            Hands-On Practice
+          </h3>
+        </div>
+        <div className="text-green-800 dark:text-green-200">
+          <p className="mb-4">
+            This hands-on section will guide you through practical
+            implementation and real-world usage.
+          </p>
+          <p>
+            Interactive tutorials and step-by-step guides are being developed to
+            provide you with practical experience using the concepts you've
+            learned.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCodeWalkthroughContent = () => (
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-2xl">💻</span>
+          <h3 className="text-xl font-bold text-purple-900 dark:text-purple-100">
+            Code Walkthrough
+          </h3>
+        </div>
+        <div className="text-purple-800 dark:text-purple-200 mb-6">
+          <p>
+            Detailed code walkthroughs with interactive examples are being
+            developed to help you understand the technical implementation.
+          </p>
+        </div>
+
+        {/* Interactive code example for demonstration */}
+        <div>
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h4 className="text-white font-medium mb-4">
+              Interactive Code Walkthrough
+            </h4>
+            <p className="text-gray-300 text-sm mb-4">
+              Example demonstrating how to interact with DeFi protocols using
+              ethers.js
+            </p>
+            <div className="h-80">
+              <CodeEditor
+                defaultValue={`// Example DeFi interaction
 import { ethers } from 'ethers';
 
 const provider = new ethers.providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');
-const tokenAddress = '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1'; // WETH
 
-async function getTokenBalance(userAddress) {
-  const contract = new ethers.Contract(tokenAddress, ['function balanceOf(address) view returns (uint256)'], provider);
-  const balance = await contract.balanceOf(userAddress);
-  return ethers.utils.formatEther(balance);
-}`,
-        };
-      default:
-        return {
-          title: "Content Coming Soon",
-          content:
-            "This section is currently being developed and will be available soon.",
-          codeExample: "",
-        };
-    }
-  };
-
-  const content = getSampleContent();
+async function interactWithProtocol() {
+  // Connect to protocol contract
+  const contract = new ethers.Contract(
+    contractAddress,
+    contractABI,
+    wallet
+  );
+  
+  // Execute transaction
+  const tx = await contract.someFunction(parameters);
+  await tx.wait();
+  
+  console.log('Transaction completed:', tx.hash);
+}`}
+                language="javascript"
+                readOnly={true}
+                height="100%"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Content Header */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-          {content.title}
-        </h2>
-      </div>
-
+    <div className="max-w-6xl mx-auto">
       {/* Content based on section type */}
-      {section.type === "theory" && (
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-2xl">📚</span>
-              <h3 className="text-xl font-bold text-blue-900 dark:text-blue-100">
-                Learning Content
-              </h3>
-            </div>
-            <div className="text-blue-800 dark:text-blue-200 whitespace-pre-line">
-              {content.content}
-            </div>
-          </div>
-        </div>
-      )}
+      {section.type === "theory" && renderTheoryContent(content)}
 
-      {section.type === "code-walkthrough" && (
-        <div className="space-y-8">
-          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-2xl">💻</span>
-              <h3 className="text-xl font-bold text-purple-900 dark:text-purple-100">
-                Code Walkthrough
-              </h3>
-            </div>
-            <div className="text-purple-800 dark:text-purple-200 whitespace-pre-line mb-6">
-              {content.content}
-            </div>
-          </div>
+      {section.type === "hands-on" && renderHandsOnContent()}
 
-          {content.codeExample && (
-            <div>
-              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                💻 Interactive Code Example
-              </h4>
-              <CodeEditor
-                initialCode={content.codeExample}
-                language="javascript"
-                readOnly={false}
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {section.type === "hands-on" && (
-        <div className="space-y-8">
-          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-2xl">🔧</span>
-              <h3 className="text-xl font-bold text-green-900 dark:text-green-100">
-                Hands-On Practice
-              </h3>
-            </div>
-            <div className="text-green-800 dark:text-green-200 whitespace-pre-line">
-              {content.content}
-            </div>
-          </div>
-
-          {content.codeExample && (
-            <div>
-              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                🛠️ Practice Code
-              </h4>
-              <CodeEditor
-                initialCode={content.codeExample}
-                language="javascript"
-                readOnly={false}
-              />
-            </div>
-          )}
-        </div>
-      )}
+      {section.type === "code-walkthrough" && renderCodeWalkthroughContent()}
 
       {/* Default content for other types */}
       {!["theory", "code-walkthrough", "hands-on"].includes(section.type) && (
@@ -168,10 +364,10 @@ async function getTokenBalance(userAddress) {
           <motion.button
             onClick={handleComplete}
             disabled={completed}
-            className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+            className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${
               completed
                 ? "bg-green-600 text-white cursor-default"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl"
             }`}
             whileHover={!completed ? { scale: 1.05 } : {}}
             whileTap={!completed ? { scale: 0.95 } : {}}
@@ -179,10 +375,13 @@ async function getTokenBalance(userAddress) {
             {completed ? (
               <span className="flex items-center gap-2">
                 <span>✓</span>
-                Complete!
+                Section Complete!
               </span>
             ) : (
-              "Mark as Complete"
+              <span className="flex items-center gap-2">
+                <span>📝</span>
+                Mark as Complete
+              </span>
             )}
           </motion.button>
         </div>
