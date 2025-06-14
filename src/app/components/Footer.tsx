@@ -4,50 +4,57 @@ import "../styles/gamify.css";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1e293b] border-t border-gray-200 bg-gradient-to-r from-[#010229] to-[#01056b] py-6 w-full mt-auto">
+    <footer className="bg-gradient-to-r from-[#010229] to-[#01056b] border-t border-gray-700/50 py-8 w-full mt-auto">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <div className="flex items-center justify-center md:justify-start mb-2">
-              <Image 
-                src="/inorbit2.svg" 
-                alt="Arbitrum Quest Logo" 
-                width={150} 
-                height={32} 
-                className="h-auto" 
-              />
+        {/* Main footer content */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          {/* Brand section */}
+          <div className="mb-6 md:mb-0">
+            <div className="flex items-center justify-center md:justify-start mb-3">
+              <div className="relative">
+                <span className="text-2xl font-bold text-white">Modules</span>
+                <span className="absolute -bottom-2 right-0 text-xs text-blue-300 translate-x-2">
+                  (by Inorbit)
+                </span>
+              </div>
             </div>
-            <p className="text-center md:text-left text-gray-400 text-sm ml-[7px]">
-              © {new Date().getFullYear()} CodeQuest. All rights reserved.
-            </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+          {/* Navigation links */}
+          <div className="flex flex-wrap justify-center md:justify-end gap-6 md:gap-8">
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors"
+              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
             >
               About
             </Link>
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors"
+              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
             >
               Privacy
             </Link>
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors"
+              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
             >
               Terms
             </Link>
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors"
+              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
             >
               Contact
             </Link>
           </div>
+        </div>
+
+        {/* Copyright section - separated for better visual hierarchy */}
+        <div className="border-t border-gray-700/30 pt-4">
+          <p className="text-center text-gray-500 text-xs">
+            © {new Date().getFullYear()} Modules by Inorbit. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>

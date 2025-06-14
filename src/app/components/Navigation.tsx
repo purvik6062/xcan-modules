@@ -23,14 +23,12 @@ export default function Navigation() {
             href="/"
             className="text-white text-2xl font-bold flex items-center pl-2 md:pl-0"
           >
-            <Image
-              src="/inorbit2.svg"
-              alt="Arbitrum Quest Logo"
-              width={100}
-              height={40}
-              className="h-auto"
-              priority
-            />
+            <div className="relative">
+              <span className="text-2xl font-bold">Modules</span>
+              <span className="absolute -bottom-1 right-0 text-[13px] text-gray-300 translate-x-2 translate-y-1">
+                (by Inorbit)
+              </span>
+            </div>
           </Link>
 
           {/* Hamburger (mobile only) */}
@@ -74,32 +72,12 @@ export default function Navigation() {
                 </li>
                 <li>
                   <Link
-                    href="/learn-defi"
-                    className={`text-white hover:text-blue-200 transition-colors ${
-                      isActive("/learn-defi") ? "font-semibold" : ""
-                    }`}
-                  >
-                    Learn DeFi
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     href="https://arbitrum-university.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-blue-200 transition-colors"
                   >
                     University
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/challenges"
-                    className={`text-white hover:text-blue-200 transition-colors ${
-                      isActive("/challenges") ? "font-semibold" : ""
-                    }`}
-                  >
-                    Challenges
                   </Link>
                 </li>
                 <li>

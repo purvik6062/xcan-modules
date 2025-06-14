@@ -16,13 +16,13 @@ export default function StatsSection() {
             </div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">1</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">4</div>
             <div className=" text-gray-300">
               Available Now
             </div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">5</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">2</div>
             <div className=" text-gray-300">Coming Soon</div>
           </div>
         </div>

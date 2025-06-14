@@ -2,9 +2,9 @@ export default function WhyChooseSection() {
   return (
     <section className="py-16 container mx-auto px-4">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold mb-4">Why Choose ArbitrumQuest?</h2>
+        <h2 className="text-3xl font-bold mb-4">Why Choose Modules?</h2>
         <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-          The most comprehensive platform for learning Stylus Core Concepts
+          The most comprehensive platform for learning Arbitrum Core Concepts
         </p>
       </div>
 

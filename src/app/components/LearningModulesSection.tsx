@@ -10,14 +10,6 @@ export default function LearningModulesSection() {
           Comprehensive learning paths covering DeFi fundamentals on Arbitrum
           and advanced Stylus development
         </p>
-        <div className="mt-6">
-          <Link
-            href="/learn-defi"
-            className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transition-all duration-300 mr-4"
-          >
-            🎓 Learn DeFi on Arbitrum
-          </Link>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -6,9 +6,9 @@ import { defiChapters } from "../data/defiChapters";
 export default function ProgressOverview() {
   // Mock progress data - in real app this would come from user state/database
   const userProgress = {
-    "intro-to-defi": { completed: 5, total: 8 },
-    "decentralized-exchanges": { completed: 3, total: 8 },
-    "vaults-yield-aggregation": { completed: 1, total: 8 },
+    "intro-to-defi": { completed: 0, total: 8 },
+    "decentralized-exchanges": { completed: 0, total: 8 },
+    "vaults-yield-aggregation": { completed: 0, total: 8 },
     "risks-security": { completed: 0, total: 8 },
     "ai-defi": { completed: 0, total: 7 },
     "build-defi-app": { completed: 0, total: 7 },

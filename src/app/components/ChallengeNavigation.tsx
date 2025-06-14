@@ -9,21 +9,19 @@ export default function ChallengeNavigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-gradient-to-r from-[#010229] to-[#191F52] py-1">
+    <header className="bg-gradient-to-r from-[#010229] to-[#191F52] py-3 px-2">
       <div className="px-4">
         <div className="flex justify-between items-center">
           <Link
             href="/"
             className="text-white text-2xl font-bold flex items-center"
           >
-            <Image 
-              src="/inorbit2.svg" 
-              alt="Arbitrum Quest Logo" 
-              width={190} 
-              height={40} 
-              className="h-[62px]" 
-              priority
-            />
+            <div className="relative">
+              <span className="text-3xl font-bold">Modules</span>
+              <span className="absolute -bottom-1 right-0 text-[13px] text-gray-300 translate-x-2 translate-y-1">
+                (by Inorbit)
+              </span>
+            </div>
           </Link>
 
           {/* Desktop navigation - only playground and connect wallet */}
