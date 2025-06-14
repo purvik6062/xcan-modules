@@ -6,9 +6,10 @@ import { Chapter } from "../data/defiChapters";
 
 interface ChapterCardProps {
   chapter: Chapter;
+  basePath?: string;
 }
 
-export default function ChapterCard({ chapter }: ChapterCardProps) {
+export default function ChapterCard({ chapter, basePath = "/learn-defi" }: ChapterCardProps) {
   const availableSections = chapter.sections.filter(
     (section) => section.status === "available"
   );
@@ -214,11 +215,15 @@ export default function ChapterCard({ chapter }: ChapterCardProps) {
       {/* Action Button - Always at bottom */}
       <div className="p-6 pt-0 mt-auto">
         {chapter.status === "available" ? (
-          <Link href={`/learn-defi/${chapter.id}`}>
+          <Link href={`${basePath}/${chapter.id}`}>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              className={`w-full ${
+                basePath === "/learn-orbit" 
+                  ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700" 
+                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              } text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}
             >
               {completedSections > 0 ? "Continue Learning" : "Start Chapter"}
               <span className="text-lg">→</span>

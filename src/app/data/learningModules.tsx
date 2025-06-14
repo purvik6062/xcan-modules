@@ -202,8 +202,8 @@ export const learningModules: LearningModule[] = [
     level: "Advanced",
     duration: "4-6 weeks",
     challenges: 10,
-    status: "coming-soon",
-    href: "#",
+    status: "available",
+    href: "/learn-orbit",
     target: "_self",
     gradient: "from-emerald-500 to-teal-600",
     features: [

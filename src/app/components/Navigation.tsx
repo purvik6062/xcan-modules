@@ -72,7 +72,7 @@ export default function Navigation() {
                 </li>
                 <li>
                   <Link
-                    href="https://arbitrum-university.vercel.app/"
+                    href="https://inorbit-app.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-blue-200 transition-colors"
