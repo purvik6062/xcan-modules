@@ -24,25 +24,25 @@ export default function Footer() {
           <div className="flex flex-wrap justify-center md:justify-end gap-6 md:gap-8">
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
+              className="text-gray-200 hover:text-blue-400 transition-colors text-sm"
             >
               About
             </Link>
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
+              className="text-gray-200 hover:text-blue-400 transition-colors text-sm"
             >
               Privacy
             </Link>
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
+              className="text-gray-200 hover:text-blue-400 transition-colors text-sm"
             >
               Terms
             </Link>
             <Link
               href="/"
-              className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
+              className="text-gray-200 hover:text-blue-400 transition-colors text-sm"
             >
               Contact
             </Link>
@@ -51,7 +51,7 @@ export default function Footer() {
 
         {/* Copyright section - separated for better visual hierarchy */}
         <div className="border-t border-gray-700/30 pt-4">
-          <p className="text-center text-gray-500 text-xs">
+          <p className="text-center text-gray-200 text-xs">
             © {new Date().getFullYear()} Modules by Inorbit. All rights
             reserved.
           </p>

@@ -66,20 +66,20 @@ export default function ContentProgressTracker({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 min-w-[280px]"
+        className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-4 min-w-[280px]"
       >
         {/* Section Progress */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-sm font-medium text-gray-300">
               Section Progress
             </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-gray-400">
               {currentSubsection + 1} of {totalSubsections}
             </span>
           </div>
 
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-gray-700 rounded-full h-2">
             <motion.div
               className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
               initial={{ width: 0 }}
@@ -92,15 +92,15 @@ export default function ContentProgressTracker({
         {/* Reading Progress */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-sm font-medium text-gray-300">
               Reading Progress
             </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-gray-400">
               {Math.round(readingProgress)}%
             </span>
           </div>
 
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-gray-700 rounded-full h-2">
             <motion.div
               className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full"
               style={{ width: `${readingProgress}%` }}
@@ -111,20 +111,20 @@ export default function ContentProgressTracker({
 
         {/* Time Tracking */}
         <div className="mb-4 grid grid-cols-2 gap-4 text-center">
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2">
-            <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+          <div className="bg-blue-900/20 rounded-lg p-2">
+            <div className="text-xs text-blue-400 font-medium">
               Time Spent
             </div>
-            <div className="text-sm font-bold text-blue-800 dark:text-blue-200">
+            <div className="text-sm font-bold text-blue-200">
               {formatTime(timeSpent)}
             </div>
           </div>
 
-          <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2">
-            <div className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+          <div className="bg-purple-900/20 rounded-lg p-2">
+            <div className="text-xs text-purple-400 font-medium">
               Est. Time
             </div>
-            <div className="text-sm font-bold text-purple-800 dark:text-purple-200">
+            <div className="text-sm font-bold text-purple-200">
               {estimatedReadTime}
             </div>
           </div>
@@ -138,8 +138,8 @@ export default function ContentProgressTracker({
               disabled={currentSubsection === 0}
               className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
                 currentSubsection === 0
-                  ? "bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500"
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-600 text-gray-300 hover:bg-gray-500"
               }`}
             >
               ← Previous
@@ -150,7 +150,7 @@ export default function ContentProgressTracker({
               disabled={currentSubsection === totalSubsections - 1}
               className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
                 currentSubsection === totalSubsections - 1
-                  ? "bg-gray-100 dark:bg-gray-700 text-gray-400 cursor-not-allowed"
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
               }`}
             >
@@ -164,9 +164,9 @@ export default function ContentProgressTracker({
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700"
+            className="mt-3 p-2 bg-green-900/20 rounded-lg border border-green-700"
           >
-            <div className="flex items-center gap-2 text-green-700 dark:text-green-300">
+            <div className="flex items-center gap-2 text-green-300">
               <span className="text-lg">🎉</span>
               <span className="text-xs font-medium">Almost done!</span>
             </div>

@@ -310,7 +310,7 @@ export default function Playground() {
                   },
                 }}
                 loading={
-                  <div className="flex justify-center items-center h-full text-gray-500">
+                  <div className="flex justify-center items-center h-full text-gray-400">
                     Loading Editor...
                   </div>
                 }
@@ -329,7 +329,7 @@ export default function Playground() {
                     {output}
                   </div>
                 ) : (
-                  <div className="text-gray-500">Run code to see results</div>
+                  <div className="text-gray-400">Run code to see results</div>
                 )}
               </div>
             </div>

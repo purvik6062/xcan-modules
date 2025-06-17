@@ -17,7 +17,7 @@ export default function ChallengeDetails({ challenge }: ChallengeDetailsProps) {
       case "Advanced":
         return "bg-red-100 text-red-800 bg-red-900 text-red-200";
       default:
-        return "bg-gray-100 text-gray-800 bg-gray-900 text-gray-200";
+        return "bg-gray-100 text-gray-300 bg-gray-900 text-gray-200";
     }
   };
 

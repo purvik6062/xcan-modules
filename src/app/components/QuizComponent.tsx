@@ -23,10 +23,10 @@ export default function QuizComponent({
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">❓</div>
-        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+        <h3 className="text-xl font-bold text-white mb-2">
           Quiz Coming Soon
         </h3>
-        <p className="text-gray-600 dark:text-gray-300">
+        <p className="text-gray-300">
           Quiz questions for this chapter are being prepared.
         </p>
         <button
@@ -99,7 +99,7 @@ export default function QuizComponent({
           {passed ? "🎉" : "📚"}
         </div>
 
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h3 className="text-2xl font-bold text-white mb-2">
           Quiz Complete!
         </h3>
 
@@ -114,8 +114,8 @@ export default function QuizComponent({
         <p
           className={`text-lg mb-6 ${
             passed
-              ? "text-green-600 dark:text-green-400"
-              : "text-orange-600 dark:text-orange-400"
+              ? "text-green-400"
+              : "text-orange-400"
           }`}
         >
           {passed
@@ -123,7 +123,7 @@ export default function QuizComponent({
             : "Good effort! Review the material and try again."}
         </p>
 
-        <div className="space-y-4 mb-6">
+        <div className="space-y-4 mb-8">
           {questions.map((question, index) => {
             const isCorrect = selectedAnswers[index] === question.correctAnswer;
             return (
@@ -131,27 +131,27 @@ export default function QuizComponent({
                 key={question.id}
                 className={`p-4 rounded-lg border-2 ${
                   isCorrect
-                    ? "border-green-200 bg-green-50 dark:border-green-700 dark:bg-green-900/20"
-                    : "border-red-200 bg-red-50 dark:border-red-700 dark:bg-red-900/20"
+                    ? "border-green-700 bg-green-900/20"
+                    : "border-red-700 bg-red-900/20"
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`text-xl ${isCorrect ? "✅" : "❌"}`}>
                     {isCorrect ? "✅" : "❌"}
                   </span>
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="font-medium text-white">
                     Question {index + 1}
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+                <p className="text-sm text-gray-300 mb-2">
                   {question.question}
                 </p>
-                <p className="text-sm text-gray-700 dark:text-gray-200">
+                <p className="text-sm text-gray-200">
                   <strong>Correct answer:</strong>{" "}
                   {question.options[question.correctAnswer]}
                 </p>
                 {!isCorrect && (
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                  <p className="text-sm text-gray-300 mt-1">
                     <strong>Your answer:</strong>{" "}
                     {question.options[selectedAnswers[index]]}
                   </p>
@@ -191,14 +191,14 @@ export default function QuizComponent({
       {/* Progress */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <span className="text-sm font-medium text-gray-300">
             Question {currentQuestion + 1} of {questions.length}
           </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <span className="text-sm text-gray-400">
             {Math.round((currentQuestion / questions.length) * 100)}% complete
           </span>
         </div>
-        <div className="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-2">
+        <div className="w-full bg-slate-600 rounded-full h-2">
           <motion.div
             className="bg-blue-500 h-2 rounded-full"
             initial={{ width: 0 }}
@@ -219,8 +219,8 @@ export default function QuizComponent({
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 mb-6">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="bg-blue-900/20 rounded-xl p-6 mb-6">
+            <h3 className="text-xl font-bold text-white mb-4">
               {question.question}
             </h3>
           </div>
@@ -235,11 +235,11 @@ export default function QuizComponent({
                 className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
                   isAnswered
                     ? index === question.correctAnswer
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                      ? "border-green-500 bg-green-900/20 text-green-300"
                       : index === selectedAnswer
-                      ? "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300"
-                      : "border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 text-gray-500 dark:text-gray-400"
-                    : "border-gray-200 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                      ? "border-red-500 bg-red-900/20 text-red-300"
+                      : "border-slate-600 bg-slate-700 text-gray-400"
+                    : "border-slate-600 hover:border-blue-500 hover:bg-blue-900/20"
                 }`}
                 whileHover={!isAnswered ? { scale: 1.02 } : {}}
                 whileTap={!isAnswered ? { scale: 0.98 } : {}}
@@ -252,8 +252,8 @@ export default function QuizComponent({
                           ? "border-green-500 bg-green-500 text-white"
                           : index === selectedAnswer
                           ? "border-red-500 bg-red-500 text-white"
-                          : "border-gray-300 dark:border-gray-600"
-                        : "border-gray-300 dark:border-gray-600"
+                          : "border-gray-600"
+                        : "border-gray-600"
                     }`}
                   >
                     {isAnswered && index === question.correctAnswer && "✓"}
@@ -276,8 +276,8 @@ export default function QuizComponent({
               animate={{ opacity: 1, y: 0 }}
               className={`p-4 rounded-lg ${
                 isCorrect
-                  ? "bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-700"
-                  : "bg-orange-100 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700"
+                  ? "bg-green-900/20 border border-green-700"
+                  : "bg-orange-900/20 border border-orange-700"
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
@@ -285,8 +285,8 @@ export default function QuizComponent({
                 <span
                   className={`font-bold ${
                     isCorrect
-                      ? "text-green-700 dark:text-green-300"
-                      : "text-orange-700 dark:text-orange-300"
+                      ? "text-green-300"
+                      : "text-orange-300"
                   }`}
                 >
                   {isCorrect ? "Correct!" : "Not quite right"}
@@ -295,8 +295,8 @@ export default function QuizComponent({
               <p
                 className={`text-sm ${
                   isCorrect
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-orange-600 dark:text-orange-400"
+                    ? "text-green-400"
+                    : "text-orange-400"
                 }`}
               >
                 {question.explanation}

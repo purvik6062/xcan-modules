@@ -152,7 +152,7 @@ export default function LeaderboardPage() {
                         user.rank === 1
                           ? "bg-yellow-400 text-yellow-900"
                           : user.rank === 2
-                          ? "bg-gray-300 text-gray-700"
+                          ? "bg-gray-300 text-gray-300"
                           : user.rank === 3
                           ? "bg-amber-600 text-amber-100"
                           : "bg-gray-700 text-gray-300"

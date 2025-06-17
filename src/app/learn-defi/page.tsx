@@ -17,12 +17,12 @@ export default function LearnDeFiPage() {
         );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <motion.h1
-            className="text-5xl font-bold text-gray-900 dark:text-white mb-4"
+            className="text-5xl font-bold text-white mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -30,7 +30,7 @@ export default function LearnDeFiPage() {
             Master DeFi on Arbitrum
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
+            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -46,27 +46,27 @@ export default function LearnDeFiPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-blue-600">$2.5B+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 TVL on Arbitrum
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-green-600">6</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Complete Chapters
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-purple-600">50+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Interactive Lessons
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-orange-600">NFT</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Badges Earned
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function LearnDeFiPage() {
               className={`px-6 py-2 rounded-full transition-all duration-200 ${
                 selectedLevel === level
                   ? "bg-blue-600 text-white shadow-lg"
-                  : "bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-slate-700"
+                  : "bg-slate-800 text-gray-300 hover:bg-slate-700"
               }`}
             >
               {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -140,7 +140,7 @@ export default function LearnDeFiPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">
             Protocols You'll Master
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
@@ -154,10 +154,10 @@ export default function LearnDeFiPage() {
             ].map((protocol) => (
               <div
                 key={protocol.name}
-                className="bg-white dark:bg-slate-800 rounded-lg p-4 text-center shadow-lg hover:shadow-xl transition-shadow duration-200"
+                className="bg-slate-800 rounded-lg p-4 text-center shadow-lg hover:shadow-xl transition-shadow duration-200"
               >
                 <div className="text-3xl mb-2">{protocol.logo}</div>
-                <div className="font-semibold text-gray-900 dark:text-white">
+                <div className="font-semibold text-white">
                   {protocol.name}
                 </div>
               </div>

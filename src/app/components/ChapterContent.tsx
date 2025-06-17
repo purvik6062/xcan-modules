@@ -65,11 +65,11 @@ Check back soon for updates!`,
       <div className="max-w-4xl mx-auto">
         {/* Content Header */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-3xl font-bold text-white mb-4">
             {content.title}
           </h2>
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-700">
-            <p className="text-lg text-blue-800 dark:text-blue-200 leading-relaxed">
+          <div className="bg-gradient-to-r from-blue-900/20 to-indigo-900/20 rounded-xl p-6 border border-blue-700">
+            <p className="text-lg text-blue-200 leading-relaxed">
               {content.introduction}
             </p>
           </div>
@@ -86,7 +86,7 @@ Check back soon for updates!`,
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     currentSubSection === index
                       ? "bg-blue-600 text-white shadow-lg"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                   }`}
                 >
                   {index + 1}. {subsection.title}
@@ -104,7 +104,7 @@ Check back soon for updates!`,
           transition={{ duration: 0.3 }}
           className="mb-8"
         >
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
               <h3 className="text-2xl font-bold mb-2">
                 {content.sections[currentSubSection].title}
@@ -112,8 +112,8 @@ Check back soon for updates!`,
             </div>
 
             <div className="p-8">
-              <div className="prose prose-lg dark:prose-invert max-w-none">
-                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed text-base">
+              <div className="prose prose-lg prose-invert max-w-none">
+                <div className="text-gray-300 whitespace-pre-line leading-relaxed text-base">
                   {content.sections[currentSubSection].content}
                 </div>
               </div>
@@ -152,14 +152,14 @@ Check back soon for updates!`,
               disabled={currentSubSection === 0}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 currentSubSection === 0
-                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                   : "bg-gray-600 hover:bg-gray-700 text-white"
               }`}
             >
               ← Previous
             </button>
 
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+            <span className="text-sm text-gray-400">
               {currentSubSection + 1} of {content.sections.length}
             </span>
 
@@ -172,7 +172,7 @@ Check back soon for updates!`,
               disabled={currentSubSection === content.sections.length - 1}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
                 currentSubSection === content.sections.length - 1
-                  ? "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                   : "bg-gray-600 hover:bg-gray-700 text-white"
               }`}
             >
@@ -182,10 +182,10 @@ Check back soon for updates!`,
         )}
 
         {/* Key Takeaways */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 mb-8 border border-green-200 dark:border-green-700">
+        <div className="bg-gradient-to-r from-green-900/20 to-emerald-900/20 rounded-xl p-6 mb-8 border border-green-700">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-2xl">🎯</span>
-            <h4 className="text-xl font-bold text-green-900 dark:text-green-100">
+            <h4 className="text-xl font-bold text-green-100">
               Key Takeaways
             </h4>
           </div>
@@ -193,9 +193,9 @@ Check back soon for updates!`,
             {content.keyTakeaways.map((takeaway, index) => (
               <li
                 key={index}
-                className="flex items-start gap-3 text-green-800 dark:text-green-200"
+                className="flex items-start gap-3 text-green-200"
               >
-                <span className="text-green-600 dark:text-green-400 mt-1">
+                <span className="text-green-400 mt-1">
                   ✓
                 </span>
                 <span>{takeaway}</span>
@@ -207,21 +207,21 @@ Check back soon for updates!`,
         {/* Additional Resources */}
         {content.additionalResources &&
           content.additionalResources.length > 0 && (
-            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 mb-8 border border-purple-200 dark:border-purple-700">
+            <div className="bg-purple-900/20 rounded-xl p-6 mb-8 border border-purple-700">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-2xl">📚</span>
-                <h4 className="text-xl font-bold text-purple-900 dark:text-purple-100">
+                <h4 className="text-xl font-bold text-purple-100">
                   Additional Resources
                 </h4>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 {content.additionalResources.map((resource, index) => (
                   <a
                     key={index}
                     href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-purple-200 dark:border-purple-700 hover:border-purple-400 dark:hover:border-purple-500 transition-colors duration-200"
+                    className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-purple-700 hover:border-purple-500 transition-colors duration-200"
                   >
                     <span className="text-xl">
                       {resource.type === "tool"
@@ -233,10 +233,10 @@ Check back soon for updates!`,
                         : "📄"}
                     </span>
                     <div>
-                      <div className="font-medium text-gray-900 dark:text-white">
+                      <div className="font-medium text-white">
                         {resource.title}
                       </div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400 capitalize">
+                      <div className="text-sm text-gray-400 capitalize">
                         {resource.type}
                       </div>
                     </div>
@@ -251,14 +251,14 @@ Check back soon for updates!`,
 
   const renderHandsOnContent = () => (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-6">
+      <div className="bg-green-900/20 border border-green-700 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl">🔧</span>
-          <h3 className="text-xl font-bold text-green-900 dark:text-green-100">
+          <h3 className="text-xl font-bold text-green-100">
             Hands-On Practice
           </h3>
         </div>
-        <div className="text-green-800 dark:text-green-200">
+        <div className="text-green-200">
           <p className="mb-4">
             This hands-on section will guide you through practical
             implementation and real-world usage.
@@ -275,14 +275,14 @@ Check back soon for updates!`,
 
   const renderCodeWalkthroughContent = () => (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6">
+      <div className="bg-purple-900/20 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl">💻</span>
-          <h3 className="text-xl font-bold text-purple-900 dark:text-purple-100">
+          <h3 className="text-xl font-bold text-purple-100">
             Code Walkthrough
           </h3>
         </div>
-        <div className="text-purple-800 dark:text-purple-200 mb-6">
+        <div className="text-purple-200 mb-6">
           <p>
             Detailed code walkthroughs with interactive examples are being
             developed to help you understand the technical implementation.
@@ -344,10 +344,10 @@ async function interactWithProtocol() {
       {!["theory", "code-walkthrough", "hands-on"].includes(section.type) && (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🚧</div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-bold text-white mb-2">
             Content Coming Soon
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-gray-300 mb-4">
             This section is currently being developed and will be available
             soon.
           </p>
@@ -355,9 +355,9 @@ async function interactWithProtocol() {
       )}
 
       {/* Completion Button */}
-      <div className="mt-12 pt-8 border-t border-gray-200 dark:border-slate-600">
+      <div className="mt-12 pt-8 border-t border-slate-600">
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600 dark:text-gray-300">
+          <div className="text-sm text-gray-300">
             Estimated time: {section.estimatedTime}
           </div>
 

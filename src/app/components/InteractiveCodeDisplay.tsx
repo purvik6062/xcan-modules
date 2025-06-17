@@ -43,7 +43,7 @@ export default function InteractiveCodeDisplay({
       // Comments (must come first)
       {
         regex: /(\/\/.*$|\/\*[\s\S]*?\*\/)/g,
-        className: "text-gray-500 italic",
+        className: "text-gray-400 italic",
       },
       // Strings
       {
@@ -119,7 +119,7 @@ export default function InteractiveCodeDisplay({
       <div className="relative">
         <div className="flex">
           {/* Line Numbers */}
-          <div className="bg-gray-800 px-3 py-4 text-gray-500 text-sm font-mono select-none border-r border-gray-700">
+          <div className="bg-gray-800 px-3 py-4 text-gray-400 text-sm font-mono select-none border-r border-gray-700">
             {codeLines.map((_, index) => (
               <div
                 key={index}
