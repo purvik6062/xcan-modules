@@ -82,7 +82,7 @@ export default function CodeEditor({
           parameterHints: { enabled: true },
         }}
         loading={
-          <div className="flex justify-center items-center h-full text-gray-500">
+          <div className="flex justify-center items-center h-full text-gray-400">
             Loading Editor...
           </div>
         }

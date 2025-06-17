@@ -182,7 +182,7 @@ export default function ProfilePage() {
                   className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
                     activeTab === "overview"
                       ? "  text-blue-300 border-blue-300"
-                      : "text-gray-500 hover:text-gray-400 hover:border-gray-300 border-transparent"
+                      : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
                   }`}
                   onClick={() => setActiveTab("overview")}
                 >
@@ -194,7 +194,7 @@ export default function ProfilePage() {
                   className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
                     activeTab === "challenges"
                       ? "  text-blue-300 border-blue-300"
-                      : "text-gray-500 hover:text-gray-400 hover:border-gray-300 border-transparent"
+                      : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
                   }`}
                   onClick={() => setActiveTab("challenges")}
                 >
@@ -206,7 +206,7 @@ export default function ProfilePage() {
                   className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
                     activeTab === "achievements"
                       ? " text-blue-300 border-blue-300"
-                      : "text-gray-500 hover:text-gray-400 hover:border-gray-300 border-transparent"
+                      : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
                   }`}
                   onClick={() => setActiveTab("achievements")}
                 >
@@ -330,7 +330,7 @@ export default function ProfilePage() {
                                 {challenge.title}
                               </Link>
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-gray-400">
                               {challenge.completedOn}
                             </div>
                           </div>
@@ -349,7 +349,7 @@ export default function ProfilePage() {
                               {achievement.name}
                             </span>
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-400">
                             {achievement.date}
                           </div>
                         </div>
@@ -389,7 +389,7 @@ export default function ProfilePage() {
                           >
                             {challenge.level}
                           </span>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-gray-400">
                             {challenge.completedOn}
                           </span>
                         </div>
@@ -436,7 +436,7 @@ export default function ProfilePage() {
                           style={{ width: `${challenge.progress}%` }}
                         ></div>
                       </div>
-                      <div className="text-right mt-1 text-sm text-gray-500">
+                      <div className="text-right mt-1 text-sm text-gray-400">
                         {challenge.progress}% complete
                       </div>
                     </div>
@@ -463,7 +463,7 @@ export default function ProfilePage() {
                         <p className="text-sm  text-gray-300">
                           {achievement.description}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-400 mt-1">
                           Earned on {achievement.date}
                         </p>
                       </div>
@@ -480,7 +480,7 @@ export default function ProfilePage() {
                       <p className="text-sm  text-gray-300">
                         Complete 10 advanced challenges
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Locked</p>
+                      <p className="text-xs text-gray-400 mt-1">Locked</p>
                     </div>
                   </div>
 
@@ -493,7 +493,7 @@ export default function ProfilePage() {
                       <p className="text-sm  text-gray-300">
                         Complete 5 challenges in a single day
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">Locked</p>
+                      <p className="text-xs text-gray-400 mt-1">Locked</p>
                     </div>
                   </div>
                 </div>

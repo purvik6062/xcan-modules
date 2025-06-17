@@ -30,10 +30,10 @@ export default function OrbitChapterPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-2xl font-bold text-white mb-4">
             Chapter Not Found
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-gray-300">
             The Orbit chapter you're looking for doesn't exist.
           </p>
         </div>
@@ -71,11 +71,11 @@ export default function OrbitChapterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
       <div className="container mx-auto px-4 py-8">
         {/* Chapter Header */}
         <motion.div
-          className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 mb-8"
+          className="bg-slate-800 rounded-2xl shadow-xl p-8 mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -84,19 +84,19 @@ export default function OrbitChapterPage() {
             <div className="flex items-center gap-4">
               <div className="text-5xl">{chapter.icon}</div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-3xl font-bold text-white">
                   {chapter.title}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-300 mt-2">
+                <p className="text-gray-300 mt-2">
                   {chapter.description}
                 </p>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-gray-400">
                 {chapter.level} • {chapter.duration}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-gray-400">
                 {chapter.sections.length} sections
               </div>
             </div>
@@ -119,37 +119,6 @@ export default function OrbitChapterPage() {
               completedSections={completedSections}
               onSectionSelect={setCurrentSectionIndex}
             />
-
-            {/* Chapter Badge */}
-            {chapter.badge && (
-              <motion.div
-                className="mt-6 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <div className="text-center">
-                  <div className="text-4xl mb-3">🏆</div>
-                  <h3 className="text-lg font-bold mb-2">
-                    {chapter.badge.title}
-                  </h3>
-                  <p className="text-sm opacity-90">
-                    {chapter.badge.description}
-                  </p>
-                  <div className="mt-4">
-                    <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                    <p className="text-xs mt-2 opacity-80">
-                      {Math.round(progress)}% Complete
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            )}
 
             {/* Capstone Project Preview */}
             {chapter.capstoneProject && (
@@ -175,7 +144,7 @@ export default function OrbitChapterPage() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             <motion.div
-              className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
+              className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -240,10 +209,10 @@ export default function OrbitChapterPage() {
                 ) : (
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">🔒</div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-xl font-bold text-white mb-2">
                       Coming Soon
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
+                    <p className="text-gray-300">
                       This section is currently under development and will be
                       available soon.
                     </p>
@@ -252,34 +221,30 @@ export default function OrbitChapterPage() {
               </div>
 
               {/* Navigation Controls */}
-              <div className="flex justify-between items-center p-6 bg-gray-50 dark:bg-slate-700">
-                <button
-                  onClick={goToPreviousSection}
-                  disabled={currentSectionIndex === 0}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                    currentSectionIndex === 0
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                  }`}
-                >
-                  ← Previous
-                </button>
+              <div className="border-t border-slate-700 p-6">
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={goToPreviousSection}
+                    disabled={currentSectionIndex === 0}
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    ← Previous
+                  </button>
 
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {currentSectionIndex + 1} / {chapter.sections.length}
+                  <div className="text-sm text-gray-400">
+                    {currentSectionIndex + 1} / {chapter.sections.length}
+                  </div>
+
+                  <button
+                    onClick={goToNextSection}
+                    disabled={
+                      currentSectionIndex === chapter.sections.length - 1
+                    }
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next →
+                  </button>
                 </div>
-
-                <button
-                  onClick={goToNextSection}
-                  disabled={currentSectionIndex === chapter.sections.length - 1}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                    currentSectionIndex === chapter.sections.length - 1
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                  }`}
-                >
-                  Next →
-                </button>
               </div>
             </motion.div>
           </div>

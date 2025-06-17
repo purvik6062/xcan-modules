@@ -166,7 +166,7 @@ export default function ConnectWallet() {
                   overflow-hidden z-50"
               >
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4">
-                  <p className="text-sm text-gray-600">Connected as:</p>
+                  <p className="text-sm text-black">Connected as:</p>
                   <p className="font-bold text-blue-800 truncate">
                     {user?.google?.email ||
                       user?.farcaster?.displayName ||
@@ -180,7 +180,7 @@ export default function ConnectWallet() {
                     <button
                       onClick={handleCopyAddress}
                       className="w-full flex items-center justify-between 
-                        px-4 py-3 text-sm text-gray-700 
+                        px-4 py-3 text-sm text-black 
                         hover:bg-blue-50 transition-colors 
                         group relative"
                     >

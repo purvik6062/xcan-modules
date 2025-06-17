@@ -152,7 +152,7 @@ export default function ChallengesPage() {
               <div className=" bg-[#0D1221] rounded-lg p-10 text-center shadow-md border border-gray-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-16 w-16 mx-auto text-gray-500 mb-4"
+                  className="h-16 w-16 mx-auto text-gray-400 mb-4"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -164,7 +164,7 @@ export default function ChallengesPage() {
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <h3 className="text-lg font-medium  text-gray-500 mb-2">
+                <h3 className="text-lg font-medium  text-gray-400 mb-2">
                   No challenges match your filters
                 </h3>
                 <p className=" text-gray-400 mb-4">

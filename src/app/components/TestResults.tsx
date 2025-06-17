@@ -316,7 +316,7 @@ export default function TestResults({
             <h3 className="text-sm font-medium text-gray-300 mb-2">
               Console Output
             </h3>
-            <div className="bg-[#1e1e1e] border border-gray-700 rounded-md p-3 max-h-40 overflow-y-auto">
+            <div className="bg-[#1e1e1e] border border-gray-700 rounded-md p-3 h-fit">
               <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap">
                 {/* Test execution logs */}
                 {allTestLogs.map((log: string, index: number) => (
@@ -414,7 +414,7 @@ function VerificationStage({
               ? "text-green-400"
               : isActive
               ? "text-blue-400"
-              : "text-gray-500"
+              : "text-gray-400"
           }
         `}
         >

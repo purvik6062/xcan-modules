@@ -39,12 +39,12 @@ export default function ProgressBar({
   return (
     <div className={`w-full ${className}`}>
       {showPercentage && (
-        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-2">
+        <div className="flex justify-between text-sm text-gray-300 mb-2">
           <span>Progress</span>
           <span>{Math.round(progress)}%</span>
         </div>
       )}
-      <div className="w-full bg-gray-200 dark:bg-slate-600 rounded-full h-3 overflow-hidden">
+      <div className="w-full bg-slate-600 rounded-full h-3 overflow-hidden">
         <motion.div
           className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-sm"
           initial={{ width: 0 }}
@@ -55,7 +55,7 @@ export default function ProgressBar({
 
       {progress === 100 && (
         <motion.div
-          className="flex items-center gap-2 mt-2 text-green-600 dark:text-green-400"
+          className="flex items-center gap-2 mt-2 text-green-400"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}

@@ -407,13 +407,13 @@ export default function ClientChallenge({
                       <div className="flex flex-col items-center">
                         <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
                         <p className="text-blue-400 text-lg">Running tests...</p>
-                        <p className="text-gray-500 text-sm mt-2">Evaluating your blockchain magic ✨</p>
+                        <p className="text-gray-400 text-sm mt-2">Evaluating your blockchain magic ✨</p>
                       </div>
                     ) : (
                       <>
                         <FiPlayCircle className="text-4xl text-blue-500 mb-3" />
                         <p className="text-gray-300 mb-2">Ready to test your solution?</p>
-                        <p className="text-gray-500 text-sm">Complete the exercise and submit to check your results.</p>
+                        <p className="text-gray-400 text-sm">Complete the exercise and submit to check your results.</p>
                       </>
                     )}
                   </div>
@@ -436,7 +436,7 @@ export default function ClientChallenge({
                   <div className="flex flex-col items-center justify-center p-8 text-center">
                     <FiTerminal className="text-4xl text-purple-500 mb-3" />
                     <p className="text-gray-300 mb-2">Console Output</p>
-                    <p className="text-gray-500 text-sm">No logs yet. Submit your solution to see output here.</p>
+                    <p className="text-gray-400 text-sm">No logs yet. Submit your solution to see output here.</p>
                   </div>
                 )}
               </div>
@@ -458,7 +458,7 @@ export default function ClientChallenge({
                   <h4 className="text-yellow-400 font-medium">Need a hint?</h4>
                   <p className="text-gray-300 text-sm mt-1">Stuck on this challenge? Check out the hints tab for guidance!</p>
                 </div>
-                <button onClick={() => setShowHintPopup(false)} className="text-gray-500 hover:text-gray-300 cursor-pointer">
+                <button onClick={() => setShowHintPopup(false)} className="text-gray-400 hover:text-gray-300 cursor-pointer">
                   <FiX />
                 </button>
               </div>

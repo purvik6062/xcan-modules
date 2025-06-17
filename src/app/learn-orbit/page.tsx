@@ -17,12 +17,12 @@ export default function LearnOrbitPage() {
         );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
           <motion.h1
-            className="text-5xl font-bold text-gray-900 dark:text-white mb-4"
+            className="text-5xl font-bold text-white mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -30,7 +30,7 @@ export default function LearnOrbitPage() {
             Master Arbitrum Orbit
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
+            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -46,27 +46,27 @@ export default function LearnOrbitPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-emerald-600">L3</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Custom Chains
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-teal-600">6</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Complete Chapters
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-blue-600">50+</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Hands-on Lessons
               </div>
             </div>
-            <div className="bg-white dark:bg-slate-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
               <div className="text-2xl font-bold text-purple-600">SDK</div>
-              <div className="text-sm text-gray-600 dark:text-gray-300">
+              <div className="text-sm text-gray-300">
                 Orbit Integration
               </div>
             </div>
@@ -76,33 +76,33 @@ export default function LearnOrbitPage() {
         {/* Progress Overview */}
         <div className="mb-8">
           <motion.div
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6"
+            className="bg-slate-800 rounded-2xl shadow-xl p-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-2xl font-bold text-white mb-4">
               🚀 Your Orbit Learning Journey
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-gray-300 mb-4">
               Track your progress as you master Arbitrum Orbit development from basic concepts to production deployment.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4">
+              <div className="bg-emerald-900/20 rounded-lg p-4">
                 <div className="text-2xl font-bold text-emerald-600">0/42</div>
-                <div className="text-sm text-emerald-700 dark:text-emerald-300">
+                <div className="text-sm text-emerald-300">
                   Sections Completed
                 </div>
               </div>
-              <div className="bg-teal-50 dark:bg-teal-900/20 rounded-lg p-4">
+              <div className="bg-teal-900/20 rounded-lg p-4">
                 <div className="text-2xl font-bold text-teal-600">0</div>
-                <div className="text-sm text-teal-700 dark:text-teal-300">
+                <div className="text-sm text-teal-300">
                   Badges Earned
                 </div>
               </div>
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+              <div className="bg-blue-900/20 rounded-lg p-4">
                 <div className="text-2xl font-bold text-blue-600">0%</div>
-                <div className="text-sm text-blue-700 dark:text-blue-300">
+                <div className="text-sm text-blue-300">
                   Overall Progress
                 </div>
               </div>
@@ -124,7 +124,7 @@ export default function LearnOrbitPage() {
               className={`px-6 py-2 rounded-full transition-all duration-200 ${
                 selectedLevel === level
                   ? "bg-emerald-600 text-white shadow-lg"
-                  : "bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-slate-700"
+                  : "bg-slate-800 text-gray-300 hover:bg-slate-700"
               }`}
             >
               {level.charAt(0).toUpperCase() + level.slice(1)}
@@ -167,48 +167,48 @@ export default function LearnOrbitPage() {
 
         {/* Featured Technologies */}
         <motion.div
-          className="mt-16 bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8"
+          className="mt-16 bg-slate-800 rounded-2xl shadow-xl p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+          <h2 className="text-3xl font-bold text-white mb-6 text-center">
             Technologies You'll Master
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center p-4">
               <div className="text-4xl mb-3">🏗️</div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Orbit SDK
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-300">
                 Comprehensive toolkit for chain deployment and management
               </p>
             </div>
             <div className="text-center p-4">
               <div className="text-4xl mb-3">⚙️</div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Chain Configuration
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-300">
                 Custom gas tokens, governance, and chain parameters
               </p>
             </div>
             <div className="text-center p-4">
               <div className="text-4xl mb-3">🔗</div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Bridge Development
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-300">
                 L2-L3 communication and asset transfers
               </p>
             </div>
             <div className="text-center p-4">
               <div className="text-4xl mb-3">🛡️</div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Security & Monitoring
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-gray-300">
                 Production deployment and chain maintenance
               </p>
             </div>
@@ -222,10 +222,10 @@ export default function LearnOrbitPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
         >
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-white mb-4">
             Ready to Launch Your Own Chain?
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
             Start with the fundamentals and work your way up to deploying a production-ready 
             Arbitrum Orbit chain with custom features and governance.
           </p>

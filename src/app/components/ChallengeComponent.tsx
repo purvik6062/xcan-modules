@@ -71,11 +71,11 @@ export default function ChallengeComponent({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8">
         {/* Code Editor */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-bold text-gray-300 dark:text-white">
               Your Solution
             </h3>
             <div className="flex gap-2">
@@ -108,7 +108,7 @@ export default function ChallengeComponent({
         <div className="space-y-6">
           {testResults.length > 0 && (
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+              <h3 className="text-lg font-bold text-gray-300 dark:text-white mb-4">
                 Test Results
               </h3>
               <div className="space-y-2">
@@ -197,7 +197,7 @@ export default function ChallengeComponent({
       {/* Manual Completion */}
       {!completed && (
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-slate-600 text-center">
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-gray-300 mb-4">
             Having trouble? You can skip this challenge for now and come back
             later.
           </p>
