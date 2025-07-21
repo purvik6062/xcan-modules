@@ -2,11 +2,12 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Providers from "./Providers";
-import ConditionalLayout from "./components/ConditionalLayout";
+import Providers from "../providers/Providers";
+import ConditionalLayout from "../components/ConditionalLayout";
 
 // Use next/font/google if the font is available on Google Fonts
 import { Tektur } from "next/font/google";
+import { Suspense } from "react";
 
 const tektur = Tektur({
   subsets: ["latin"],
@@ -20,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inorbit",
+  title: "Modules (by Inorbit)",
   description:
     "Comprehensive learning platform for Arbitrum concepts. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
 };
@@ -35,9 +36,11 @@ export default function RootLayout({
       <body
         className={`${tektur.variable} ${geistMono.variable} flex flex-col min-h-screen antialiased`}
       >
-        <Providers>
-          <ConditionalLayout>{children}</ConditionalLayout>
-        </Providers>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Providers>
+            <ConditionalLayout>{children}</ConditionalLayout>
+          </Providers>
+        </Suspense>
       </body>
     </html>
   );

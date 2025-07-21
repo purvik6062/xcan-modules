@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { challengesData } from "../../data/challenges";
+import { challengesData } from "../../../data/challenges";
 import { ethers } from "ethers";
 
 // Improved helper function for BigInt serialization
@@ -49,7 +49,8 @@ async function executeInSandbox(code: string, testCases: any[], slug: string) {
         description: testCase.description,
         input: JSON.stringify(testCase.input),
         expected: JSON.stringify(serializeBigInt(testCase.expectedOutput)),
-        actual: "Error: No function call found in your code. Make sure you call your function at the end.",
+        actual:
+          "Error: No function call found in your code. Make sure you call your function at the end.",
         passed: false,
         duration: 0,
         gasUsed: 0,

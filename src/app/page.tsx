@@ -1,8 +1,8 @@
-import HeroSection from "./components/HeroSection";
-import StatsSection from "./components/StatsSection";
-import LearningModulesSection from "./components/LearningModulesSection";
-import FeaturedChallengesSection from "./components/FeaturedChallengesSection";
-import WhyChooseSection from "./components/WhyChooseSection";
+import HeroSection from "../components/HeroSection";
+import StatsSection from "../components/StatsSection";
+import LearningModulesSection from "../components/LearningModulesSection";
+import FeaturedChallengesSection from "../components/FeaturedChallengesSection";
+import WhyChooseSection from "../components/WhyChooseSection";
 
 export default function Home() {
   return (
