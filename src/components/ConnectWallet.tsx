@@ -37,15 +37,6 @@ export default function ConnectWallet() {
   // console.log("user", user);
 
   useEffect(() => {
-    // Check if there's a social login
-    const hasSocialLogin = user?.google || user?.farcaster;
-
-    // If there's a social login, don't modify wallet connection
-    if (hasSocialLogin) {
-      setDisplayAddress(address);
-      return;
-    }
-
     // Find the first wallet with a matching address from a real wallet provider
     const realWallet = wallets.find(
       (wallet) =>
@@ -54,17 +45,17 @@ export default function ConnectWallet() {
 
     if (realWallet) {
       setDisplayAddress(realWallet.address);
+    } else if (address && isConnected && authenticated) {
+      // If we have an address and are connected and authenticated, keep it even if it's a Privy wallet
+      setDisplayAddress(address);
     } else {
       setDisplayAddress(null);
-      if (
-        !hasSocialLogin &&
-        wallets.every((wallet) => wallet.walletClientType === "privy")
-      ) {
+      // Only disconnect if we're not authenticated at all and have no real wallets
+      if (!authenticated && wallets.every((wallet) => wallet.walletClientType === "privy")) {
         wagmiDisconnect();
-        console.log("LOGOUT::::::::::");
       }
     }
-  }, [wallets, address, user]);
+  }, [wallets, address, user, isConnected, authenticated]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

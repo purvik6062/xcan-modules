@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { useAccount } from "wagmi";
+import { useWalletProtection } from "@/hooks/useWalletProtection";
 import ConnectWallet from "./ConnectWallet";
+import GitHubConnect from "./GitHubConnect";
 import { motion } from "framer-motion";
-import { FiShield, FiWifi } from "react-icons/fi";
+import { FiShield, FiWifi, FiGithub, FiCheckCircle } from "react-icons/fi";
 
 interface WalletProtectedWrapperProps {
   children: React.ReactNode;
@@ -14,39 +14,44 @@ interface WalletProtectedWrapperProps {
 export default function WalletProtectedWrapper({
   children,
 }: WalletProtectedWrapperProps) {
-  const { authenticated, ready, user } = usePrivy();
-  const { wallets } = useWallets();
-  const { address, isConnected } = useAccount();
+  const {
+    isWalletConnected,
+    isGitHubConnected,
+    isFullyAuthenticated,
+    githubUsername,
+    isReady,
+    isLoading,
+    address,
+    refreshAuthStatus
+  } = useWalletProtection();
+
 
   // Show loading state while Privy is initializing
-  if (!ready) {
+  if (!isReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid mx-auto mb-4"></div>
-          <p className="text-white text-lg">Initializing wallet connection...</p>
+          <p className="text-white text-lg">Initializing authentication...</p>
         </div>
       </div>
     );
   }
 
-  // Check if user is authenticated and has a wallet connected
-  const hasWalletConnected = () => {
-    // Check for social login (Google/Farcaster)
-    const hasSocialLogin = user?.google || user?.farcaster;
-    if (hasSocialLogin) return true;
-
-    // Check for real wallet connection (not just embedded wallet)
-    const realWallet = wallets.find(
-      (wallet) =>
-        wallet.address === address && wallet.walletClientType !== "privy"
+  // Show loading state while checking auth status
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid mx-auto mb-4"></div>
+          <p className="text-white text-lg">Checking authentication status...</p>
+        </div>
+      </div>
     );
+  }
 
-    return authenticated && isConnected && realWallet;
-  };
-
-  // If not connected, show connection prompt
-  if (!hasWalletConnected()) {
+  // If not fully authenticated, show connection prompts
+  if (!isFullyAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center px-4">
         <motion.div
@@ -66,28 +71,62 @@ export default function WalletProtectedWrapper({
             </motion.div>
 
             <h1 className="text-2xl font-bold text-white mb-4">
-              Wallet Required
+              Authentication Required
             </h1>
 
             <p className="text-gray-300 mb-6 leading-relaxed">
-              To access the learning modules and challenges, you need to connect your wallet.
+              To access the learning modules and challenges, you need to connect both your wallet and GitHub account.
               This ensures a secure and personalized learning experience.
             </p>
 
-            <div className="flex items-center justify-center space-x-2 text-sm text-gray-400 mb-6">
+            <div className="space-y-4 w-full mx-auto">
+              {/* Wallet Connection Status */}
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-3 h-3 rounded-full ${isWalletConnected ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+                  <span className="text-white">Wallet Connection</span>
+                </div>
+                {isWalletConnected ? (
+                  <FiCheckCircle className="w-5 h-5 text-green-400" />
+                ) : (
+                  <ConnectWallet />
+                )}
+              </div>
+
+              {/* GitHub Connection Status */}
+              <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-3 h-3 rounded-full ${isGitHubConnected ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+                  <span className="text-white">GitHub Connection</span>
+                </div>
+                {isGitHubConnected ? (
+                  <div className="flex items-center space-x-2 text-green-400">
+                    <FiCheckCircle className="w-5 h-5" />
+                    <span className="text-sm">@{githubUsername}</span>
+                  </div>
+                ) : (
+                  isWalletConnected && address ? (
+                    <GitHubConnect
+                      walletAddress={address}
+                      onConnectionSuccess={refreshAuthStatus}
+                    />
+                  ) : (
+                    <div className="text-gray-400 text-sm">Connect wallet first</div>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center space-x-2 text-sm text-gray-400 mt-6">
               <FiWifi className="w-4 h-4" />
               <span>Secure • Fast • Easy</span>
             </div>
 
-            <div className="space-y-4 w-full mx-auto">
-              <ConnectWallet />
-
-              <div className="text-xs text-gray-500">
-                <p>
-                  By connecting your wallet, you agree to our terms of service.
-                  Your wallet is only used for authentication and progress tracking.
-                </p>
-              </div>
+            <div className="text-xs text-gray-500 mt-4">
+              <p>
+                By connecting your accounts, you agree to our terms of service.
+                Your data is only used for authentication and progress tracking.
+              </p>
             </div>
           </div>
 
@@ -114,6 +153,6 @@ export default function WalletProtectedWrapper({
     );
   }
 
-  // If connected, render the protected content
+  // If fully authenticated, render the protected content
   return <>{children}</>;
 } 

@@ -117,6 +117,8 @@ export default function ProfilePage() {
           <div className=" bg-[#0A142A] rounded-lg shadow-md p-6">
             <div className="flex flex-col items-center text-center">
               <Image
+                width={128}
+                height={128}
                 src={userData.avatar}
                 alt={userData.username}
                 className="w-32 h-32 rounded-full mb-4"
@@ -135,13 +137,12 @@ export default function ProfilePage() {
                     Level:
                   </span>
                   <span
-                    className={`font-medium ${
-                      userData.level === "Beginner"
+                    className={`font-medium ${userData.level === "Beginner"
                         ? "text-green-600"
                         : userData.level === "Intermediate"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                    }`}
+                          ? "text-yellow-600"
+                          : "text-red-600"
+                      }`}
                   >
                     {userData.level}
                   </span>
@@ -180,11 +181,10 @@ export default function ProfilePage() {
             <ul className="flex flex-wrap -mb-px">
               <li className="mr-2">
                 <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
-                    activeTab === "overview"
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "overview"
                       ? "  text-blue-300 border-blue-300"
                       : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                  }`}
+                    }`}
                   onClick={() => setActiveTab("overview")}
                 >
                   Overview
@@ -192,11 +192,10 @@ export default function ProfilePage() {
               </li>
               <li className="mr-2">
                 <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
-                    activeTab === "challenges"
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "challenges"
                       ? "  text-blue-300 border-blue-300"
                       : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                  }`}
+                    }`}
                   onClick={() => setActiveTab("challenges")}
                 >
                   Challenges
@@ -204,11 +203,10 @@ export default function ProfilePage() {
               </li>
               <li>
                 <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${
-                    activeTab === "achievements"
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "achievements"
                       ? " text-blue-300 border-blue-300"
                       : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                  }`}
+                    }`}
                   onClick={() => setActiveTab("achievements")}
                 >
                   Achievements
@@ -265,9 +263,8 @@ export default function ProfilePage() {
                       <div
                         className="h-full bg-yellow-500"
                         style={{
-                          width: `${
-                            (intermediateCount / completedCount) * 100
-                          }%`,
+                          width: `${(intermediateCount / completedCount) * 100
+                            }%`,
                         }}
                         title={`${intermediateCount} Intermediate Challenges`}
                       ></div>
@@ -380,13 +377,12 @@ export default function ProfilePage() {
                         </Link>
                         <div className="flex items-center mt-1">
                           <span
-                            className={`text-xs px-2 py-0.5 rounded mr-2 ${
-                              challenge.level === "Beginner"
+                            className={`text-xs px-2 py-0.5 rounded mr-2 ${challenge.level === "Beginner"
                                 ? "  bg-green-900 text-green-200"
                                 : challenge.level === "Intermediate"
-                                ? "  bg-yellow-900 text-yellow-200"
-                                : "  bg-red-900 text-red-200"
-                            }`}
+                                  ? "  bg-yellow-900 text-yellow-200"
+                                  : "  bg-red-900 text-red-200"
+                              }`}
                           >
                             {challenge.level}
                           </span>
@@ -420,13 +416,12 @@ export default function ProfilePage() {
                           {challenge.title}
                         </Link>
                         <span
-                          className={`text-xs px-2 py-0.5 rounded ${
-                            challenge.level === "Beginner"
+                          className={`text-xs px-2 py-0.5 rounded ${challenge.level === "Beginner"
                               ? "  bg-green-900 text-green-200"
                               : challenge.level === "Intermediate"
-                              ? "  bg-yellow-900 text-yellow-200"
-                              : "  bg-red-900 text-red-200"
-                          }`}
+                                ? "  bg-yellow-900 text-yellow-200"
+                                : "  bg-red-900 text-red-200"
+                            }`}
                         >
                           {challenge.level}
                         </span>
