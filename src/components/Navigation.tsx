@@ -63,9 +63,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/#modules"
-                    className={`text-white hover:text-blue-200 transition-colors ${
-                      isActive("/#modules") ? "font-semibold" : ""
-                    }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${isActive("/#modules") ? "font-semibold" : ""
+                      }`}
                   >
                     Modules
                   </Link>
@@ -83,9 +82,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/playground"
-                    className={`text-white hover:text-blue-200 transition-colors ${
-                      isActive("/playground") ? "font-semibold" : ""
-                    }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${isActive("/playground") ? "font-semibold" : ""
+                      }`}
                   >
                     Playground
                   </Link>
@@ -93,9 +91,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/leaderboard"
-                    className={`text-white hover:text-blue-200 transition-colors ${
-                      isActive("/leaderboard") ? "font-semibold" : ""
-                    }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${isActive("/leaderboard") ? "font-semibold" : ""
+                      }`}
                   >
                     Leaderboard
                   </Link>
@@ -103,11 +100,19 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/profile"
-                    className={`text-white hover:text-blue-200 transition-colors ${
-                      isActive("/profile") ? "font-semibold" : ""
-                    }`}
+                    className={`text-white hover:text-blue-200 transition-colors ${isActive("/profile") ? "font-semibold" : ""
+                      }`}
                   >
                     Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/nft"
+                    className={`text-white hover:text-blue-200 transition-colors ${isActive("/nft") ? "font-semibold" : ""
+                      }`}
+                  >
+                    NFT
                   </Link>
                 </li>
               </ul>
@@ -122,19 +127,17 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <nav className="mt-4 md:hidden">
             <div
-              className={`rounded-lg p-4 shadow-lg ${
-                pathname === "/"
-                  ? "bg-[#0a0a2a] bg-opacity-95"
-                  : "bg-gradient-to-b from-[#010229] to-[#01056b]"
-              }`}
+              className={`rounded-lg p-4 shadow-lg ${pathname === "/"
+                ? "bg-[#0a0a2a] bg-opacity-95"
+                : "bg-gradient-to-b from-[#010229] to-[#01056b]"
+                }`}
             >
               <ul className="flex flex-col space-y-2">
                 <li>
                   <Link
                     href="/#modules"
-                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                      isActive("/#modules") ? "bg-blue-700" : ""
-                    }`}
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/#modules") ? "bg-blue-700" : ""
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Modules
@@ -143,9 +146,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/learn-defi"
-                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                      isActive("/learn-defi") ? "bg-blue-700" : ""
-                    }`}
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/learn-defi") ? "bg-blue-700" : ""
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Learn DeFi
@@ -165,9 +167,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/challenges"
-                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                      isActive("/challenges") ? "bg-blue-700" : ""
-                    }`}
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/challenges") ? "bg-blue-700" : ""
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Challenges
@@ -176,9 +177,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/playground"
-                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                      isActive("/playground") ? "bg-blue-700" : ""
-                    }`}
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/playground") ? "bg-blue-700" : ""
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Playground
@@ -187,9 +187,8 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/leaderboard"
-                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                      isActive("/leaderboard") ? "bg-blue-700" : ""
-                    }`}
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/leaderboard") ? "bg-blue-700" : ""
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Leaderboard
@@ -198,12 +197,21 @@ export default function Navigation() {
                 <li>
                   <Link
                     href="/profile"
-                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${
-                      isActive("/profile") ? "bg-blue-700" : ""
-                    }`}
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/profile") ? "bg-blue-700" : ""
+                      }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/nft"
+                    className={`block text-white hover:bg-blue-700 px-3 py-2 rounded transition-colors ${isActive("/nft") ? "bg-blue-700" : ""
+                      }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    NFT
                   </Link>
                 </li>
               </ul>
