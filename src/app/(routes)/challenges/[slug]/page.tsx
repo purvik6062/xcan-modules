@@ -21,7 +21,7 @@ interface TestCase {
 // Add a simple footer for mobile
 const MobileFooter = () => (
   <footer className="w-full py-4 text-center text-xs text-blue-300 bg-gradient-to-br from-[#010229] to-[#01056b] border-t border-blue-900 opacity-90">
-    © {new Date().getFullYear()} Modules (by Inorbit). All rights reserved.
+    © {new Date().getFullYear()} Modules (by Xcan). All rights reserved.
   </footer>
 );
 

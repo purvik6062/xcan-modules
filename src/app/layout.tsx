@@ -8,6 +8,7 @@ import ConditionalLayout from "../components/ConditionalLayout";
 // Use next/font/google if the font is available on Google Fonts
 import { Tektur } from "next/font/google";
 import { Suspense } from "react";
+import { Toaster } from "react-hot-toast";
 
 const tektur = Tektur({
   subsets: ["latin"],
@@ -21,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Modules (by Inorbit)",
+  title: "Modules (by Xcan)",
   description:
     "Comprehensive learning platform for Arbitrum concepts. Master precompiles, Stylus, DeFi, and cross-chain development through interactive challenges and projects.",
 };
@@ -40,6 +41,7 @@ export default function RootLayout({
           <Providers>
             <ConditionalLayout>{children}</ConditionalLayout>
           </Providers>
+          <Toaster position="top-center" />
         </Suspense>
       </body>
     </html>

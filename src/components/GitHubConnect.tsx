@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiGithub, FiExternalLink, FiCheckCircle } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 interface GitHubConnectProps {
   walletAddress: string;
@@ -21,7 +22,7 @@ export default function GitHubConnect({
 
   const handleGitHubConnect = async () => {
     if (!walletAddress) {
-      alert("Wallet address is required");
+      toast.error("Wallet address is required");
       return;
     }
 
@@ -39,7 +40,7 @@ export default function GitHubConnect({
     } catch (error) {
       console.error("GitHub connection error:", error);
       setIsConnecting(false);
-      alert("Failed to connect GitHub. Please try again.");
+      toast.error("Failed to connect GitHub. Please try again.");
     }
   };
 

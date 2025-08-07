@@ -10,6 +10,7 @@ import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import { SuccessfulMint } from "@/components/nft/SuccessfulMint";
 import { useRouter } from "next/navigation";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
+import { useChainId, useSwitchChain } from "wagmi";
 import {
   Wallet,
   Shield,
@@ -27,9 +28,14 @@ import {
   Award,
   Target,
   Rocket,
+  AlertTriangle,
+  RefreshCw,
 } from "lucide-react";
 import { useMint } from "@/hooks/useMint";
 import { CertificationLevels } from "@/components/nft/CertificationLevels";
+
+// Arbitrum Sepolia Chain ID
+const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;
 
 export default function HomePage() {
   const { handleMint, isMinting, isMined, mintedNFT } = useMint();
@@ -37,12 +43,18 @@ export default function HomePage() {
   const { isReady, isLoading, address: userAddress, isWalletConnected } = useWalletProtection();
   const router = useRouter();
 
+  // Chain management hooks
+  const chainId = useChainId();
+  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  const isCorrectNetwork = chainId === ARBITRUM_SEPOLIA_CHAIN_ID;
+
   // Redirect to NFT page when minting is successful
   useEffect(() => {
     if (isMined && selectedLevel) {
       router.push(`/nft/${selectedLevel}?justMinted=true`);
     }
   }, [isMined, selectedLevel, router]);
+
   const {
     data: eligibility,
     isLoading: isCheckingEligibility,
@@ -61,6 +73,31 @@ export default function HomePage() {
   const handleMintLevel = async (levelKey: string, levelName: string, level: number) => {
     setSelectedLevel(levelKey);
     await handleMint(eligibility?.githubUsername, levelName, level, levelKey);
+  };
+
+  const handleSwitchNetwork = () => {
+    switchChain({ chainId: ARBITRUM_SEPOLIA_CHAIN_ID });
+  };
+
+  const getNetworkName = (chainId: number) => {
+    switch (chainId) {
+      case 1:
+        return "Ethereum Mainnet";
+      case 5:
+        return "Goerli Testnet";
+      case 11155111:
+        return "Sepolia Testnet";
+      case 137:
+        return "Polygon Mainnet";
+      case 80001:
+        return "Polygon Mumbai";
+      case 42161:
+        return "Arbitrum One";
+      case 421614:
+        return "Arbitrum Sepolia";
+      default:
+        return `Chain ID: ${chainId}`;
+    }
   };
 
   if (!isReady || isLoading) {
@@ -300,23 +337,31 @@ export default function HomePage() {
                 transition={{ duration: 0.5 }}
                 className="space-y-8"
               >
-                {/* User Info with softer colors */}
+                {/* User Info with Network Status */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
                 >
                   <GlassCard className="p-8">
-                    <div className="flex justify-between items-center">
+                    <div className="flex w-full justify-between items-center">
                       <div className="flex items-center gap-6">
                         <motion.div
-                          className="w-20 h-20 bg-gradient-to-br from-emerald-400/80 via-green-500/80 to-teal-500/80 rounded-2xl flex items-center justify-center relative"
+                          className={`w-20 h-20 rounded-2xl flex items-center justify-center relative ${isCorrectNetwork
+                            ? "bg-gradient-to-br from-emerald-400/80 via-green-500/80 to-teal-500/80"
+                            : "bg-gradient-to-br from-amber-400/80 via-orange-500/80 to-red-500/80"
+                            }`}
                           whileHover={{ rotate: 5 }}
                           transition={{ type: "spring", stiffness: 300 }}
                         >
-                          <CheckCircle className="w-10 h-10 text-white" />
+                          {isCorrectNetwork ? (
+                            <CheckCircle className="w-10 h-10 text-white" />
+                          ) : (
+                            <AlertTriangle className="w-10 h-10 text-white" />
+                          )}
                           <motion.div
-                            className="absolute inset-0 bg-emerald-400/20 rounded-2xl blur-lg"
+                            className={`absolute inset-0 rounded-2xl blur-lg ${isCorrectNetwork ? "bg-emerald-400/20" : "bg-amber-400/20"
+                              }`}
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{
                               duration: 2,
@@ -325,261 +370,315 @@ export default function HomePage() {
                           />
                         </motion.div>
 
-                        <div>
-                          <h3 className="text-2xl font-bold text-white mb-2">
-                            Wallet Connected
-                          </h3>
-                          <p className="text-gray-300 font-mono text-lg bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20">
-                            {userAddress
-                              ? `${userAddress.slice(
-                                0,
-                                8
-                              )}...${userAddress.slice(-6)}`
-                              : "Loading..."}
-                          </p>
-                          <p className="text-sm text-gray-400 flex items-center gap-2 mt-2">
-                            <Zap className="w-4 h-4" />
-                            Arbitrum Sepolia Network
-                          </p>
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <h3 className="text-2xl font-bold text-white mb-2">
+                              {isCorrectNetwork ? "Wallet Connected" : "Wrong Network"}
+                            </h3>
+                            <p className="text-gray-300 font-mono text-lg bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20 mb-2">
+                              {userAddress
+                                ? `${userAddress.slice(0, 8)}...${userAddress.slice(-6)}`
+                                : "Loading..."}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-1">
+                                <p className={`text-sm flex items-center gap-2 ${isCorrectNetwork ? "text-emerald-300" : "text-amber-300"
+                                  }`}>
+                                  <Zap className="w-4 h-4" />
+                                  Current Network: {getNetworkName(chainId)}
+                                </p>
+                                {!isCorrectNetwork && (
+                                  <p className="text-sm text-gray-400 flex items-center gap-2">
+                                    <Target className="w-4 h-4" />
+                                    Required: Arbitrum Sepolia
+                                  </p>
+                                )}
+                              </div>
+
+                            </div>
+                          </div>
                         </div>
                       </div>
+
+                      <>
+                        {!isCorrectNetwork && (
+                          <motion.button
+                            onClick={handleSwitchNetwork}
+                            disabled={isSwitchingChain}
+                            className="cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 disabled:from-gray-600 disabled:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 }}
+                          >
+                            {isSwitchingChain ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Switching...
+                              </>
+                            ) : (
+                              <>
+                                <RefreshCw className="w-4 h-4" />
+                                Switch Network
+                              </>
+                            )}
+                          </motion.button>
+                        )}
+                      </>
                     </div>
+
+                    {!isCorrectNetwork && (
+                      <motion.div
+                        className="mt-6 p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-400/30 rounded-xl"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                          <p className="text-amber-200 text-sm">
+                            Please switch to Arbitrum Sepolia network to mint your NFT badges and access all features.
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
                   </GlassCard>
                 </motion.div>
 
-                {/* Challenge Status */}
-                <AnimatePresence mode="wait">
-                  {isCheckingEligibility ? (
-                    <motion.div
-                      key="loading"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                    >
-                      <GlassCard className="p-16 text-center">
-                        <div className="flex items-center justify-center mb-8">
-                          <motion.div
-                            className="relative"
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 2,
-                              repeat: Number.POSITIVE_INFINITY,
-                              ease: "linear",
-                            }}
-                          >
-                            <Loader2 className="w-16 h-16 text-blue-400" />
-                            <div className="absolute inset-0 w-16 h-16 border-4 border-blue-400/20 rounded-full animate-pulse"></div>
-                          </motion.div>
-                          <motion.div
-                            className="ml-6"
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{
-                              duration: 1.5,
-                              repeat: Number.POSITIVE_INFINITY,
-                            }}
-                          >
-                            <Target className="w-12 h-12 text-indigo-400" />
-                          </motion.div>
-                        </div>
-
-                        <h3 className="text-2xl font-bold text-white mb-4">
-                          Analyzing Your Achievements
-                        </h3>
-                        <p className="text-gray-300 text-lg">
-                          Scanning blockchain for completed challenges...
-                        </p>
-                      </GlassCard>
-                    </motion.div>
-                  ) : error ? (
-                    <motion.div
-                      key="error"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                    >
-                      <GlassCard className="p-12 border-red-500/30">
-                        <div className="text-center">
-                          <motion.div
-                            className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Number.POSITIVE_INFINITY,
-                            }}
-                          >
-                            <Clock className="w-10 h-10 text-red-400" />
-                          </motion.div>
-                          <h3 className="text-2xl font-bold text-red-300 mb-4">
-                            Connection Error
-                          </h3>
-                          <p className="text-red-200 text-lg">
-                            Failed to check eligibility. Please try again.
-                          </p>
-                        </div>
-                      </GlassCard>
-                    </motion.div>
-                  ) : eligibility ? (
-                    <motion.div
-                      key="eligibility"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="space-y-8"
-                    >
-                      {/* Overall Progress Summary */}
+                {/* Challenge Status - Only show if on correct network */}
+                {isCorrectNetwork && (
+                  <AnimatePresence mode="wait">
+                    {isCheckingEligibility ? (
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
+                        key="loading"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
                       >
-                        <GlassCard className="p-10">
-                          <div className="flex items-center gap-6 mb-10">
+                        <GlassCard className="p-16 text-center">
+                          <div className="flex items-center justify-center mb-8">
                             <motion.div
-                              className="w-16 h-16 bg-gradient-to-br from-blue-500/80 to-indigo-500/80 rounded-2xl flex items-center justify-center relative"
-                              whileHover={{ rotate: 360 }}
-                              transition={{ duration: 0.8 }}
+                              className="relative"
+                              animate={{ rotate: 360 }}
+                              transition={{
+                                duration: 2,
+                                repeat: Number.POSITIVE_INFINITY,
+                                ease: "linear",
+                              }}
                             >
-                              <Award className="w-8 h-8 text-white" />
-                              <div className="absolute inset-0 bg-blue-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                              <Loader2 className="w-16 h-16 text-blue-400" />
+                              <div className="absolute inset-0 w-16 h-16 border-4 border-blue-400/20 rounded-full animate-pulse"></div>
                             </motion.div>
-                            <div>
-                              <h3 className="text-4xl font-bold text-white mb-2">
-                                Your Achievement Overview
-                              </h3>
-                              <p className="text-gray-300 text-lg">
-                                Complete challenges across all levels to unlock rewards
-                              </p>
-                            </div>
+                            <motion.div
+                              className="ml-6"
+                              animate={{ scale: [1, 1.1, 1] }}
+                              transition={{
+                                duration: 1.5,
+                                repeat: Number.POSITIVE_INFINITY,
+                              }}
+                            >
+                              <Target className="w-12 h-12 text-indigo-400" />
+                            </motion.div>
                           </div>
 
-                          {/* Total Progress */}
-                          <div className="bg-gradient-to-r from-blue-500/8 via-indigo-500/8 to-gray-500/8 border border-blue-400/20 rounded-3xl p-8 mb-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-2xl font-bold text-white flex items-center gap-3">
-                                  <Zap className="w-6 h-6 text-blue-400" />
-                                  Total Challenges Completed
-                                </h4>
-                                <motion.span
-                                  className="text-4xl font-black text-blue-400"
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  transition={{
-                                    delay: 0.5,
-                                    type: "spring",
-                                    stiffness: 200,
-                                  }}
-                                >
-                                  {eligibility.totalCompletedChallenges}
-                                </motion.span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-2xl font-bold text-white flex items-center gap-3">
-                                  <Trophy className="w-6 h-6 text-amber-400" />
-                                  NFTs Minted
-                                </h4>
-                                <motion.span
-                                  className="text-4xl font-black text-amber-400"
-                                  initial={{ scale: 0 }}
-                                  animate={{ scale: 1 }}
-                                  transition={{
-                                    delay: 0.7,
-                                    type: "spring",
-                                    stiffness: 200,
-                                  }}
-                                >
-                                  {totalMinted}
-                                </motion.span>
-                              </div>
-                            </div>
-                            <p className="text-gray-300 text-lg mt-4">
-                              Great work! You&apos;ve completed{" "}
-                              {eligibility.totalCompletedChallenges} challenge
-                              {eligibility.totalCompletedChallenges !== 1
-                                ? "s"
-                                : ""}{" "}
-                              and minted {totalMinted} NFT{totalMinted !== 1 ? "s" : ""} on Speedrun Stylus.
+                          <h3 className="text-2xl font-bold text-white mb-4">
+                            Analyzing Your Achievements
+                          </h3>
+                          <p className="text-gray-300 text-lg">
+                            Scanning blockchain for completed challenges...
+                          </p>
+                        </GlassCard>
+                      </motion.div>
+                    ) : error ? (
+                      <motion.div
+                        key="error"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                      >
+                        <GlassCard className="p-12 border-red-500/30">
+                          <div className="text-center">
+                            <motion.div
+                              className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6"
+                              animate={{ scale: [1, 1.1, 1] }}
+                              transition={{
+                                duration: 2,
+                                repeat: Number.POSITIVE_INFINITY,
+                              }}
+                            >
+                              <Clock className="w-10 h-10 text-red-400" />
+                            </motion.div>
+                            <h3 className="text-2xl font-bold text-red-300 mb-4">
+                              Connection Error
+                            </h3>
+                            <p className="text-red-200 text-lg">
+                              Failed to check eligibility. Please try again.
                             </p>
                           </div>
-
-                          {/* Levels Overview */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {eligibility.certificationLevels.map((level) => {
-                              const hasMintedThisLevel = mintedNFTs.some(nft => nft.level === level.level);
-                              return (
-                                <motion.div
-                                  key={level.levelKey}
-                                  className={`border-2 rounded-2xl p-4 text-center ${hasMintedThisLevel
-                                    ? "bg-gradient-to-r from-purple-500/8 to-pink-500/8 border-purple-400/40"
-                                    : level.isEligible
-                                      ? "bg-gradient-to-r from-emerald-500/8 to-green-500/8 border-emerald-400/40"
-                                      : "bg-gradient-to-r from-slate-800/30 to-slate-700/30 border-slate-600/40"
-                                    }`}
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ type: "spring", stiffness: 300 }}
-                                >
-                                  <div className="text-2xl font-bold text-white mb-2">
-                                    Level {level.level}
-                                  </div>
-                                  <div className="text-sm text-gray-300 mb-2">
-                                    {level.completedRequiredChallenges}/{level.requiredChallenges}
-                                  </div>
-                                  <div className={`text-xs ${hasMintedThisLevel
-                                    ? "text-purple-300"
-                                    : level.isEligible
-                                      ? "text-emerald-300"
-                                      : "text-amber-300"
-                                    }`}>
-                                    {hasMintedThisLevel ? "Minted" : level.isEligible ? "Ready" : "In Progress"}
-                                  </div>
-                                </motion.div>
-                              );
-                            })}
-                          </div>
                         </GlassCard>
                       </motion.div>
-
-                      {/* Certification Levels */}
+                    ) : eligibility ? (
                       <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
+                        key="eligibility"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="space-y-8"
                       >
-                        <GlassCard className="p-10">
-                          <div className="flex items-center gap-6 mb-10">
-                            <motion.div
-                              className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
-                              whileHover={{ scale: 1.1 }}
-                              transition={{ type: "spring", stiffness: 300 }}
-                            >
-                              <Trophy className="w-8 h-8 text-white" />
-                              <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
-                            </motion.div>
-                            <div>
-                              <h3 className="text-4xl font-bold text-white mb-2">
-                                Certification Levels
-                              </h3>
-                              <p className="text-gray-300 text-lg">
-                                Complete challenges for each level to mint your NFT badges
+                        {/* Overall Progress Summary */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.2 }}
+                        >
+                          <GlassCard className="p-10">
+                            <div className="flex items-center gap-6 mb-10">
+                              <motion.div
+                                className="w-16 h-16 bg-gradient-to-br from-blue-500/80 to-indigo-500/80 rounded-2xl flex items-center justify-center relative"
+                                whileHover={{ rotate: 360 }}
+                                transition={{ duration: 0.8 }}
+                              >
+                                <Award className="w-8 h-8 text-white" />
+                                <div className="absolute inset-0 bg-blue-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                              </motion.div>
+                              <div>
+                                <h3 className="text-4xl font-bold text-white mb-2">
+                                  Your Achievement Overview
+                                </h3>
+                                <p className="text-gray-300 text-lg">
+                                  Complete challenges across all levels to unlock rewards
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Total Progress */}
+                            <div className="bg-gradient-to-r from-blue-500/8 via-indigo-500/8 to-gray-500/8 border border-blue-400/20 rounded-3xl p-8 mb-8">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-2xl font-bold text-white flex items-center gap-3">
+                                    <Zap className="w-6 h-6 text-blue-400" />
+                                    Total Challenges Completed
+                                  </h4>
+                                  <motion.span
+                                    className="text-4xl font-black text-blue-400"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{
+                                      delay: 0.5,
+                                      type: "spring",
+                                      stiffness: 200,
+                                    }}
+                                  >
+                                    {eligibility.totalCompletedChallenges}
+                                  </motion.span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <h4 className="text-2xl font-bold text-white flex items-center gap-3">
+                                    <Trophy className="w-6 h-6 text-amber-400" />
+                                    NFTs Minted
+                                  </h4>
+                                  <motion.span
+                                    className="text-4xl font-black text-amber-400"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{
+                                      delay: 0.7,
+                                      type: "spring",
+                                      stiffness: 200,
+                                    }}
+                                  >
+                                    {totalMinted}
+                                  </motion.span>
+                                </div>
+                              </div>
+                              <p className="text-gray-300 text-lg mt-4">
+                                Great work! You&apos;ve completed{" "}
+                                {eligibility.totalCompletedChallenges} challenge
+                                {eligibility.totalCompletedChallenges !== 1
+                                  ? "s"
+                                  : ""}{" "}
+                                and minted {totalMinted} NFT{totalMinted !== 1 ? "s" : ""} on Speedrun Stylus.
                               </p>
                             </div>
-                          </div>
 
-                          <CertificationLevels
-                            certificationLevels={eligibility.certificationLevels}
-                            onMint={handleMintLevel}
-                            isMinting={isMinting}
-                            selectedLevel={selectedLevel}
-                            hasMinted={hasMinted}
-                            isCheckingMinted={isCheckingMinted}
-                            mintedNFTs={mintedNFTs}
-                          />
-                        </GlassCard>
+                            {/* Levels Overview */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                              {eligibility.certificationLevels.map((level) => {
+                                const hasMintedThisLevel = mintedNFTs.some(nft => nft.level === level.level);
+                                return (
+                                  <motion.div
+                                    key={level.levelKey}
+                                    className={`border-2 rounded-2xl p-4 text-center ${hasMintedThisLevel
+                                      ? "bg-gradient-to-r from-purple-500/8 to-pink-500/8 border-purple-400/40"
+                                      : level.isEligible
+                                        ? "bg-gradient-to-r from-emerald-500/8 to-green-500/8 border-emerald-400/40"
+                                        : "bg-gradient-to-r from-slate-800/30 to-slate-700/30 border-slate-600/40"
+                                      }`}
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ type: "spring", stiffness: 300 }}
+                                  >
+                                    <div className="text-2xl font-bold text-white mb-2">
+                                      Level {level.level}
+                                    </div>
+                                    <div className="text-sm text-gray-300 mb-2">
+                                      {level.completedRequiredChallenges}/{level.requiredChallenges}
+                                    </div>
+                                    <div className={`text-xs ${hasMintedThisLevel
+                                      ? "text-purple-300"
+                                      : level.isEligible
+                                        ? "text-emerald-300"
+                                        : "text-amber-300"
+                                      }`}>
+                                      {hasMintedThisLevel ? "Minted" : level.isEligible ? "Ready" : "In Progress"}
+                                    </div>
+                                  </motion.div>
+                                );
+                              })}
+                            </div>
+                          </GlassCard>
+                        </motion.div>
+
+                        {/* Certification Levels */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                        >
+                          <GlassCard className="p-10">
+                            <div className="flex items-center gap-6 mb-10">
+                              <motion.div
+                                className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
+                                whileHover={{ scale: 1.1 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                              >
+                                <Trophy className="w-8 h-8 text-white" />
+                                <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                              </motion.div>
+                              <div>
+                                <h3 className="text-4xl font-bold text-white mb-2">
+                                  Certification Levels
+                                </h3>
+                                <p className="text-gray-300 text-lg">
+                                  Complete challenges for each level to mint your NFT badges
+                                </p>
+                              </div>
+                            </div>
+
+                            <CertificationLevels
+                              certificationLevels={eligibility.certificationLevels}
+                              onMint={handleMintLevel}
+                              isMinting={isMinting}
+                              selectedLevel={selectedLevel}
+                              hasMinted={hasMinted}
+                              isCheckingMinted={isCheckingMinted}
+                              mintedNFTs={mintedNFTs}
+                            />
+                          </GlassCard>
+                        </motion.div>
                       </motion.div>
-
-
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
+                    ) : null}
+                  </AnimatePresence>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

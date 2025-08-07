@@ -26,7 +26,7 @@ export default function Navigation() {
             <div className="relative">
               <span className="text-2xl font-bold">Modules</span>
               <span className="absolute -bottom-1 right-0 text-[13px] text-gray-300 translate-x-2 translate-y-1">
-                (by Inorbit)
+                (by Xcan)
               </span>
             </div>
           </Link>

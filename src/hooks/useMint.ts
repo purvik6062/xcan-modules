@@ -3,10 +3,9 @@ import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
-  useSwitchChain,
 } from "wagmi";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../utils/contracts";
-import { arbitrumSepolia } from "wagmi/chains";
+import toast from "react-hot-toast";
 
 // Level to NFT image mapping (IPFS gateway URLs)
 const LEVEL_NFT_IMAGES = {
@@ -52,7 +51,6 @@ export const useMint = () => {
 
   const { writeContractAsync } = useWriteContract();
   const { isSuccess: isMined } = useWaitForTransactionReceipt({ hash: txHash });
-  const { switchChain, isPending: isSwitchingNetwork } = useSwitchChain();
 
   const uploadFileToPinata = async (file: File) => {
     const formData = new FormData();
@@ -230,27 +228,17 @@ export const useMint = () => {
     levelKey?: string
   ) => {
     if (!address) {
-      alert("Please connect your wallet.");
+      toast.error("Please connect your wallet.");
       return;
     }
 
     if (!level) {
-      alert("Level information is required for minting.");
+      toast.error("Level information is required for minting.");
       return;
     }
 
     setIsMinting(true);
     try {
-      // Check current chain and switch if necessary
-      try {
-        switchChain({ chainId: arbitrumSepolia.id });
-      } catch (switchError) {
-        console.error("Failed to switch network:", switchError);
-      }
-
-      // Wait a moment for the network switch to complete
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       // Get the appropriate metadata hash for the level
       const metadataHash =
         LEVEL_METADATA_HASHES[levelKey as keyof typeof LEVEL_METADATA_HASHES];
@@ -292,10 +280,10 @@ export const useMint = () => {
         levelKey,
       });
 
-      // alert("✅ NFT minted successfully!");
+      toast.success("NFT minted successfully!");
     } catch (err) {
       console.error("Minting failed:", err);
-      alert("❌ Minting failed. Please try again.");
+      toast.error("Minting failed. Please try again.");
     } finally {
       setIsMinting(false);
     }
