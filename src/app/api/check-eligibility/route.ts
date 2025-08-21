@@ -107,6 +107,10 @@ export async function POST(request: NextRequest) {
 
     const completedChallengeIds = completedChallenges.map((c) => c.challengeId);
 
+    const uniqueChallengeIds = completedChallengeIds.filter(
+      (id, index, array) => array.indexOf(id) === index
+    );
+
     // Get githubUsername from the most recent accepted challenge (if any)
     let githubUsername = null;
     if (completedChallenges.length > 0) {
@@ -161,7 +165,8 @@ export async function POST(request: NextRequest) {
 
     const eligibilityData = {
       userAddress: userAddress,
-      totalCompletedChallenges: completedChallenges.length,
+      totalCompletedChallenges: uniqueChallengeIds.length,
+      totalSubmissions: completedChallenges.length,
       githubUsername,
       certificationLevels: certificationEligibility,
       highestEligibleLevel,
