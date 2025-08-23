@@ -135,6 +135,22 @@ const DocumentIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const GlobeIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+    />
+  </svg>
+);
+
 // Type definition for a learning module
 export interface LearningModule {
   id: string;
@@ -153,6 +169,28 @@ export interface LearningModule {
 
 // Learning modules data
 export const learningModules: LearningModule[] = [
+  {
+    id: "web3-basics",
+    title: "Web3 Basics",
+    description:
+      "Learn Web3 fundamentals through engaging stories and interactive lessons. Perfect for beginners - no prior experience needed!",
+    icon: GlobeIcon,
+    level: "Absolute Beginner",
+    duration: "1-2 weeks",
+    challenges: 16,
+    status: "available",
+    href: "/learn-web3-basics",
+    target: "_self",
+    gradient: "from-purple-500 to-blue-600",
+    features: [
+      "Story-Based Learning",
+      "Interactive Quizzes",
+      "8 Core Concepts",
+      "No Prerequisites",
+      "Beginner Friendly",
+      "Progress Tracking",
+    ],
+  },
   {
     id: "arbitrum-stylus",
     title: "Arbitrum Stylus",
