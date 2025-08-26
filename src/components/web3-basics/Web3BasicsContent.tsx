@@ -26,15 +26,16 @@ export default function Web3BasicsContent({
   return (
     <div className="w-full">
       {/* Story-Quiz Content */}
-      {["web-evolution", "wallet-fundamentals", "crypto-basics", "blockchain-core", "ledger-principles", "key-security", "nft-ownership", "defi-trading"].includes(section.type) && section.content && (
+      {["web3-evolution", "wallet-fundamentals", "crypto-basics", "blockchain-core", "ledger-principles", "key-security", "nft-ownership", "defi-trading", "rust-basics", "rust-ownership", "rust-data-types", "rust-control-flow", "rust-lifetimes", "rust-error-handling", "rust-macros", "theory", "quiz"].includes(section.type) && section.content && (
         <StoryQuizComponent
+          key={section.id}
           content={section.content}
           onComplete={handleComplete}
         />
       )}
 
       {/* Theory Content */}
-      {section.type === "theory" && (
+      {/* {section.type === "theory" && (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center">
           <div className="w-full max-w-2xl mx-auto px-4">
             <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
@@ -56,7 +57,7 @@ export default function Web3BasicsContent({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Quiz Content */}
       {section.type === "quiz" && (
@@ -84,7 +85,7 @@ export default function Web3BasicsContent({
       )}
 
       {/* Default content for other types */}
-      {!["web-evolution", "wallet-fundamentals", "crypto-basics", "blockchain-core", "ledger-principles", "key-security", "nft-ownership", "defi-trading", "theory", "quiz"].includes(section.type) && (
+      {!["web3-evolution", "wallet-fundamentals", "crypto-basics", "blockchain-core", "ledger-principles", "key-security", "nft-ownership", "defi-trading", "theory", "quiz"].includes(section.type) && (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center">
           <div className="text-center bg-gray-800 rounded-2xl p-8 border border-gray-700 max-w-md">
             <div className="text-6xl mb-4">🚧</div>
@@ -99,7 +100,7 @@ export default function Web3BasicsContent({
       )}
 
       {/* Completion Button for non-story content */}
-      {!["web-evolution", "wallet-fundamentals", "crypto-basics", "blockchain-core", "ledger-principles", "key-security", "nft-ownership", "defi-trading"].includes(section.type) && (
+      {!["web3-evolution", "wallet-fundamentals", "crypto-basics", "blockchain-core", "ledger-principles", "key-security", "nft-ownership", "defi-trading", "rust-basics", "rust-ownership", "rust-data-types", "rust-control-flow", "rust-lifetimes", "rust-error-handling", "rust-macros", "theory", "quiz"].includes(section.type) && (
         <div className="mt-12 pt-8 border-t border-gray-600">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-400">

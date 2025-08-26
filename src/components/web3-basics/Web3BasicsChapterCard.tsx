@@ -7,13 +7,20 @@ import { Chapter } from "../../data/web3BasicsChapters";
 interface Web3BasicsChapterCardProps {
   chapter: Chapter;
   basePath?: string;
+  progressData?: string[];
+  isLoading?: boolean;
 }
 
-export default function Web3BasicsChapterCard({ chapter, basePath = "/learn-web3-basics" }: Web3BasicsChapterCardProps) {
+export default function Web3BasicsChapterCard({
+  chapter,
+  basePath = "/learn-web3-basics",
+  progressData = [],
+  isLoading = false
+}: Web3BasicsChapterCardProps) {
   const availableSections = chapter.sections.filter(
     (section) => section.status === "available"
   );
-  const completedSections = 0; // This would come from user progress data
+  const completedSections = progressData.length;
   const progressPercentage =
     availableSections.length > 0
       ? (completedSections / availableSections.length) * 100
@@ -34,7 +41,7 @@ export default function Web3BasicsChapterCard({ chapter, basePath = "/learn-web3
 
   const getSectionIcon = (type: string) => {
     switch (type) {
-      case "web-evolution":
+      case "web3-evolution":
         return "🌐";
       case "wallet-fundamentals":
         return "👛";
@@ -50,6 +57,20 @@ export default function Web3BasicsChapterCard({ chapter, basePath = "/learn-web3
         return "🎨";
       case "defi-trading":
         return "🔄";
+      case "rust-basics":
+        return "🦀";
+      case "rust-ownership":
+        return "🔐";
+      case "rust-data-types":
+        return "📊";
+      case "rust-control-flow":
+        return "🔄";
+      case "rust-lifetimes":
+        return "⏰";
+      case "rust-error-handling":
+        return "⚠️";
+      case "rust-macros":
+        return "🔧";
       case "theory":
         return "📚";
       case "quiz":
@@ -58,6 +79,41 @@ export default function Web3BasicsChapterCard({ chapter, basePath = "/learn-web3
         return "📄";
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden h-full">
+        <div className="p-6 border-b border-gray-700">
+          <div className="animate-pulse">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gray-700 rounded"></div>
+              <div className="flex items-center gap-2">
+                <div className="w-16 h-6 bg-gray-700 rounded"></div>
+                <div className="w-20 h-6 bg-gray-700 rounded"></div>
+              </div>
+            </div>
+            <div className="w-3/4 h-6 bg-gray-700 rounded mb-2"></div>
+            <div className="w-full h-4 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+        <div className="px-6 py-4">
+          <div className="animate-pulse">
+            <div className="w-24 h-4 bg-gray-700 rounded mb-3"></div>
+            <div className="space-y-2">
+              <div className="w-full h-4 bg-gray-700 rounded"></div>
+              <div className="w-full h-4 bg-gray-700 rounded"></div>
+              <div className="w-3/4 h-4 bg-gray-700 rounded"></div>
+            </div>
+          </div>
+        </div>
+        <div className="p-6 border-t border-gray-700">
+          <div className="animate-pulse">
+            <div className="w-full h-12 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div

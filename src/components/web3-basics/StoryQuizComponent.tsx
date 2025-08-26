@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
-import { StoryContent, StoryQuestion } from "../../data/web3BasicsChapters";
+import { StoryContent } from "../../data/web3BasicsChapters";
 import ReactMarkdown from "react-markdown";
 
 interface StoryQuizComponentProps {
@@ -17,7 +16,6 @@ export default function StoryQuizComponent({
 }: StoryQuizComponentProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
-  const [showResults, setShowResults] = useState(false);
   const [answered, setAnswered] = useState(false);
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -34,135 +32,11 @@ export default function StoryQuizComponent({
       setCurrentQuestion(currentQuestion + 1);
       setAnswered(false);
     } else {
-      setShowResults(true);
-      // Trigger confetti if they got all questions right
-      const score = calculateScore();
-      if (score >= 100) {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-        });
-      }
       onComplete();
     }
   };
 
-  const calculateScore = () => {
-    let correct = 0;
-    content.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === question.correctAnswer) {
-        correct++;
-      }
-    });
-    return Math.round((correct / content.questions.length) * 100);
-  };
-
-  const restartQuiz = () => {
-    setCurrentQuestion(0);
-    setSelectedAnswers([]);
-    setShowResults(false);
-    setAnswered(false);
-  };
-
-  // Results screen overlay
-  if (showResults) {
-    const score = calculateScore();
-    const passed = score >= 100; // All questions must be correct to proceed
-
-    return (
-      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-2xl max-h-[80vh] overflow-y-auto m-4"
-        >
-          <div className="text-center">
-            <div className={`text-6xl mb-4`}>
-              {passed ? "🎉" : "📚"}
-            </div>
-
-            <h3 className="text-2xl font-bold text-white mb-2">
-              Learning Section Complete!
-            </h3>
-
-            <div
-              className={`text-4xl font-bold mb-4 ${passed ? "text-green-400" : "text-orange-400"
-                }`}
-            >
-              {score}%
-            </div>
-
-            <p
-              className={`text-lg mb-6 ${passed ? "text-green-300" : "text-orange-300"
-                }`}
-            >
-              {passed
-                ? "Perfect! You've mastered this section and can move on!"
-                : "Good try! Review the story and try again to unlock the next section."}
-            </p>
-
-            <div className="space-y-4 mb-8 text-left">
-              {content.questions.map((question, index) => {
-                const isCorrect = selectedAnswers[index] === question.correctAnswer;
-                return (
-                  <div
-                    key={question.id}
-                    className={`p-4 rounded-lg border-2 ${isCorrect
-                      ? "border-green-500 bg-green-900/20"
-                      : "border-red-500 bg-red-900/20"
-                      }`}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className={`text-xl`}>
-                        {isCorrect ? "✅" : "❌"}
-                      </span>
-                      <span className="font-medium text-white">
-                        Question {index + 1}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-300 mb-2">
-                      {question.question}
-                    </p>
-                    <p className="text-sm text-gray-200">
-                      <strong>Correct answer:</strong>{" "}
-                      {question.options[question.correctAnswer]}
-                    </p>
-                    {!isCorrect && (
-                      <p className="text-sm text-gray-300 mt-1">
-                        <strong>Your answer:</strong>{" "}
-                        {question.options[selectedAnswers[index]]}
-                      </p>
-                    )}
-                    <div className="mt-2 p-3 bg-gray-800 rounded text-sm text-gray-300">
-                      <strong>Explanation:</strong> {question.explanation}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex gap-4 justify-center">
-              {!passed && (
-                <button
-                  onClick={restartQuiz}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Try Again
-                </button>
-              )}
-              {passed && (
-                <div className="text-green-400 flex items-center gap-2 font-semibold">
-                  <span>🔓</span>
-                  <span>Section unlocked! You can now proceed.</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
+  // Results popup removed to enable seamless progression
 
   // Main side-by-side layout
   const question = content.questions[currentQuestion];
@@ -196,9 +70,9 @@ export default function StoryQuizComponent({
         </div>
 
         {/* Side by Side Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[600px]">
           {/* Story Content - Left Side */}
-          <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+          <div className="lg:col-span-2 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
             <div className="h-full flex flex-col">
               <div className="p-8 flex-1 overflow-y-auto">
                 <div className="prose prose-lg max-w-none prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-base prose-p:leading-7 prose-p:mb-4 prose-strong:text-blue-300 prose-em:text-cyan-300">
@@ -228,7 +102,7 @@ export default function StoryQuizComponent({
           </div>
 
           {/* Quiz Content - Right Side */}
-          <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+          <div className="h-fit sticky top-0 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
             <div className="h-full flex flex-col">
               {/* Quiz Header */}
               <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">

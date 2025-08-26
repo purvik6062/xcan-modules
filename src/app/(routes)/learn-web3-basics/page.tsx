@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { web3BasicsChapters } from "../../../data/web3BasicsChapters";
 import Web3BasicsChapterCard from "../../../components/web3-basics/Web3BasicsChapterCard";
+import { useWalletProtection } from "../../../hooks/useWalletProtection";
 
 export default function LearnWeb3BasicsPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
+  const [progressData, setProgressData] = useState<{ [chapterId: string]: string[] }>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const { address, isReady } = useWalletProtection();
 
   const filteredChapters =
     selectedLevel === "all"
@@ -15,24 +19,52 @@ export default function LearnWeb3BasicsPage() {
         (chapter) => chapter.level.toLowerCase() === selectedLevel
       );
 
-  // Check which chapters are accessible
-  const getChapterAccessibility = () => {
-    return web3BasicsChapters.map((chapter, index) => {
-      if (index === 0) return true; // First chapter always accessible
+  // Fetch progress data
+  useEffect(() => {
+    const fetchProgress = async () => {
+      if (!isReady || !address) {
+        setIsLoading(false);
+        return;
+      }
 
-      // Check if previous chapter is completed
-      const prevChapter = web3BasicsChapters[index - 1];
-      const prevChapterSections = prevChapter.sections.filter(s => s.status === "available");
-      const prevChapterProgress = localStorage.getItem(`web3-basics-progress-${prevChapter.id}`);
-      const prevChapterCompleted = prevChapterProgress ? JSON.parse(prevChapterProgress) : [];
+      try {
+        setIsLoading(true);
+        const params = new URLSearchParams({ userAddress: address });
+        const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          setProgressData(data?.chapters || {});
+        }
+      } catch (e) {
+        console.error("Failed to fetch progress", e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      return prevChapterSections.every(section =>
-        prevChapterCompleted.includes(section.id)
-      );
+    fetchProgress();
+  }, [isReady, address]);
+
+  // Calculate overall progress
+  const calculateOverallProgress = () => {
+    let totalSections = 0;
+    let completedSections = 0;
+
+    web3BasicsChapters.forEach(chapter => {
+      const availableSections = chapter.sections.filter(s => s.status === "available");
+      totalSections += availableSections.length;
+      const chapterCompleted = progressData[chapter.id] || [];
+      completedSections += chapterCompleted.length;
     });
+
+    return {
+      total: totalSections,
+      completed: completedSections,
+      percentage: totalSections > 0 ? Math.round((completedSections / totalSections) * 100) : 0
+    };
   };
 
-  const chapterAccessibility = getChapterAccessibility();
+  const overallProgress = calculateOverallProgress();
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -71,7 +103,7 @@ export default function LearnWeb3BasicsPage() {
               </div>
             </div>
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-cyan-400">8</div>
+              <div className="text-2xl font-bold text-cyan-400">{web3BasicsChapters.length}</div>
               <div className="text-sm text-gray-300">
                 Complete Chapters
               </div>
@@ -91,7 +123,7 @@ export default function LearnWeb3BasicsPage() {
           </motion.div>
         </div>
 
-        {/* Progress Overview */}
+        {/* Progress Overview - Similar to the image */}
         <div className="mb-8">
           <motion.div
             className="bg-gray-800 rounded-2xl border border-gray-700 p-6"
@@ -106,21 +138,53 @@ export default function LearnWeb3BasicsPage() {
               Track your progress as you master Web3 fundamentals through story-based learning
               and interactive challenges.
             </p>
+
+            {/* Overall Progress Bar */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-gray-300">Progress</span>
+                </div>
+                <div className="text-sm text-gray-400">
+                  {overallProgress.completed}/{overallProgress.total} sections {overallProgress.percentage}%
+                </div>
+              </div>
+              <div className="w-full bg-gray-700 rounded-full h-2">
+                <motion.div
+                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${overallProgress.percentage}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-blue-400">0/8</div>
+                <div className="text-2xl font-bold text-blue-400">
+                  {overallProgress.completed}/{overallProgress.total}
+                </div>
                 <div className="text-sm text-blue-300">
+                  Sections Completed
+                </div>
+              </div>
+              <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
+                <div className="text-2xl font-bold text-cyan-400">
+                  {Object.keys(progressData).filter(chapterId => {
+                    const chapter = web3BasicsChapters.find(ch => ch.id === chapterId);
+                    if (!chapter) return false;
+                    const availableSections = chapter.sections.filter(s => s.status === "available");
+                    const completed = progressData[chapterId] || [];
+                    return availableSections.every(s => completed.includes(s.id));
+                  }).length}
+                </div>
+                <div className="text-sm text-cyan-300">
                   Chapters Completed
                 </div>
               </div>
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-cyan-400">0</div>
-                <div className="text-sm text-cyan-300">
-                  Badges Earned
-                </div>
-              </div>
-              <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-green-400">0%</div>
+                <div className="text-2xl font-bold text-green-400">{overallProgress.percentage}%</div>
                 <div className="text-sm text-green-300">
                   Overall Progress
                 </div>
@@ -136,7 +200,7 @@ export default function LearnWeb3BasicsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          {["all", "beginner"].map((level) => (
+          {["all", "beginner", "intermediate", "advanced"].map((level) => (
             <button
               key={level}
               onClick={() => setSelectedLevel(level)}
@@ -152,28 +216,16 @@ export default function LearnWeb3BasicsPage() {
 
         {/* Chapters Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
-          {filteredChapters.map((chapter, index) => {
-            const originalIndex = web3BasicsChapters.findIndex(ch => ch.id === chapter.id);
-            // console.log("chapter: ", originalIndex, chapter);
-            const isAccessible = chapterAccessibility[originalIndex];
-
-            return (
-              <div key={chapter.id} className="relative">
-                <Web3BasicsChapterCard
-                  chapter={chapter}
-                  basePath="/learn-web3-basics"
-                />
-                {!isAccessible && (
-                  <div className="absolute inset-0 bg-black/50 rounded-xl flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <div className="text-4xl mb-2">🔒</div>
-                      <p className="text-sm font-medium">Complete previous chapter</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {filteredChapters.map((chapter) => (
+            <div key={chapter.id}>
+              <Web3BasicsChapterCard
+                chapter={chapter}
+                basePath="/learn-web3-basics"
+                progressData={progressData[chapter.id] || []}
+                isLoading={isLoading}
+              />
+            </div>
+          ))}
         </div>
 
         {/* Learning Path Info */}
@@ -212,77 +264,32 @@ export default function LearnWeb3BasicsPage() {
           <h2 className="text-3xl font-bold text-white mb-6 text-center">
             Concepts You'll Master
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="text-center p-4">
               <div className="text-4xl mb-3">🌐</div>
               <h3 className="text-lg font-semibold text-white mb-2">
-                Web Evolution
+                Web3 Fundamentals
               </h3>
               <p className="text-sm text-gray-300">
-                From Web1 to Web3 - understand the evolution of the internet
-              </p>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-4xl mb-3">👛</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Digital Wallets
-              </h3>
-              <p className="text-sm text-gray-300">
-                Your gateway to Web3 - secure, self-custodial identity
-              </p>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-4xl mb-3">💰</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Cryptocurrency
-              </h3>
-              <p className="text-sm text-gray-300">
-                Digital money that's scarce, programmable, and borderless
+                Web evolution, digital wallets, and cryptocurrency basics
               </p>
             </div>
             <div className="text-center p-4">
               <div className="text-4xl mb-3">🧱</div>
               <h3 className="text-lg font-semibold text-white mb-2">
-                Blockchain
+                Blockchain & DeFi
               </h3>
               <p className="text-sm text-gray-300">
-                The unbreakable chain of digital truth and trust
+                Blockchain technology, distributed ledgers, and DeFi concepts
               </p>
             </div>
             <div className="text-center p-4">
-              <div className="text-4xl mb-3">📋</div>
+              <div className="text-4xl mb-3">🦀</div>
               <h3 className="text-lg font-semibold text-white mb-2">
-                Distributed Ledgers
+                Rust & Advanced Web3
               </h3>
               <p className="text-sm text-gray-300">
-                Shared records without central authority or control
-              </p>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-4xl mb-3">🔐</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Cryptographic Keys
-              </h3>
-              <p className="text-sm text-gray-300">
-                The mathematical magic that secures your digital assets
-              </p>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-4xl mb-3">🎨</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                NFTs
-              </h3>
-              <p className="text-sm text-gray-300">
-                True digital ownership and provable scarcity
-              </p>
-            </div>
-            <div className="text-center p-4">
-              <div className="text-4xl mb-3">🔄</div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                DeFi Trading
-              </h3>
-              <p className="text-sm text-gray-300">
-                Decentralized finance and automated market makers
+                Rust programming and advanced Web3 concepts like NFTs
               </p>
             </div>
           </div>

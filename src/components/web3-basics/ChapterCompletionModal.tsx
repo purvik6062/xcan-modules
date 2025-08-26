@@ -45,28 +45,28 @@ export default function ChapterCompletionModal({
         <div className="text-center">
           {/* Celebration Emoji */}
           <div className="text-8xl mb-6">🎉</div>
-          
+
           {/* Title */}
           <h2 className="text-3xl font-bold text-white mb-4">
             Congratulations!
           </h2>
-          
+
           {/* Chapter Completion Message */}
           <p className="text-xl text-gray-300 mb-6">
             You've successfully completed <span className="text-blue-400 font-semibold">{chapterTitle}</span>!
           </p>
-          
+
           {/* Achievement Description */}
-          <div className="bg-gray-800 rounded-xl p-6 mb-8 border border-gray-600">
+          {/* <div className="bg-gray-800 rounded-xl p-6 mb-8 border border-gray-600">
             <div className="text-4xl mb-3">🏆</div>
             <h3 className="text-lg font-semibold text-white mb-2">
               Chapter Mastered!
             </h3>
             <p className="text-gray-300 text-sm">
-              You've demonstrated a solid understanding of the fundamental concepts. 
+              You've demonstrated a solid understanding of the fundamental concepts.
               Your Web3 journey is off to an excellent start!
             </p>
-          </div>
+          </div> */}
 
           {/* Next Chapter Info */}
           {nextChapterId && nextChapterTitle ? (
@@ -78,7 +78,7 @@ export default function ChapterCompletionModal({
               <p className="text-blue-300 text-sm mb-4">
                 Your next adventure awaits: <span className="font-semibold">{nextChapterTitle}</span>
               </p>
-              
+
               {/* Navigation Button */}
               <Link
                 href={`/learn-web3-basics/${nextChapterId}`}
@@ -92,10 +92,10 @@ export default function ChapterCompletionModal({
             <div className="bg-green-900/20 border border-green-500 rounded-xl p-6 mb-8">
               <div className="text-4xl mb-3">🎓</div>
               <h3 className="text-lg font-semibold text-green-400 mb-2">
-                Course Complete!
+                Web3 Basics Completed!
               </h3>
               <p className="text-green-300 text-sm">
-                You've mastered all the Web3 Basics! You're now ready to explore more advanced topics.
+                Congratulations! You have successfully completed the Web3 Basics module. Explore more modules on our platform.
               </p>
             </div>
           )}
@@ -124,7 +124,7 @@ export default function ChapterCompletionModal({
                 onClick={onClose}
                 className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors"
               >
-                Return to Course Overview
+                Explore More Modules
               </Link>
             )}
           </div>
