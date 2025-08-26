@@ -28,7 +28,8 @@ export default function GitHubConnect({
 
     setIsConnecting(true);
     try {
-      const response = await fetch(`/api/auth/github?wallet_address=${walletAddress}`);
+      const returnTo = encodeURIComponent(window.location.href);
+      const response = await fetch(`/api/auth/github?wallet_address=${walletAddress}&return_to=${returnTo}`);
       const data = await response.json();
 
       if (data.authUrl) {

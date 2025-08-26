@@ -6,6 +6,7 @@ const GITHUB_REDIRECT_URI = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/github
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const walletAddress = searchParams.get("wallet_address");
+  const returnTo = searchParams.get("return_to");
 
   if (!walletAddress) {
     return NextResponse.json(
@@ -14,10 +15,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // Store wallet address in session or state for callback
-  const state = Buffer.from(JSON.stringify({ walletAddress })).toString(
-    "base64"
-  );
+  // Store wallet address and return URL in state for callback
+  const state = Buffer.from(
+    JSON.stringify({ walletAddress, returnTo })
+  ).toString("base64");
 
   const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(
     GITHUB_REDIRECT_URI

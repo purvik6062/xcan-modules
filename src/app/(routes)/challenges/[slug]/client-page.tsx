@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiAward, FiZap, FiCpu, FiCode, FiBookOpen, FiHelpCircle, FiTerminal, FiPlayCircle, FiCheck, FiRefreshCw, FiChevronLeft, FiChevronRight, FiMaximize, FiMinimize, FiList, FiInfo, FiTarget, FiGift } from "react-icons/fi";
 import { GoBeaker, GoFlame, GoPulse, GoTrophy, GoRocket, GoStar, GoLightBulb } from "react-icons/go";
 import { FiX } from "react-icons/fi";
+import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 
 export default function ClientChallenge({
   challenge,
@@ -47,6 +48,38 @@ export default function ClientChallenge({
   const [allTestsPassed, setAllTestsPassed] = useState(false);
   const [codeSubmitted, setCodeSubmitted] = useState(false);
   const [showHintPopup, setShowHintPopup] = useState(false);
+  const { address } = useWalletProtection();
+  const [initiatingGithub, setInitiatingGithub] = useState(false);
+
+  // Capture GitHub params from callback and store in localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    const ghUser = url.searchParams.get("github_username");
+    if (ghUser) localStorage.setItem("github_username", ghUser);
+  }, []);
+
+  const ensureGitHubAuth = async () => {
+    if (!address) return false;
+    const existing = typeof window !== "undefined" ? localStorage.getItem("github_username") : null;
+    if (existing) return true;
+    if (initiatingGithub) return false;
+    try {
+      setInitiatingGithub(true);
+      const returnTo = encodeURIComponent(window.location.href);
+      const res = await fetch(`/api/auth/github?wallet_address=${address}&return_to=${returnTo}`);
+      const data = await res.json();
+      if (data.authUrl) {
+        window.location.href = data.authUrl;
+        return false;
+      }
+    } catch (e) {
+      console.error("Failed to start GitHub OAuth", e);
+    } finally {
+      setInitiatingGithub(false);
+    }
+    return false;
+  };
 
   useEffect(() => {
     if (challenge) {
@@ -84,6 +117,11 @@ export default function ClientChallenge({
   }
 
   const runTests = async () => {
+    // Require GitHub only when submitting solution, if wallet is connected
+    if (address && !localStorage.getItem("github_username")) {
+      await ensureGitHubAuth();
+      return;
+    }
     setIsLoading(true);
     setTestResults([]);
     setOutput("");

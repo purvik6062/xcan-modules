@@ -26,9 +26,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Decode state to get wallet address
+    // Decode state to get wallet address and return URL
     const stateData = JSON.parse(Buffer.from(state, "base64").toString());
     const walletAddress = stateData.walletAddress;
+    const returnTo = stateData.returnTo as string | undefined;
 
     if (!walletAddress) {
       return NextResponse.redirect(
@@ -103,10 +104,12 @@ export async function GET(req: NextRequest) {
         { upsert: true }
       );
 
-      // Redirect to success page
-      return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/success?github_username=${userData.login}`
-      );
+      // Redirect back to the originating page with GitHub info in query params
+      const fallback = process.env.NEXT_PUBLIC_BASE_URL;
+      const target = new URL(returnTo || fallback);
+      target.searchParams.set("github_id", String(userData.id));
+      target.searchParams.set("github_username", userData.login);
+      return NextResponse.redirect(target.toString());
     } finally {
       if (client) {
         await client.close();

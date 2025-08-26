@@ -102,7 +102,7 @@ export default function StoryQuizComponent({
           </div>
 
           {/* Quiz Content - Right Side */}
-          <div className="h-fit sticky top-0 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
+          <div className="h-fit sticky top-6 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
             <div className="h-full flex flex-col">
               {/* Quiz Header */}
               <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">

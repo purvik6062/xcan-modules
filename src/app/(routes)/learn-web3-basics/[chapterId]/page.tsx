@@ -19,6 +19,36 @@ export default function Web3BasicsChapterPage() {
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { address, isReady } = useWalletProtection();
+  const [initiatingGithub, setInitiatingGithub] = useState(false);
+
+  // Capture GitHub params from callback and store in localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    const ghUser = url.searchParams.get("github_username");
+    if (ghUser) localStorage.setItem("github_username", ghUser);
+  }, []);
+
+  const ensureGitHubAuth = async () => {
+    if (!address) return false;
+    if (localStorage.getItem("github_username")) return true;
+    if (initiatingGithub) return false;
+    try {
+      setInitiatingGithub(true);
+      const returnTo = encodeURIComponent(window.location.href);
+      const res = await fetch(`/api/auth/github?wallet_address=${address}&return_to=${returnTo}`);
+      const data = await res.json();
+      if (data.authUrl) {
+        window.location.href = data.authUrl;
+        return false;
+      }
+    } catch (e) {
+      console.error("Failed to start GitHub OAuth", e);
+    } finally {
+      setInitiatingGithub(false);
+    }
+    return false;
+  };
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -161,9 +191,14 @@ export default function Web3BasicsChapterPage() {
             {currentSection.type === "quiz" ? (
               <QuizComponent
                 questions={quizQuestions[chapterId] || []}
-                onComplete={() =>
-                  handleSectionComplete(currentSection.id)
-                }
+                onComplete={async () => {
+                  // Gate quiz attempt completion behind GitHub auth
+                  if (address && !localStorage.getItem("github_username")) {
+                    await ensureGitHubAuth();
+                    return;
+                  }
+                  handleSectionComplete(currentSection.id);
+                }}
               />
             ) : (
               <div className="">
@@ -180,9 +215,9 @@ export default function Web3BasicsChapterPage() {
                   <button
                     onClick={goToPreviousSection}
                     disabled={currentSectionIndex === 0}
-                    className={`px-6 py-3 rounded-lg transition-all duration-200 ${currentSectionIndex === 0
-                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                        : "bg-gray-700 text-white hover:bg-gray-600"
+                    className={`px-6 py-3 ml-4 rounded-lg transition-all duration-200 ${currentSectionIndex === 0
+                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                      : "bg-gray-700 text-white hover:bg-gray-600"
                       }`}
                   >
                     ← Previous Section
@@ -195,9 +230,9 @@ export default function Web3BasicsChapterPage() {
                   <button
                     onClick={goToNextSection}
                     disabled={currentSectionIndex === availableSections.length - 1}
-                    className={`px-6 py-3 rounded-lg transition-all duration-200 ${currentSectionIndex === availableSections.length - 1
-                        ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                        : "bg-gray-700 text-white hover:bg-gray-600"
+                    className={`px-6 py-3 mr-4 rounded-lg transition-all duration-200 ${currentSectionIndex === availableSections.length - 1
+                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                      : "bg-gray-700 text-white hover:bg-gray-600"
                       }`}
                   >
                     Next Section →
