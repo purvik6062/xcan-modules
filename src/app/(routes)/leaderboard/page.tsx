@@ -168,6 +168,8 @@ export default function LeaderboardPage() {
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
                         <Image
+                          width={100}
+                          height={100}
                           className="h-10 w-10 rounded-full"
                           src={user.avatar}
                           alt={user.username}

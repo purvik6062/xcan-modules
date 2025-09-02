@@ -106,7 +106,13 @@ export async function GET(req: NextRequest) {
 
       // Redirect back to the originating page with GitHub info in query params
       const fallback = process.env.NEXT_PUBLIC_BASE_URL;
-      const target = new URL(returnTo || fallback);
+      const redirectBase = returnTo || fallback;
+      if (!redirectBase) {
+        return NextResponse.redirect(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/auth/error?error=invalid_redirect`
+        );
+      }
+      const target = new URL(redirectBase);
       target.searchParams.set("github_id", String(userData.id));
       target.searchParams.set("github_username", userData.login);
       return NextResponse.redirect(target.toString());
