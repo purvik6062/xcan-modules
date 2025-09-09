@@ -136,7 +136,7 @@ export default function ClientChallenge({
             const response = await fetch("/api/execute-challenge", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ code: modifiedCode, slug }),
+              body: JSON.stringify({ code: modifiedCode, slug, userAddress: address || null }),
             });
             if (!response.ok) {
               const errorData = await response.json();
@@ -174,6 +174,28 @@ export default function ClientChallenge({
       setIsLoading(false);
     }
   };
+
+  // Load prior results for this challenge and user
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        if (!address) return;
+        const res = await fetch(`/api/execute-challenge?userAddress=${address}&slug=${slug}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data?.result?.testResults && Array.isArray(data.result.testResults)) {
+          setTestResults(data.result.testResults);
+          setOutput(data.result.summary || "");
+          const allPassed = data.result.testResults.every((r: any) => r.passed);
+          setAllTestsPassed(allPassed);
+          setCodeSubmitted(true);
+        }
+      } catch (e) {
+        // ignore progress fetch errors in UI
+      }
+    };
+    fetchProgress();
+  }, [address, slug]);
 
   const getLevelBadgeStyle = (level: string) => {
     switch (level) {

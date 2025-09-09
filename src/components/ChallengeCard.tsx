@@ -9,6 +9,7 @@ interface ChallengeCardProps {
   category: string;
   points: number;
   precompileUsed: string;
+  completed?: boolean;
 }
 
 export default function ChallengeCard({
@@ -20,6 +21,7 @@ export default function ChallengeCard({
   category,
   points,
   precompileUsed,
+  completed = false,
 }: ChallengeCardProps) {
   const getLevelStyle = (level: string) => {
     switch (level) {
@@ -37,7 +39,8 @@ export default function ChallengeCard({
   return (
     <Link
       href={`/challenges/${slug}`}
-      className="block border  border-gray-700 rounded-lg p-6 hover:shadow-md transition-shadow  hover:border-blue-600"
+      className={`block border  rounded-lg p-6 hover:shadow-md transition-shadow  ${completed ? "border-green-600 ring-1 ring-green-500/40 bg-green-900/10" : "border-gray-700 hover:border-blue-600"
+        }`}
     >
       <div className="flex justify-between items-start mb-2">
         <h3 className="text-lg font-bold">{title}</h3>
@@ -57,7 +60,14 @@ export default function ChallengeCard({
             {precompileUsed}
           </span>
         </div>
-        <span className="font-semibold">{points} points</span>
+        <span className="font-semibold flex items-center gap-2">
+          {completed && (
+            <span className="inline-flex items-center text-green-400 text-xs bg-green-900/40 border border-green-700 rounded px-2 py-0.5">
+              ✓ Completed
+            </span>
+          )}
+          {points} points
+        </span>
       </div>
     </Link>
   );

@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>("challenges");
+    const collection = db.collection<UserChallengesDoc>("challenges-web3-basics");
 
     const doc = await collection.findOne({ userAddress });
     const chapters = doc?.chapters || {};
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>("challenges");
+    const collection = db.collection<UserChallengesDoc>("challenges-web3-basics");
 
     const existing = await collection.findOne({ userAddress });
     const chapters = existing?.chapters || {};

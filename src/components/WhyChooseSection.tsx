@@ -56,7 +56,7 @@ export default function WhyChooseSection() {
           <h3 className="text-xl font-bold mb-3">Progressive Curriculum</h3>
           <p className="text-gray-300">
             Structured learning paths that take you from basics to advanced
-            Stylus Core Concepts concepts.
+            Stylus Core Concepts.
           </p>
         </div>
         <div className="text-center">

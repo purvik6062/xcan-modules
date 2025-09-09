@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { challengesData } from "../../../data/challenges";
+import { connectToDatabase } from "../../../lib/database/mongodb";
 import { ethers } from "ethers";
 
 // Improved helper function for BigInt serialization
@@ -244,7 +245,7 @@ function estimateGasUsed(code: string, slug: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { code, slug } = await request.json();
+    const { code, slug, userAddress } = await request.json();
 
     if (!code || !slug) {
       return NextResponse.json(
@@ -288,6 +289,36 @@ export async function POST(request: NextRequest) {
       );
 
       summary += ` • Average execution: ${avgDuration}ms • Estimated gas: ${totalGas}`;
+
+      // Persist successful result for progress tracking
+      try {
+        const { db } = await connectToDatabase();
+        const collection = db.collection("challenge-core-stylus");
+        if (userAddress && typeof userAddress === "string") {
+          const lower = userAddress.toLowerCase();
+          const resultEntry = {
+            summary,
+            testResults,
+            completedAt: new Date(),
+            success: true,
+          };
+          await collection.updateOne(
+            { userAddress: lower },
+            {
+              $set: {
+                userAddress: lower,
+                updatedAt: new Date(),
+                [`results.${slug}`]: resultEntry,
+              },
+              $setOnInsert: { createdAt: new Date() },
+              $addToSet: { challenges: slug },
+            },
+            { upsert: true }
+          );
+        }
+      } catch (dbErr) {
+        console.error("Failed to persist challenge result:", dbErr);
+      }
     }
 
     return NextResponse.json({
@@ -299,6 +330,56 @@ export async function POST(request: NextRequest) {
     console.error("API error:", error);
     return NextResponse.json(
       { error: `Error processing request: ${error.message}` },
+      { status: 500 }
+    );
+  }
+}
+
+// GET /api/execute-challenge?userAddress=0x...&slug=optional
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userAddress = searchParams.get("userAddress");
+    const slug = searchParams.get("slug");
+
+    if (!userAddress) {
+      return NextResponse.json(
+        { error: "userAddress is required" },
+        { status: 400 }
+      );
+    }
+
+    const { db } = await connectToDatabase();
+    const collection = db.collection("challenge-core-stylus");
+
+    const doc = await collection.findOne(
+      { userAddress: userAddress.toLowerCase() },
+      { projection: { _id: 0 } }
+    );
+
+    const progress = doc || {
+      userAddress: userAddress.toLowerCase(),
+      challenges: [],
+      results: {},
+    };
+
+    if (slug) {
+      const completed =
+        Array.isArray(progress.challenges) &&
+        progress.challenges.includes(slug);
+      const result = progress.results?.[slug] || null;
+      return NextResponse.json({
+        completed,
+        result,
+        challenges: progress.challenges || [],
+      });
+    }
+
+    return NextResponse.json({ progress });
+  } catch (error: any) {
+    console.error("GET progress error:", error);
+    return NextResponse.json(
+      { error: `Error fetching results: ${error.message}` },
       { status: 500 }
     );
   }

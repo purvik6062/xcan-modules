@@ -5,6 +5,7 @@ import ChallengeFilters, { FilterState } from "../../../components/ChallengeFilt
 import { challengePreviews } from "../../../data/challenges";
 import { ChallengePreview } from "../../../types/challenge";
 import "../../../styles/gamify.css";
+import { useWalletProtection } from "../../../hooks/useWalletProtection";
 
 // export const metadata = {
 //   title: "Stylus Core Concepts Challenges - CodeQuest",
@@ -16,6 +17,22 @@ export default function ChallengesPage() {
   const [filteredChallenges, setFilteredChallenges] =
     useState<ChallengePreview[]>(challengePreviews);
   const [showSidebar, setShowSidebar] = useState(false);
+  const { address } = useWalletProtection();
+  const [completedSlugs, setCompletedSlugs] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      try {
+        if (!address) return;
+        const res = await fetch(`/api/execute-challenge?userAddress=${address}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const slugs = data?.progress?.challenges || [];
+        if (Array.isArray(slugs)) setCompletedSlugs(slugs);
+      } catch (_) { }
+    };
+    fetchUserProgress();
+  }, [address]);
 
   // Extract unique categories and precompiles for filters
   const categories = [
@@ -144,6 +161,7 @@ export default function ChallengesPage() {
                     category={challenge.category}
                     points={challenge.points}
                     precompileUsed={challenge.precompileUsed}
+                    completed={completedSlugs.includes(challenge.slug)}
                   />
                 ))}
               </div>
