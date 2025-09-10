@@ -3,7 +3,7 @@
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 interface UseWalletProtectionOptions {
   redirectTo?: string;
@@ -24,10 +24,10 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
   const { address, isConnected } = useAccount();
   const router = useRouter();
   const [authStatus, setAuthStatus] = useState<AuthStatus | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Start with false, only true when actually loading
   const [lastCheckedAddress, setLastCheckedAddress] = useState<string | null>(null);
 
-  const isWalletConnected = () => {
+  const isWalletConnected = useCallback(() => {
     if (!ready) return false;
 
     // Check for social login (Google/Farcaster)
@@ -44,9 +44,9 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
     const hasPrivyWallet = address && isConnected && authenticated;
 
     return authenticated && (realWallet || hasPrivyWallet);
-  };
+  }, [ready, user, wallets, address, isConnected, authenticated]);
 
-  const checkAuthStatus = async () => {
+  const checkAuthStatus = useCallback(async () => {
     // Don't check if we're not ready or not authenticated
     if (!ready || !authenticated) {
       setAuthStatus({
@@ -55,7 +55,6 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
         githubUsername: null,
         fullyAuthenticated: false
       });
-      setIsLoading(false);
       return;
     }
 
@@ -66,21 +65,20 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
         githubUsername: null,
         fullyAuthenticated: false
       });
-      setIsLoading(false);
       return;
     }
 
     // Don't make API call if we've already checked this address recently
     if (lastCheckedAddress === address && authStatus) {
-      setIsLoading(false);
       return;
     }
 
-    try {
-      // For now, we'll skip the token verification in the hook
-      // The actual verification will happen in the API route
-      // We'll make a simple API call to check the status
+    // Only show loading for the first check or when address changes
+    if (!authStatus || lastCheckedAddress !== address) {
+      setIsLoading(true);
+    }
 
+    try {
       // Check authentication status from API
       const response = await fetch("/api/auth/status", {
         headers: {
@@ -114,18 +112,14 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [ready, authenticated, isWalletConnected, address, lastCheckedAddress, authStatus]);
 
+  // Only check auth status when wallet connection state changes, not on every render
   useEffect(() => {
     if (ready) {
-      // Add a small delay to prevent rapid API calls during navigation
-      const timer = setTimeout(() => {
-        checkAuthStatus();
-      }, 200);
-
-      return () => clearTimeout(timer);
+      checkAuthStatus();
     }
-  }, [ready, authenticated, address, isConnected]);
+  }, [ready, checkAuthStatus]);
 
   useEffect(() => {
     if (autoRedirect && !isLoading && authStatus && !authStatus.fullyAuthenticated) {
@@ -133,7 +127,8 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
     }
   }, [autoRedirect, isLoading, authStatus, redirectTo, router]);
 
-  const isReady = ready && !isLoading;
+  // Only show loading during initial Privy setup, not during auth checks
+  const isReady = ready;
 
   return {
     isWalletConnected: isWalletConnected(),
@@ -147,10 +142,10 @@ export function useWalletProtection(options: UseWalletProtectionOptions = {}) {
     wallets,
     address,
     authStatus,
-    refreshAuthStatus: () => {
+    refreshAuthStatus: useCallback(() => {
       setLastCheckedAddress(null); // Reset cache to force fresh check
       checkAuthStatus();
-    },
+    }, [checkAuthStatus]),
     requireConnection: () => {
       if (!isWalletConnected()) {
         throw new Error("Wallet connection required for this action");

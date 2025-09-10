@@ -36,9 +36,25 @@ const LEVEL_METADATA_HASHES = {
   "farcaster-miniapps": "QmbHfr4GsSvxFs1C97QwknU4f1zfVRyUBomGonK9Gsnz4b",
 };
 
+const modulesHashes = {
+  "web3-basics": {
+    metadataHash: "QmdGYhDPfFXhqNT9jx6KucHJZDMk9BNYVffS3yM4Bcw61L",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmcyiBHVJtZwzhiF83iWvDouHqbTN2r3RkP7vkXVRxWwdG",
+    name: "Web3 Basics",
+  },
+  "core-stylus": {
+    metadataHash: "Qmb9CirahKamo1bhbfjbSvnvokGoqDTMGxrSnYfssrsR8R",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmfFbkTHYhGw8goQL3eZENcD2Kh6niAV4JHmKjtD9QuKL6",
+    name: "Stylus Core Concepts",
+  },
+};
+
 export const useMint = () => {
   const { address } = useAccount();
   const [isMinting, setIsMinting] = useState(false);
+  const [isCertificationMinting, setIsCertificationMinting] = useState(false);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const [mintedNFT, setMintedNFT] = useState<{
     transactionHash: string;
@@ -115,7 +131,7 @@ export const useMint = () => {
     try {
       // Fetch the GIF from the public folder
       // const response = await fetch("/speedrun-stylus-nft.png");
-      const response = await fetch("/nft/farcaster-miniapps.png");
+      const response = await fetch("/images/Web3Basics.png");
       if (!response.ok) {
         throw new Error("Failed to fetch GIF");
       }
@@ -123,7 +139,7 @@ export const useMint = () => {
 
       // Create a File object for Pinata upload
       // const imageFile = new File([blob], "speedrun-stylus-nft.png", {
-      const imageFile = new File([blob], "farcaster-miniapps.png", {
+      const imageFile = new File([blob], "Web3Basics.png", {
         type: blob.type,
       });
 
@@ -146,18 +162,18 @@ export const useMint = () => {
   const uploadMetadataToIPFS = async (imageIpfsUrl: string) => {
     try {
       const metadata = {
-        name: "Speedrun Stylus: Farcaster Miniapps Challenge",
+        name: "Xcan Modules: Web3 Basics Challenge",
         description:
-          "Awarded for completing the Farcaster Miniapps Challenge on Speedrun Stylus",
+          "Awarded for completing the Web3 Basics Challenge on Xcan",
         image: imageIpfsUrl, // Use ipfs:// URL in metadata
         attributes: [
           {
             trait_type: "Achievement",
-            value: "Farcaster Miniapps Challenge",
+            value: "Web3 Basics Challenge",
           },
           {
             trait_type: "Platform",
-            value: "Speedrun Stylus",
+            value: "Xcan",
           },
           {
             trait_type: "Network",
@@ -180,6 +196,7 @@ export const useMint = () => {
       throw err;
     }
   };
+
 
   // Store minted NFT to MongoDB
   const storeMintedNFT = async (
@@ -289,5 +306,64 @@ export const useMint = () => {
     }
   };
 
-  return { handleMint, isMinting, isMined, mintedNFT };
+  const certificationMint = async (moduleName: string) => {
+    if (!address) {
+      toast.error("Please connect your wallet.");
+      return;
+    }
+
+    if (!moduleName) {
+      toast.error("Level information is required for minting.");
+      return;
+    }
+
+    setIsCertificationMinting(true);
+    try {
+      const metadataIpfsHash = modulesHashes[moduleName as keyof typeof modulesHashes].metadataHash;
+      const imageUrl = modulesHashes[moduleName as keyof typeof modulesHashes].imageUrl;
+      const name = modulesHashes[moduleName as keyof typeof modulesHashes].name;
+
+      // const imageResult = await uploadImageToIPFS();
+      // if (!imageResult) {
+      //   throw new Error("Failed to upload image to IPFS");
+      // }
+      // console.log("imageIpfsUrl", imageResult.ipfsUrl);
+      // console.log("imageGatewayUrl", imageResult.gatewayUrl);
+
+      // // Upload metadata to IPFS (using ipfs:// URL for image in metadata)
+      // const metadataResult = await uploadMetadataToIPFS(imageResult.ipfsUrl);
+      // if (!metadataResult) {
+      //   throw new Error("Failed to upload metadata to IPFS");
+      // }
+      // console.log("metadataIpfsUrl", metadataResult.ipfsUrl);
+      // console.log("metadataGatewayUrl", metadataResult.gatewayUrl);
+
+      const hash = await writeContractAsync({
+        address: CONTRACT_ADDRESS,
+        abi: CONTRACT_ABI,
+        functionName: "safeMint",
+        args: [address, `ipfs://${metadataIpfsHash}`],
+      });
+
+      setTxHash(hash);
+
+      const minted = {
+        transactionHash: hash,
+        metadataUrl: `https://gateway.pinata.cloud/ipfs/${metadataIpfsHash}`,
+        imageUrl: imageUrl,
+        name: name,
+      };
+
+      toast.success("NFT minted successfully!");
+      return minted;
+    } catch (err) {
+      console.error("Minting failed:", err);
+      toast.error("Minting failed. Please try again.");
+      throw err;
+    } finally {
+      setIsCertificationMinting(false);
+    }
+  };
+
+  return { handleMint, certificationMint, isMinting, isCertificationMinting, isMined, mintedNFT };
 };

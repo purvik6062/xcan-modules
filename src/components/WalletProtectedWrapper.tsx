@@ -3,9 +3,8 @@
 import React, { useEffect } from "react";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
 import ConnectWallet from "./ConnectWallet";
-import GitHubConnect from "./GitHubConnect";
 import { motion } from "framer-motion";
-import { FiShield, FiWifi, FiGithub, FiCheckCircle } from "react-icons/fi";
+import { FiShield, FiWifi, FiCheckCircle } from "react-icons/fi";
 
 interface WalletProtectedWrapperProps {
   children: React.ReactNode;
@@ -16,8 +15,6 @@ export default function WalletProtectedWrapper({
 }: WalletProtectedWrapperProps) {
   const {
     isWalletConnected,
-    /* isGitHubConnected, */
-    /* isFullyAuthenticated, */
     githubUsername,
     isReady,
     isLoading,
@@ -48,26 +45,13 @@ export default function WalletProtectedWrapper({
     }
   }, [isWalletConnected, githubUsername]);
 
-
-  // Show loading state while Privy is initializing
+  // Show loading state only while Privy is initializing (not during auth checks)
   if (!isReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid mx-auto mb-4"></div>
           <p className="text-white text-lg">Initializing authentication...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show loading state while checking auth status
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid mx-auto mb-4"></div>
-          <p className="text-white text-lg">Checking authentication status...</p>
         </div>
       </div>
     );
@@ -142,6 +126,21 @@ export default function WalletProtectedWrapper({
     );
   }
 
-  // If fully authenticated, render the protected content
+  // Show a subtle loading indicator only when checking auth status (not blocking navigation)
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
+        <div className="fixed top-4 right-4 z-50">
+          <div className="bg-blue-500/20 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center space-x-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-blue-400 border-solid"></div>
+            <span className="text-white text-sm">Checking authentication...</span>
+          </div>
+        </div>
+        {children}
+      </div>
+    );
+  }
+
+  // If wallet is connected, render the protected content immediately
   return <>{children}</>;
 } 

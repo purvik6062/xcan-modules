@@ -1,18 +1,15 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BiSolidWallet } from "react-icons/bi";
 import {
-  FiArrowUpRight,
   FiCopy,
-  FiExternalLink,
   FiLogOut,
   FiCheck,
 } from "react-icons/fi";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useAccount, useEnsName, useDisconnect } from "wagmi";
-// import { CheckIcon } from "lucide-react";
 
 export default function ConnectWallet() {
   const { login, authenticated, user, logout, ready, connectWallet } =
@@ -22,21 +19,11 @@ export default function ConnectWallet() {
   const { disconnect: wagmiDisconnect } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [displayAddress, setDisplayAddress] = useState<
-    string | null | `0x${string}` | undefined
-  >(null);
   const [copiedAddress, setCopiedAddress] = useState(false);
-  const dropdownRef = useRef<any>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // console.log("------------");
-  // console.log("isConnected", isConnected);
-  // console.log("authenticated", authenticated);
-  // console.log("address", address);
-  // console.log("wallets", wallets);
-  // console.log("ready", ready);
-  // console.log("user", user);
-
-  useEffect(() => {
+  // Memoize the display address calculation to avoid unnecessary re-renders
+  const displayAddress = useMemo(() => {
     // Find the first wallet with a matching address from a real wallet provider
     const realWallet = wallets.find(
       (wallet) =>
@@ -44,24 +31,32 @@ export default function ConnectWallet() {
     );
 
     if (realWallet) {
-      setDisplayAddress(realWallet.address);
+      return realWallet.address;
     } else if (address && isConnected && authenticated) {
       // If we have an address and are connected and authenticated, keep it even if it's a Privy wallet
-      setDisplayAddress(address);
-    } else {
-      setDisplayAddress(null);
-      // Only disconnect if we're not authenticated at all and have no real wallets
-      if (!authenticated && wallets.every((wallet) => wallet.walletClientType === "privy")) {
-        wagmiDisconnect();
-      }
+      return address;
     }
-  }, [wallets, address, user, isConnected, authenticated]);
+    return null;
+  }, [wallets, address, isConnected, authenticated]);
 
+  // Memoize wallet connection status
+  const isWalletConnected = useMemo(() => {
+    return user?.google || user?.farcaster || displayAddress !== null;
+  }, [user?.google, user?.farcaster, displayAddress]);
+
+  // Handle wallet disconnection when not authenticated
+  useEffect(() => {
+    if (!authenticated && wallets.every((wallet) => wallet.walletClientType === "privy")) {
+      wagmiDisconnect();
+    }
+  }, [authenticated, wallets, wagmiDisconnect]);
+
+  // Handle click outside dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef?.current?.contains(event.target as Node)
+        !dropdownRef.current.contains(event.target as Node)
       ) {
         setIsDropdownOpen(false);
       }
@@ -73,19 +68,19 @@ export default function ConnectWallet() {
     };
   }, []);
 
-  const handleCopyAddress = () => {
+  const handleCopyAddress = useCallback(() => {
     if (displayAddress) {
       navigator.clipboard.writeText(displayAddress);
       setCopiedAddress(true);
       setTimeout(() => setCopiedAddress(false), 2000);
     }
-  };
+  }, [displayAddress]);
 
-  const truncateAddress = (addr: any) => {
+  const truncateAddress = useCallback((addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-  };
+  }, []);
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
     if (!authenticated) {
       login();
     } else {
@@ -93,19 +88,15 @@ export default function ConnectWallet() {
         connectWallet();
       }
     }
-  };
+  }, [authenticated, login, user?.google, user?.farcaster, connectWallet]);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await logout();
     if (!user?.google && !user?.farcaster) {
       wagmiDisconnect();
-      setDisplayAddress(null);
     }
     setIsDropdownOpen(false);
-  };
-
-  const isWalletConnected =
-    user?.google || user?.farcaster || displayAddress !== null;
+  }, [logout, user?.google, user?.farcaster, wagmiDisconnect]);
 
   return (
     <div className="relative" ref={dropdownRef}>

@@ -5,12 +5,16 @@ import { motion } from "framer-motion";
 import { web3BasicsChapters } from "../../../data/web3BasicsChapters";
 import Web3BasicsChapterCard from "../../../components/web3-basics/Web3BasicsChapterCard";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
+import { useMint } from "../../../hooks/useMint";
+import toast from "react-hot-toast";
 
 export default function LearnWeb3BasicsPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [progressData, setProgressData] = useState<{ [chapterId: string]: string[] }>({});
   const [isLoading, setIsLoading] = useState(true);
   const { address, isReady } = useWalletProtection();
+  const { certificationMint, isCertificationMinting } = useMint();
+  const [alreadyClaimed, setAlreadyClaimed] = useState(false);
 
   const filteredChapters =
     selectedLevel === "all"
@@ -34,6 +38,13 @@ export default function LearnWeb3BasicsPage() {
         if (res.ok) {
           const data = await res.json();
           setProgressData(data?.chapters || {});
+          try {
+            const claimRes = await fetch(`/api/certification/claim/web3-basics?${params.toString()}`, { cache: "no-store" });
+            if (claimRes.ok) {
+              const claim = await claimRes.json();
+              setAlreadyClaimed(Boolean(claim?.claimed));
+            }
+          } catch { }
         }
       } catch (e) {
         console.error("Failed to fetch progress", e);
@@ -65,6 +76,33 @@ export default function LearnWeb3BasicsPage() {
   };
 
   const overallProgress = calculateOverallProgress();
+
+  const claimNFT = async () => {
+    try {
+      if (!address) {
+        toast.error("Connect your wallet first");
+        return;
+      }
+      if (overallProgress.percentage !== 100) {
+        toast.error("Complete all sections to claim certification");
+        return;
+      }
+      const minted = await certificationMint("web3-basics");
+      // await fetch("/api/certification/claim/web3-basics", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     userAddress: address,
+      //     transactionHash: minted?.transactionHash,
+      //     metadataUrl: minted?.metadataUrl,
+      //     imageUrl: minted?.imageUrl,
+      //   }),
+      // });
+      toast.success("Certification claimed!");
+    } catch (_) {
+      // errors already handled
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -191,6 +229,96 @@ export default function LearnWeb3BasicsPage() {
               </div>
             </div>
           </motion.div>
+          <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+            {/* Explanatory Text */}
+            <div className="text-center w-full">
+              {overallProgress.percentage !== 100 ? (
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                    Complete all sections to unlock your certificate
+                  </h3>
+                </div>
+              ) : alreadyClaimed ? (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center space-x-2 text-green-600 dark:text-green-400">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <h3 className="text-lg font-semibold">Certification claimed — check your wallet</h3>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Your NFT certification has been minted to your wallet.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-green-600 dark:text-green-400">Ready to claim</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Great work—everything’s complete. Claim your NFT certification now.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Claim Button */}
+            <button
+              onClick={claimNFT}
+              disabled={overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
+              className={`${alreadyClaimed
+                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
+                : overallProgress.percentage === 100 && !isCertificationMinting
+                  ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
+                } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
+            >
+              {alreadyClaimed ? (
+                <>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Certification Claimed</span>
+                </>
+              ) : isCertificationMinting ? (
+                <>
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Claiming...</span>
+                </>
+              ) : overallProgress.percentage === 100 ? (
+                <>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
+                  </svg>
+                  <span>Claim NFT Certification</span>
+                </>
+              ) : (
+                <span>Complete All Challenges</span>
+              )}
+            </button>
+
+            {/* Additional Info for Claimed State */}
+            {/* {alreadyClaimed && (
+              <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    <svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="text-sm">
+                    <p className="text-green-800 dark:text-green-200 font-medium">
+                      Your achievement is now onchain
+                    </p>
+                    <p className="text-green-700 dark:text-green-300 mt-1">
+                      This NFT is permanent proof of completion
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )} */}
+          </div>
         </div>
 
         {/* Filter Controls */}

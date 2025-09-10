@@ -293,7 +293,7 @@ export async function POST(request: NextRequest) {
       // Persist successful result for progress tracking
       try {
         const { db } = await connectToDatabase();
-        const collection = db.collection("challenge-core-stylus");
+        const collection = db.collection("challenges-core-stylus");
         if (userAddress && typeof userAddress === "string") {
           const lower = userAddress.toLowerCase();
           const resultEntry = {
@@ -350,7 +350,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { db } = await connectToDatabase();
-    const collection = db.collection("challenge-core-stylus");
+    const collection = db.collection("challenges-core-stylus");
 
     const doc = await collection.findOne(
       { userAddress: userAddress.toLowerCase() },

@@ -9,6 +9,13 @@ type UserChallengesDoc = {
   // convenience list of fully completed chapter ids
   completedChapters: string[];
   updatedAt: Date;
+  certification?: {
+    claimed: boolean;
+    claimedAt: Date;
+    transactionHash: string;
+    metadataUrl: string;
+    imageUrl: string;
+  };
 };
 
 function computeProgress(chaptersCompletedSections: {
@@ -51,11 +58,14 @@ export async function GET(request: NextRequest) {
     }
 
     const { db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>("challenges-web3-basics");
+    const collection = db.collection<UserChallengesDoc>(
+      "challenges-web3-basics"
+    );
 
     const doc = await collection.findOne({ userAddress });
     const chapters = doc?.chapters || {};
     const completedChapters = doc?.completedChapters || [];
+    const certification = doc?.certification || null;
 
     const progressByChapter = computeProgress(chapters);
 
@@ -64,6 +74,7 @@ export async function GET(request: NextRequest) {
       chapters,
       completedChapters,
       progressByChapter,
+      certification,
     });
   } catch (error) {
     console.error("GET /api/challenges error", error);
@@ -88,7 +99,9 @@ export async function POST(request: NextRequest) {
     }
 
     const { db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>("challenges-web3-basics");
+    const collection = db.collection<UserChallengesDoc>(
+      "challenges-web3-basics"
+    );
 
     const existing = await collection.findOne({ userAddress });
     const chapters = existing?.chapters || {};
