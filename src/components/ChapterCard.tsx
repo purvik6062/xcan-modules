@@ -52,7 +52,7 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi" }: Chapt
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col"
+      className={`bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col`}
     >
       {/* Header */}
       <div className="p-6 border-b border-slate-700">

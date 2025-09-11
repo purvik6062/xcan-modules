@@ -118,10 +118,10 @@ export default function ClientChallenge({
 
   const runTests = async () => {
     // Require GitHub only when submitting solution, if wallet is connected
-    if (address && !localStorage.getItem("github_username")) {
-      await ensureGitHubAuth();
-      return;
-    }
+    // if (address && !localStorage.getItem("github_username")) {
+    //   await ensureGitHubAuth();
+    //   return;
+    // }
     setIsLoading(true);
     setTestResults([]);
     setOutput("");
@@ -136,7 +136,7 @@ export default function ClientChallenge({
             const response = await fetch("/api/execute-challenge", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ code: modifiedCode, slug, userAddress: address || null }),
+              body: JSON.stringify({ code: modifiedCode, slug, userAddress: address || null, level: challenge.level, points: challenge.points }),
             });
             if (!response.ok) {
               const errorData = await response.json();

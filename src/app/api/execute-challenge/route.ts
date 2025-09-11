@@ -245,7 +245,7 @@ function estimateGasUsed(code: string, slug: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { code, slug, userAddress } = await request.json();
+    const { code, slug, userAddress, level, points } = await request.json();
 
     if (!code || !slug) {
       return NextResponse.json(
@@ -297,8 +297,8 @@ export async function POST(request: NextRequest) {
         if (userAddress && typeof userAddress === "string") {
           const lower = userAddress.toLowerCase();
           const resultEntry = {
-            summary,
-            testResults,
+            level: level,
+            points: points,
             completedAt: new Date(),
             success: true,
           };

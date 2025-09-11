@@ -7,7 +7,7 @@ type UserChallengesDoc = {
   // Map of chapterId to array of completed section ids
   chapters: { [chapterId: string]: string[] };
   // convenience list of fully completed chapter ids
-  completedChapters: string[];
+  completedChapters: Array<{ id: string; level: string; points: number }>;
   updatedAt: Date;
   certification?: {
     claimed: boolean;
@@ -91,7 +91,9 @@ export async function POST(request: NextRequest) {
     const userAddress: string = (body.userAddress || "").toLowerCase();
     const chapterId: string = body.chapterId;
     const sectionId: string = body.sectionId;
-    if (!userAddress || !chapterId || !sectionId) {
+    const level: string = body.level;
+    const points: number = body.points;
+    if (!userAddress || !chapterId || !sectionId || !level || !points) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -110,7 +112,7 @@ export async function POST(request: NextRequest) {
     chapters[chapterId] = Array.from(chapterCompleted);
 
     // Recompute completedChapters
-    const completedChapters: string[] = [];
+    const completedChapters: Array<{ id: string; level: string; points: number }> = [];
     for (const ch of web3BasicsChapters) {
       const availableSections = ch.sections.filter(
         (s) => s.status === "available"
@@ -120,7 +122,7 @@ export async function POST(request: NextRequest) {
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        completedChapters.push(ch.id);
+        completedChapters.push({ id: ch.id, level: ch.level, points: ch.points });
       }
     }
 

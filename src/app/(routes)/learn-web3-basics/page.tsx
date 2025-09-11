@@ -286,16 +286,14 @@ export default function LearnWeb3BasicsPage() {
                   </svg>
                   <span>Claiming...</span>
                 </>
-              ) : overallProgress.percentage === 100 ? (
+              ) :
                 <>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
                   </svg>
                   <span>Claim NFT Certification</span>
                 </>
-              ) : (
-                <span>Complete All Challenges</span>
-              )}
+              }
             </button>
 
             {/* Additional Info for Claimed State */}
