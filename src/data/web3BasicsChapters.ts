@@ -4,6 +4,7 @@ export interface Chapter {
   description: string;
   icon: string;
   level: "Beginner" | "Intermediate" | "Advanced";
+  points: number;
   duration: string;
   status: "available" | "coming-soon";
   sections: Section[];
@@ -61,6 +62,7 @@ export const web3BasicsChapters: Chapter[] = [
       "Discover the evolution from Web1 to Web3 and learn about digital wallets - your gateway to the decentralized internet. Understand how Web3 empowers users with true ownership.",
     icon: "🌐",
     level: "Beginner",
+    points: 10,
     duration: "1.5 hours",
     status: "available",
     badge: {
@@ -281,7 +283,8 @@ Welcome to the wallet revolution! 👛✨`,
       "Dive deep into the technology that powers Web3. Understand how blocks form unbreakable chains, how distributed ledgers create trust without authorities, and how cryptographic keys secure your digital assets.",
     icon: "🔐",
     level: "Beginner",
-    duration: "2.5 hours",
+    points: 10,
+      duration: "2.5 hours",
     status: "available",
     badge: {
       title: "Crypto Guardian",
@@ -466,6 +469,7 @@ Welcome to the age of digital truth! 🧱✨`,
       "Explore the world of digital assets and decentralized finance. Learn about cryptocurrency, NFTs, and DeFi protocols through engaging stories about Sam, Zara, and Max.",
     icon: "💎",
     level: "Intermediate",
+    points: 15,
     duration: "3 hours",
     status: "available",
     badge: {
@@ -831,6 +835,7 @@ Welcome to the future of finance! 🔄✨`,
       "Master the basics of Rust programming language. Learn about Rust syntax, data types, control flow, and pattern matching through practical examples and exercises.",
     icon: "🦀",
     level: "Beginner",
+    points: 10,
     duration: "45 mins",
     status: "available",
     badge: {
@@ -960,6 +965,7 @@ Welcome to the future of finance! 🔄✨`,
       "Understand Rust's unique approach to memory management. Learn about ownership, borrowing, and lifetimes - the concepts that make Rust both safe and fast.",
     icon: "🔐",
     level: "Intermediate",
+    points: 15,
     duration: "2.5 hours",
     status: "available",
     badge: {
@@ -1059,6 +1065,7 @@ Welcome to the future of finance! 🔄✨`,
       "Master advanced Rust concepts including error handling and macros. Learn how to write robust, maintainable Rust code for blockchain applications.",
     icon: "⚡",
     level: "Advanced",
+    points: 20,
     duration: "3 hours",
     status: "available",
     badge: {

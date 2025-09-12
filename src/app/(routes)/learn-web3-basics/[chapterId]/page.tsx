@@ -107,7 +107,7 @@ export default function Web3BasicsChapterPage() {
         await fetch("/api/challenges", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userAddress: address, chapterId, sectionId }),
+          body: JSON.stringify({ userAddress: address, chapterId, sectionId, level: chapter.level, points: chapter.points }),
         });
       } catch (e) {
         console.error("Failed to update progress", e);
@@ -179,7 +179,10 @@ export default function Web3BasicsChapterPage() {
 
           <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
             <span>{completedSections.length}/{availableSections.length} sections completed</span>
-            <span>{chapter.duration}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-blue-400">{chapter.points} points</span>
+              <span>{chapter.duration}</span>
+            </div>
           </div>
         </div>
       </div>
