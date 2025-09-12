@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
 import { web3BasicsChapters } from "@/data/web3BasicsChapters";
+import { crossChainChapters } from "@/data/crossChainChapters";
 
 type UserChallengesDoc = {
   userAddress: string;
@@ -20,13 +21,15 @@ type UserChallengesDoc = {
 
 function computeProgress(chaptersCompletedSections: {
   [chapterId: string]: string[];
-}) {
+}, module: string = "web3-basics") {
   const progressByChapter: Record<
     string,
     { completedSectionIds: string[]; totalSections: number; percent: number }
   > = {};
 
-  for (const chapter of web3BasicsChapters) {
+  const chapters = module === "cross-chain" ? crossChainChapters : web3BasicsChapters;
+
+  for (const chapter of chapters) {
     const availableSections = chapter.sections.filter(
       (s) => s.status === "available"
     );
@@ -50,6 +53,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userAddress = (searchParams.get("userAddress") || "").toLowerCase();
+    const module = searchParams.get("module") || "web3-basics";
+    
     if (!userAddress) {
       return NextResponse.json(
         { error: "Missing userAddress" },
@@ -57,17 +62,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const collectionName = module === "cross-chain" ? "challenges-cross-chain" : "challenges-web3-basics";
+
     const { db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>(
-      "challenges-web3-basics"
-    );
+    const collection = db.collection<UserChallengesDoc>(collectionName);
 
     const doc = await collection.findOne({ userAddress });
     const chapters = doc?.chapters || {};
     const completedChapters = doc?.completedChapters || [];
     const certification = doc?.certification || null;
 
-    const progressByChapter = computeProgress(chapters);
+    const progressByChapter = computeProgress(chapters, module);
 
     return NextResponse.json({
       userAddress,
@@ -91,6 +96,8 @@ export async function POST(request: NextRequest) {
     const userAddress: string = (body.userAddress || "").toLowerCase();
     const chapterId: string = body.chapterId;
     const sectionId: string = body.sectionId;
+    const module: string = body.module || "web3-basics";
+    
     if (!userAddress || !chapterId || !sectionId) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -98,10 +105,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const collectionName = module === "cross-chain" ? "challenges-cross-chain" : "challenges-web3-basics";
+
     const { db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>(
-      "challenges-web3-basics"
-    );
+    const collection = db.collection<UserChallengesDoc>(collectionName);
 
     const existing = await collection.findOne({ userAddress });
     const chapters = existing?.chapters || {};
@@ -111,7 +118,9 @@ export async function POST(request: NextRequest) {
 
     // Recompute completedChapters
     const completedChapters: string[] = [];
-    for (const ch of web3BasicsChapters) {
+    const chaptersData = module === "cross-chain" ? crossChainChapters : web3BasicsChapters;
+    
+    for (const ch of chaptersData) {
       const availableSections = ch.sections.filter(
         (s) => s.status === "available"
       );
@@ -137,7 +146,7 @@ export async function POST(request: NextRequest) {
       { upsert: true }
     );
 
-    const progressByChapter = computeProgress(chapters);
+    const progressByChapter = computeProgress(chapters, module);
 
     return NextResponse.json({
       userAddress,

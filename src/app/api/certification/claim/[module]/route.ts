@@ -25,6 +25,8 @@ export async function POST(
         ? "challenges-core-stylus"
         : module === "web3-basics"
         ? "challenges-web3-basics"
+        : module === "cross-chain"
+        ? "challenges-cross-chain"
         : null;
 
     if (!collectionName) {
@@ -90,6 +92,8 @@ export async function GET(
         ? "challenges-core-stylus"
         : module === "web3-basics"
         ? "challenges-web3-basics"
+        : module === "cross-chain"
+        ? "challenges-cross-chain"
         : null;
         
     if (!collectionName) {

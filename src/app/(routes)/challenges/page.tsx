@@ -162,7 +162,7 @@ export default function ChallengesPage() {
               </div>
             ) : !allCompleted ? (
               <div className="space-y-1">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-400 dark:text-gray-400">
                   Finish every challenge to unlock your onchain NFT certificate
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-500 pb-2">
@@ -177,7 +177,7 @@ export default function ChallengesPage() {
                   </svg>
                   <span className="text-sm font-medium">All challenges complete</span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
+                <p className="text-xs text-gray-400 dark:text-gray-400">
                   You’re eligible to claim your NFT certification
                 </p>
               </div>

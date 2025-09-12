@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { web3BasicsChapters } from "../../../data/web3BasicsChapters";
-import Web3BasicsChapterCard from "../../../components/web3-basics/Web3BasicsChapterCard";
+import { crossChainChapters } from "../../../data/crossChainChapters";
+import CrossChainChapterCard from "../../../components/cross-chain/CrossChainChapterCard";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
 import toast from "react-hot-toast";
 
-export default function LearnWeb3BasicsPage() {
+export default function LearnCrossChainPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const [progressData, setProgressData] = useState<{ [chapterId: string]: string[] }>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -18,8 +18,8 @@ export default function LearnWeb3BasicsPage() {
 
   const filteredChapters =
     selectedLevel === "all"
-      ? web3BasicsChapters
-      : web3BasicsChapters.filter(
+      ? crossChainChapters
+      : crossChainChapters.filter(
         (chapter) => chapter.level.toLowerCase() === selectedLevel
       );
 
@@ -33,13 +33,13 @@ export default function LearnWeb3BasicsPage() {
 
       try {
         setIsLoading(true);
-        const params = new URLSearchParams({ userAddress: address });
+        const params = new URLSearchParams({ userAddress: address, module: "cross-chain" });
         const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           setProgressData(data?.chapters || {});
           try {
-            const claimRes = await fetch(`/api/certification/claim/web3-basics?${params.toString()}`, { cache: "no-store" });
+            const claimRes = await fetch(`/api/certification/claim/cross-chain?${params.toString()}`, { cache: "no-store" });
             if (claimRes.ok) {
               const claim = await claimRes.json();
               setAlreadyClaimed(Boolean(claim?.claimed));
@@ -61,7 +61,7 @@ export default function LearnWeb3BasicsPage() {
     let totalSections = 0;
     let completedSections = 0;
 
-    web3BasicsChapters.forEach(chapter => {
+    crossChainChapters.forEach(chapter => {
       const availableSections = chapter.sections.filter(s => s.status === "available");
       totalSections += availableSections.length;
       const chapterCompleted = progressData[chapter.id] || [];
@@ -87,17 +87,7 @@ export default function LearnWeb3BasicsPage() {
         toast.error("Complete all sections to claim certification");
         return;
       }
-      const minted = await certificationMint("web3-basics");
-      // await fetch("/api/certification/claim/web3-basics", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     userAddress: address,
-      //     transactionHash: minted?.transactionHash,
-      //     metadataUrl: minted?.metadataUrl,
-      //     imageUrl: minted?.imageUrl,
-      //   }),
-      // });
+      const minted = await certificationMint("cross-chain");
       toast.success("Certification claimed!");
     } catch (_) {
       // errors already handled
@@ -115,7 +105,7 @@ export default function LearnWeb3BasicsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Master Web3 Basics
+            Master Cross-Chain Development
           </motion.h1>
           <motion.p
             className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
@@ -123,8 +113,9 @@ export default function LearnWeb3BasicsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Learn Web3 fundamentals through engaging stories and interactive lessons.
-            From Web1 to Web3, wallets to NFTs - master the building blocks of the decentralized web.
+            Build the future of blockchain interoperability. Learn to create bridges, 
+            develop cross-chain protocols, and master the tools that connect different 
+            blockchain ecosystems into a unified network.
           </motion.p>
 
           {/* Key Stats */}
@@ -135,33 +126,33 @@ export default function LearnWeb3BasicsPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-blue-400">📖</div>
+              <div className="text-2xl font-bold text-purple-400">🌉</div>
               <div className="text-sm text-gray-300">
-                Story-Based Learning
+                Bridge Technology
               </div>
             </div>
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-cyan-400">{web3BasicsChapters.length}</div>
+              <div className="text-2xl font-bold text-cyan-400">{crossChainChapters.length}</div>
               <div className="text-sm text-gray-300">
                 Complete Chapters
               </div>
             </div>
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-green-400">🎯</div>
+              <div className="text-2xl font-bold text-green-400">🔐</div>
               <div className="text-sm text-gray-300">
-                Interactive Quizzes
+                Security Protocols
               </div>
             </div>
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-orange-400">👛</div>
+              <div className="text-2xl font-bold text-orange-400">🛠️</div>
               <div className="text-sm text-gray-300">
-                Hands-on Practice
+                Development Tools
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Progress Overview - Similar to the image */}
+        {/* Progress Overview */}
         <div className="mb-8">
           <motion.div
             className="bg-gray-800 rounded-2xl border border-gray-700 p-6"
@@ -170,18 +161,18 @@ export default function LearnWeb3BasicsPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <h2 className="text-2xl font-bold text-white mb-4">
-              🌐 Your Web3 Learning Journey
+              🌐 Your Cross-Chain Learning Journey
             </h2>
             <p className="text-gray-300 mb-4">
-              Track your progress as you master Web3 fundamentals through story-based learning
-              and interactive challenges.
+              Track your progress as you master cross-chain development and blockchain interoperability.
+              Learn to build the bridges that will connect the future of decentralized technology.
             </p>
 
             {/* Overall Progress Bar */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                   <span className="text-sm font-medium text-gray-300">Progress</span>
                 </div>
                 <div className="text-sm text-gray-400">
@@ -190,7 +181,7 @@ export default function LearnWeb3BasicsPage() {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <motion.div
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+                  className="bg-gradient-to-r from-purple-500 to-cyan-500 h-2 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${overallProgress.percentage}%` }}
                   transition={{ duration: 0.5 }}
@@ -200,17 +191,17 @@ export default function LearnWeb3BasicsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-blue-400">
+                <div className="text-2xl font-bold text-purple-400">
                   {overallProgress.completed}/{overallProgress.total}
                 </div>
-                <div className="text-sm text-blue-300">
+                <div className="text-sm text-purple-300">
                   Sections Completed
                 </div>
               </div>
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
                 <div className="text-2xl font-bold text-cyan-400">
                   {Object.keys(progressData).filter(chapterId => {
-                    const chapter = web3BasicsChapters.find(ch => ch.id === chapterId);
+                    const chapter = crossChainChapters.find(ch => ch.id === chapterId);
                     if (!chapter) return false;
                     const availableSections = chapter.sections.filter(s => s.status === "available");
                     const completed = progressData[chapterId] || [];
@@ -254,7 +245,7 @@ export default function LearnWeb3BasicsPage() {
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold text-green-600 dark:text-green-400">Ready to claim</h3>
                   <p className="text-sm text-gray-400 dark:text-gray-400">
-                    Great work—everything’s complete. Claim your NFT certification now.
+                    Great work—everything's complete. Claim your NFT certification now.
                   </p>
                 </div>
               )}
@@ -267,7 +258,7 @@ export default function LearnWeb3BasicsPage() {
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
                 : overallProgress.percentage === 100 && !isCertificationMinting
-                  ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  ? "bg-gradient-to-r from-purple-600 via-cyan-600 to-blue-600 hover:from-purple-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
@@ -297,27 +288,6 @@ export default function LearnWeb3BasicsPage() {
                 <span>Complete All Challenges</span>
               )}
             </button>
-
-            {/* Additional Info for Claimed State */}
-            {/* {alreadyClaimed && (
-              <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0">
-                    <svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="text-sm">
-                    <p className="text-green-800 dark:text-green-200 font-medium">
-                      Your achievement is now onchain
-                    </p>
-                    <p className="text-green-700 dark:text-green-300 mt-1">
-                      This NFT is permanent proof of completion
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )} */}
           </div>
         </div>
 
@@ -333,7 +303,7 @@ export default function LearnWeb3BasicsPage() {
               key={level}
               onClick={() => setSelectedLevel(level)}
               className={`px-6 py-2 rounded-full transition-all duration-200 ${selectedLevel === level
-                ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg"
+                ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600"
                 }`}
             >
@@ -346,9 +316,9 @@ export default function LearnWeb3BasicsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
           {filteredChapters.map((chapter) => (
             <div key={chapter.id}>
-              <Web3BasicsChapterCard
+              <CrossChainChapterCard
                 chapter={chapter}
-                basePath="/learn-web3-basics"
+                basePath="/learn-cross-chain"
                 progressData={progressData[chapter.id] || []}
                 isLoading={isLoading}
               />
@@ -358,23 +328,23 @@ export default function LearnWeb3BasicsPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
+          className="mt-16 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-4">Learning Path</h2>
+          <h2 className="text-3xl font-bold mb-4">Cross-Chain Learning Path</h2>
           <p className="text-lg mb-6 max-w-3xl mx-auto">
-            Learn Web3 fundamentals through engaging stories and interactive quizzes.
-            Each chapter uses storytelling to make complex concepts simple and memorable.
+            Master cross-chain development through comprehensive lessons on bridge technology, 
+            security protocols, and development tools. Build the future of blockchain interoperability.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            {web3BasicsChapters.map((chapter, index) => (
+            {crossChainChapters.map((chapter, index) => (
               <div key={chapter.id} className="flex items-center">
                 <div className="flex items-center justify-center w-10 h-10 bg-white text-black bg-opacity-20 rounded-full text-sm font-bold">
                   {index + 1}
                 </div>
-                {index < web3BasicsChapters.length - 1 && (
+                {index < crossChainChapters.length - 1 && (
                   <div className="w-8 h-0.5 bg-white bg-opacity-30 mx-2" />
                 )}
               </div>
@@ -390,34 +360,34 @@ export default function LearnWeb3BasicsPage() {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <h2 className="text-3xl font-bold text-white mb-6 text-center">
-            Concepts You'll Master
+            Cross-Chain Concepts You'll Master
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="text-center p-4">
-              <div className="text-4xl mb-3">🌐</div>
+              <div className="text-4xl mb-3">🌉</div>
               <h3 className="text-lg font-semibold text-white mb-2">
-                Web3 Fundamentals
+                Bridge Technology
               </h3>
               <p className="text-sm text-gray-300">
-                Web evolution, digital wallets, and cryptocurrency basics
+                Learn how bridges connect different blockchain networks and enable cross-chain value transfer
               </p>
             </div>
             <div className="text-center p-4">
-              <div className="text-4xl mb-3">🧱</div>
+              <div className="text-4xl mb-3">🔐</div>
               <h3 className="text-lg font-semibold text-white mb-2">
-                Blockchain & DeFi
+                Security Protocols
               </h3>
               <p className="text-sm text-gray-300">
-                Blockchain technology, distributed ledgers, and DeFi concepts
+                Master cross-chain security models, validator systems, and economic incentives
               </p>
             </div>
             <div className="text-center p-4">
-              <div className="text-4xl mb-3">🦀</div>
+              <div className="text-4xl mb-3">🛠️</div>
               <h3 className="text-lg font-semibold text-white mb-2">
-                Rust & Advanced Web3
+                Development Tools
               </h3>
               <p className="text-sm text-gray-300">
-                Rust programming and advanced Web3 concepts like NFTs
+                Build cross-chain applications using modern frameworks and development tools
               </p>
             </div>
           </div>
@@ -431,22 +401,22 @@ export default function LearnWeb3BasicsPage() {
           transition={{ duration: 0.6, delay: 0.7 }}
         >
           <h2 className="text-2xl font-bold text-white mb-4">
-            Ready to Enter the Web3 World?
+            Ready to Build Cross-Chain Solutions?
           </h2>
           <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-            Start your journey with our story-based approach that makes complex Web3 concepts
-            simple, engaging, and memorable. No prior experience needed!
+            Start your journey into cross-chain development and learn to create the interoperable 
+            blockchain solutions that will shape the future of decentralized technology.
           </p>
           <motion.button
             onClick={() => {
-              const firstChapter = document.getElementById(web3BasicsChapters[0].id);
+              const firstChapter = document.getElementById(crossChainChapters[0].id);
               firstChapter?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
+            className="bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Begin Your Web3 Journey →
+            Begin Your Cross-Chain Journey →
           </motion.button>
         </motion.div>
       </div>
