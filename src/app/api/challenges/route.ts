@@ -143,9 +143,7 @@ export async function POST(request: NextRequest) {
 
     
     const progressByChapter = computeProgress(chapters);
-    
-    await client.close();
-    
+      
     return NextResponse.json({
       userAddress,
       chapters,

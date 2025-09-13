@@ -1,4 +1,4 @@
-import { connectDB } from "@/config/connectDB";
+import { connectToDatabase } from "@/lib/database/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { AuthTokenClaims, PrivyClient } from "@privy-io/server-auth";
 
@@ -73,8 +73,7 @@ export async function POST(req: NextRequest) {
       }: DelegateRequestBody = await req.json();
 
       // Connect to database
-      client = await connectDB();
-      const db = client.db();
+      const { client, db } = await connectToDatabase();
       const collection = db.collection("users");
 
       // Check if delegate already exists
@@ -128,9 +127,5 @@ export async function POST(req: NextRequest) {
       { error: "Internal Server Error" },
       { status: 500 }
     );
-  } finally {
-    if (client) {
-      await client.close();
-    }
   }
 }

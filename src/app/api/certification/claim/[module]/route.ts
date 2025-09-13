@@ -59,8 +59,6 @@ export async function POST(
 
     await collection.updateOne({ userAddress }, update, { upsert: true });
 
-    await client.close();
-
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("Claim certification (dynamic) error", error);
@@ -107,8 +105,6 @@ export async function GET(
       { userAddress },
       { projection: { _id: 0, certification: 1 } }
     );
-
-    await client.close();
 
     return NextResponse.json({
       claimed: Boolean(doc?.certification?.claimed),

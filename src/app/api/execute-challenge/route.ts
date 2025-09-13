@@ -316,8 +316,6 @@ export async function POST(request: NextRequest) {
             { upsert: true }
           );
         }
-
-        await client.close();
       } catch (dbErr) {
         console.error("Failed to persist challenge result:", dbErr);
       }
@@ -376,8 +374,6 @@ export async function GET(request: NextRequest) {
         challenges: progress.challenges || [],
       });
     }
-
-    await client.close();
 
     return NextResponse.json({ progress });
   } catch (error: any) {

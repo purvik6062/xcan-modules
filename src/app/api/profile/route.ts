@@ -229,8 +229,6 @@ export async function GET(request: NextRequest) {
       userAddress: userAddress.toLowerCase(),
     };
 
-    await client.close();
-
     return NextResponse.json(profileData);
   } catch (error) {
     console.error("Error fetching profile data:", error);
