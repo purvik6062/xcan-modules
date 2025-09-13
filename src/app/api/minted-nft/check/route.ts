@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection("minted-nft");
 
     const existingUser = await collection.findOne({
@@ -40,6 +40,8 @@ export async function GET(request: NextRequest) {
         (mintedLevel: any) => mintedLevel.level === parseInt(level)
       );
 
+      await client.close();
+
       return NextResponse.json({
         hasMinted: hasMintedThisLevel,
         nft: specificLevelNFT || null,
@@ -48,6 +50,8 @@ export async function GET(request: NextRequest) {
       });
     } else {
       // Get all minted NFTs for the user
+      await client.close();
+
       return NextResponse.json({
         hasMinted: existingUser.totalMinted > 0,
         nfts: existingUser.mintedLevels || [],

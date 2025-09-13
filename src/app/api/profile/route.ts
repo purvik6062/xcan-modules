@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
 
     // Fetch data from all collections in parallel
     const [userData, mintedNFTData, web3BasicsData, coreStylusData] =
@@ -228,6 +228,8 @@ export async function GET(request: NextRequest) {
       mintedNFTs: mintedNFTData?.mintedLevels || [],
       userAddress: userAddress.toLowerCase(),
     };
+
+    await client.close();
 
     return NextResponse.json(profileData);
   } catch (error) {

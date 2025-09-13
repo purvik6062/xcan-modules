@@ -118,10 +118,10 @@ export default function ClientChallenge({
 
   const runTests = async () => {
     // Require GitHub only when submitting solution, if wallet is connected
-    // if (address && !localStorage.getItem("github_username")) {
-    //   await ensureGitHubAuth();
-    //   return;
-    // }
+    if (address && !localStorage.getItem("github_username")) {
+      await ensureGitHubAuth();
+      return;
+    }
     setIsLoading(true);
     setTestResults([]);
     setOutput("");

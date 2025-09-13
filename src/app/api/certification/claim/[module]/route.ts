@@ -34,7 +34,7 @@ export async function POST(
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection(collectionName);
 
     const baseSetOnInsert =
@@ -59,6 +59,8 @@ export async function POST(
 
     await collection.updateOne({ userAddress }, update, { upsert: true });
 
+    await client.close();
+
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("Claim certification (dynamic) error", error);
@@ -77,7 +79,7 @@ export async function GET(
     const { module } = await context.params;
     const { searchParams } = new URL(request.url);
     const userAddress = (searchParams.get("userAddress") || "").toLowerCase();
-    
+
     if (!userAddress) {
       return NextResponse.json(
         { error: "Missing userAddress" },
@@ -91,7 +93,7 @@ export async function GET(
         : module === "web3-basics"
         ? "challenges-web3-basics"
         : null;
-        
+
     if (!collectionName) {
       return NextResponse.json(
         { error: "Unsupported module" },
@@ -99,12 +101,14 @@ export async function GET(
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection(collectionName);
     const doc = await collection.findOne(
       { userAddress },
       { projection: { _id: 0, certification: 1 } }
     );
+
+    await client.close();
 
     return NextResponse.json({
       claimed: Boolean(doc?.certification?.claimed),

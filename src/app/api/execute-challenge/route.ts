@@ -292,7 +292,7 @@ export async function POST(request: NextRequest) {
 
       // Persist successful result for progress tracking
       try {
-        const { db } = await connectToDatabase();
+        const { client, db } = await connectToDatabase();
         const collection = db.collection("challenges-core-stylus");
         if (userAddress && typeof userAddress === "string") {
           const lower = userAddress.toLowerCase();
@@ -316,6 +316,8 @@ export async function POST(request: NextRequest) {
             { upsert: true }
           );
         }
+
+        await client.close();
       } catch (dbErr) {
         console.error("Failed to persist challenge result:", dbErr);
       }
@@ -349,7 +351,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection("challenges-core-stylus");
 
     const doc = await collection.findOne(
@@ -374,6 +376,8 @@ export async function GET(request: NextRequest) {
         challenges: progress.challenges || [],
       });
     }
+
+    await client.close();
 
     return NextResponse.json({ progress });
   } catch (error: any) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase, MintedNFT } from "@/lib/database/mongodb";
+import { connectToDatabase } from "@/lib/database/mongodb";
+import { MintedNFT } from "@/components/nft/types";
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client,db } = await connectToDatabase();
     const collection = db.collection("minted-nft");
 
     // Check if user already has a document
@@ -77,12 +78,16 @@ export async function POST(request: NextRequest) {
         { returnDocument: "after" }
       );
 
+      await client.close();
+
       return NextResponse.json({
         success: true,
         nft: updatedUser?.value || null,
       });
     } else {
       // Create new user document with first minted level
+      await client.close();
+
       const newMintedLevel = {
         level: level,
         levelKey: levelKey,
@@ -103,6 +108,8 @@ export async function POST(request: NextRequest) {
       };
 
       const result = await collection.insertOne(mintedNFT);
+
+      await client.close();
 
       return NextResponse.json({
         success: true,

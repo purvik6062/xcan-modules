@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection<UserChallengesDoc>(
       "challenges-web3-basics"
     );
@@ -68,6 +68,8 @@ export async function GET(request: NextRequest) {
     const certification = doc?.certification || null;
 
     const progressByChapter = computeProgress(chapters);
+
+    await client.close();
 
     return NextResponse.json({
       userAddress,
@@ -100,7 +102,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection<UserChallengesDoc>(
       "challenges-web3-basics"
     );
@@ -139,8 +141,11 @@ export async function POST(request: NextRequest) {
       { upsert: true }
     );
 
+    
     const progressByChapter = computeProgress(chapters);
-
+    
+    await client.close();
+    
     return NextResponse.json({
       userAddress,
       chapters,
