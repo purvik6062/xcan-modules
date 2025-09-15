@@ -1,36 +1,82 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 import { defiChapters } from "../data/defiChapters";
+import { useWalletProtection } from "../hooks/useWalletProtection";
+
+type ChapterProgress = { completed: number; total: number };
 
 export default function ProgressOverview() {
-  // Mock progress data - in real app this would come from user state/database
-  const userProgress = {
-    "intro-to-defi": { completed: 0, total: 8 },
-    "decentralized-exchanges": { completed: 0, total: 8 },
-    "vaults-yield-aggregation": { completed: 0, total: 8 },
-    "risks-security": { completed: 0, total: 8 },
-    "ai-defi": { completed: 0, total: 7 },
-    "build-defi-app": { completed: 0, total: 7 },
-  };
+  const { address, isReady } = useWalletProtection();
+  const [chapterProgress, setChapterProgress] = useState<Record<string, ChapterProgress>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const totalCompleted = Object.values(userProgress).reduce(
-    (sum, chapter) => sum + chapter.completed,
+  // Compute per-chapter total sections (exclude coming-soon)
+  const totalsByChapter = useMemo(() => {
+    const totals: Record<string, number> = {};
+    for (const chapter of defiChapters) {
+      const totalAvailable = chapter.sections.filter((s) => s.status === "available").length;
+      totals[chapter.id] = totalAvailable;
+    }
+    return totals;
+  }, []);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      if (!isReady || !address) return;
+      try {
+        setIsLoading(true);
+        const params = new URLSearchParams({ userAddress: address, module: "master-defi" });
+        const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Failed to fetch progress: ${res.status}`);
+        const data = await res.json();
+        console.log("ProgressOverview: API data", data);
+
+        const chaptersMap: Record<string, string[]> = data?.chapters || {};
+        const progressByChapter: Record<string, { totalSections: number; completedSectionIds: string[] }> = data?.progressByChapter || {};
+        const nextProgress: Record<string, ChapterProgress> = {};
+
+        for (const chapter of defiChapters) {
+          const completedArray = chaptersMap[chapter.id] || progressByChapter[chapter.id]?.completedSectionIds || [];
+          const totalFromApi = progressByChapter[chapter.id]?.totalSections;
+          nextProgress[chapter.id] = {
+            completed: completedArray.length,
+            total: typeof totalFromApi === "number" ? totalFromApi : (totalsByChapter[chapter.id] ?? chapter.sections.filter((s) => s.status === "available").length),
+          };
+        }
+        setChapterProgress(nextProgress);
+      } catch (e) {
+        console.error("ProgressOverview: failed to load progress", e);
+        // Fallback to zeros
+        const zeros: Record<string, ChapterProgress> = {};
+        for (const chapter of defiChapters) {
+          zeros[chapter.id] = { completed: 0, total: totalsByChapter[chapter.id] ?? 0 };
+        }
+        setChapterProgress(zeros);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProgress();
+  }, [address, isReady, totalsByChapter]);
+
+  const totalCompleted = Object.values(chapterProgress).reduce(
+    (sum, chapter) => sum + (chapter?.completed ?? 0),
     0
   );
-  const totalSections = Object.values(userProgress).reduce(
-    (sum, chapter) => sum + chapter.total,
+  const totalSections = Object.values(chapterProgress).reduce(
+    (sum, chapter) => sum + (chapter?.total ?? 0),
     0
   );
-  const overallProgress =
-    totalSections > 0 ? (totalCompleted / totalSections) * 100 : 0;
+  const overallProgress = totalSections > 0 ? (totalCompleted / totalSections) * 100 : 0;
 
-  const completedChapters = Object.values(userProgress).filter(
-    (chapter) => chapter.completed === chapter.total
+  const completedChapters = Object.values(chapterProgress).filter(
+    (chapter) => (chapter?.completed ?? 0) === (chapter?.total ?? 0) && (chapter?.total ?? 0) > 0
   ).length;
   const earnedBadges = defiChapters.filter((chapter) => {
-    const progress = userProgress[chapter.id as keyof typeof userProgress];
-    return progress && progress.completed === progress.total;
+    const progress = chapterProgress[chapter.id];
+    return progress && progress.completed === progress.total && progress.total > 0;
   }).length;
 
   return (
@@ -130,9 +176,8 @@ export default function ProgressOverview() {
         </h3>
 
         {defiChapters.map((chapter, index) => {
-          const progress =
-            userProgress[chapter.id as keyof typeof userProgress];
-          const progressPercentage = progress
+          const progress = chapterProgress[chapter.id];
+          const progressPercentage = progress && progress.total > 0
             ? (progress.completed / progress.total) * 100
             : 0;
 

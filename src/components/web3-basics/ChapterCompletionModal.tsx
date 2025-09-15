@@ -113,7 +113,7 @@ export default function ChapterCompletionModal({
                 <Link
                   href={`/learn-web3-basics/${nextChapterId}`}
                   onClick={onClose}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors"
+                  className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors"
                 >
                   Continue Learning
                 </Link>

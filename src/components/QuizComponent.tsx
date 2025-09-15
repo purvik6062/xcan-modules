@@ -31,7 +31,7 @@ export default function QuizComponent({
         </p>
         <button
           onClick={onComplete}
-          className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="hover:cursor-pointer mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           Mark as Complete
         </button>
@@ -168,7 +168,7 @@ export default function QuizComponent({
           {passed && (
             <button
               onClick={() => (window.location.href = "/learn-defi")}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="hover:cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Continue Learning
             </button>

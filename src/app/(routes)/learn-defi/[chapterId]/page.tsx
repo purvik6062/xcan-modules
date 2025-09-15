@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
 import { defiChapters, quizQuestions } from "../../../../data/defiChapters";
@@ -13,6 +14,7 @@ import InteractiveLearningDashboard from "../../../../components/InteractiveLear
 import ContentProgressTracker from "../../../../components/ContentProgressTracker";
 import { getChapterGlossary } from "../../../../data/defiGlossary";
 import { getTheoryContent } from "../../../../data/defiContent";
+import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 
 export default function ChapterPage() {
   const params = useParams();
@@ -23,14 +25,27 @@ export default function ChapterPage() {
   const [completedSections, setCompletedSections] = useState<string[]>([]);
   const [currentSubSection, setCurrentSubSection] = useState(0);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { address, isReady } = useWalletProtection();
 
   useEffect(() => {
-    // Load progress from localStorage or API
-    const saved = localStorage.getItem(`progress-${chapterId}`);
-    if (saved) {
-      setCompletedSections(JSON.parse(saved));
-    }
-  }, [chapterId]);
+    const fetchProgress = async () => {
+      try {
+        if (!isReady || !address) return;
+        const params = new URLSearchParams({ userAddress: address, module: "master-defi" });
+        console.log("[DeFi] GET /api/challenges", { chapterId, address });
+        const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          console.log("[DeFi] GET /api/challenges response", data);
+          const chapterCompleted: string[] = data?.chapters?.[chapterId] || [];
+          setCompletedSections(chapterCompleted);
+        }
+      } catch (err) {
+        console.warn("[DeFi] GET /api/challenges error", err);
+      }
+    };
+    fetchProgress();
+  }, [chapterId, isReady, address]);
 
   if (!chapter) {
     return (
@@ -66,14 +81,21 @@ export default function ChapterPage() {
   // Calculate time spent (mock data for now)
   const timeSpentMinutes = completedSections.length * 15;
 
-  const handleSectionComplete = (sectionId: string) => {
+  const handleSectionComplete = async (sectionId: string) => {
     if (!completedSections.includes(sectionId)) {
       const newCompleted = [...completedSections, sectionId];
       setCompletedSections(newCompleted);
-      localStorage.setItem(
-        `progress-${chapterId}`,
-        JSON.stringify(newCompleted)
-      );
+      try {
+        if (!isReady || !address) return;
+        console.log("[DeFi] POST /api/challenges", { chapterId, sectionId, address });
+        const res = await fetch("/api/challenges", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-defi", finalizeChapter: true }),
+        });
+        const json = await res.json().catch(() => ({}));
+        console.log("[DeFi] POST /api/challenges response", { status: res.status, json });
+      } catch {}
     }
   };
 
@@ -88,6 +110,13 @@ export default function ChapterPage() {
       setCurrentSectionIndex(currentSectionIndex - 1);
     }
   };
+
+  // Determine next chapter for navigation on completion
+  const currentChapterIndex = defiChapters.findIndex((ch) => ch.id === chapterId);
+  const nextChapter =
+    currentChapterIndex >= 0 && currentChapterIndex < defiChapters.length - 1
+      ? defiChapters[currentChapterIndex + 1]
+      : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
@@ -242,7 +271,7 @@ export default function ChapterPage() {
                   <button
                     onClick={handlePreviousSection}
                     disabled={currentSectionIndex === 0}
-                    className="flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     ← Previous
                   </button>
@@ -256,7 +285,7 @@ export default function ChapterPage() {
                     disabled={
                       currentSectionIndex === chapter.sections.length - 1
                     }
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Next →
                   </button>
@@ -284,6 +313,16 @@ export default function ChapterPage() {
                     {chapter.badge.description}
                   </p>
                 </div>
+                {nextChapter && (
+                  <div className="mt-6">
+                    <Link
+                      href={`/learn-defi/${nextChapter.id}`}
+                      className="inline-block px-6 py-3 mt-2 rounded-lg bg-white text-purple-700 font-semibold hover:bg-purple-100 transition-colors"
+                    >
+                      Continue to Next Chapter →
+                    </Link>
+                  </div>
+                )}
               </motion.div>
             )}
           </div>

@@ -89,27 +89,27 @@ Once upon a time, in the vast digital ocean, there existed many islands - each a
 
 In the beginning, there were many island kingdoms:
 
-**Ethereum Island**: The most populous kingdom with magnificent smart contract castles and bustling DeFi markets. Its native coin, ETH, was highly valued across all lands.
+Ethereum Island: The most populous kingdom with magnificent smart contract castles and bustling DeFi markets. Its native coin, ETH, was highly valued across all lands.
 
-**Bitcoin Island**: The ancient, mysterious island where the first digital gold was discovered. Simple yet powerful, it focused primarily on storing and transferring value.
+Bitcoin Island: The ancient, mysterious island where the first digital gold was discovered. Simple yet powerful, it focused primarily on storing and transferring value.
 
-**Solana Island**: The lightning-fast island where transactions moved at incredible speed, perfect for high-frequency trading and gaming.
+Solana Island: The lightning-fast island where transactions moved at incredible speed, perfect for high-frequency trading and gaming.
 
-**Polygon Island**: A thriving suburb of Ethereum Island, offering faster and cheaper transactions while maintaining security.
+Polygon Island: A thriving suburb of Ethereum Island, offering faster and cheaper transactions while maintaining security.
 
-**Avalanche Island**: The snowy mountain kingdom where subnets created specialized communities with their own rules.
+Avalanche Island: The snowy mountain kingdom where subnets created specialized communities with their own rules.
 
 ## Chapter 2: The Communication Problem 📡
 
 Each island was magnificent in its own right, but they had a fundamental problem:
 
-**No Direct Communication**: Islands couldn't talk to each other directly. A citizen of Ethereum Island couldn't easily send assets to Solana Island.
+No Direct Communication: Islands couldn't talk to each other directly. A citizen of Ethereum Island couldn't easily send assets to Solana Island.
 
-**Value Silos**: Each island's native currency was trapped within its borders. Moving value between islands required dangerous journeys through centralized exchanges.
+Value Silos: Each island's native currency was trapped within its borders. Moving value between islands required dangerous journeys through centralized exchanges.
 
-**Duplication of Effort**: Developers built similar applications on each island, unable to share code or functionality across ecosystems.
+Duplication of Effort: Developers built similar applications on each island, unable to share code or functionality across ecosystems.
 
-**Fragmented User Experience**: Users needed different boats (wallets) and maps (interfaces) for each island they visited.
+Fragmented User Experience: Users needed different boats (wallets) and maps (interfaces) for each island they visited.
 
 "The digital world should be connected," thought Elena, a brilliant engineer who had traveled between many islands. "Why must we live in separate kingdoms when we could build bridges between them?"
 
@@ -117,23 +117,23 @@ Each island was magnificent in its own right, but they had a fundamental problem
 
 Elena gathered the brightest minds from each island to solve the interoperability challenge:
 
-**The Problem**: How can different blockchain networks (islands) communicate and transfer value securely?
+The Problem: How can different blockchain networks (islands) communicate and transfer value securely?
 
-**The Challenge**: Each island has different rules, security models, and consensus mechanisms. A bridge must respect all these differences while ensuring safety.
+The Challenge: Each island has different rules, security models, and consensus mechanisms. A bridge must respect all these differences while ensuring safety.
 
-**The Goal**: Create secure, decentralized pathways for assets and information to flow between blockchain networks.
+The Goal: Create secure, decentralized pathways for assets and information to flow between blockchain networks.
 
 ## Chapter 4: Understanding Cross-Chain Technology 🔧
 
 The council of engineers identified several approaches to building bridges:
 
-**Wrapped Assets**: Creating representations of one island's assets on another island (like wBTC on Ethereum).
+Wrapped Assets: Creating representations of one island's assets on another island (like wBTC on Ethereum).
 
-**Atomic Swaps**: Direct peer-to-peer exchanges between different blockchains using smart contracts and hash locks.
+Atomic Swaps: Direct peer-to-peer exchanges between different blockchains using smart contracts and hash locks.
 
-**Relay Networks**: Specialized networks that monitor multiple chains and verify transactions across them.
+Relay Networks: Specialized networks that monitor multiple chains and verify transactions across them.
 
-**Validator Sets**: Groups of validators who secure bridges by staking assets and verifying cross-chain transactions.
+Validator Sets: Groups of validators who secure bridges by staking assets and verifying cross-chain transactions.
 
 "Each approach has different trade-offs between security, speed, and cost," Elena explained. "The key is finding the right balance for each use case."
 
@@ -141,21 +141,21 @@ The council of engineers identified several approaches to building bridges:
 
 The team decided to build their first bridge between Ethereum Island and Polygon Island:
 
-**Step 1: Understanding the Terrain**
+Step 1: Understanding the Terrain
 - Ethereum Island: High security, slower transactions, expensive fees
 - Polygon Island: Faster transactions, lower fees, security derived from Ethereum
 
-**Step 2: Designing the Bridge Architecture**
+Step 2: Designing the Bridge Architecture
 - Users lock assets on Ethereum in a smart contract vault
 - The same amount is minted as wrapped assets on Polygon
 - Users can burn wrapped assets on Polygon to unlock original assets on Ethereum
 
-**Step 3: Security Considerations**
+Step 3: Security Considerations
 - Multiple validators must approve each transfer
 - Time locks prevent rushed malicious actions
 - Economic incentives ensure validators act honestly
 
-**Step 4: Testing the Waters**
+Step 4: Testing the Waters
 - Start with small test transfers
 - Monitor for any unusual activity
 - Gradually increase transfer limits as confidence grows
@@ -164,11 +164,11 @@ The team decided to build their first bridge between Ethereum Island and Polygon
 
 After months of development and testing, the bridge was ready:
 
-**First Crossing**: Elena successfully transferred 1 ETH from Ethereum to Polygon, receiving 1 WETH on Polygon.
+First Crossing: Elena successfully transferred 1 ETH from Ethereum to Polygon, receiving 1 WETH on Polygon.
 
-**The Magic**: The original ETH remained locked in the Ethereum vault while the WETH on Polygon represented ownership of that locked ETH.
+The Magic: The original ETH remained locked in the Ethereum vault while the WETH on Polygon represented ownership of that locked ETH.
 
-**Return Journey**: When Elena wanted her ETH back, she burned the WETH on Polygon, and the bridge released her original ETH from the Ethereum vault.
+Return Journey: When Elena wanted her ETH back, she burned the WETH on Polygon, and the bridge released her original ETH from the Ethereum vault.
 
 "It works!" exclaimed Elena. "We've broken down the walls between our islands!"
 
@@ -176,25 +176,25 @@ After months of development and testing, the bridge was ready:
 
 The success of the Ethereum-Polygon bridge inspired bridges between other islands:
 
-**Multi-Chain Ecosystem**: Users could now move assets between Ethereum, Polygon, Avalanche, and other networks.
+Multi-Chain Ecosystem: Users could now move assets between Ethereum, Polygon, Avalanche, and other networks.
 
-**Liquidity Sharing**: DeFi protocols could now share liquidity across multiple chains, increasing efficiency.
+Liquidity Sharing: DeFi protocols could now share liquidity across multiple chains, increasing efficiency.
 
-**Cross-Chain Applications**: Developers started building applications that leveraged the unique features of multiple chains simultaneously.
+Cross-Chain Applications: Developers started building applications that leveraged the unique features of multiple chains simultaneously.
 
-**User Freedom**: Users could choose the right chain for their needs - fast and cheap for gaming, secure and robust for high-value transactions.
+User Freedom: Users could choose the right chain for their needs - fast and cheap for gaming, secure and robust for high-value transactions.
 
 ## Chapter 8: The Future Vision ✨
 
 Looking ahead, Elena dreamed of an even more connected future:
 
-**Universal Interoperability**: Any blockchain could communicate with any other blockchain seamlessly.
+Universal Interoperability: Any blockchain could communicate with any other blockchain seamlessly.
 
-**Cross-Chain Identity**: Users would have a single, unified identity across all blockchain networks.
+Cross-Chain Identity: Users would have a single, unified identity across all blockchain networks.
 
-**Interchain Smart Contracts**: Smart contracts that could execute logic across multiple chains simultaneously.
+Interchain Smart Contracts: Smart contracts that could execute logic across multiple chains simultaneously.
 
-**The Internet of Blockchains**: Not just individual islands, but a fully connected ecosystem where value and information flow freely.
+The Internet of Blockchains: Not just individual islands, but a fully connected ecosystem where value and information flow freely.
 
 ## The Bridge Building Legacy 🏗️
 
@@ -353,9 +353,9 @@ Alex was a DeFi enthusiast who loved Ethereum but was frustrated by high gas fee
 
 Alex had been actively using Ethereum DeFi protocols, but recently faced a frustrating challenge:
 
-**The Problem**: Gas fees on Ethereum had skyrocketed to $50-100 per transaction.
+The Problem: Gas fees on Ethereum had skyrocketed to $50-100 per transaction.
 
-**The Impact**: 
+The Impact: 
 - Small trades became unprofitable
 - NFT purchases were too expensive
 - Regular DeFi operations like providing liquidity became cost-prohibitive
@@ -367,15 +367,15 @@ Alex had been actively using Ethereum DeFi protocols, but recently faced a frust
 
 Alex's friend Jamie, a blockchain developer, introduced them to Layer 2 solutions:
 
-**Jamie's Explanation**: "Think of Ethereum as a busy highway. When it gets congested, traffic slows down and tolls (gas fees) go up. Layer 2s are like building additional express lanes above the highway!"
+Jamie's Explanation: "Think of Ethereum as a busy highway. When it gets congested, traffic slows down and tolls (gas fees) go up. Layer 2s are like building additional express lanes above the highway!"
 
-**The Types of L2s Jamie Explained**:
+The Types of L2s Jamie Explained:
 
-**Optimistic Rollups**: Assume transactions are valid by default, only check if someone challenges. Faster and cheaper, but longer withdrawal times.
+Optimistic Rollups: Assume transactions are valid by default, only check if someone challenges. Faster and cheaper, but longer withdrawal times.
 
-**ZK-Rollups**: Use zero-knowledge proofs to prove transaction validity instantly. More complex but faster withdrawals.
+ZK-Rollups: Use zero-knowledge proofs to prove transaction validity instantly. More complex but faster withdrawals.
 
-**Sidechains**: Separate blockchains that can communicate with Ethereum. Faster but different security model.
+Sidechains: Separate blockchains that can communicate with Ethereum. Faster but different security model.
 
 "Which one should I use?" Alex asked eagerly.
 
@@ -385,62 +385,62 @@ Alex's friend Jamie, a blockchain developer, introduced them to Layer 2 solution
 
 Jamie helped Alex set up their first cross-chain transfer:
 
-**Step 1: Choosing a Bridge**
+Step 1: Choosing a Bridge
 - They decided to use the Arbitrum Bridge (an Optimistic Rollup)
 - It had good security, reasonable fees, and was widely trusted
 
-**Step 2: The Transfer Process**
+Step 2: The Transfer Process
 1. Alex connected their wallet to the bridge interface
 2. They selected Ethereum as the source chain and Arbitrum as the destination
 3. They entered the amount: 1 ETH
 4. The bridge showed the fee: $3 (much better than $50!)
 5. Alex confirmed the transaction
 
-**The Magic Moment**: Alex watched as their ETH left Ethereum and, minutes later, appeared on Arbitrum as 1 ETH (not a wrapped version!)
+The Magic Moment: Alex watched as their ETH left Ethereum and, minutes later, appeared on Arbitrum as 1 ETH (not a wrapped version!)
 
-**Key Insight**: "On L2s, you're using the same ETH token," Jamie explained. "The bridge just moves it between layers, you're not creating a wrapped version."
+Key Insight: "On L2s, you're using the same ETH token," Jamie explained. "The bridge just moves it between layers, you're not creating a wrapped version."
 
 ## Chapter 4: Exploring the L2 Ecosystem 🌟
 
 With funds on Arbitrum, Alex discovered a whole new world:
 
-**Lower Fees**: Transactions that cost $50 on Ethereum now cost $0.50-2 on Arbitrum
+Lower Fees: Transactions that cost $50 on Ethereum now cost $0.50-2 on Arbitrum
 
-**Same Apps, Better Experience**: Many of Alex's favorite DeFi protocols had deployed on Arbitrum:
+Same Apps, Better Experience: Many of Alex's favorite DeFi protocols had deployed on Arbitrum:
 - Uniswap for trading
 - Aave for lending and borrowing
 - GMX for perpetual trading
 - Various yield farming opportunities
 
-**Speed**: Transactions confirmed in seconds instead of minutes
+Speed: Transactions confirmed in seconds instead of minutes
 
-**The Revelation**: "I can do everything I did on Ethereum, but cheaper and faster!" Alex exclaimed.
+The Revelation: "I can do everything I did on Ethereum, but cheaper and faster!" Alex exclaimed.
 
 ## Chapter 5: Understanding Bridge Security 🔒
 
 As Alex got more comfortable, Jamie explained the security aspects:
 
-**Trustlessness**: Good bridges don't require you to trust a central authority. The smart contract code handles everything automatically.
+Trustlessness: Good bridges don't require you to trust a central authority. The smart contract code handles everything automatically.
 
-**Economic Security**: Many bridges use validators who must stake large amounts of the native token. If they act maliciously, they lose their stake.
+Economic Security: Many bridges use validators who must stake large amounts of the native token. If they act maliciously, they lose their stake.
 
-**Time Locks**: Some bridges have delays before large transfers can be completed, giving time to detect and prevent attacks.
+Time Locks: Some bridges have delays before large transfers can be completed, giving time to detect and prevent attacks.
 
-**Audits**: Reputable bridges undergo multiple security audits by third-party firms.
+Audits: Reputable bridges undergo multiple security audits by third-party firms.
 
-**The Rule**: "Never bridge more than you're willing to lose," Jamie advised. "Even the best bridges can have vulnerabilities."
+The Rule: "Never bridge more than you're willing to lose," Jamie advised. "Even the best bridges can have vulnerabilities."
 
 ## Chapter 6: Cross-Chain Adventures 🌍
 
 Emboldened by success with L2s, Alex began exploring other chains:
 
-**Polygon**: For gaming and NFTs with ultra-low fees
+Polygon: For gaming and NFTs with ultra-low fees
 
-**Binance Smart Chain**: For certain DeFi protocols and Binance ecosystem integration
+Binance Smart Chain: For certain DeFi protocols and Binance ecosystem integration
 
-**Avalanche**: For subnets and specialized applications
+Avalanche: For subnets and specialized applications
 
-**The Learning**: Each chain has its own strengths:
+The Learning: Each chain has its own strengths:
 - Ethereum: Maximum security and decentralization
 - L2s: Balance of security and cost
 - Alternative L1s: Speed and unique features
@@ -449,29 +449,29 @@ Emboldened by success with L2s, Alex began exploring other chains:
 
 Alex developed a personal strategy for managing assets across chains:
 
-**High-Value, Long-Term Holdings**: Keep on Ethereum for maximum security
+High-Value, Long-Term Holdings: Keep on Ethereum for maximum security
 
-**Active Trading**: Use L2s like Arbitrum or Optimism for lower fees
+Active Trading: Use L2s like Arbitrum or Optimism for lower fees
 
-**Gaming and NFTs**: Use specialized chains like Polygon or Immutable X
+Gaming and NFTs: Use specialized chains like Polygon or Immutable X
 
-**Yield Farming**: Diversify across chains to find the best opportunities
+Yield Farming: Diversify across chains to find the best opportunities
 
-**The Philosophy**: "Use the right tool for the job," Alex realized. "Different chains excel at different things."
+The Philosophy: "Use the right tool for the job," Alex realized. "Different chains excel at different things."
 
 ## Chapter 8: Risks and Best Practices ⚠️
 
 Through experience, Alex learned important lessons:
 
-**Slippage**: Prices can change between chains, always check rates before bridging
+Slippage: Prices can change between chains, always check rates before bridging
 
-**Bridge Congestion**: During high traffic, bridges can get slow or expensive
+Bridge Congestion: During high traffic, bridges can get slow or expensive
 
-**Smart Contract Risk**: Each bridge has its own smart contracts with potential vulnerabilities
+Smart Contract Risk: Each bridge has its own smart contracts with potential vulnerabilities
 
-**Finality**: Some bridges take time to complete transfers, especially during security challenges
+Finality: Some bridges take time to complete transfers, especially during security challenges
 
-**Best Practices Alex Developed**:
+Best Practices Alex Developed:
 - Start with small test transfers
 - Use reputable, well-audited bridges
 - Never share seed phrases or private keys
@@ -482,13 +482,13 @@ Through experience, Alex learned important lessons:
 
 Alex became passionate about cross-chain technology and its potential:
 
-**Interoperability**: The ability for different chains to communicate and work together
+Interoperability: The ability for different chains to communicate and work together
 
-**Composability**: Building applications that can leverage multiple chains simultaneously
+Composability: Building applications that can leverage multiple chains simultaneously
 
-**User Choice**: Allowing users to choose the best chain for their specific needs
+User Choice: Allowing users to choose the best chain for their specific needs
 
-**Innovation**: Cross-chain technology enables new types of applications that weren't possible before
+Innovation: Cross-chain technology enables new types of applications that weren't possible before
 
 ## The Cross-Chain Mindset 💡
 
@@ -556,13 +556,13 @@ Understanding how token bridges work is essential for safely moving assets acros
 
 Token bridges are the highways of the cross-chain world, enabling the flow of value between different blockchain ecosystems. To understand how they work, we need to examine their core components:
 
-**Lock-Mint Mechanism**: The most common approach where assets are locked on the source chain and equivalent tokens are minted on the destination chain.
+Lock-Mint Mechanism: The most common approach where assets are locked on the source chain and equivalent tokens are minted on the destination chain.
 
-**Burn-Release Mechanism**: Assets are burned on the source chain and released from a reserve on the destination chain.
+Burn-Release Mechanism: Assets are burned on the source chain and released from a reserve on the destination chain.
 
-**Liquidity Pool Model**: Users swap tokens through liquidity pools, similar to decentralized exchanges.
+Liquidity Pool Model: Users swap tokens through liquidity pools, similar to decentralized exchanges.
 
-**Validator/Relayer Networks**: Specialized networks that verify and relay cross-chain transactions.
+Validator/Relayer Networks: Specialized networks that verify and relay cross-chain transactions.
 
 As Maya, a blockchain engineer, explains: "Token bridges are like the postal system of the blockchain world. They ensure that when you send an asset from one chain to another, it arrives safely and can be returned when needed."
 
@@ -570,36 +570,36 @@ As Maya, a blockchain engineer, explains: "Token bridges are like the postal sys
 
 Let's examine the core components that make up a token bridge:
 
-**Bridge Contracts**: Smart contracts deployed on each chain that handle the locking, minting, burning, or releasing of tokens.
+Bridge Contracts: Smart contracts deployed on each chain that handle the locking, minting, burning, or releasing of tokens.
 
-**Validators/Relayers**: Off-chain actors who monitor transactions on both chains and relay information between them.
+Validators/Relayers: Off-chain actors who monitor transactions on both chains and relay information between them.
 
-**Messaging Layer**: The communication protocol that allows chains to exchange information about cross-chain transactions.
+Messaging Layer: The communication protocol that allows chains to exchange information about cross-chain transactions.
 
-**Security Model**: The mechanism that ensures only valid transactions are processed (e.g., validator staking, multi-signatures).
+Security Model: The mechanism that ensures only valid transactions are processed (e.g., validator staking, multi-signatures).
 
-**User Interface**: Frontend applications that make it easy for users to interact with the bridge.
+User Interface: Frontend applications that make it easy for users to interact with the bridge.
 
 ## Chapter 3: The Lock-Mint Process 🔒
 
 The lock-mint mechanism is the most widely used approach in token bridges:
 
-**Step 1: Locking Tokens**
+Step 1: Locking Tokens
 1. User initiates a bridge transaction on the source chain
 2. Tokens are transferred to a vault contract on the source chain
 3. Vault contract locks the tokens, preventing further transfers
 
-**Step 2: Message Relay**
+Step 2: Message Relay
 1. Validators or relayers detect the locking transaction
 2. They create a message containing transaction details
 3. This message is sent to the destination chain
 
-**Step 3: Minting Wrapped Tokens**
+Step 3: Minting Wrapped Tokens
 1. Bridge contract on the destination chain receives the message
 2. Contract mints an equivalent amount of wrapped tokens
 3. Wrapped tokens are transferred to the user's address
 
-**Step 4: Return Journey (Burn-Release)**
+Step 4: Return Journey (Burn-Release)
 1. User initiates a reverse transaction
 2. Wrapped tokens are burned on the destination chain
 3. Validators relay the burn message
@@ -609,22 +609,22 @@ The lock-mint mechanism is the most widely used approach in token bridges:
 
 Token bridges are frequent targets for attackers due to the large amounts of value they handle. Understanding their security models is crucial:
 
-**Validator Security**:
+Validator Security:
 - Validators must stake tokens as collateral
 - Slashing conditions for malicious or incorrect behavior
 - Decentralized validator sets for improved security
 
-**Contract Security**:
+Contract Security:
 - Regular security audits by reputable firms
 - Formal verification of critical components
 - Bug bounty programs to identify vulnerabilities
 
-**Message Passing Security**:
+Message Passing Security:
 - Cryptographic signatures to verify message authenticity
 - Light client verification for message validation
 - Multi-signature requirements for critical operations
 
-**User Security Best Practices**:
+User Security Best Practices:
 - Only use well-audited, reputable bridges
 - Start with small test transfers
 - Never approve unlimited token allowances
@@ -634,17 +634,17 @@ Token bridges are frequent targets for attackers due to the large amounts of val
 
 Different bridges use different architectural approaches:
 
-**Trustless Bridges**:
+Trustless Bridges:
 - Require no trust in a central authority
 - Use cryptographic proofs or economic incentives for security
 - Examples: Chainlink CCIP, LayerZero
 
-**Federated Bridges**:
+Federated Bridges:
 - Use a set of validators or federation members
 - Validators must stake tokens to participate
 - Security through economic incentives
 
-**Custodial Bridges**:
+Custodial Bridges:
 - Centralized entities control the bridging process
 - Users must trust the custodian to handle funds properly
 - Generally discouraged due to security risks
@@ -653,22 +653,22 @@ Different bridges use different architectural approaches:
 
 Understanding the risks associated with different bridges is essential for safe cross-chain operations:
 
-**Smart Contract Risk**:
+Smart Contract Risk:
 - Potential bugs in bridge contracts
 - Upgrade mechanisms and governance risks
 - Complexity of cross-chain state management
 
-**Validator Risk**:
+Validator Risk:
 - Centralization of validator sets
 - Insufficient staking requirements
 - Social engineering or compromise of validators
 
-**Economic Risk**:
+Economic Risk:
 - Insufficient economic incentives for security
 - Market manipulation affecting bridge economics
 - Flash loan attacks on liquidity pools
 
-**Network Risk**:
+Network Risk:
 - Finality differences between chains
 - Network congestion affecting bridge operations
 - Forks or chain reorganizations
@@ -677,24 +677,24 @@ Understanding the risks associated with different bridges is essential for safe 
 
 Let's walk through a practical example of using a token bridge:
 
-**Scenario**: Moving ETH from Ethereum to Arbitrum using the official Arbitrum bridge
+Scenario: Moving ETH from Ethereum to Arbitrum using the official Arbitrum bridge
 
-**Step 1: Preparation**
+Step 1: Preparation
 - Ensure you have sufficient ETH for gas fees on Ethereum
 - Connect your wallet to the bridge interface
 - Verify you're on the correct network
 
-**Step 2: Initiating the Transfer**
+Step 2: Initiating the Transfer
 - Enter the amount of ETH to bridge
 - Review the estimated fees and time to completion
 - Confirm the transaction in your wallet
 
-**Step 3: Monitoring the Transfer**
+Step 3: Monitoring the Transfer
 - Track the transaction on the bridge interface
 - Wait for sufficient confirmations on Ethereum
 - Watch for the minting transaction on Arbitrum
 
-**Step 4: Verification**
+Step 4: Verification
 - Confirm the ETH balance on Arbitrum
 - Check transaction details on block explorers
 - Test small transactions before large transfers
@@ -703,22 +703,22 @@ Let's walk through a practical example of using a token bridge:
 
 Choosing the right bridge for your needs is crucial:
 
-**Security First**:
+Security First:
 - Audit history and reputation
 - Validator decentralization
 - Economic security model
 
-**User Experience**:
+User Experience:
 - Interface simplicity and reliability
 - Transaction speed and cost
 - Support for desired token pairs
 
-**Supported Chains**:
+Supported Chains:
 - Availability on source and destination chains
 - Integration with your preferred wallets
 - Ecosystem alignment
 
-**Liquidity and Fees**:
+Liquidity and Fees:
 - Available liquidity for large transfers
 - Fee structure and cost efficiency
 - Slippage considerations
@@ -727,17 +727,17 @@ Choosing the right bridge for your needs is crucial:
 
 The token bridging space is rapidly evolving with new innovations:
 
-**Zero-Knowledge Bridges**:
+Zero-Knowledge Bridges:
 - Using ZK-proofs for efficient cross-chain verification
 - Reduced trust assumptions and improved privacy
 - Faster finality with enhanced security
 
-**Cross-Chain Messaging**:
+Cross-Chain Messaging:
 - Beyond simple token transfers to complex data exchange
 - Interoperable smart contract execution
 - Unified cross-chain development frameworks
 
-**Institutional Bridges**:
+Institutional Bridges:
 - Bridges designed for large-scale institutional use
 - Enhanced compliance and regulatory features
 - Professional validator services
@@ -791,17 +791,17 @@ Now that we understand how token bridges work, let's build our own simplified ve
 
 For our implementation, we'll create a simplified but functional bridge with these components:
 
-**Bridge Contracts**: 
+Bridge Contracts: 
 - Lock contract on Chain A
 - Mint contract on Chain B
 - Message relay mechanism
 
-**Security Model**:
+Security Model:
 - Owner-controlled for simplicity (in production, use validators)
 - Pausing mechanism for emergencies
 - Upgradeable contracts pattern
 
-**User Interface**:
+User Interface:
 - Simple web interface for initiating transfers
 
 Before we begin, let's understand the basic flow:
@@ -814,12 +814,12 @@ Before we begin, let's understand the basic flow:
 
 We'll use Hardhat for our development environment:
 
-**Prerequisites**:
+Prerequisites:
 - Node.js installed
 - Basic knowledge of Solidity and smart contracts
 - Two local Hardhat networks to simulate different chains
 
-**Project Setup**:
+Project Setup:
 \`\`\`bash
 mkdir simple-bridge
 cd simple-bridge
@@ -828,7 +828,7 @@ npm install --save-dev hardhat @nomiclabs/hardhat-ethers ethers @nomiclabs/hardh
 npx hardhat
 \`\`\`
 
-**Hardhat Configuration**:
+Hardhat Configuration:
 We'll configure two networks in our \`hardhat.config.js\`:
 
 \`\`\`javascript
@@ -930,7 +930,7 @@ contract BridgeToken is ERC20, Ownable {
     
     constructor(address _bridgeOperator) ERC20("Bridge Token", "BRIDGE") {
         bridgeOperator = _bridgeOperator;
-        _mint(msg.sender, 1000 * 10**18); // Mint some for testing
+        _mint(msg.sender, 1000 * 1018); // Mint some for testing
     }
     
     function updateBridgeOperator(address _bridgeOperator) external onlyOwner {
@@ -1009,12 +1009,12 @@ npx hardhat run scripts/deploy.js --network chainB
 
 In a production environment, we would need a relayer service to monitor events and relay messages. For our simplified example, we'll manually relay:
 
-**Manual Relaying Process**:
+Manual Relaying Process:
 1. Monitor \`TokensLocked\` events on Chain A
 2. Extract user address, amount, and messageId from event
 3. Call \`mintTokens\` on Chain B with the same parameters
 
-**Implementation Example**:
+Implementation Example:
 \`\`\`javascript
 // In a relayer service
 async function relayLockToMint(lockContractAddress, bridgeTokenAddress, chainAProvider, chainBProvider) {
@@ -1236,21 +1236,21 @@ describe("Simple Bridge", function () {
 
 Even our simplified bridge has important security considerations:
 
-**Access Control**:
+Access Control:
 - Use proper ownership patterns
 - Limit who can call critical functions
 - Implement multi-signature requirements for production
 
-**Reentrancy Protection**:
+Reentrancy Protection:
 - Use checks-effects-interactions pattern
 - Consider OpenZeppelin's ReentrancyGuard
 
-**Input Validation**:
+Input Validation:
 - Validate all user inputs
 - Check for zero values and edge cases
 - Implement proper error handling
 
-**Upgradeability**:
+Upgradeability:
 - Consider using proxy patterns for upgradability
 - Implement careful upgrade procedures
 - Test upgrades thoroughly
@@ -1259,17 +1259,17 @@ Even our simplified bridge has important security considerations:
 
 Before deploying to production, consider these enhancements:
 
-**Validator Network**:
+Validator Network:
 - Replace single operator with a decentralized validator set
 - Implement staking and slashing mechanisms
 - Use threshold signatures for message validation
 
-**Cross-Chain Messaging**:
+Cross-Chain Messaging:
 - Implement more sophisticated message passing
 - Use light clients for chain verification
 - Add message ordering and batching
 
-**User Experience**:
+User Experience:
 - Add transaction status tracking
 - Implement automatic relaying
 - Create comprehensive error handling
@@ -1288,10 +1288,10 @@ By building this simplified bridge, you've gained practical experience with:
 
 With this foundation, you're ready to explore more advanced cross-chain development topics. Consider these next steps:
 
-1. **Explore Production Bridges**: Study the code of major bridges like Chainlink CCIP, LayerZero, or Wormhole
-2. **Advanced Security Patterns**: Learn about zero-knowledge proofs and threshold cryptography
-3. **Cross-Chain Messaging**: Dive into protocols that enable complex cross-chain communication
-4. **Scalability Solutions**: Understand how bridges interact with rollups and other scaling solutions
+1. Explore Production Bridges: Study the code of major bridges like Chainlink CCIP, LayerZero, or Wormhole
+2. Advanced Security Patterns: Learn about zero-knowledge proofs and threshold cryptography
+3. Cross-Chain Messaging: Dive into protocols that enable complex cross-chain communication
+4. Scalability Solutions: Understand how bridges interact with rollups and other scaling solutions
 
 Welcome to the world of cross-chain infrastructure development! 🛠️✨`,
           questions: [
@@ -1417,10 +1417,10 @@ One of the most critical security challenges in token bridges is preventing doub
 
 ## The Double-Minting Problem 💰
 
-**What is Double-Minting?**
+What is Double-Minting?
 Double-minting occurs when a malicious actor tricks a bridge into minting more wrapped tokens than they should receive, essentially creating money out of thin air.
 
-**How It Happens:**
+How It Happens:
 1. User locks 100 tokens on Chain A
 2. Bridge mints 100 wrapped tokens on Chain B
 3. Attacker replays the same lock event
@@ -1430,20 +1430,20 @@ This attack can drain bridge reserves and destroy the economic model of the brid
 
 ## The Solution: Message Tracking 📝
 
-**processedMessages Mapping:**
+processedMessages Mapping:
 Bridges use a simple but effective mechanism to prevent replay attacks:
 
 \`\`\`solidity
 mapping(bytes32 => bool) public processedMessages;
 \`\`\`
 
-**How It Works:**
+How It Works:
 1. Each cross-chain message gets a unique identifier (messageId)
 2. Before processing any message, the bridge checks if it's already been processed
 3. If processed, the transaction reverts
 4. If not processed, it's marked as processed and executed
 
-**Message ID Generation:**
+Message ID Generation:
 \`\`\`solidity
 bytes32 messageId = keccak256(abi.encodePacked(
     userAddress,
@@ -1455,17 +1455,17 @@ bytes32 messageId = keccak256(abi.encodePacked(
 
 ## Additional Security Layers 🔒
 
-**Event Replay Protection:**
+Event Replay Protection:
 - Each lock event includes a unique message ID
 - Validators only process events with new message IDs
 - Old events cannot be replayed
 
-**Time-based Protection:**
+Time-based Protection:
 - Message IDs include timestamp and block number
 - Prevents replaying events from different time periods
 - Adds another layer of uniqueness
 
-**Economic Incentives:**
+Economic Incentives:
 - Validators stake tokens as collateral
 - Malicious behavior results in slashing
 - Creates strong incentive to follow protocol rules
@@ -1474,14 +1474,14 @@ bytes32 messageId = keccak256(abi.encodePacked(
 
 Consider a bridge between Ethereum and Polygon:
 
-**Safe Flow:**
+Safe Flow:
 1. User locks 1 ETH on Ethereum
 2. Bridge generates messageId: \`0xabc123...\`
 3. Validators verify the lock and relay to Polygon
 4. Bridge mints 1 WETH on Polygon
 5. MessageId is marked as processed
 
-**Attack Attempt:**
+Attack Attempt:
 1. Attacker tries to replay the same messageId
 2. Bridge checks: \`processedMessages[0xabc123...] == true\`
 3. Transaction reverts: "Message already processed"
@@ -1489,13 +1489,13 @@ Consider a bridge between Ethereum and Polygon:
 
 ## Best Practices for Bridge Security ✅
 
-**For Developers:**
+For Developers:
 - Always check message processing status
 - Use cryptographically secure message ID generation
 - Implement proper access controls
 - Regular security audits
 
-**For Users:**
+For Users:
 - Use reputable, well-audited bridges
 - Start with small test transfers
 - Monitor transaction status
@@ -1559,13 +1559,13 @@ Understanding cross-chain security is crucial for safely navigating the multi-ch
 
 Cross-chain protocols introduce unique security challenges that don't exist in single-chain environments:
 
-**Increased Attack Surface**: Each additional chain and bridge connection creates new potential vulnerabilities.
+Increased Attack Surface: Each additional chain and bridge connection creates new potential vulnerabilities.
 
-**Trust Assumptions**: Different bridges rely on different trust models - some more decentralized than others.
+Trust Assumptions: Different bridges rely on different trust models - some more decentralized than others.
 
-**Finality Differences**: Chains have different finality times, creating windows for potential attacks.
+Finality Differences: Chains have different finality times, creating windows for potential attacks.
 
-**Economic Security**: The security of cross-chain protocols often depends on economic incentives and game theory.
+Economic Security: The security of cross-chain protocols often depends on economic incentives and game theory.
 
 "Security in cross-chain isn't just about code," explains Marcus, a cross-chain security expert. "It's about understanding economic incentives, game theory, and the interaction between different consensus mechanisms."
 
@@ -1573,40 +1573,40 @@ Cross-chain protocols introduce unique security challenges that don't exist in s
 
 Different bridges use different security approaches:
 
-**Mint/Burn Bridges (Most Common)**
+Mint/Burn Bridges (Most Common)
 - Users lock assets on Chain A
 - Bridge mints wrapped assets on Chain B
 - Security depends on the bridge's ability to prevent unauthorized minting
 
-**Lock/Unlock Bridges**
+Lock/Unlock Bridges
 - Assets are locked on Chain A and unlocked on Chain B
 - Requires the same asset to exist on both chains
 - Limited to assets that are native to multiple chains
 
-**Liquidity Pool Bridges**
+Liquidity Pool Bridges
 - Users provide liquidity in pools on both chains
 - Swaps happen against these pools
 - Security depends on pool economics and oracle reliability
 
-**Atomic Swaps**
+Atomic Swaps
 - Direct peer-to-peer exchanges using hash locks
 - No intermediary required
 - Limited to simple swap operations
 
-**Each model has different trade-offs between security, speed, and complexity.**
+Each model has different trade-offs between security, speed, and complexity.
 
 ## Chapter 3: Validator-Based Security 👥
 
 Many bridges use validator sets to secure cross-chain operations:
 
-**How Validator Bridges Work**:
+How Validator Bridges Work:
 1. A set of validators stake tokens as collateral
 2. Users request cross-chain transfers
 3. Validators monitor and verify transfers
 4. A threshold of validators must approve each transfer
 5. Malicious validators lose their staked collateral
 
-**Security Considerations**:
+Security Considerations:
 - Validator quantity and decentralization
 - Stake requirements and slashing conditions
 - Validator reputation and history
@@ -1618,19 +1618,19 @@ Many bridges use validator sets to secure cross-chain operations:
 
 Oracles play a crucial role in many cross-chain protocols:
 
-**Oracle Functions in Cross-Chain**:
+Oracle Functions in Cross-Chain:
 - Price feeds for cross-chain DEXs
 - Proof of transfer completion
 - Validation of external data
 - Triggering cross-chain smart contract execution
 
-**Oracle Security Risks**:
+Oracle Security Risks:
 - Data manipulation attacks
 - Front-running opportunities
 - Centralization of data sources
 - Network partition vulnerabilities
 
-**Best Practices**:
+Best Practices:
 - Use multiple, independent oracle providers
 - Implement time delays for critical operations
 - Use cryptographic proofs when possible
@@ -1640,19 +1640,19 @@ Oracles play a crucial role in many cross-chain protocols:
 
 Cross-chain smart contracts face unique challenges:
 
-**Common Vulnerabilities**:
+Common Vulnerabilities:
 - Reentrancy attacks across chains
 - Improper input validation
 - Logic errors in cross-chain state management
 - Token approval exploits
 
-**Cross-Chain Specific Risks**:
+Cross-Chain Specific Risks:
 - Chain finality assumptions
 - Timestamp differences between chains
 - Gas limit variations
 - Transaction ordering dependencies
 
-**Security Measures**:
+Security Measures:
 - Comprehensive auditing by specialized firms
 - Formal verification of critical components
 - Bug bounty programs
@@ -1663,17 +1663,17 @@ Cross-chain smart contracts face unique challenges:
 
 Economic incentives are fundamental to cross-chain security:
 
-**Slashing Mechanisms**:
+Slashing Mechanisms:
 - Validators lose staked tokens for malicious behavior
 - Slashing amounts must exceed potential profits from attacks
 - Requires reliable detection mechanisms
 
-**Insurance Funds**:
+Insurance Funds:
 - Protocol reserves to cover potential losses
 - Funded through protocol fees and treasury management
 - Provides user confidence but creates moral hazard
 
-**Bonding Curves**:
+Bonding Curves:
 - Dynamic adjustment of security requirements based on usage
 - Increasing security as protocol value grows
 - Balancing cost efficiency with safety
@@ -1682,20 +1682,20 @@ Economic incentives are fundamental to cross-chain security:
 
 Studying past incidents helps prevent future ones:
 
-**Notable Cross-Chain Hacks**:
+Notable Cross-Chain Hacks:
 - Wormhole: $320M lost due to signature verification vulnerability
 - Harmony Horizon Bridge: $100M lost due to multi-sig compromise
 - Nomad Bridge: $190M lost due to initialization vulnerability
 - Ronin Network: $625M lost due to validator compromise
 
-**Common Patterns in Attacks**:
+Common Patterns in Attacks:
 - Private key compromises
 - Smart contract vulnerabilities
 - Social engineering and insider threats
 - Protocol design flaws
 - Economic incentive misalignment
 
-**Key Lessons**:
+Key Lessons:
 1. Never underestimate the creativity of attackers
 2. Security is only as strong as the weakest link
 3. Decentralization is crucial for long-term security
@@ -1706,7 +1706,7 @@ Studying past incidents helps prevent future ones:
 
 For users and developers alike, following security best practices is essential:
 
-**For Users**:
+For Users:
 - Use reputable, well-audited bridges
 - Start with small test transfers
 - Never share private keys or seed phrases
@@ -1714,7 +1714,7 @@ For users and developers alike, following security best practices is essential:
 - Use hardware wallets for large amounts
 - Diversify across different bridges when possible
 
-**For Developers**:
+For Developers:
 - Follow established security patterns
 - Implement proper access controls
 - Use formal verification where possible
@@ -1722,7 +1722,7 @@ For users and developers alike, following security best practices is essential:
 - Plan for emergency scenarios
 - Build with upgradeability in mind
 
-**For Protocols**:
+For Protocols:
 - Maintain transparency about security models
 - Regular security audits by multiple firms
 - Active bug bounty programs
@@ -1734,15 +1734,15 @@ For users and developers alike, following security best practices is essential:
 
 The field continues to evolve with new approaches:
 
-**Zero-Knowledge Proofs**: Enabling more efficient and secure cross-chain verification
+Zero-Knowledge Proofs: Enabling more efficient and secure cross-chain verification
 
-**Shared Security Protocols**: Multiple chains sharing security infrastructure
+Shared Security Protocols: Multiple chains sharing security infrastructure
 
-**Decentralized Validator Networks**: More robust and censorship-resistant validation
+Decentralized Validator Networks: More robust and censorship-resistant validation
 
-**AI-Powered Security**: Automated threat detection and response
+AI-Powered Security: Automated threat detection and response
 
-**Cross-Chain Standards**: Interoperable security frameworks across protocols
+Cross-Chain Standards: Interoperable security frameworks across protocols
 
 ## Security as a Foundation 🛡️
 
@@ -1793,25 +1793,25 @@ Understanding different approaches to cross-chain messaging is crucial for build
 
 Cross-chain messaging enables different blockchain networks to communicate and share information. However, this communication faces unique challenges:
 
-**Trust Assumptions**: How much do we need to trust the messaging system?
-**Latency**: How fast can messages be delivered?
-**Security**: How can we ensure message authenticity and integrity?
-**Cost**: What are the economic costs of different approaches?
+Trust Assumptions: How much do we need to trust the messaging system?
+Latency: How fast can messages be delivered?
+Security: How can we ensure message authenticity and integrity?
+Cost: What are the economic costs of different approaches?
 
 "Choosing the right messaging path is like selecting the right transportation method for a journey," explains Dr. Chen, a cross-chain protocol researcher. "Each has different trade-offs between speed, cost, and reliability."
 
 ## Approach 1: Validator-Set Relays 👥
 
-**How It Works:**
+How It Works:
 Validator-set relays use a group of trusted validators to monitor and relay messages between chains.
 
-**Architecture:**
+Architecture:
 - Validators monitor source chain events
 - They reach consensus on message validity
 - A threshold of validators must approve each message
 - Approved messages are relayed to destination chains
 
-**Example Implementation:**
+Example Implementation:
 \`\`\`solidity
 contract ValidatorRelay {
     mapping(bytes32 => bool) public processedMessages;
@@ -1832,13 +1832,13 @@ contract ValidatorRelay {
 }
 \`\`\`
 
-**Pros:**
+Pros:
 - Fast message delivery (seconds to minutes)
 - Relatively simple to implement
 - Good for high-frequency messaging
 - Economic incentives through staking
 
-**Cons:**
+Cons:
 - Requires trust in validator set
 - Centralization risks if validator set is small
 - Validator collusion possibilities
@@ -1846,16 +1846,16 @@ contract ValidatorRelay {
 
 ## Approach 2: Light Client Verification 🔍
 
-**How It Works:**
+How It Works:
 Light clients verify messages by checking cryptographic proofs against the source chain's state.
 
-**Architecture:**
+Architecture:
 - Light client contracts deployed on destination chains
 - They maintain a minimal representation of source chain state
 - Messages include cryptographic proofs of validity
 - Light clients verify proofs before processing messages
 
-**Example Implementation:**
+Example Implementation:
 \`\`\`solidity
 contract LightClient {
     bytes32 public latestBlockHash;
@@ -1881,13 +1881,13 @@ contract LightClient {
 }
 \`\`\`
 
-**Pros:**
+Pros:
 - Cryptographically secure
 - No need to trust third parties
 - Decentralized verification
 - Long-term sustainability
 
-**Cons:**
+Cons:
 - Higher gas costs for verification
 - More complex implementation
 - Slower message processing
@@ -1895,16 +1895,16 @@ contract LightClient {
 
 ## Approach 3: Oracle-Assisted Proofs 🔮
 
-**How It Works:**
+How It Works:
 Oracles provide external data and proofs to enable cross-chain communication.
 
-**Architecture:**
+Architecture:
 - Oracle networks monitor source chains
 - They generate proofs of events and state changes
 - Smart contracts consume oracle data
 - Multiple oracles provide redundancy
 
-**Example Implementation:**
+Example Implementation:
 \`\`\`solidity
 contract OracleBridge {
     mapping(address => bool) public authorizedOracles;
@@ -1924,13 +1924,13 @@ contract OracleBridge {
 }
 \`\`\`
 
-**Pros:**
+Pros:
 - Leverages existing oracle infrastructure
 - Good for complex data verification
 - Flexible proof formats
 - Established security models
 
-**Cons:**
+Cons:
 - Dependency on oracle reliability
 - Potential centralization through oracle providers
 - Additional costs for oracle services
@@ -1938,36 +1938,36 @@ contract OracleBridge {
 
 ## Latency vs. Trust Trade-offs ⚖️
 
-**High Trust, Low Latency:**
+High Trust, Low Latency:
 - Validator-set relays
 - Fast but requires trust in validators
 - Good for: High-frequency trading, gaming
 
-**Low Trust, High Latency:**
+Low Trust, High Latency:
 - Light client verification
 - Slow but cryptographically secure
 - Good for: High-value transfers, governance
 
-**Medium Trust, Medium Latency:**
+Medium Trust, Medium Latency:
 - Oracle-assisted proofs
 - Balanced approach
 - Good for: General-purpose applications
 
 ## Security Considerations 🔒
 
-**Validator-Set Security:**
+Validator-Set Security:
 - Validator decentralization
 - Economic incentives and slashing
 - Governance and validator selection
 - Collusion resistance
 
-**Light Client Security:**
+Light Client Security:
 - Cryptographic proof verification
 - State update mechanisms
 - Fork choice rules
 - Long-range attack prevention
 
-**Oracle Security:**
+Oracle Security:
 - Oracle reputation and reliability
 - Multiple oracle redundancy
 - Data source verification
@@ -1975,30 +1975,30 @@ contract OracleBridge {
 
 ## Real-World Examples 🌍
 
-**Validator-Set Bridges:**
+Validator-Set Bridges:
 - Multichain (formerly Anyswap)
 - Stargate Finance
 - Synapse Protocol
 
-**Light Client Bridges:**
+Light Client Bridges:
 - IBC (Inter-Blockchain Communication)
 - Near Rainbow Bridge
 - Cosmos Hub
 
-**Oracle-Assisted Bridges:**
+Oracle-Assisted Bridges:
 - Chainlink CCIP
 - Band Protocol
 - Pyth Network
 
 ## Choosing the Right Path 🛤️
 
-**For Developers:**
+For Developers:
 - Consider your security requirements
 - Evaluate latency needs
 - Assess trust assumptions
 - Plan for long-term sustainability
 
-**For Users:**
+For Users:
 - Understand the trade-offs
 - Choose based on use case
 - Monitor bridge security
@@ -2006,13 +2006,13 @@ contract OracleBridge {
 
 ## The Future of Cross-Chain Messaging 🚀
 
-**Emerging Approaches:**
+Emerging Approaches:
 - Zero-knowledge proof verification
 - Shared security models
 - Hybrid messaging systems
 - AI-assisted verification
 
-**Standardization Efforts:**
+Standardization Efforts:
 - Common message formats
 - Interoperable verification
 - Universal security models
@@ -2053,10 +2053,10 @@ Understanding the economic incentives that secure cross-chain bridges is crucial
 
 ## The Staking Model 🏦
 
-**How It Works:**
+How It Works:
 Validators must stake (lock) tokens as collateral to participate in bridge operations. This creates economic incentives for honest behavior.
 
-**Basic Concept:**
+Basic Concept:
 - Validators stake tokens to become eligible
 - They earn rewards for correct operations
 - They lose staked tokens (slashing) for malicious behavior
@@ -2084,44 +2084,44 @@ contract ValidatorStaking {
 
 ## The Slashing Mechanism ⚡
 
-**Purpose:** Penalize validators who act maliciously or fail to perform their duties.
+Purpose: Penalize validators who act maliciously or fail to perform their duties.
 
-**Common Slashing Conditions:**
+Common Slashing Conditions:
 - Signing invalid transactions
 - Double-signing (signing conflicting messages)
 - Going offline for extended periods
 - Attempting to censor transactions
 
-**Economic Impact:**
+Economic Impact:
 - Slashing should be severe enough to deter attacks
 - But not so severe that honest validators are afraid to participate
 
 ## Attack Profit vs. Stake Requirements 🛡️
 
-**The Golden Rule:**
+The Golden Rule:
 \`Minimum Stake > Maximum Attack Profit\`
 
-**Why This Matters:**
+Why This Matters:
 - If attack profit > stake, validators have incentive to attack
 - If stake > attack profit, attacking becomes economically irrational
 - This creates a natural security mechanism
 
 ## Real-World Example 📊
 
-**Scenario:** A bridge holds $10M in assets
-- **Attack Profit:** Up to $10M (if successful)
-- **Required Stake:** Must be > $10M per validator
-- **Result:** Validators won't attack because they'd lose more than they'd gain
+Scenario: A bridge holds $10M in assets
+- Attack Profit: Up to $10M (if successful)
+- Required Stake: Must be > $10M per validator
+- Result: Validators won't attack because they'd lose more than they'd gain
 
 ## Economic Security Layers 🔒
 
-**1. Individual Validator Security:**
+1. Individual Validator Security:
 - Each validator's stake > their potential profit from attacking
 
-**2. Collective Security:**
+2. Collective Security:
 - Total stake across all validators > total bridge value
 
-**3. Time-based Security:**
+3. Time-based Security:
 - Slashing can happen even after the attack
 - Creates ongoing deterrent effect
 
@@ -2136,10 +2136,10 @@ function calculateRequiredStake(uint256 bridgeValue, uint256 validatorCount) pur
 
 ## Key Takeaways ✅
 
-- **Staking creates skin in the game** for validators
-- **Slashing deters malicious behavior** through economic penalties  
-- **Stake requirements must exceed attack profits** to maintain security
-- **Economic security complements technical security** in bridge design
+- Staking creates skin in the game for validators
+- Slashing deters malicious behavior through economic penalties  
+- Stake requirements must exceed attack profits to maintain security
+- Economic security complements technical security in bridge design
 
 This economic model is what makes decentralized bridges secure without requiring complete trust in validators.`,
           questions: [
@@ -2172,19 +2172,19 @@ A comprehensive security checklist is essential for any cross-chain bridge imple
 
 ## Critical Security Areas 🛡️
 
-**1. Access Control**
+1. Access Control
 - Review who can call critical functions
 - Implement role-based permissions
 - Use multi-signature requirements for sensitive operations
 - Regular access control audits
 
-**2. Event Replay Protection**
+2. Event Replay Protection
 - Implement unique message IDs (messageId)
 - Track processed messages to prevent replays
 - Use time-based or nonce-based protection
 - Validate message authenticity
 
-**3. Emergency Controls**
+3. Emergency Controls
 - Implement pausable mechanisms
 - Emergency stop functionality
 - Circuit breakers for unusual activity
@@ -2222,31 +2222,31 @@ contract SecureBridge {
 
 ## Security Checklist Items ✅
 
-**Access Control:**
+Access Control:
 - [ ] Role-based permissions implemented
 - [ ] Multi-signature for critical functions
 - [ ] Regular access review process
 - [ ] Owner key management secured
 
-**Replay Protection:**
+Replay Protection:
 - [ ] Unique message ID generation
 - [ ] Processed message tracking
 - [ ] Time-based validation
 - [ ] Cryptographic signature verification
 
-**Emergency Controls:**
+Emergency Controls:
 - [ ] Pausable contract functionality
 - [ ] Emergency stop mechanisms
 - [ ] Circuit breakers implemented
 - [ ] Recovery procedures documented
 
-**Upgrade Security:**
+Upgrade Security:
 - [ ] Transparent upgrade process
 - [ ] Time-locked upgrades
 - [ ] Community governance for changes
 - [ ] Backward compatibility checks
 
-**Audit & Monitoring:**
+Audit & Monitoring:
 - [ ] Third-party security audits
 - [ ] Bug bounty program active
 - [ ] Monitoring and alerting systems
@@ -2254,12 +2254,12 @@ contract SecureBridge {
 
 ## Real-World Security Examples 🌍
 
-**Successful Security Practices:**
+Successful Security Practices:
 - Chainlink CCIP: Multiple security audits and economic incentives
 - LayerZero: Comprehensive testing and formal verification
 - Wormhole: Guardian network with economic security
 
-**Common Vulnerabilities to Avoid:**
+Common Vulnerabilities to Avoid:
 - Missing access controls
 - Replay attack vectors
 - Insufficient validation
@@ -2267,17 +2267,17 @@ contract SecureBridge {
 
 ## Implementation Tips 💡
 
-**Start Simple:**
+Start Simple:
 - Begin with basic security measures
 - Gradually add complexity
 - Test each security layer thoroughly
 
-**Regular Reviews:**
+Regular Reviews:
 - Monthly security assessments
 - Quarterly access control reviews
 - Annual comprehensive audits
 
-**Community Involvement:**
+Community Involvement:
 - Open source security practices
 - Community bug reporting
 - Transparent security updates
@@ -2313,10 +2313,10 @@ Understanding the specific threats that target cross-chain protocols is essentia
 
 ## The Replay Attack Problem 🔄
 
-**What is a Replay Attack?**
+What is a Replay Attack?
 A replay attack occurs when an attacker intercepts and retransmits a valid message to trick the system into processing it multiple times.
 
-**Cross-Chain Replay Scenarios:**
+Cross-Chain Replay Scenarios:
 1. Attacker captures a valid bridge message
 2. Replays the same message to mint additional tokens
 3. System processes the message again, creating duplicate assets
@@ -2324,20 +2324,20 @@ A replay attack occurs when an attacker intercepts and retransmits a valid messa
 
 ## Why Replay Attacks Are Dangerous 💸
 
-**Economic Impact:**
+Economic Impact:
 - Double-spending of bridged assets
 - Inflation of token supply
 - Loss of bridge reserves
 - Destruction of economic model
 
-**Real-World Examples:**
+Real-World Examples:
 - Historical bridge hacks often involved replay vulnerabilities
 - Even small replay attacks can compound over time
 - Can lead to complete bridge failure
 
 ## The Solution: Message Tracking 🛡️
 
-**Unique Message Identifiers:**
+Unique Message Identifiers:
 Each cross-chain message must have a unique identifier that prevents replay:
 
 \`\`\`solidity
@@ -2352,49 +2352,49 @@ contract ReplayProtection {
 }
 \`\`\`
 
-**Key Components:**
-- **MessageId Generation**: Cryptographically unique identifiers
-- **On-Chain Tracking**: Storing processed message states
-- **Validation Logic**: Checking before processing
-- **Permanent Storage**: Never allowing replay
+Key Components:
+- MessageId Generation: Cryptographically unique identifiers
+- On-Chain Tracking: Storing processed message states
+- Validation Logic: Checking before processing
+- Permanent Storage: Never allowing replay
 
 ## Other Common Cross-Chain Threats 🚨
 
-**1. Validator Collusion:**
+1. Validator Collusion:
 - Multiple validators working together
 - Bypassing security mechanisms
 - Solution: Decentralized validator sets
 
-**2. Oracle Manipulation:**
+2. Oracle Manipulation:
 - False data from oracle networks
 - Price manipulation attacks
 - Solution: Multiple oracle sources
 
-**3. Smart Contract Vulnerabilities:**
+3. Smart Contract Vulnerabilities:
 - Code bugs in bridge contracts
 - Logic errors in cross-chain state
 - Solution: Comprehensive auditing
 
-**4. Economic Attacks:**
+4. Economic Attacks:
 - Flash loan attacks on liquidity
 - Market manipulation strategies
 - Solution: Economic security models
 
 ## Prevention Strategies 🔒
 
-**Technical Measures:**
+Technical Measures:
 - Unique message identifiers
 - Cryptographic signatures
 - Time-based validation
 - State consistency checks
 
-**Economic Measures:**
+Economic Measures:
 - Staking requirements
 - Slashing mechanisms
 - Insurance funds
 - Gradual release schedules
 
-**Operational Measures:**
+Operational Measures:
 - Regular security audits
 - Bug bounty programs
 - Community monitoring
@@ -2402,19 +2402,19 @@ contract ReplayProtection {
 
 ## Implementation Best Practices ✅
 
-**Message ID Design:**
+Message ID Design:
 - Include timestamp and nonce
 - Use cryptographic hashing
 - Make identifiers unpredictable
 - Store permanently on-chain
 
-**Validation Process:**
+Validation Process:
 - Check messageId before processing
 - Verify cryptographic signatures
 - Validate message format
 - Confirm source chain state
 
-**Monitoring Systems:**
+Monitoring Systems:
 - Track unusual message patterns
 - Alert on duplicate attempts
 - Monitor validator behavior
@@ -2424,10 +2424,10 @@ contract ReplayProtection {
 
 Replay protection is fundamental to cross-chain security because:
 
-- **Prevents Double-Spending**: Ensures each message processes only once
-- **Maintains Economic Integrity**: Protects against inflation attacks
-- **Preserves User Trust**: Users can rely on bridge security
-- **Enables Innovation**: Safe foundation for new cross-chain features
+- Prevents Double-Spending: Ensures each message processes only once
+- Maintains Economic Integrity: Protects against inflation attacks
+- Preserves User Trust: Users can rely on bridge security
+- Enables Innovation: Safe foundation for new cross-chain features
 
 Without proper replay protection, cross-chain bridges become vulnerable to simple but devastating attacks that can destroy their economic model and user confidence.`,
           questions: [
@@ -2479,15 +2479,15 @@ Building cross-chain applications requires specialized tools and frameworks. Let
 
 Cross-chain development brings unique challenges that require specialized tools:
 
-**Multi-Chain Management**: Handling different blockchain networks simultaneously
+Multi-Chain Management: Handling different blockchain networks simultaneously
 
-**State Synchronization**: Keeping application state consistent across chains
+State Synchronization: Keeping application state consistent across chains
 
-**Transaction Coordination**: Managing complex multi-step operations across networks
+Transaction Coordination: Managing complex multi-step operations across networks
 
-**Security Considerations**: Additional security concerns in cross-chain environments
+Security Considerations: Additional security concerns in cross-chain environments
 
-**Testing Complexity**: Testing across multiple blockchain environments
+Testing Complexity: Testing across multiple blockchain environments
 
 "Cross-chain development is like learning to conduct an orchestra where each musician speaks a different language," explains Sarah, a cross-chain developer. "You need tools that help harmonize everything."
 
@@ -2495,25 +2495,25 @@ Cross-chain development brings unique challenges that require specialized tools:
 
 Several frameworks have emerged to simplify cross-chain development:
 
-**Hardhat + Plugins**
+Hardhat + Plugins
 - Ethereum development framework with extensive plugin ecosystem
 - Plugins for multi-chain deployment and testing
 - TypeScript support for better developer experience
 - Excellent debugging and testing capabilities
 
-**Foundry**
+Foundry
 - Solidity-first development environment
 - Fast testing and deployment
 - Built-in fuzzing and formal verification
 - Growing plugin ecosystem for cross-chain development
 
-**Truffle Suite**
+Truffle Suite
 - Mature development environment
 - Multi-chain support through custom providers
 - Comprehensive testing framework
 - Good for enterprise development
 
-**Framework Selection Criteria**:
+Framework Selection Criteria:
 - Team expertise and language preference
 - Target blockchain networks
 - Required features and performance needs
@@ -2523,25 +2523,25 @@ Several frameworks have emerged to simplify cross-chain development:
 
 Essential tools for working across multiple chains:
 
-**Chainlink CCIP (Cross-Chain Interoperability Protocol)**
+Chainlink CCIP (Cross-Chain Interoperability Protocol)
 - Programmable token transfers
 - Arbitrary message passing
 - Unified interface for multiple chains
 - Strong security model with risk management
 
-**LayerZero**
+LayerZero
 - Omnichain applications framework
 - Ultra-light node architecture
 - Efficient message passing
 - Growing ecosystem of supported chains
 
-**Wormhole**
+Wormhole
 - General message passing protocol
 - Support for multiple token standards
 - Guardian-based security model
 - Integration with major DeFi protocols
 
-**Axelar**
+Axelar
 - Universal interoperability network
 - SDK for easy integration
 - Cross-chain communication
@@ -2551,19 +2551,19 @@ Essential tools for working across multiple chains:
 
 Setting up efficient cross-chain development environments:
 
-**Local Development Networks**
+Local Development Networks
 - Hardhat Network for local Ethereum testing
 - Anvil for local Fork testing
 - Custom local chains for specific protocols
 - Docker containers for reproducible environments
 
-**Testnet Strategies**
+Testnet Strategies
 - Multi-chain testnet deployments
 - Faucet integration for testing tokens
 - Testnet bridge configurations
 - Automated testnet funding
 
-**Development Workflow Tools**:
+Development Workflow Tools:
 - VS Code with Solidity extensions
 - Git for version control
 - CI/CD pipelines for multi-chain deployment
@@ -2573,25 +2573,25 @@ Setting up efficient cross-chain development environments:
 
 Common patterns for cross-chain smart contracts:
 
-**Proxy Patterns**
+Proxy Patterns
 - Upgradeable contracts across chains
 - Diamond proxy for complex logic
 - Transparent proxy standards
 - Cross-chain initialization patterns
 
-**Message Passing Patterns**
+Message Passing Patterns
 - Request-response communication
 - Event-driven state updates
 - Batched message processing
 - Error handling and retry mechanisms
 
-**Token Management Patterns**
+Token Management Patterns
 - Canonical token bridges
 - Mint/burn token wrappers
 - Liquidity pool token representations
 - Multi-token standard compliance
 
-**Security Patterns**:
+Security Patterns:
 - Multi-signature requirements
 - Time locks for critical operations
 - Circuit breakers for emergencies
@@ -2601,25 +2601,25 @@ Common patterns for cross-chain smart contracts:
 
 Comprehensive testing is crucial for cross-chain applications:
 
-**Unit Testing**
+Unit Testing
 - Individual contract function testing
 - Edge case coverage
 - Gas optimization testing
 - Cross-chain state validation
 
-**Integration Testing**
+Integration Testing
 - Multi-contract interaction testing
 - Cross-chain message passing validation
 - End-to-end transaction flows
 - Bridge contract interaction testing
 
-**Simulation Testing**
+Simulation Testing
 - Fork testing on mainnet state
 - Economic simulation
 - Attack scenario testing
 - Performance under load
 
-**Test Coverage Goals**:
+Test Coverage Goals:
 - 95%+ code coverage
 - All critical paths tested
 - Error conditions handled
@@ -2629,19 +2629,19 @@ Comprehensive testing is crucial for cross-chain applications:
 
 Strategies for deploying and maintaining cross-chain applications:
 
-**Multi-Chain Deployment**
+Multi-Chain Deployment
 - Automated deployment scripts
 - Chain-specific configuration management
 - Gas optimization per chain
 - Deployment verification
 
-**Monitoring and Observability**
+Monitoring and Observability
 - Cross-chain transaction monitoring
 - Health checks across networks
 - Performance metrics collection
 - Alert systems for anomalies
 
-**Maintenance Strategies**:
+Maintenance Strategies:
 - Regular security audits
 - Protocol upgrades and migrations
 - Community governance participation
@@ -2651,19 +2651,19 @@ Strategies for deploying and maintaining cross-chain applications:
 
 Essential practices for successful cross-chain development:
 
-**Code Quality**
+Code Quality
 - Consistent coding standards
 - Comprehensive documentation
 - Code review processes
 - Automated linting and formatting
 
-**Security Practices**
+Security Practices
 - Multiple security audits
 - Bug bounty programs
 - Formal verification where applicable
 - Security-focused architecture design
 
-**Community Engagement**
+Community Engagement
 - Open source development
 - Developer documentation
 - Community support channels
@@ -2673,19 +2673,19 @@ Essential practices for successful cross-chain development:
 
 The cross-chain development landscape continues to evolve:
 
-**AI-Assisted Development**
+AI-Assisted Development
 - Automated code generation
 - Security vulnerability detection
 - Optimization suggestions
 - Natural language to code translation
 
-**Improved Developer Experience**
+Improved Developer Experience
 - Unified development environments
 - Better debugging tools
 - Integrated testing frameworks
 - Simplified deployment processes
 
-**Standardization Efforts**
+Standardization Efforts
 - Cross-chain communication standards
 - Universal token standards
 - Interoperable security models
@@ -2933,13 +2933,13 @@ Creating user-friendly interfaces for Arbitrum bridging requires understanding b
 
 ## UI Component Design Principles 🎨
 
-**User Experience Focus:**
+User Experience Focus:
 - Clear visual feedback during transactions
 - Loading states to manage user expectations
 - Error handling with helpful messages
 - Simple, intuitive interface design
 
-**Technical Considerations:**
+Technical Considerations:
 - State management for transaction status
 - Integration with wallet providers
 - Network switching capabilities
@@ -2970,17 +2970,17 @@ export function DepositButton() {
 
 ## Key Implementation Details 🔧
 
-**State Management:**
+State Management:
 - \`loading\` state prevents multiple clicks
 - Button disabled during processing
 - Visual feedback with text changes
 
-**Error Handling:**
+Error Handling:
 - Try-catch blocks for transaction errors
 - Finally block ensures loading state reset
 - User-friendly error messages
 
-**Integration Points:**
+Integration Points:
 - Wallet connection verification
 - Network validation (Ethereum mainnet)
 - Balance checks before deposit
@@ -2988,19 +2988,19 @@ export function DepositButton() {
 
 ## Best Practices for Bridge UI ✅
 
-**Pre-Transaction Checks:**
+Pre-Transaction Checks:
 - Verify wallet is connected
 - Check sufficient ETH for gas
 - Validate network is correct
 - Estimate total costs
 
-**During Transaction:**
+During Transaction:
 - Show clear loading indicators
 - Display transaction hash
 - Provide progress updates
 - Allow cancellation if possible
 
-**Post-Transaction:**
+Post-Transaction:
 - Confirm successful deposit
 - Show Arbitrum transaction link
 - Display estimated arrival time
@@ -3008,13 +3008,13 @@ export function DepositButton() {
 
 ## Real-World Integration 🌍
 
-**Official Arbitrum Bridge:**
+Official Arbitrum Bridge:
 - Use official SDK when available
 - Follow Arbitrum's UI patterns
 - Implement their error codes
 - Stay updated with changes
 
-**Custom Implementations:**
+Custom Implementations:
 - Direct contract interaction
 - Custom fee calculations
 - Advanced user controls
@@ -3078,27 +3078,27 @@ Understanding the timing differences between deposits and withdrawals on Arbitru
 
 ## Deposit vs. Withdrawal Timing 📊
 
-**Deposits (L1 → L2):**
-- **Speed**: Fast (minutes)
-- **Process**: Direct state transition
-- **Security**: Inherited from L1 finality
-- **User Experience**: Smooth and quick
+Deposits (L1 → L2):
+- Speed: Fast (minutes)
+- Process: Direct state transition
+- Security: Inherited from L1 finality
+- User Experience: Smooth and quick
 
-**Withdrawals (L2 → L1):**
-- **Speed**: Slow (7 days)
-- **Process**: Challenge period required
-- **Security**: Fraud-proof window
-- **User Experience**: Requires patience
+Withdrawals (L2 → L1):
+- Speed: Slow (7 days)
+- Process: Challenge period required
+- Security: Fraud-proof window
+- User Experience: Requires patience
 
 ## Why Withdrawals Take Longer 🛡️
 
-**Fraud-Proof Challenge Window:**
+Fraud-Proof Challenge Window:
 - 7-day period for potential challenges
 - Anyone can challenge invalid withdrawals
 - Security through economic incentives
 - Prevents malicious state transitions
 
-**Technical Process:**
+Technical Process:
 1. User initiates withdrawal on L2
 2. Withdrawal request queued
 3. 7-day challenge period begins
@@ -3107,13 +3107,13 @@ Understanding the timing differences between deposits and withdrawals on Arbitru
 
 ## Safety Considerations ⚠️
 
-**For Users:**
+For Users:
 - Plan withdrawals in advance
 - Don't expect immediate L1 access
 - Consider using alternative bridges for urgent needs
 - Understand the security trade-offs
 
-**For Developers:**
+For Developers:
 - Build UI that clearly shows timing
 - Provide progress indicators
 - Handle edge cases gracefully
@@ -3121,13 +3121,13 @@ Understanding the timing differences between deposits and withdrawals on Arbitru
 
 ## Optimizing the Experience 🚀
 
-**Clear Communication:**
+Clear Communication:
 - Show estimated completion times
 - Explain why delays exist
 - Provide transaction tracking
 - Set proper expectations
 
-**Alternative Strategies:**
+Alternative Strategies:
 - Use other bridges for urgent transfers
 - Plan transactions around timing
 - Consider L2-native solutions
@@ -3135,13 +3135,13 @@ Understanding the timing differences between deposits and withdrawals on Arbitru
 
 ## Security Benefits 🔒
 
-**Economic Security:**
+Economic Security:
 - Challenge period prevents attacks
 - Economic incentives for honest behavior
 - Decentralized security model
 - No trusted third parties required
 
-**User Protection:**
+User Protection:
 - Prevents invalid withdrawals
 - Protects against malicious validators
 - Ensures fund safety

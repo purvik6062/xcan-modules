@@ -30,32 +30,149 @@ export default function ChapterContent({
 
   // Fallback content for sections without comprehensive content
   const getFallbackContent = () => {
+    const safeTitle = section.title || "DeFi Concept";
+    const codeBySection: { [key: string]: string } = {
+      // 4) Setting up MetaMask & Connecting to Arbitrum
+      "setup-wallet": `// MetaMask connection + Arbitrum network switch (read-only)
+import { ethers } from 'ethers';
+
+declare global { interface Window { ethereum?: any } }
+
+export async function connectWalletAndSwitch() {
+  if (!window.ethereum) throw new Error('Wallet not found');
+
+  // Request accounts (prompts user)
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+  // Try switch to Arbitrum One (42161)
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0xa4b1' }], // 42161
+    });
+  } catch (_) {
+    // If not present, add network
+    await window.ethereum.request({
+      method: 'wallet_addEthereumChain',
+      params: [{
+        chainId: '0xa4b1',
+        chainName: 'Arbitrum One',
+        rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+        nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+        blockExplorerUrls: ['https://arbiscan.io/']
+      }],
+    });
+  }
+
+  // Provider for reads
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const address = await signer.getAddress();
+  return { address };
+}`,
+
+      // 5) Bridging Assets to Arbitrum (conceptual approve + deposit shape)
+      "bridge-assets": `// Conceptual approve + deposit flow (read-only template)
+import { ethers } from 'ethers';
+
+const erc20Abi = [
+  'function approve(address spender, uint256 amount) returns (bool)',
+  'function allowance(address owner, address spender) view returns (uint256)'
+];
+
+const bridgeAbi = [
+  'function depositERC20(address l1Token, address to, uint256 amount)'
+];
+
+async function depositToL2(token, bridge, amount) {
+  // 1) Ensure allowance
+  const allowance = await token.allowance(USER, bridge.address);
+  if (allowance.lt(amount)) {
+    // In practice this is a tx; here we just show the sequence
+    await token.approve(bridge.address, amount);
+  }
+  // 2) Deposit call
+  await bridge.depositERC20(token.address, USER, amount);
+  // On optimistic rollups, credit appears on L2 after finalization
+}`,
+
+      // 6) Basic Smart Contract Interaction
+      "smart-contract-interaction": `// Read (call) vs Write (transaction) pattern
+import { ethers } from 'ethers';
+
+const abi = [
+  'function balanceOf(address) view returns (uint256)',
+  'function transfer(address to, uint256 amount) returns (bool)'
+];
+
+async function readBalance(provider, tokenAddr, user) {
+  const token = new ethers.Contract(tokenAddr, abi, provider);
+  const bal = await token.balanceOf(user);
+  return bal.toString();
+}
+
+async function sendToken(signer, tokenAddr, to, amount) {
+  const token = new ethers.Contract(tokenAddr, abi, signer);
+  const tx = await token.transfer(to, amount); // write → tx
+  await tx.wait();
+}`,
+
+      // 7) Token Transfer Code Examples
+      "send-tokens-example": `// ERC-20 transferFrom pattern used by DEXes and vaults
+import { ethers } from 'ethers';
+
+const abi = [
+  'function approve(address spender, uint256 amount) returns (bool)',
+  'function allowance(address owner, address spender) view returns (uint256)',
+  'function transferFrom(address from, address to, uint256 amount) returns (bool)'
+];
+
+async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
+  const token = new ethers.Contract(tokenAddr, abi, signer);
+  const owner = await signer.getAddress();
+
+  const current = await token.allowance(owner, spender);
+  if (current.lt(amount)) {
+    await (await token.approve(spender, amount)).wait();
+  }
+  // Later, spender calls transferFrom(owner, to, amount)
+}`,
+    };
+
+    const defaultCode = `// Read-only template: basic ERC-20 interaction on Arbitrum\nimport { ethers } from 'ethers';\n\nconst provider = new ethers.providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');\nconst erc20Abi = [\n  'function name() view returns (string)',\n  'function symbol() view returns (string)',\n  'function decimals() view returns (uint8)',\n  'function balanceOf(address) view returns (uint256)'\n];\n\nasync function readTokenBasics(tokenAddress, user) {\n  const token = new ethers.Contract(tokenAddress, erc20Abi, provider);\n  const [name, symbol, decimals, balance] = await Promise.all([\n    token.name(), token.symbol(), token.decimals(), token.balanceOf(user)\n  ]);\n  return { name, symbol, decimals, balance: balance.toString() };\n}`;
+
+    const chosenCode = codeBySection[section.id] || defaultCode;
     return {
-      title: section.title,
+      title: safeTitle,
       introduction:
-        "This section is currently being developed and will be available soon with comprehensive educational content.",
+        `Learn the core ideas behind ${safeTitle} on Arbitrum with a quick overview, a real-world analogy, and a simple read-only code template.`,
       sections: [
         {
-          id: "coming-soon",
-          title: "Coming Soon",
-          content: `We're working hard to bring you high-quality educational content for this section. 
-
-This will include:
-• Detailed explanations and concepts
-• Real-world examples and case studies  
-• Interactive code examples
-• Practical exercises and challenges
-• Key takeaways and best practices
-
-Check back soon for updates!`,
+          id: "overview",
+          title: `${safeTitle}: What and Why`,
+          content:
+            `This topic explains how this concept shows up in day-to-day DeFi use. You'll understand its purpose, the actors involved (user, wallet, contracts, and protocols), and how Arbitrum's low fees and high throughput make the experience smoother for beginners.`,
+        },
+        {
+          id: "analogy",
+          title: "Real‑World Analogy",
+          content:
+            `Think of it like a digital bank transfer with guardrails. Your wallet is your identity card, the smart contract is the bank counter that follows strict rules, and the blockchain is the public ledger that records every movement transparently.`,
+        },
+        {
+          id: "code-template",
+          title: "Code Template (Read‑Only)",
+          content:
+            `Here is a simple template that mirrors how many DeFi interactions look in practice. It's not for running—just to help you read and recognize the flow.`,
+          codeExample: chosenCode,
         },
       ],
       keyTakeaways: [
-        "Comprehensive content is being developed for this section",
-        "Will include theory, examples, and practical applications",
-        "Part of our commitment to high-quality DeFi education",
+        `You can read contract state with a provider and an ABI`,
+        `Arbitrum improves UX with lower fees and faster confirmations`,
+        `Most DeFi flows follow a simple pattern: read → approve (if needed) → interact`,
       ],
-    };
+    } as TheoryContent;
   };
 
   const content = theoryContent || getFallbackContent();
@@ -149,7 +266,7 @@ Check back soon for updates!`,
                 setCurrentSubSection(Math.max(0, currentSubSection - 1))
               }
               disabled={currentSubSection === 0}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentSubSection === 0
+              className={`hover:cursor-pointer px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentSubSection === 0
                 ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                 : "bg-gray-600 hover:bg-gray-700 text-white"
                 }`}
@@ -168,7 +285,7 @@ Check back soon for updates!`,
                 )
               }
               disabled={currentSubSection === content.sections.length - 1}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentSubSection === content.sections.length - 1
+              className={`hover:cursor-pointer px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentSubSection === content.sections.length - 1
                 ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                 : "bg-gray-600 hover:bg-gray-700 text-white"
                 }`}
@@ -337,19 +454,9 @@ async function interactWithProtocol() {
 
       {section.type === "code-walkthrough" && renderCodeWalkthroughContent()}
 
-      {/* Default content for other types */}
-      {!["theory", "code-walkthrough", "hands-on"].includes(section.type) && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🚧</div>
-          <h3 className="text-xl font-bold text-white mb-2">
-            Content Coming Soon
-          </h3>
-          <p className="text-gray-300 mb-4">
-            This section is currently being developed and will be available
-            soon.
-          </p>
-        </div>
-      )}
+      {/* Default content for other types: show structured theory fallback */}
+      {!["theory", "code-walkthrough", "hands-on"].includes(section.type) &&
+        renderTheoryContent(content)}
 
       {/* Completion Button */}
       <div className="mt-12 pt-8 border-t border-slate-600">
@@ -374,7 +481,7 @@ async function interactWithProtocol() {
                 Section Complete!
               </span>
             ) : (
-              <span className="flex items-center gap-2">
+              <span className="hover:cursor-pointer flex items-center gap-2">
                 <span>📝</span>
                 Mark as Complete
               </span>

@@ -226,7 +226,7 @@ export default function OrbitChapterPage() {
                   <button
                     onClick={goToPreviousSection}
                     disabled={currentSectionIndex === 0}
-                    className="flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     ← Previous
                   </button>
@@ -240,7 +240,7 @@ export default function OrbitChapterPage() {
                     disabled={
                       currentSectionIndex === chapter.sections.length - 1
                     }
-                    className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Next →
                   </button>

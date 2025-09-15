@@ -7,16 +7,18 @@ import { Chapter } from "../data/defiChapters";
 interface ChapterCardProps {
   chapter: Chapter;
   basePath?: string;
+  progress?: { completed: number; total: number };
 }
 
-export default function ChapterCard({ chapter, basePath = "/learn-defi" }: ChapterCardProps) {
+export default function ChapterCard({ chapter, basePath = "/learn-defi", progress }: ChapterCardProps) {
   const availableSections = chapter.sections.filter(
     (section) => section.status === "available"
   );
-  const completedSections = 0; // This would come from user progress data
+  const completedSections = progress?.completed ?? 0;
+  const totalSections = progress?.total ?? availableSections.length;
   const progressPercentage =
-    availableSections.length > 0
-      ? (completedSections / availableSections.length) * 100
+    totalSections > 0
+      ? (completedSections / totalSections) * 100
       : 0;
 
   const getLevelColor = (level: string) => {
@@ -52,7 +54,7 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi" }: Chapt
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className={`bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col`}
+      className={`bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : "border border-slate-700"}`}
     >
       {/* Header */}
       <div className="p-6 border-b border-slate-700">
@@ -99,7 +101,7 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi" }: Chapt
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-blue-400">
-                {completedSections}/{availableSections.length}
+                {completedSections}/{totalSections}
               </span>
               <span className="text-xs text-gray-400 bg-slate-700 px-2 py-1 rounded-full">
                 {Math.round(progressPercentage)}%
@@ -130,7 +132,7 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi" }: Chapt
               {progressPercentage > 0 ? "🚀 In Progress" : "⭐ Ready to Start"}
             </span>
             <span className="text-gray-400">
-              {availableSections.length} sections total
+              {totalSections} sections total
             </span>
           </div>
         </div>
@@ -217,7 +219,7 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi" }: Chapt
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className={`w-full ${basePath === "/learn-orbit"
+              className={`w-full hover:cursor-pointer ${basePath === "/learn-orbit"
                 ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
                 : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                 } text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}

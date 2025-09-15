@@ -100,7 +100,7 @@ export default function CrossChainChapterCard({
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700"
+      className={`bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : ""}`}
     >
       {/* Header */}
       <div className="p-6 border-b border-gray-700">

@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
 import { web3BasicsChapters } from "@/data/web3BasicsChapters";
 import { crossChainChapters } from "@/data/crossChainChapters";
+import { defiChapters } from "@/data/defiChapters";
 
 type UserChallengesDoc = {
   userAddress: string;
   // Map of chapterId to array of completed section ids
   chapters: { [chapterId: string]: string[] };
   // convenience list of fully completed chapter ids
-  completedChapters: string[];
+  // For cross-chain module we store objects with level/points. Keep type broad.
+  completedChapters: any[];
   updatedAt: Date;
   certification?: {
     claimed: boolean;
@@ -27,7 +29,11 @@ function computeProgress(chaptersCompletedSections: {
     { completedSectionIds: string[]; totalSections: number; percent: number }
   > = {};
 
-  const chapters = module === "cross-chain" ? crossChainChapters : web3BasicsChapters;
+  const chapters = module === "cross-chain"
+    ? crossChainChapters
+    : module === "master-defi"
+    ? defiChapters
+    : web3BasicsChapters;
 
   for (const chapter of chapters) {
     const availableSections = chapter.sections.filter(
@@ -62,7 +68,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const collectionName = module === "cross-chain" ? "challenges-cross-chain" : "challenges-web3-basics";
+    const collectionName = module === "cross-chain"
+      ? "challenges-cross-chain"
+      : module === "master-defi"
+      ? "challenges-master-defi"
+      : "challenges-web3-basics";
 
     const { db } = await connectToDatabase();
     const collection = db.collection<UserChallengesDoc>(collectionName);
@@ -97,6 +107,7 @@ export async function POST(request: NextRequest) {
     const chapterId: string = body.chapterId;
     const sectionId: string = body.sectionId;
     const module: string = body.module || "web3-basics";
+    const finalizeChapter: boolean = Boolean(body.finalizeChapter);
     
     if (!userAddress || !chapterId || !sectionId) {
       return NextResponse.json(
@@ -105,7 +116,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const collectionName = module === "cross-chain" ? "challenges-cross-chain" : "challenges-web3-basics";
+    const collectionName = module === "cross-chain"
+      ? "challenges-cross-chain"
+      : module === "master-defi"
+      ? "challenges-master-defi"
+      : "challenges-web3-basics";
 
     const { db } = await connectToDatabase();
     const collection = db.collection<UserChallengesDoc>(collectionName);
@@ -117,19 +132,35 @@ export async function POST(request: NextRequest) {
     chapters[chapterId] = Array.from(chapterCompleted);
 
     // Recompute completedChapters
-    const completedChapters: string[] = [];
-    const chaptersData = module === "cross-chain" ? crossChainChapters : web3BasicsChapters;
+    const completedChapters: any[] = [];
+    const chaptersData = module === "cross-chain"
+      ? crossChainChapters
+      : module === "master-defi"
+      ? defiChapters
+      : web3BasicsChapters;
     
     for (const ch of chaptersData) {
       const availableSections = ch.sections.filter(
         (s) => s.status === "available"
       );
       const done = new Set(chapters[ch.id] || []);
+
+      // If client asked to finalize a chapter, backfill its completed sections to all available
+      if (finalizeChapter && ch.id === chapterId) {
+        chapters[chapterId] = availableSections.map((s) => s.id);
+      }
       if (
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        completedChapters.push(ch.id);
+        if (module === "cross-chain" || module === "master-defi") {
+          // Enrich with level and points for Cross-Chain and Master DeFi
+          const level: string = (ch as any).level || "Beginner";
+          const points = level === "Advanced" ? 30 : level === "Intermediate" ? 20 : 10;
+          completedChapters.push({ id: ch.id, level, points });
+        } else {
+          completedChapters.push(ch.id);
+        }
       }
     }
 
@@ -140,7 +171,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date(),
     };
 
-    await collection.updateOne(
+    const updateResult = await collection.updateOne(
       { userAddress },
       { $set: doc },
       { upsert: true }

@@ -101,7 +101,7 @@ export default function ChapterCompletionModal({
                 <Link
                   href={`/learn-cross-chain/${nextChapterId}`}
                   onClick={onClose}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 text-white rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-colors"
+                  className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 text-white rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-colors"
                 >
                   Continue Learning
                 </Link>

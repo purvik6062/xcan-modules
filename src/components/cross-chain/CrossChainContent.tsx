@@ -98,7 +98,7 @@ export default function CrossChainContent({
                         Section Complete!
                       </span>
                     ) : (
-                      <span className="flex items-center gap-2">
+                      <span className="hover:cursor-pointer flex items-center gap-2">
                         <span>📝</span>
                         Mark as Complete
                       </span>

@@ -27,6 +27,8 @@ export async function POST(
         ? "challenges-web3-basics"
         : module === "cross-chain"
         ? "challenges-cross-chain"
+        : module === "master-defi"
+        ? "challenges-master-defi"
         : null;
 
     if (!collectionName) {
@@ -94,6 +96,8 @@ export async function GET(
         ? "challenges-web3-basics"
         : module === "cross-chain"
         ? "challenges-cross-chain"
+        : module === "master-defi"
+        ? "challenges-master-defi"
         : null;
         
     if (!collectionName) {

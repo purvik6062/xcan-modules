@@ -165,7 +165,7 @@ export default function InteractiveLearningDashboard({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-all duration-200 ${
+            className={`hover:cursor-pointer flex-1 flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-all duration-200 ${
               activeTab === tab.id
                 ? "bg-gray-800 text-white border-b-2 border-blue-500"
                 : "text-gray-300 hover:text-white hover:bg-gray-600"

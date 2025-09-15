@@ -370,7 +370,7 @@ VALIDATOR_ADDRESS=0x... # Your validator address`;
           <button
             onClick={() => setStep(Math.max(1, step - 1))}
             disabled={step === 1}
-            className={`px-4 py-2 rounded-lg transition-all duration-200 ${
+            className={`hover:cursor-pointer px-4 py-2 rounded-lg transition-all duration-200 ${
               step === 1
                 ? "text-gray-400 cursor-not-allowed"
                 : "text-emerald-600 hover:bg-emerald-900/20"
@@ -385,7 +385,7 @@ VALIDATOR_ADDRESS=0x... # Your validator address`;
 
           <button
             onClick={() => handleStepComplete(step)}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition-all duration-200"
+            className="hover:cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition-all duration-200"
           >
             {step === steps.length ? "Complete Challenge" : "Next →"}
           </button>

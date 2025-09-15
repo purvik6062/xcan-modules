@@ -86,11 +86,11 @@ Imagine the internet as a growing city. Let's take a journey through time to see
 
 In the early days, the internet was like a massive digital library. Picture yourself walking into this library:
 
-- **Static Information**: Every book (website) was already written and placed on the shelf. You could read them, but you couldn't add your own notes or change anything.
-- **One-Way Communication**: Just like in a traditional library, you could only consume information. The librarian (website owner) put content on the shelves, and you could only read it.
-- **Simple Websites**: These were like pamphlets - basic HTML pages with text, some images, and simple links.
+- Static Information: Every book (website) was already written and placed on the shelf. You could read them, but you couldn't add your own notes or change anything.
+- One-Way Communication: Just like in a traditional library, you could only consume information. The librarian (website owner) put content on the shelves, and you could only read it.
+- Simple Websites: These were like pamphlets - basic HTML pages with text, some images, and simple links.
 
-**Examples**: Early websites like the first Amazon (just a book catalog), early news sites, personal homepage with basic information.
+Examples: Early websites like the first Amazon (just a book catalog), early news sites, personal homepage with basic information.
 
 *The internet was READ-ONLY.*
 
@@ -98,12 +98,12 @@ In the early days, the internet was like a massive digital library. Picture your
 
 Then something magical happened! Our digital library transformed into a bustling interactive city:
 
-- **Social Platforms**: Suddenly, you could write on walls (Facebook posts), share pictures (Instagram), and have conversations with people worldwide.
-- **User-Generated Content**: Instead of just reading books, you could now write your own stories, create videos, and share them with everyone.
-- **Interactive Applications**: The city got restaurants (food delivery apps), banks (online banking), entertainment centers (Netflix), and shopping malls (e-commerce).
-- **Data Collection**: But here's the catch - in this city, everything you do is watched and recorded by big corporations who own most of the buildings.
+- Social Platforms: Suddenly, you could write on walls (Facebook posts), share pictures (Instagram), and have conversations with people worldwide.
+- User-Generated Content: Instead of just reading books, you could now write your own stories, create videos, and share them with everyone.
+- Interactive Applications: The city got restaurants (food delivery apps), banks (online banking), entertainment centers (Netflix), and shopping malls (e-commerce).
+- Data Collection: But here's the catch - in this city, everything you do is watched and recorded by big corporations who own most of the buildings.
 
-**Examples**: Facebook, YouTube, Twitter, Amazon, Google - platforms where users create content but companies control the data.
+Examples: Facebook, YouTube, Twitter, Amazon, Google - platforms where users create content but companies control the data.
 
 *The internet became READ-WRITE, but centralized.*
 
@@ -111,16 +111,16 @@ Then something magical happened! Our digital library transformed into a bustling
 
 Now imagine our city evolving into something even more revolutionary - a decentralized nation where:
 
-- **You Own Your Data**: Instead of corporations owning your information, you carry your own digital passport (wallet) that contains your identity, money, and assets.
-- **No Central Authority**: There's no single mayor or government controlling everything. Instead, communities govern themselves using transparent rules (smart contracts).
-- **Digital Ownership**: You can truly own digital items (NFTs), participate in governing protocols (DAOs), and even own pieces of the infrastructure itself.
-- **Interoperability**: Your digital assets and identity work everywhere in this nation, not just in one company's territory.
+- You Own Your Data: Instead of corporations owning your information, you carry your own digital passport (wallet) that contains your identity, money, and assets.
+- No Central Authority: There's no single mayor or government controlling everything. Instead, communities govern themselves using transparent rules (smart contracts).
+- Digital Ownership: You can truly own digital items (NFTs), participate in governing protocols (DAOs), and even own pieces of the infrastructure itself.
+- Interoperability: Your digital assets and identity work everywhere in this nation, not just in one company's territory.
 
-**Key Features**:
-- **Decentralization**: No single point of control
-- **Ownership**: Users own their data and digital assets
-- **Transparency**: All transactions are public and verifiable
-- **Permissionless**: Anyone can participate without asking permission
+Key Features:
+- Decentralization: No single point of control
+- Ownership: Users own their data and digital assets
+- Transparency: All transactions are public and verifiable
+- Permissionless: Anyone can participate without asking permission
 
 *The internet becomes READ-WRITE-OWN, and decentralized.*
 
@@ -178,7 +178,7 @@ Maya has always used her traditional bank account and credit cards. When her tec
 
 Alex sits down with Maya to explain:
 
-**Traditional Bank Account vs Digital Wallet:**
+Traditional Bank Account vs Digital Wallet:
 
 *Traditional Bank Account:*
 - The bank holds your money
@@ -198,14 +198,14 @@ Alex sits down with Maya to explain:
 
 Alex helps Maya create her first wallet. She's amazed to discover:
 
-**What a Digital Wallet Actually Contains:**
-1. **Cryptocurrency** (like digital cash)
-2. **NFTs** (unique digital collectibles)
-3. **Identity credentials** (proving who you are)
-4. **Access tokens** (keys to enter different Web3 applications)
-5. **Transaction history** (all publicly viewable but pseudonymous)
+What a Digital Wallet Actually Contains:
+1. Cryptocurrency (like digital cash)
+2. NFTs (unique digital collectibles)
+3. Identity credentials (proving who you are)
+4. Access tokens (keys to enter different Web3 applications)
+5. Transaction history (all publicly viewable but pseudonymous)
 
-**The Seed Phrase - Maya's Master Key:**
+The Seed Phrase - Maya's Master Key:
 Maya learns about her "seed phrase" - 12 special words that are like the master key to her entire digital life. Alex emphasizes: "These words ARE your wallet. Lose them, and you lose everything. Share them, and someone else controls your wallet."
 
 ## Chapter 4: Maya's First Transaction 💸
@@ -224,19 +224,19 @@ Alex sends Maya her first cryptocurrency - 0.01 ETH (Ethereum). Maya watches in 
 
 With her new wallet, Maya can now:
 
-- **Connect to DeFi protocols** (like decentralized banks)
-- **Buy and sell NFTs** (digital art and collectibles)
-- **Participate in DAOs** (decentralized organizations)
-- **Access exclusive communities** (token-gated experiences)
-- **Play blockchain games** (where she truly owns in-game items)
+- Connect to DeFi protocols (like decentralized banks)
+- Buy and sell NFTs (digital art and collectibles)
+- Participate in DAOs (decentralized organizations)
+- Access exclusive communities (token-gated experiences)
+- Play blockchain games (where she truly owns in-game items)
 
 ## Chapter 6: Maya's Realization 💡
 
 After a week of exploring, Maya realizes her digital wallet isn't just about money - it's her:
-- **Digital identity**
-- **Proof of membership** in various communities
-- **Portfolio** of digital assets
-- **Key** to the entire Web3 ecosystem
+- Digital identity
+- Proof of membership in various communities
+- Portfolio of digital assets
+- Key to the entire Web3 ecosystem
 
 "It's like having a magical passport that works everywhere in the digital world," Maya tells her other friends, "and the best part? I'M in control, not some big corporation!"
 
@@ -319,14 +319,14 @@ Marcus starts with a simple analogy:
 - Each page is connected to the previous page in an unbreakable way
 - Everyone in the world has an identical copy of this notebook"
 
-**What's in a Block?**
+What's in a Block?
 Marcus shows Luna that each block contains:
 
-1. **Transaction Data**: Records of what happened (like "Alice sent 5 coins to Bob")
-2. **Timestamp**: Exactly when these transactions occurred
-3. **Hash**: A unique fingerprint of all the data in the block
-4. **Previous Block Hash**: A link to the block before it
-5. **Nonce**: A special number that makes the block valid
+1. Transaction Data: Records of what happened (like "Alice sent 5 coins to Bob")
+2. Timestamp: Exactly when these transactions occurred
+3. Hash: A unique fingerprint of all the data in the block
+4. Previous Block Hash: A link to the block before it
+5. Nonce: A special number that makes the block valid
 
 "Think of each block as a sealed evidence box in your detective cases," Marcus explains.
 
@@ -334,17 +334,17 @@ Marcus shows Luna that each block contains:
 
 Luna learns how blocks connect to form a chain:
 
-**Block 1 (Genesis Block):**
+Block 1 (Genesis Block):
 - Contains: First transactions
 - Hash: ABC123 (unique fingerprint)
 - Previous Hash: 000000 (it's the first block)
 
-**Block 2:**
+Block 2:
 - Contains: Next set of transactions  
 - Hash: DEF456
 - Previous Hash: ABC123 (links to Block 1)
 
-**Block 3:**
+Block 3:
 - Contains: More transactions
 - Hash: GHI789
 - Previous Hash: DEF456 (links to Block 2)
@@ -355,13 +355,13 @@ Luna learns how blocks connect to form a chain:
 
 Marcus demonstrates why blockchain is tamper-proof:
 
-**Scenario**: A bad actor tries to change a transaction in Block 1
+Scenario: A bad actor tries to change a transaction in Block 1
 
-1. **They change the data** in Block 1
-2. **Block 1's hash changes** (because content changed)
-3. **Block 2's "previous hash" no longer matches** Block 1's new hash
-4. **The chain is broken!** Everyone notices the tampering
-5. **The network rejects** the invalid chain
+1. They change the data in Block 1
+2. Block 1's hash changes (because content changed)
+3. Block 2's "previous hash" no longer matches Block 1's new hash
+4. The chain is broken! Everyone notices the tampering
+5. The network rejects the invalid chain
 
 "It's like trying to change evidence in a case," Luna understands, "but every other detective in the world has the original evidence and will immediately notice your tampering!"
 
@@ -369,7 +369,7 @@ Marcus demonstrates why blockchain is tamper-proof:
 
 Luna discovers the most brilliant part:
 
-**Decentralized Verification:**
+Decentralized Verification:
 - Thousands of computers (nodes) around the world each keep a complete copy
 - When a new block is proposed, all nodes verify it independently
 - A block is only accepted when the majority agrees it's valid
@@ -381,7 +381,7 @@ Luna discovers the most brilliant part:
 
 Marcus explains who creates new blocks:
 
-**Miners are like security guards who:**
+Miners are like security guards who:
 - Collect pending transactions
 - Solve a difficult mathematical puzzle (proof of work)
 - The first to solve it gets to create the next block
@@ -394,22 +394,22 @@ Marcus explains who creates new blocks:
 
 Luna realizes blockchain's detective superpowers work for many things:
 
-**Financial Transactions:**
+Financial Transactions:
 - Every Bitcoin transaction is permanently recorded
 - No one can spend the same Bitcoin twice
 - All transactions are publicly verifiable
 
-**Supply Chain Tracking:**
+Supply Chain Tracking:
 - Track products from farm to table
 - Verify authenticity of luxury goods
 - Ensure ethical sourcing
 
-**Digital Identity:**
+Digital Identity:
 - Prove ownership of digital assets
 - Verify credentials and certificates
 - Create tamper-proof records
 
-**Voting Systems:**
+Voting Systems:
 - Create transparent, verifiable elections
 - Prevent vote tampering
 - Maintain voter privacy while ensuring integrity
@@ -418,11 +418,11 @@ Luna realizes blockchain's detective superpowers work for many things:
 
 "I get it now!" Luna exclaims. "Blockchain isn't just about cryptocurrency - it's about creating digital truth in a world where information can be easily copied and changed!"
 
-**The Blockchain Breakthrough:**
-- **Immutable**: Once recorded, data can't be changed
-- **Transparent**: Everyone can verify the information
-- **Decentralized**: No single point of failure or control
-- **Trustless**: You don't need to trust any individual or institution
+The Blockchain Breakthrough:
+- Immutable: Once recorded, data can't be changed
+- Transparent: Everyone can verify the information
+- Decentralized: No single point of failure or control
+- Trustless: You don't need to trust any individual or institution
 
 ## The Great Discovery 🚀
 
@@ -493,11 +493,11 @@ Sam runs a small online art business and has always struggled with international
 
 Sam creates digital art and sells it worldwide. Their current payment struggles:
 
-- **High Fees**: Credit card companies take 3-5% of every sale
-- **Slow Transfers**: International payments take 3-7 business days
-- **Currency Conversion**: Losing money on exchange rates
-- **Accessibility**: Some customers can't access traditional banking
-- **Chargebacks**: Buyers can reverse payments months later
+- High Fees: Credit card companies take 3-5% of every sale
+- Slow Transfers: International payments take 3-7 business days
+- Currency Conversion: Losing money on exchange rates
+- Accessibility: Some customers can't access traditional banking
+- Chargebacks: Buyers can reverse payments months later
 
 "There has to be a better way," Sam thinks after losing $50 in fees on a $200 sale to Japan.
 
@@ -506,22 +506,22 @@ Sam creates digital art and sells it worldwide. Their current payment struggles:
 Sam's friend Rio introduces them to cryptocurrency:
 
 "Imagine money that's..."
-- **Digital**: Exists only in cyberspace, no physical form
-- **Borderless**: Works the same whether you're sending to your neighbor or someone in another continent
-- **Programmable**: Can be programmed to do smart things automatically
-- **Scarce**: Unlike traditional money, you can't just print more
-- **Transparent**: Every transaction is publicly recorded
+- Digital: Exists only in cyberspace, no physical form
+- Borderless: Works the same whether you're sending to your neighbor or someone in another continent
+- Programmable: Can be programmed to do smart things automatically
+- Scarce: Unlike traditional money, you can't just print more
+- Transparent: Every transaction is publicly recorded
 
 ## Chapter 3: Understanding Digital Scarcity 🎯
 
 Rio explains a mind-bending concept:
 
-**Traditional Digital Items (NOT scarce):**
+Traditional Digital Items (NOT scarce):
 - You can copy a digital photo infinite times
 - Each copy is identical to the original
 - No way to prove which copy is "original"
 
-**Cryptocurrency (DIGITALLY SCARCE):**
+Cryptocurrency (DIGITALLY SCARCE):
 - Each coin is unique and can't be duplicated
 - You can't "copy-paste" Bitcoin like you would a photo
 - The network keeps track of who owns what
@@ -533,11 +533,11 @@ Rio explains a mind-bending concept:
 
 Rio helps Sam set up a wallet and sends them $10 worth of Bitcoin. Sam watches in amazement:
 
-1. **Transaction starts** at 2:15 PM
-2. **Network confirms** the transaction within 10 minutes
-3. **Sam receives** the Bitcoin directly in their wallet
-4. **Total cost**: About $0.50 in network fees
-5. **No middleman**: No bank, no credit card company, just direct transfer
+1. Transaction starts at 2:15 PM
+2. Network confirms the transaction within 10 minutes
+3. Sam receives the Bitcoin directly in their wallet
+4. Total cost: About $0.50 in network fees
+5. No middleman: No bank, no credit card company, just direct transfer
 
 "This is revolutionary!" Sam realizes. "I could have received this payment from anywhere in the world, at any time, in the same way!"
 
@@ -545,19 +545,19 @@ Rio helps Sam set up a wallet and sends them $10 worth of Bitcoin. Sam watches i
 
 Sam learns there are different types of cryptocurrency, each with different purposes:
 
-**Bitcoin (BTC) - Digital Gold 🥇**
+Bitcoin (BTC) - Digital Gold 🥇
 - The first and most well-known cryptocurrency
 - Limited supply: Only 21 million will ever exist
 - Primarily used as a store of value
 - Like digital gold that you can send anywhere
 
-**Ethereum (ETH) - Digital Oil ⛽**
+Ethereum (ETH) - Digital Oil ⛽
 - Not just money, but fuel for a world computer
 - Powers smart contracts and applications
 - Platform for building decentralized apps
 - Like owning shares in the internet's infrastructure
 
-**Stablecoins (USDC, USDT) - Digital Dollars 💵**
+Stablecoins (USDC, USDT) - Digital Dollars 💵
 - Cryptocurrencies pegged to real-world currencies
 - $1 stablecoin = $1 USD (approximately)
 - Combines crypto benefits with stable value
@@ -567,17 +567,17 @@ Sam learns there are different types of cryptocurrency, each with different purp
 
 Sam discovers cryptocurrency's global implications:
 
-**Financial Inclusion:**
+Financial Inclusion:
 - 1.7 billion people worldwide are unbanked
 - But many have smartphones and can access crypto
 - Cryptocurrency provides financial services to everyone
 
-**Economic Freedom:**
+Economic Freedom:
 - People in countries with unstable currencies use crypto to protect savings
 - Activists can receive donations without government interference
 - Artists like Sam can sell globally without permission
 
-**Innovation:**
+Innovation:
 - Programmable money enables new types of applications
 - Decentralized finance (DeFi) recreates banking without banks
 - New economic models become possible
@@ -586,11 +586,11 @@ Sam discovers cryptocurrency's global implications:
 
 Three months later, Sam's business has transformed:
 
-- **30% of customers** now pay with cryptocurrency
-- **90% lower fees** compared to credit cards
-- **Instant payments** from anywhere in the world
-- **No chargebacks** - payments are final
-- **New customer base** from countries with limited banking
+- 30% of customers now pay with cryptocurrency
+- 90% lower fees compared to credit cards
+- Instant payments from anywhere in the world
+- No chargebacks - payments are final
+- New customer base from countries with limited banking
 
 "Cryptocurrency isn't just about money," Sam tells other artists, "it's about economic freedom and connecting directly with customers worldwide!"
 
@@ -643,7 +643,7 @@ Meet Zara, a talented digital artist who's been struggling with a fundamental pr
 
 Zara creates beautiful digital art, but faces frustrating challenges:
 
-**The Copy-Paste Problem:**
+The Copy-Paste Problem:
 - Anyone can right-click and save her artwork
 - People share her art without credit or payment
 - No way to prove she's the original creator
@@ -666,11 +666,11 @@ Jordan smiles: "You're thinking about this wrong. Let me explain what NFTs ACTUA
 
 Jordan breaks it down:
 
-**NFT = Non-Fungible Token**
-- **Non-Fungible**: Unique and irreplaceable (unlike Bitcoin, where 1 BTC = 1 BTC)
-- **Token**: A digital certificate stored on the blockchain
+NFT = Non-Fungible Token
+- Non-Fungible: Unique and irreplaceable (unlike Bitcoin, where 1 BTC = 1 BTC)
+- Token: A digital certificate stored on the blockchain
 
-**What an NFT Really Is:**
+What an NFT Really Is:
 - A unique digital certificate of ownership
 - Stored permanently on the blockchain
 - Contains metadata pointing to the digital asset
@@ -685,23 +685,23 @@ Zara suddenly understands:
 
 "So when people 'buy' my NFT, they're not buying the image itself - they're buying a blockchain certificate that proves they own the ORIGINAL version of my digital creation!"
 
-**Analogies That Click:**
-- **Trading Cards**: Anyone can print a photo of a rare Pokemon card, but only one person owns the REAL card
-- **Autographed Photos**: You can copy a photo of a celebrity, but only one person owns the photo they actually signed
-- **Concert Tickets**: You can photocopy a ticket, but only the real ticket gets you into the venue
+Analogies That Click:
+- Trading Cards: Anyone can print a photo of a rare Pokemon card, but only one person owns the REAL card
+- Autographed Photos: You can copy a photo of a celebrity, but only one person owns the photo they actually signed
+- Concert Tickets: You can photocopy a ticket, but only the real ticket gets you into the venue
 
 ## Chapter 5: Zara's First NFT Creation 🚀
 
 Jordan helps Zara create her first NFT:
 
-**The Minting Process:**
-1. **Zara uploads** her digital artwork to IPFS (decentralized storage)
-2. **She creates metadata** describing the artwork
-3. **She mints an NFT** on Ethereum, creating a unique token ID
-4. **The blockchain records** Zara as the original creator
-5. **The NFT is now tradeable** on marketplaces like OpenSea
+The Minting Process:
+1. Zara uploads her digital artwork to IPFS (decentralized storage)
+2. She creates metadata describing the artwork
+3. She mints an NFT on Ethereum, creating a unique token ID
+4. The blockchain records Zara as the original creator
+5. The NFT is now tradeable on marketplaces like OpenSea
 
-**What's Recorded on the Blockchain:**
+What's Recorded on the Blockchain:
 - Token ID: #4521
 - Creator: Zara's wallet address
 - Current Owner: Zara's wallet address
@@ -752,13 +752,13 @@ Meet Max, a global merchant who's tired of the limitations of traditional financ
 
 Max runs an international trading business and faces daily challenges:
 
-**Traditional Trading Problems:**
-- **Bank Hours**: Can only trade during business hours
-- **Geographic Limits**: Different exchanges in different countries
-- **High Fees**: Banks and exchanges take large cuts
-- **Slow Settlements**: International transfers take days
-- **Account Requirements**: Extensive KYC and minimum balances
-- **Middleman Control**: Banks can freeze accounts or block transactions
+Traditional Trading Problems:
+- Bank Hours: Can only trade during business hours
+- Geographic Limits: Different exchanges in different countries
+- High Fees: Banks and exchanges take large cuts
+- Slow Settlements: International transfers take days
+- Account Requirements: Extensive KYC and minimum balances
+- Middleman Control: Banks can freeze accounts or block transactions
 
 "There has to be a better way," Max thinks, "especially for digital assets like cryptocurrency!"
 
@@ -782,19 +782,19 @@ Riley grins: "Welcome to Decentralized Finance - DeFi!"
 
 Riley explains the fundamental difference:
 
-**Traditional Exchanges (Order Books):**
-- **Buyers** place buy orders: "I'll buy 100 tokens at $10 each"
-- **Sellers** place sell orders: "I'll sell 100 tokens at $10.50 each"
-- **Matching Engine** pairs buyers and sellers
-- **Requires Market Makers** to provide liquidity
-- **Centralized** - the exchange controls everything
+Traditional Exchanges (Order Books):
+- Buyers place buy orders: "I'll buy 100 tokens at $10 each"
+- Sellers place sell orders: "I'll sell 100 tokens at $10.50 each"
+- Matching Engine pairs buyers and sellers
+- Requires Market Makers to provide liquidity
+- Centralized - the exchange controls everything
 
-**Automated Market Makers (AMMs):**
-- **Liquidity Pools** contain pairs of tokens (like ETH/USDC)
-- **Mathematical Formula** determines price automatically
-- **Anyone Can Trade** by swapping tokens with the pool
-- **No Order Books** - just math!
-- **Decentralized** - runs on smart contracts
+Automated Market Makers (AMMs):
+- Liquidity Pools contain pairs of tokens (like ETH/USDC)
+- Mathematical Formula determines price automatically
+- Anyone Can Trade by swapping tokens with the pool
+- No Order Books - just math!
+- Decentralized - runs on smart contracts
 
 Welcome to the future of finance! 🔄✨`,
           questions: [
@@ -851,7 +851,7 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "30 min",
         content: {
-          story: `# Getting Started with Rust 🦀\n\nRust is a systems programming language focused on performance, reliability, and productivity. It gives you low-level control like C/C++ but prevents entire classes of bugs at compile time.\n\n## Why Rust?\n- **Memory Safety without GC**: Rust eliminates data races and use-after-free with its ownership rules instead of a garbage collector.\n- **Zero-Cost Abstractions**: High-level code compiles down to efficient machine code.\n- **Great Tooling**: Cargo (package manager), rustc (compiler), rustfmt, and Clippy make development smooth.\n- **Fearless Concurrency**: Compile-time checks prevent data races across threads.\n\n## Install and Create a Project\n- Install with rustup (manages toolchains).\n- New binary crate: cargo new hello-rust\n- Build & run: cargo run\n\nExample main function:\n\n\`\`\`rust\nfn main() {\n  println!("Hello, Rust!");\n}\n\`\`\`\n\n## Variables, Mutability, and Shadowing\n- Variables are immutable by default; use \`mut\` for mutability.\n- Shadowing lets you reuse names for transformed values while keeping prior bindings immutable.\n\n\`\`\`rust\nlet x = 5;\nlet x = x + 1; // shadowing creates a new 'x'\nlet mut y = 10;\ny += 2;\nprintln!("x = {x}, y = {y}");\n\`\`\`\n\n## Functions and Expressions\nFunctions are declared with \`fn\`. The last expression in a block (without a semicolon) is the return value.\n\n\`\`\`rust\nfn add(a: i32, b: i32) -> i32 {\n  a + b // expression, no semicolon\n}\n\nfn main() {\n  println!("{}", add(2, 3));\n}\n\`\`\`\n\n## Crates and Modules\n- **Crate**: Compilation unit (binary or library).\n- **Module**: Namespacing within a crate using \`mod\`.\n- Use \`pub\` to make items visible across modules.\n\nThese fundamentals prepare you to explore Rust's type system and ownership model next.`,
+          story: `# Getting Started with Rust 🦀\n\nRust is a systems programming language focused on performance, reliability, and productivity. It gives you low-level control like C/C++ but prevents entire classes of bugs at compile time.\n\n## Why Rust?\n- Memory Safety without GC: Rust eliminates data races and use-after-free with its ownership rules instead of a garbage collector.\n- Zero-Cost Abstractions: High-level code compiles down to efficient machine code.\n- Great Tooling: Cargo (package manager), rustc (compiler), rustfmt, and Clippy make development smooth.\n- Fearless Concurrency: Compile-time checks prevent data races across threads.\n\n## Install and Create a Project\n- Install with rustup (manages toolchains).\n- New binary crate: cargo new hello-rust\n- Build & run: cargo run\n\nExample main function:\n\n\`\`\`rust\nfn main() {\n  println!("Hello, Rust!");\n}\n\`\`\`\n\n## Variables, Mutability, and Shadowing\n- Variables are immutable by default; use \`mut\` for mutability.\n- Shadowing lets you reuse names for transformed values while keeping prior bindings immutable.\n\n\`\`\`rust\nlet x = 5;\nlet x = x + 1; // shadowing creates a new 'x'\nlet mut y = 10;\ny += 2;\nprintln!("x = {x}, y = {y}");\n\`\`\`\n\n## Functions and Expressions\nFunctions are declared with \`fn\`. The last expression in a block (without a semicolon) is the return value.\n\n\`\`\`rust\nfn add(a: i32, b: i32) -> i32 {\n  a + b // expression, no semicolon\n}\n\nfn main() {\n  println!("{}", add(2, 3));\n}\n\`\`\`\n\n## Crates and Modules\n- Crate: Compilation unit (binary or library).\n- Module: Namespacing within a crate using \`mod\`.\n- Use \`pub\` to make items visible across modules.\n\nThese fundamentals prepare you to explore Rust's type system and ownership model next.`,
           questions: [
             {
               id: "q1",
@@ -891,7 +891,7 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "25 min",
         content: {
-          story: `# Rust Data Types 🔤\n\nRust has a rich, static type system with primitive and compound types. Choosing the right type yields safer, faster code.\n\n## Primitives\n- **Integers**: i8..i128, u8..u128, and isize/usize (pointer-sized). Choose signed/unsigned and width appropriately.\n- **Floating-Point**: f32, f64 (IEEE-754). Prefer f64 unless memory is tight.\n- **Bool**: true/false.\n- **Char**: Unicode scalar value (4 bytes).\n\n## Compound\n- **Tuples**: Fixed-length, heterogenous. Great for lightweight returns.\n- **Arrays**: Fixed-length, homogenous, stack-allocated.\n- **Slices**: Views into arrays/vectors ([T]) without owning data.\n- **Vectors (Vec<T>)**: Growable arrays on the heap.\n\n\`\`\`rust\nlet tup: (i32, bool) = (42, true);\nlet arr: [i32; 3] = [1, 2, 3];\nlet slice: &[i32] = &arr[0..2];\nlet mut v: Vec<i32> = vec![1, 2, 3];\nv.push(4);\n\`\`\`\n\n## Strings\n- **&str**: Borrowed string slice; usually string literals or views into a String.\n- **String**: Owned, growable UTF-8 buffer.\n\nConversions are common:\n\n\`\`\`rust\nlet s: String = "hi".to_string();\nlet r: &str = &s;\n\`\`\`\n\n## Enums and Structs\n- **Structs** model data with named fields; **enums** model alternatives (sum types).\n\n\`\`\`rust\nstruct User { id: u64, name: String }\nenum Direction { North, South, East, West }\n\`\`\`\n\nPick types that communicate intent clearly and minimize invalid states.`,
+          story: `# Rust Data Types 🔤\n\nRust has a rich, static type system with primitive and compound types. Choosing the right type yields safer, faster code.\n\n## Primitives\n- Integers: i8..i128, u8..u128, and isize/usize (pointer-sized). Choose signed/unsigned and width appropriately.\n- Floating-Point: f32, f64 (IEEE-754). Prefer f64 unless memory is tight.\n- Bool: true/false.\n- Char: Unicode scalar value (4 bytes).\n\n## Compound\n- Tuples: Fixed-length, heterogenous. Great for lightweight returns.\n- Arrays: Fixed-length, homogenous, stack-allocated.\n- Slices: Views into arrays/vectors ([T]) without owning data.\n- Vectors (Vec<T>): Growable arrays on the heap.\n\n\`\`\`rust\nlet tup: (i32, bool) = (42, true);\nlet arr: [i32; 3] = [1, 2, 3];\nlet slice: &[i32] = &arr[0..2];\nlet mut v: Vec<i32> = vec![1, 2, 3];\nv.push(4);\n\`\`\`\n\n## Strings\n- &str: Borrowed string slice; usually string literals or views into a String.\n- String: Owned, growable UTF-8 buffer.\n\nConversions are common:\n\n\`\`\`rust\nlet s: String = "hi".to_string();\nlet r: &str = &s;\n\`\`\`\n\n## Enums and Structs\n- Structs model data with named fields; enums model alternatives (sum types).\n\n\`\`\`rust\nstruct User { id: u64, name: String }\nenum Direction { North, South, East, West }\n\`\`\`\n\nPick types that communicate intent clearly and minimize invalid states.`,
           questions: [
             {
               id: "q1",

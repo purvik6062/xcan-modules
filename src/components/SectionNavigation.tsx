@@ -76,7 +76,7 @@ export default function SectionNavigation({
 
         <motion.button
           onClick={handleToggle}
-          className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-700 hover:bg-slate-600 transition-all duration-200 group"
+          className="hover:cursor-pointer flex items-center justify-center w-10 h-10 rounded-lg bg-slate-700 hover:bg-slate-600 transition-all duration-200 group"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           title={isCollapsed ? "Expand Sections" : "Collapse Sections"}
@@ -139,7 +139,7 @@ export default function SectionNavigation({
                     key={section.id}
                     onClick={() => !isLocked && onSectionSelect(index)}
                     disabled={isLocked}
-                    className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${isCurrent
+                    className={`hover:cursor-pointer w-full text-left p-3 rounded-lg transition-all duration-200 ${isCurrent
                       ? "bg-blue-900/20 border-2 border-blue-700"
                       : isCompleted
                         ? "bg-green-900/20 border border-green-700 hover:bg-green-900/30"

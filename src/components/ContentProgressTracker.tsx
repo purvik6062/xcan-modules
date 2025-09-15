@@ -136,7 +136,7 @@ export default function ContentProgressTracker({
             <button
               onClick={() => onNavigate("previous")}
               disabled={currentSubsection === 0}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
+              className={`hover:cursor-pointer flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
                 currentSubsection === 0
                   ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                   : "bg-gray-600 text-gray-300 hover:bg-gray-500"
@@ -148,7 +148,7 @@ export default function ContentProgressTracker({
             <button
               onClick={() => onNavigate("next")}
               disabled={currentSubsection === totalSubsections - 1}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
+              className={`hover:cursor-pointer flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
                 currentSubsection === totalSubsections - 1
                   ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                   : "bg-blue-500 hover:bg-blue-600 text-white"
