@@ -52,13 +52,17 @@ export async function POST(
       $set: {
         userAddress,
         updatedAt: new Date(),
-        certification: {
-          claimed: true,
-          claimedAt: new Date(),
-          ...(transactionHash ? { transactionHash } : {}),
-          ...(metadataUrl ? { metadataUrl } : {}),
-          ...(imageUrl ? { imageUrl } : {}),
-        },
+        certification: [
+          {
+            level: 1,
+            levelName: module,
+            claimed: true,
+            mintedAt: new Date(),
+            ...(transactionHash ? { transactionHash } : {}),
+            ...(metadataUrl ? { metadataUrl } : {}),
+            ...(imageUrl ? { imageUrl } : {}),
+          },
+        ],
       },
       $setOnInsert: baseSetOnInsert,
     };
@@ -111,16 +115,20 @@ export async function GET(
       );
     }
 
-    const { client, db } = await connectToDatabase();
+    const { db } = await connectToDatabase();
     const collection = db.collection(collectionName);
     const doc = await collection.findOne(
       { userAddress },
       { projection: { _id: 0, certification: 1 } }
     );
 
+    const certification = Array.isArray(doc?.certification)
+      ? doc?.certification?.[doc.certification.length - 1]
+      : doc?.certification || null;
+
     return NextResponse.json({
-      claimed: Boolean(doc?.certification?.claimed),
-      certification: doc?.certification || null,
+      claimed: Boolean(certification?.claimed),
+      certification: certification || null,
     });
   } catch (error: any) {
     console.error("Get certification (dynamic) error", error);

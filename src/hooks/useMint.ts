@@ -6,6 +6,7 @@ import {
 } from "wagmi";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../utils/contracts";
 import toast from "react-hot-toast";
+import { XCAN_ABI, XCAN_CONTRACT_ADDRESS } from "@/utils/mintContract";
 
 // Level to NFT image mapping (IPFS gateway URLs)
 const LEVEL_NFT_IMAGES = {
@@ -360,10 +361,10 @@ export const useMint = () => {
       // console.log("metadataGatewayUrl", metadataResult.gatewayUrl);
 
       const hash = await writeContractAsync({
-        address: CONTRACT_ADDRESS,
-        abi: CONTRACT_ABI,
-        functionName: "safeMint",
-        args: [address, `ipfs://${metadataIpfsHash}`],
+        address: XCAN_CONTRACT_ADDRESS,
+        abi: XCAN_ABI,
+        functionName: "mintSelf",
+        args: [`ipfs://${metadataIpfsHash}`],
       });
 
       setTxHash(hash);

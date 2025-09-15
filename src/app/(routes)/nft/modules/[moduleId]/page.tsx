@@ -10,6 +10,7 @@ import { useWalletProtection } from "@/hooks/useWalletProtection";
 import { useModuleStatus } from "@/hooks/useModuleStatus";
 import { useMint } from "@/hooks/useMint";
 import { useMintedStatus } from "@/hooks/useMintedStatus";
+import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import { CheckCircle, ArrowLeft, Loader2, Trophy, Target, Clock, Rocket, AlertTriangle, Sparkles } from "lucide-react";
 
 export default function ModuleDetailPage() {
@@ -22,7 +23,7 @@ export default function ModuleDetailPage() {
   const status = currentModule ? moduleStatuses[currentModule.id] : undefined;
 
   const { certificationMint, isCertificationMinting } = useMint();
-  const { hasMinted, isLoading: mintedLoading, refetch } = useMintedStatus(userAddress || null);
+  const { hasMinted, nft, isLoading: mintedLoading, refetch } = useMintedStatus(userAddress || null);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -80,7 +81,8 @@ export default function ModuleDetailPage() {
     }
   };
 
-  const isClaimDisabled = !status?.isCompleted || isCertificationMinting || mintedLoading;
+  const alreadyClaimed = Boolean(status?.isClaimed || hasMinted);
+  const isClaimDisabled = !status?.isCompleted || isCertificationMinting || mintedLoading || alreadyClaimed;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden">
@@ -120,35 +122,54 @@ export default function ModuleDetailPage() {
                 <span className="flex items-center gap-2"><Trophy className="w-4 h-4" />{currentModule.level}</span>
               </div>
 
-              <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/10">
+              <motion.div
+                className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/10"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {status?.isCompleted ? (
-                      <CheckCircle className="w-5 h-5 text-emerald-400" />
+                      <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>
+                        <CheckCircle className="w-5 h-5 text-emerald-400" />
+                      </motion.div>
                     ) : (
                       <AlertTriangle className="w-5 h-5 text-amber-400" />
                     )}
                     <div>
-                      <p className="text-white font-semibold">{status?.isCompleted ? "Module Completed" : "In Progress"}</p>
-                      <p className="text-gray-400 text-sm">{status?.isCompleted ? "You can claim your certification NFT." : "Complete all required challenges to enable claim."}</p>
+                      <p className="text-white font-semibold">{alreadyClaimed ? "Already Claimed" : status?.isCompleted ? "Module Completed" : "In Progress"}</p>
+                      <p className="text-gray-400 text-sm">{alreadyClaimed ? "Your certification NFT has been minted." : status?.isCompleted ? "You can claim your certification NFT." : "Complete all required challenges to enable claim."}</p>
                     </div>
                   </div>
-                  <button
-                    disabled={isClaimDisabled}
-                    onClick={handleClaim}
-                    className={`cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"}`}
-                  >
-                    {isCertificationMinting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" /> Minting...
-                      </>
-                    ) : (
-                      <>Claim NFT</>
+                  <div className="flex items-center gap-3">
+                    {alreadyClaimed && (
+                      <button
+                        onClick={() => router.push(`/nft/certification/${currentModule.id}`)}
+                        className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white"
+                      >
+                        View Minted NFT
+                      </button>
                     )}
-                  </button>
+                    <button
+                      disabled={isClaimDisabled}
+                      onClick={handleClaim}
+                      className={`cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"}`}
+                    >
+                      {alreadyClaimed ? (
+                        <>Claimed</>
+                      ) : isCertificationMinting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" /> Minting...
+                        </>
+                      ) : (
+                        <>Claim NFT</>
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
-              </div>
+              </motion.div>
             </div>
 
             {/* Right: Interactive panel */}
@@ -168,23 +189,23 @@ export default function ModuleDetailPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <Trophy className="w-5 h-5 text-amber-300" />
-                    <p className="text-gray-300">Claiming stores proof in our database to prevent duplicates.</p>
+                    <p className="text-gray-300">Claiming stores proof to prevent duplicate claims.</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <Rocket className="w-5 h-5 text-purple-300" />
                     <p className="text-gray-300">View the minted NFT on the certification page after success.</p>
                   </div>
 
-                  {(status?.isCompleted && !status?.isClaimed) && (
-                    <p className="text-emerald-300 text-sm">You're ready to claim!</p>
+                  {(status?.isCompleted && !alreadyClaimed) && (
+                    <motion.p className="text-emerald-300 text-sm" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>
+                      You're ready to claim!
+                    </motion.p>
                   )}
-                  {status?.isClaimed && (
-                    <button
-                      onClick={() => router.push(`/nft/certification/${currentModule.id}`)}
-                      className="mt-2 cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white"
-                    >
-                      View Minted NFT
-                    </button>
+
+                  {(alreadyClaimed && nft) && (
+                    <div className="pt-2">
+                      <MintedNFTDisplay nft={{ ...nft, mintedAt: new Date(nft.mintedAt) as any }} levelKey={currentModule.id} />
+                    </div>
                   )}
                 </div>
               </motion.div>
