@@ -3,6 +3,7 @@ import { connectToDatabase } from "@/lib/database/mongodb";
 import { web3BasicsChapters } from "@/data/web3BasicsChapters";
 import { crossChainChapters } from "@/data/crossChainChapters";
 import { defiChapters } from "@/data/defiChapters";
+import { orbitChapters } from "@/data/orbitChapters";
 
 type UserChallengesDoc = {
   userAddress: string;
@@ -11,6 +12,8 @@ type UserChallengesDoc = {
   // convenience list of fully completed chapter ids
   // For cross-chain module we store objects with level/points. Keep type broad.
   completedChapters: any[];
+  // Whether the entire module is completed (all chapters fully done)
+  isCompleted?: boolean;
   updatedAt: Date;
   certification?: {
     claimed: boolean;
@@ -33,6 +36,8 @@ function computeProgress(chaptersCompletedSections: {
     ? crossChainChapters
     : module === "master-defi"
     ? defiChapters
+    : module === "master-orbit"
+    ? orbitChapters
     : web3BasicsChapters;
 
   for (const chapter of chapters) {
@@ -72,6 +77,8 @@ export async function GET(request: NextRequest) {
       ? "challenges-cross-chain"
       : module === "master-defi"
       ? "challenges-master-defi"
+      : module === "master-orbit"
+      ? "challenges-orbit-chain"
       : "challenges-web3-basics";
 
     const { db } = await connectToDatabase();
@@ -80,6 +87,7 @@ export async function GET(request: NextRequest) {
     const doc = await collection.findOne({ userAddress });
     const chapters = doc?.chapters || {};
     const completedChapters = doc?.completedChapters || [];
+    const isCompleted = Boolean(doc?.isCompleted);
     const certification = doc?.certification || null;
 
     const progressByChapter = computeProgress(chapters, module);
@@ -89,6 +97,7 @@ export async function GET(request: NextRequest) {
       chapters,
       completedChapters,
       progressByChapter,
+      isCompleted,
       certification,
     });
   } catch (error) {
@@ -120,6 +129,8 @@ export async function POST(request: NextRequest) {
       ? "challenges-cross-chain"
       : module === "master-defi"
       ? "challenges-master-defi"
+      : module === "master-orbit"
+      ? "challenges-orbit-chain"
       : "challenges-web3-basics";
 
     const { db } = await connectToDatabase();
@@ -133,13 +144,15 @@ export async function POST(request: NextRequest) {
 
     // Recompute completedChapters
     const completedChapters: any[] = [];
-    const chaptersData = module === "cross-chain"
+    const chaptersDataForModule = module === "cross-chain"
       ? crossChainChapters
       : module === "master-defi"
       ? defiChapters
+      : module === "master-orbit"
+      ? orbitChapters
       : web3BasicsChapters;
     
-    for (const ch of chaptersData) {
+    for (const ch of chaptersDataForModule) {
       const availableSections = ch.sections.filter(
         (s) => s.status === "available"
       );
@@ -153,7 +166,7 @@ export async function POST(request: NextRequest) {
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        if (module === "cross-chain" || module === "master-defi") {
+        if (module === "cross-chain" || module === "master-defi" || module === "master-orbit") {
           // Enrich with level and points for Cross-Chain and Master DeFi
           const level: string = (ch as any).level || "Beginner";
           const points = level === "Advanced" ? 30 : level === "Intermediate" ? 20 : 10;
@@ -168,8 +181,27 @@ export async function POST(request: NextRequest) {
       userAddress,
       chapters,
       completedChapters,
+      isCompleted: false,
       updatedAt: new Date(),
     };
+
+    // Determine if module is fully completed (all chapters complete)
+    const chaptersData2 = module === "cross-chain"
+      ? crossChainChapters
+      : module === "master-defi"
+      ? defiChapters
+      : module === "master-orbit"
+      ? orbitChapters
+      : web3BasicsChapters;
+
+    const allChapterIds = chaptersData2.map((c) => c.id);
+    const allSectionsCompleted = allChapterIds.every((cid) => {
+      const available = chaptersData2.find((c) => c.id === cid)!.sections.filter((s) => s.status === "available").map((s) => s.id);
+      const done = new Set(chapters[cid] || []);
+      return available.length > 0 && available.every((sid) => done.has(sid));
+    });
+
+    doc.isCompleted = allSectionsCompleted;
 
     const updateResult = await collection.updateOne(
       { userAddress },
@@ -184,6 +216,7 @@ export async function POST(request: NextRequest) {
       chapters,
       completedChapters,
       progressByChapter,
+      isCompleted: doc.isCompleted,
     });
   } catch (error) {
     console.error("POST /api/challenges error", error);

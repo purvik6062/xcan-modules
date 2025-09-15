@@ -1,13 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { orbitChapters } from "../../../data/orbitChapters";
 import ChapterCard from "../../../components/ChapterCard";
 import ProgressOverview from "../../../components/ProgressOverview";
+import { useWalletProtection } from "../../../hooks/useWalletProtection";
 
 export default function LearnOrbitPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
+  const { address, isReady } = useWalletProtection();
+  const [chapterProgress, setChapterProgress] = useState<Record<string, { completed: number; total: number }>>({});
+
+  const totalsByChapter = useMemo(() => {
+    const totals: Record<string, number> = {};
+    for (const chapter of orbitChapters) {
+      totals[chapter.id] = chapter.sections.filter((s) => s.status === "available").length;
+    }
+    return totals;
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      if (!isReady || !address) return;
+      try {
+        const params = new URLSearchParams({ userAddress: address, module: "master-orbit" });
+        const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        const chaptersMap: Record<string, string[]> = data?.chapters || {};
+        const progressByChapter: Record<string, { totalSections: number; completedSectionIds: string[] }> = data?.progressByChapter || {};
+        const next: Record<string, { completed: number; total: number }> = {};
+        for (const ch of orbitChapters) {
+          const done = chaptersMap[ch.id] || progressByChapter[ch.id]?.completedSectionIds || [];
+          const total = progressByChapter[ch.id]?.totalSections ?? totalsByChapter[ch.id] ?? 0;
+          next[ch.id] = { completed: done.length, total };
+        }
+        setChapterProgress(next);
+      } catch (e) {
+        console.error("learn-orbit: failed to fetch progress", e);
+      }
+    };
+    load();
+  }, [address, isReady, totalsByChapter]);
 
   const filteredChapters =
     selectedLevel === "all"
@@ -134,7 +169,7 @@ export default function LearnOrbitPage() {
         {/* Chapters Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
           {filteredChapters.map((chapter) => (
-            <ChapterCard key={chapter.id} chapter={chapter} basePath="/learn-orbit" />
+            <ChapterCard key={chapter.id} chapter={chapter} basePath="/learn-orbit" progress={chapterProgress[chapter.id]} />
           ))}
         </div>
 

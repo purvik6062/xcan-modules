@@ -93,9 +93,9 @@ export default function CrossChainContent({
                     whileTap={!completed ? { scale: 0.95 } : {}}
                   >
                     {completed ? (
-                      <span className="flex items-center gap-2">
+                      <span className="hover:cursor-pointer flex items-center gap-2">
                         <span>✓</span>
-                        Section Complete!
+                        Section Completed!
                       </span>
                     ) : (
                       <span className="hover:cursor-pointer flex items-center gap-2">
@@ -156,9 +156,9 @@ export default function CrossChainContent({
               whileTap={!completed ? { scale: 0.95 } : {}}
             >
               {completed ? (
-                <span className="flex items-center gap-2">
+                <span className="hover:cursor-pointer flex items-center gap-2">
                   <span>✓</span>
-                  Section Complete!
+                  Section Completed!
                 </span>
               ) : (
                 <span className="flex items-center gap-2">

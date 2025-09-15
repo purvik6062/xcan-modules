@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Section } from "../data/defiChapters";
 import { getTheoryContent, TheoryContent } from "../data/defiContent";
@@ -20,6 +20,11 @@ export default function ChapterContent({
   const [completed, setCompleted] = useState(false);
   const [currentSubSection, setCurrentSubSection] = useState(0);
 
+  // Reset subsection index when section changes to avoid out-of-range access
+  useEffect(() => {
+    setCurrentSubSection(0);
+  }, [section.id, chapterId]);
+
   const handleComplete = () => {
     setCompleted(true);
     onComplete();
@@ -30,7 +35,292 @@ export default function ChapterContent({
 
   // Fallback content for sections without comprehensive content
   const getFallbackContent = () => {
-    const safeTitle = section.title || "DeFi Concept";
+    const safeTitle = section.title || "Concept";
+    const isOrbitIntro = chapterId === "intro-to-orbit";
+    // Orbit Intro: section-specific read-only templates
+    if (isOrbitIntro) {
+      if (section.id === "what-is-orbit") {
+        return {
+          title: "What is Arbitrum Orbit?",
+          introduction:
+            "Arbitrum Orbit lets teams launch their own Arbitrum chains (L2 or L3) using the Nitro stack—configurable execution, governance, DA, and gas models.",
+          sections: [
+            {
+              id: "nutshell",
+              title: "In a nutshell",
+              content:
+                "Orbit chains are permissionless, configurable instances of Arbitrum Nitro you own and govern. Choose throughput, privacy, gas token, DA layer (Rollup/AnyTrust/Alt-DA), and validation model. See the official gentle introduction for context.",
+            },
+            {
+              id: "l1-l2-l3",
+              title: "L1 vs L2 vs L3",
+              content:
+                "L1 (Ethereum): base security, finality, high fees during congestion. L2 (Arbitrum One/Nova): scales Ethereum via optimistic rollups or AnyTrust. L3 (Orbit): app- or ecosystem-specific chains that can settle to an L2 with dedicated throughput.",
+            },
+            {
+              id: "read-template",
+              title: "Read-only template: network metadata",
+              content: "A simple template to fetch chain data (no private keys).",
+              codeExample:
+                "" +
+                "// Fetch current chain and block number (read-only)\n" +
+                "import { ethers } from 'ethers';\n\n" +
+                "export async function describeNetwork(rpcUrl: string){\n" +
+                "  const provider = new ethers.JsonRpcProvider(rpcUrl);\n" +
+                "  const net = await provider.getNetwork();\n" +
+                "  const block = await provider.getBlockNumber();\n" +
+                "  return { chainId: Number(net.chainId), block };\n" +
+                "}\n",
+            },
+          ],
+          keyTakeaways: [
+            "Orbit chains are configurable Arbitrum chains you own",
+            "L3s inherit security via their settlement layer",
+            "Start with read-only RPC interactions to learn",
+          ],
+          additionalResources: [
+            {
+              title: "A gentle introduction: Arbitrum chains",
+              url: "https://docs.arbitrum.io/launch-arbitrum-chain/a-gentle-introduction",
+              type: "documentation",
+            },
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "l3-vs-l2") {
+        return {
+          title: "L3 vs L2 vs L1: Where Orbit Fits",
+          introduction:
+            "Clarify how Orbit chains differ from public L2s and Ethereum L1, and why teams pick L3s for tailored throughput and governance.",
+          sections: [
+            {
+              id: "compare",
+              title: "Comparison",
+              content:
+                "L1: maximum decentralization, highest cost. L2: optimistic rollups AnyTrust—lower cost, inherits L1 security. L3 (Orbit): custom execution and governance, can optimize for app needs while leveraging L2 settlement.",
+            },
+            {
+              id: "template",
+              title: "Read-only: gas price snapshot",
+              content: "Compare gas price across two RPCs to see cost profiles.",
+              codeExample:
+                "import { ethers } from 'ethers';\n" +
+                "export async function gasSnapshot(urls: string[]){\n" +
+                "  const entries = await Promise.all(urls.map(async (u)=>{\n" +
+                "    const p = new ethers.JsonRpcProvider(u);\n" +
+                "    const price = await p.getFeeData();\n" +
+                "    return { url: u, maxFeePerGas: price.maxFeePerGas?.toString() };\n" +
+                "  }));\n" +
+                "  return entries;\n" +
+                "}\n",
+            },
+          ],
+          keyTakeaways: [
+            "Pick L3 when you need dedicated throughput and custom policy",
+            "L2s balance cost and security for general users",
+          ],
+          additionalResources: [
+            {
+              title: "Arbitrum chains overview",
+              url: "https://docs.arbitrum.io/launch-arbitrum-chain/a-gentle-introduction",
+              type: "documentation",
+            },
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "orbit-use-cases") {
+        return {
+          title: "Orbit Use Cases & Benefits",
+          introduction:
+            "Why teams adopt Orbit: dedicated throughput, custom gas token, privacy domains, governance, and tailored precompiles.",
+          sections: [
+            {
+              id: "catalog",
+              title: "Common use cases",
+              content:
+                "- DeFi ecosystems needing deterministic throughput\n- Gaming chains with predictable fees\n- Enterprise/private deployments\n- Data-availability experiments (AnyTrust/Alt-DA)",
+            },
+            {
+              id: "template",
+              title: "Read-only: ERC-20 metadata on your chain",
+              content: "Inspect a token’s name/symbol/decimals via RPC.",
+              codeExample:
+                "import { ethers } from 'ethers';\n" +
+                "const erc20 = ['function name() view returns(string)', 'function symbol() view returns(string)', 'function decimals() view returns(uint8)'];\n" +
+                "export async function tokenMeta(rpc:string, token:string){\n" +
+                "  const p=new ethers.JsonRpcProvider(rpc);\n" +
+                "  const c=new ethers.Contract(token, erc20, p);\n" +
+                "  const [n,s,d]=await Promise.all([c.name(),c.symbol(),c.decimals()]);\n" +
+                "  return { n,s,d };\n" +
+                "}\n",
+            },
+          ],
+          keyTakeaways: [
+            "Orbit enables app-tailored chains with EVM+ compatibility",
+            "Benefits include governance and fee policy control",
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "orbit-architecture") {
+        return {
+          title: "Orbit Chain Architecture Overview",
+          introduction:
+            "High-level components: execution (Nitro), DA layer (Rollup/AnyTrust), settlement, validation, and bridge integration.",
+          sections: [
+            {
+              id: "diagram",
+              title: "Conceptual map",
+              content:
+                "Execution (Nitro) → Sequencing → Batching/Compression → DA posting → Settlement & challenge → Bridge integration for interop.",
+            },
+            {
+              id: "template",
+              title: "Read-only: latest block timestamp",
+              content: "Simple block metadata fetch helps validate liveness.",
+              codeExample:
+                "import { ethers } from 'ethers';\n" +
+                "export async function latest(rpc:string){\n" +
+                "  const p=new ethers.JsonRpcProvider(rpc);\n" +
+                "  const b=await p.getBlock('latest');\n" +
+                "  return { number:b?.number, ts:b?.timestamp };\n" +
+                "}\n",
+            },
+          ],
+          keyTakeaways: [
+            "Orbit architecture composes DA, settlement, validation",
+            "Monitoring basics start with block/fee/health reads",
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "orbit-da-overview") {
+        return {
+          title: "Data Availability Choices: Rollup vs AnyTrust vs Alt-DA",
+          introduction:
+            "DA determines how and where your transaction data is stored and verified. Choose based on security, cost, and throughput goals.",
+          sections: [
+            {
+              id: "matrix",
+              title: "Selection matrix",
+              content:
+                "Rollup: post data to L1 (max security, higher cost). AnyTrust: DAC attestation (lower cost, different assumptions). Alt-DA: external DA layers (cost/perf trade-offs).",
+            },
+            {
+              id: "code",
+              title: "Read-only: DA mode flag (pseudo)",
+              content:
+                "A conceptual snippet to illustrate how a config might carry a DA selection flag.",
+              codeExample:
+                "type DAConfig = { mode: 'Rollup' | 'AnyTrust' | 'AltDA'; committee?: string[] }\n" +
+                "function describeDA(c: DAConfig){\n" +
+                "  if(c.mode==='Rollup') return 'Posts data to L1';\n" +
+                "  if(c.mode==='AnyTrust') return 'DAC attestation, lower cost';\n" +
+                "  return 'External DA integration';\n" +
+                "}\n",
+            },
+          ],
+          keyTakeaways: [
+            "Pick DA based on security and cost needs",
+            "Plan for migrations and user communications",
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "orbit-governance-models") {
+        return {
+          title: "Governance Options for Orbit Chains",
+          introduction:
+            "Start centralized for safety, then progressively decentralize with councils, timelocks, and token voting.",
+          sections: [
+            {
+              id: "stages",
+              title: "Progressive decentralization",
+              content:
+                "Phase 0: Multisig admins. Phase 1: Council + timelock. Phase 2: Token voting (quorum, thresholds).",
+            },
+            {
+              id: "code",
+              title: "Read-only: timelock policy (pseudo)",
+              content:
+                "Sketch a policy object that could parameterize governance actions with delays.",
+              codeExample:
+                "type TimelockPolicy = { minDelayHours:number; roles: Record<string,string[]> }\n" +
+                "const policy: TimelockPolicy = { minDelayHours: 48, roles: { proposer: ['council'], executor: ['multisig'] } }\n" +
+                "function canExecute(role:string){ return policy.roles.executor.includes(role) }\n",
+            },
+          ],
+          keyTakeaways: [
+            "Use timelocks and clear roles to reduce risk",
+            "Publish RFCs and post-mortems for transparency",
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "rollup-vs-anytrust") {
+        return {
+          title: "Rollup vs AnyTrust",
+          introduction:
+            "Rollup uses L1 DA for maximum security; AnyTrust uses a DAC for lower costs—pick per use case.",
+          sections: [
+            {
+              id: "tradeoffs",
+              title: "Trade-offs",
+              content:
+                "Rollup: highest DA security, higher cost. AnyTrust: DAC attestation lowers cost, different assumptions. Alt-DA integrations expand choices.",
+            },
+            {
+              id: "template",
+              title: "Read-only: fee data",
+              content: "Inspect fee data as a quick proxy for cost profile.",
+              codeExample:
+                "import { ethers } from 'ethers';\n" +
+                "export async function feeInfo(rpc:string){\n" +
+                "  const p=new ethers.JsonRpcProvider(rpc);\n" +
+                "  const f=await p.getFeeData();\n" +
+                "  return { base: f.gasPrice?.toString(), maxFee: f.maxFeePerGas?.toString() };\n" +
+                "}\n",
+            },
+          ],
+          keyTakeaways: [
+            "Rollup maximizes security with L1 DA",
+            "AnyTrust reduces costs via DAC attestations",
+          ],
+        } as TheoryContent;
+      }
+      if (section.id === "orbit-sdk-overview") {
+        return {
+          title: "Orbit SDK Overview (Conceptual)",
+          introduction:
+            "Understand the deployment flow conceptually—no execution required: prepare config → prepare params → create chain.",
+          sections: [
+            {
+              id: "flow",
+              title: "High-level flow",
+              content:
+                "1) Prepare chain config (chainId, owner). 2) Build deployment params. 3) Submit rollup creation. In practice use official guides and testnets first.",
+            },
+            {
+              id: "template",
+              title: "Read-only: config shape (pseudo)",
+              content: "Sketch of types you’ll see when preparing parameters.",
+              codeExample:
+                "type ChainConfig = { chainId:number; owner:string; dac?:boolean };\n" +
+                "type DeployParams = { config: ChainConfig; batchPoster:string; validators:string[] };\n" +
+                "function validate(params:DeployParams){ if(!params.config.owner) throw new Error('owner'); }\n",
+            },
+          ],
+          keyTakeaways: [
+            "Orbit SDK structures deployment into clear phases",
+            "Practice on testnets with read-only exploration first",
+          ],
+          additionalResources: [
+            {
+              title: "Arbitrum docs: introduction",
+              url: "https://docs.arbitrum.io/launch-arbitrum-chain/a-gentle-introduction",
+              type: "documentation",
+            },
+          ],
+        } as TheoryContent;
+      }
+    }
+
     const codeBySection: { [key: string]: string } = {
       // 4) Setting up MetaMask & Connecting to Arbitrum
       "setup-wallet": `// MetaMask connection + Arbitrum network switch (read-only)
@@ -223,19 +513,19 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
           <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
               <h3 className="text-2xl font-bold mb-2">
-                {content.sections[currentSubSection].title}
+                {content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].title}
               </h3>
             </div>
 
             <div className="p-8">
               <div className="prose prose-lg prose-invert max-w-none">
                 <div className="text-gray-300 whitespace-pre-line leading-relaxed text-base">
-                  {content.sections[currentSubSection].content}
+                  {content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].content}
                 </div>
               </div>
 
               {/* Code Example */}
-              {content.sections[currentSubSection].codeExample && (
+              {content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].codeExample && (
                 <div className="mt-8">
                   <div className="bg-gray-800 rounded-lg p-4">
                     <h4 className="text-white font-medium mb-4">
@@ -244,7 +534,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
                     <div className="h-64">
                       <CodeEditor
                         defaultValue={
-                          content.sections[currentSubSection].codeExample
+                          content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].codeExample
                         }
                         language="javascript"
                         readOnly={true}
@@ -476,9 +766,9 @@ async function interactWithProtocol() {
             whileTap={!completed ? { scale: 0.95 } : {}}
           >
             {completed ? (
-              <span className="flex items-center gap-2">
+              <span className="hover:cursor-pointer flex items-center gap-2">
                 <span>✓</span>
-                Section Complete!
+                Section Completed!
               </span>
             ) : (
               <span className="hover:cursor-pointer flex items-center gap-2">
