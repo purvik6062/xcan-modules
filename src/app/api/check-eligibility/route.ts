@@ -6,6 +6,12 @@ import { eq, and, or } from "drizzle-orm";
 
 // Define all certification levels with their required challenges
 const CERTIFICATION_LEVELS = {
+  "first-blood": {
+    name: "First Blood",
+    description: "Complete challenge 1 to earn your first NFT badge",
+    requiredChallenges: [ChallengeId.SIMPLE_COUNTER_EXAMPLE],
+    level: 0,
+  },
   "web3-basics": {
     name: "Web3 Basics with Stylus",
     description: "Complete challenges 1-3 to earn your first NFT badge",

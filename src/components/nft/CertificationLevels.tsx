@@ -87,6 +87,8 @@ const CHALLENGE_DESCRIPTIONS = {
 
 const getLevelIcon = (level: number) => {
   switch (level) {
+    case 0:
+      return <Sparkles className="w-8 h-8 text-amber-400" />;
     case 1:
       return <Trophy className="w-8 h-8 text-amber-400" />;
     case 2:
@@ -108,6 +110,8 @@ const getLevelIcon = (level: number) => {
 
 const getLevelColor = (level: number) => {
   switch (level) {
+    case 0:
+      return "from-orange-500/8 to-red-500/8 border-orange-400/40";
     case 1:
       return "from-amber-500/8 to-orange-500/8 border-amber-400/40";
     case 2:

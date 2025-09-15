@@ -9,6 +9,7 @@ type UserChallengesDoc = {
   // convenience list of fully completed chapter ids
   completedChapters: Array<{ id: string; level: string; points: number }>;
   updatedAt: Date;
+  isCompleted?: boolean;
   certification?: {
     claimed: boolean;
     claimedAt: Date;
@@ -50,6 +51,8 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userAddress = (searchParams.get("userAddress") || "").toLowerCase();
+    const currentModule = searchParams.get("module") || "web3-basics";
+
     if (!userAddress) {
       return NextResponse.json(
         { error: "Missing userAddress" },
@@ -57,19 +60,49 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Map module names to collection names
+    const collectionName =
+    currentModule === "web3-basics"
+        ? "challenges-web3-basics"
+        : currentModule === "core-stylus"
+        ? "challenges-core-stylus"
+        : currentModule === "arbitrum-orbit"
+        ? "challenges-arbitrum-orbit"
+        : currentModule === "defi-arbitrum"
+        ? "challenges-defi-arbitrum"
+        : currentModule === "cross-chain"
+        ? "challenges-cross-chain"
+        : "challenges-web3-basics"; // default
+
     const { client, db } = await connectToDatabase();
-    const collection = db.collection<UserChallengesDoc>(
-      "challenges-web3-basics"
-    );
+    const collection = db.collection<UserChallengesDoc>(collectionName);
 
     const doc = await collection.findOne({ userAddress });
     const chapters = doc?.chapters || {};
     const completedChapters = doc?.completedChapters || [];
     const certification = doc?.certification || null;
+    const isCompleted = doc?.isCompleted || false;
 
-    const progressByChapter = computeProgress(chapters);
+    // For web3-basics, compute progress using the existing function
+    const progressByChapter =
+    currentModule === "web3-basics" ? computeProgress(chapters) : {};
 
     await client.close();
+
+    // Calculate isCompleted based on module type
+    // let isCompleted = false;
+
+    // if (module === "web3-basics") {
+    //   // For Web3 Basics, check if all 6 chapters are completed
+    //   isCompleted = completedChapters.length >= 6;
+    // } else if (module === "core-stylus") {
+    //   // For Stylus Core Concepts, check if all 6 challenges are completed
+    //   // Get the isCompleted status from the document
+    //   isCompleted = doc?.isCompleted || false;
+    // } else {
+    //   // For other modules, assume completed if document exists
+    //   isCompleted = doc ? true : false;
+    // }
 
     return NextResponse.json({
       userAddress,
@@ -77,6 +110,7 @@ export async function GET(request: NextRequest) {
       completedChapters,
       progressByChapter,
       certification,
+      isCompleted,
     });
   } catch (error) {
     console.error("GET /api/challenges error", error);
@@ -114,7 +148,11 @@ export async function POST(request: NextRequest) {
     chapters[chapterId] = Array.from(chapterCompleted);
 
     // Recompute completedChapters
-    const completedChapters: Array<{ id: string; level: string; points: number }> = [];
+    const completedChapters: Array<{
+      id: string;
+      level: string;
+      points: number;
+    }> = [];
     for (const ch of web3BasicsChapters) {
       const availableSections = ch.sections.filter(
         (s) => s.status === "available"
@@ -124,15 +162,23 @@ export async function POST(request: NextRequest) {
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        completedChapters.push({ id: ch.id, level: ch.level, points: ch.points });
+        completedChapters.push({
+          id: ch.id,
+          level: ch.level,
+          points: ch.points,
+        });
       }
     }
+
+    // Check if all 6 chapters are completed for Web3 Basics
+    const isCompleted = completedChapters.length >= 6;
 
     const doc: UserChallengesDoc = {
       userAddress,
       chapters,
       completedChapters,
       updatedAt: new Date(),
+      isCompleted: isCompleted,
     };
 
     await collection.updateOne(
@@ -141,14 +187,14 @@ export async function POST(request: NextRequest) {
       { upsert: true }
     );
 
-    
     const progressByChapter = computeProgress(chapters);
-      
+
     return NextResponse.json({
       userAddress,
       chapters,
       completedChapters,
       progressByChapter,
+      isCompleted,
     });
   } catch (error) {
     console.error("POST /api/challenges error", error);

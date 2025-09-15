@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
       !metadataUrl ||
       !imageUrl ||
       !levelName ||
-      !level
+      level === undefined ||
+      level === null
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { client,db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection("minted-nft");
 
     // Check if user already has a document
@@ -78,15 +79,12 @@ export async function POST(request: NextRequest) {
         { returnDocument: "after" }
       );
 
-      await client.close();
-
       return NextResponse.json({
         success: true,
         nft: updatedUser?.value || null,
       });
     } else {
       // Create new user document with first minted level
-      await client.close();
 
       const newMintedLevel = {
         level: level,
@@ -108,8 +106,6 @@ export async function POST(request: NextRequest) {
       };
 
       const result = await collection.insertOne(mintedNFT);
-
-      await client.close();
 
       return NextResponse.json({
         success: true,

@@ -25,6 +25,12 @@ export async function POST(
         ? "challenges-core-stylus"
         : module === "web3-basics"
         ? "challenges-web3-basics"
+        : module === "arbitrum-orbit"
+        ? "challenges-arbitrum-orbit"
+        : module === "defi-arbitrum"
+        ? "challenges-defi-arbitrum"
+        : module === "cross-chain"
+        ? "challenges-cross-chain"
         : null;
 
     if (!collectionName) {
@@ -90,6 +96,12 @@ export async function GET(
         ? "challenges-core-stylus"
         : module === "web3-basics"
         ? "challenges-web3-basics"
+        : module === "arbitrum-orbit"
+        ? "challenges-arbitrum-orbit"
+        : module === "defi-arbitrum"
+        ? "challenges-defi-arbitrum"
+        : module === "cross-chain"
+        ? "challenges-cross-chain"
         : null;
 
     if (!collectionName) {
