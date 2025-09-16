@@ -52,7 +52,7 @@ export const orbitChapters: Chapter[] = [
     id: "intro-to-orbit",
     title: "Introduction to Arbitrum Orbit",
     description:
-      "Understand the fundamentals of Arbitrum Orbit and how to create your own custom Layer 3 blockchain",
+      "Foundations of Orbit: L3 vs L2, architecture, DA choices, governance, and a fundamentals quiz.",
     icon: "🚀",
     level: "Beginner",
     duration: "2-3 hours",
@@ -163,7 +163,7 @@ export const orbitChapters: Chapter[] = [
     id: "chain-configuration",
     title: "Chain Configuration & Setup",
     description:
-      "Learn how to configure your Orbit chain parameters, gas tokens, and governance settings",
+      "Configure chain ID, ownership, gas token strategy, prepareChainConfig, deployment params, validation best practices, and governance templates — with a quiz.",
     icon: "⚙️",
     level: "Intermediate",
     duration: "3-4 hours",
@@ -180,6 +180,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "30 min",
+        content: {
+          story: `# Understanding Chain Configuration 🔧\n\nChain configuration is the foundation of your Orbit chain. It defines critical parameters like chain ID, ownership, gas settings, and data availability mode.\n\n## Key Configuration Elements\n\n**Chain Identity**\n- Chain ID: Unique identifier preventing transaction replay\n- Chain name and symbol for wallet display\n- Network metadata for block explorers\n\n**Ownership Structure**\n- Initial Chain Owner: Controls upgrades and parameter changes\n- Multi-signature recommendations for production\n- Governance transition planning\n\n**Economic Parameters**\n- Gas pricing mechanisms\n- Custom gas token selection\n- Fee collection and distribution\n\n**Technical Settings**\n- Data availability mode (Rollup vs AnyTrust)\n- Block time and batch posting frequency\n- Validator set configuration\n\n## Why Configuration Matters\n\nProper configuration ensures your chain operates securely, efficiently, and meets your specific use case requirements. Poor configuration choices can lead to security vulnerabilities, high operational costs, or user experience issues.`,
+          questions: [
+            {
+              id: "config-q1",
+              question: "What is the primary purpose of a chain ID in Orbit configuration?",
+              options: [
+                "To set gas prices",
+                "To prevent transaction replay attacks across different networks",
+                "To configure validators",
+                "To set block times"
+              ],
+              correctAnswer: 1,
+              explanation: "Chain ID serves as a unique identifier that prevents transactions from one network being replayed on another network with the same address space.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "chain-id-ownership",
@@ -187,6 +205,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "25 min",
+        content: {
+          story: `# Chain ID & Initial Ownership 🔑\n\nTwo fundamental decisions that shape your Orbit chain's identity and governance structure.\n\n## Choosing Your Chain ID\n\n**What is a Chain ID?**\nA unique number that identifies your blockchain network. It's used in transaction signatures to prevent replay attacks across different networks.\n\n**Selection Guidelines:**\n- Must be unique across all EVM networks\n- Avoid conflicts with existing chains\n- Consider using chainlist.org for reference\n- Reserve a range for testnet versions\n\n**Examples:**\n- Ethereum Mainnet: 1\n- Arbitrum One: 42161\n- Arbitrum Nova: 42170\n- Your chain: Pick an unused number > 1000\n\n## Initial Chain Owner\n\n**Role and Responsibilities:**\n- Controls all chain upgrades and parameter changes\n- Can modify gas settings, validator sets, and DA mode\n- Should transition to decentralized governance over time\n\n**Best Practices:**\n- Start with a multi-signature wallet (3/5 or 5/7)\n- Plan governance decentralization roadmap\n- Document all owner actions publicly\n- Implement time delays for critical changes\n\n**Security Considerations:**\n- Owner key compromise = full chain control\n- Use hardware wallets or HSMs\n- Regular key rotation procedures\n- Emergency response protocols`,
+          questions: [
+            {
+              id: "ownership-q1",
+              question: "Why should the Initial Chain Owner use a multi-signature wallet?",
+              options: [
+                "To reduce gas costs",
+                "To improve transaction speed",
+                "To distribute control and reduce single points of failure",
+                "To increase validator rewards"
+              ],
+              correctAnswer: 2,
+              explanation: "Multi-signature wallets require multiple parties to authorize transactions, reducing the risk of a single compromised key taking control of the entire chain.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "custom-gas-tokens",
@@ -194,6 +230,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Custom Gas Token Configuration 💰\n\nOrbit chains can use custom ERC-20 tokens for gas instead of ETH, enabling unique economic models and ecosystem alignment.\n\n## Native ETH vs Custom Gas Tokens\n\n**Using Native ETH:**\n- Familiar user experience\n- Wallet compatibility guaranteed\n- Simplified accounting\n- Lower complexity for bridges\n\n**Using Custom Gas Tokens:**\n- Ecosystem token utility\n- Custom economic models\n- Token value accrual\n- Governance token integration\n\n## Configuration Requirements\n\n**Token Standards:**\n- Must be a standard ERC-20 token\n- Should have adequate liquidity\n- Decimals recommendation: 18\n- Consider total supply economics\n\n**Technical Implementation:**\n\`\`\`javascript\n// Example configuration with custom gas token\nconst chainConfig = prepareChainConfig({\n  chainId: 123456,\n  arbitrum: {\n    InitialChainOwner: "0x...",\n    DataAvailabilityCommittee: false,\n    // Custom gas token address\n    nativeToken: "0x..." // ERC-20 token address\n  }\n});\n\`\`\`\n\n## Economic Considerations\n\n**Token Economics:**\n- Gas fee collection mechanisms\n- Token burn vs redistribution\n- Validator reward distribution\n- Economic sustainability models\n\n**User Experience:**\n- Wallet integration challenges\n- Gas estimation complexity\n- Bridge liquidity requirements\n- Exchange listing considerations`,
+          questions: [
+            {
+              id: "gastoken-q1",
+              question: "What is a key advantage of using a custom gas token over native ETH?",
+              options: [
+                "Always cheaper gas fees",
+                "Better security",
+                "Ecosystem token utility and value accrual",
+                "Faster transaction processing"
+              ],
+              correctAnswer: 2,
+              explanation: "Custom gas tokens can drive utility for ecosystem tokens and create value accrual mechanisms, though they introduce UX complexity.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "prepare-chain-config",
@@ -201,6 +255,24 @@ export const orbitChapters: Chapter[] = [
         type: "code-walkthrough",
         status: "available",
         estimatedTime: "40 min",
+        content: {
+          story: `# Using prepareChainConfig Function 💻\n\nThe \`prepareChainConfig\` function from the Orbit SDK generates the configuration object needed for chain deployment.\n\n## Function Overview\n\n\`\`\`javascript\nimport { prepareChainConfig } from '@arbitrum/orbit-sdk';\n\n// Basic configuration\nconst chainConfig = prepareChainConfig({\n  chainId: 123456,\n  arbitrum: {\n    InitialChainOwner: "0xYourOwnerAddress",\n    DataAvailabilityCommittee: false // Rollup mode\n  }\n});\n\`\`\`\n\n## Configuration Parameters\n\n**Required Parameters:**\n- \`chainId\`: Unique network identifier\n- \`arbitrum.InitialChainOwner\`: Address controlling the chain\n- \`arbitrum.DataAvailabilityCommittee\`: true for AnyTrust, false for Rollup\n\n**Optional Parameters:**\n- \`arbitrum.nativeToken\`: Custom gas token address\n- Various gas and fee settings\n- Precompile configurations\n\n## Advanced Configuration Examples\n\n**Rollup with Custom Gas Token:**\n\`\`\`javascript\nconst rollupWithToken = prepareChainConfig({\n  chainId: 123456,\n  arbitrum: {\n    InitialChainOwner: "0xOwner...",\n    DataAvailabilityCommittee: false,\n    nativeToken: "0xTokenAddress..."\n  }\n});\n\`\`\`\n\n**AnyTrust Configuration:**\n\`\`\`javascript\nconst anytrustConfig = prepareChainConfig({\n  chainId: 123457,\n  arbitrum: {\n    InitialChainOwner: "0xOwner...",\n    DataAvailabilityCommittee: true\n  }\n});\n\`\`\`\n\n## Configuration Validation\n\nThe function automatically:\n- Sets appropriate default values\n- Validates parameter combinations\n- Generates chain-specific configurations\n- Prepares for deployment process`,
+          questions: [
+            {
+              id: "prepare-q1",
+              question: "What happens when you set DataAvailabilityCommittee to true?",
+              options: [
+                "Creates a Rollup chain",
+                "Creates an AnyTrust chain with data availability committee",
+                "Enables custom precompiles",
+                "Sets up custom gas token"
+              ],
+              correctAnswer: 1,
+              explanation: "Setting DataAvailabilityCommittee to true creates an AnyTrust chain where a committee attests to data availability instead of posting all data to L1.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "deployment-params",
@@ -208,6 +280,24 @@ export const orbitChapters: Chapter[] = [
         type: "code-walkthrough",
         status: "available",
         estimatedTime: "45 min",
+        content: {
+          story: `# Preparing Deployment Parameters 🚀\n\nAfter creating your chain configuration, you need to prepare deployment parameters using \`createRollupPrepareDeploymentParamsConfig\`.\n\n## Deployment Parameters Function\n\n\`\`\`javascript\nimport { \n  createRollupPrepareDeploymentParamsConfig,\n  createPublicClient,\n  http\n} from '@arbitrum/orbit-sdk';\nimport { arbitrumSepolia } from 'viem/chains';\n\n// Create parent chain client\nconst parentChainPublicClient = createPublicClient({\n  chain: arbitrumSepolia,\n  transport: http()\n});\n\n// Prepare deployment parameters\nconst createRollupConfig = await createRollupPrepareDeploymentParamsConfig(\n  parentChainPublicClient,\n  {\n    chainId: 123456,\n    owner: "0xYourOwnerAddress",\n    chainConfig: chainConfig // From prepareChainConfig\n  }\n);\n\`\`\`\n\n## Required Parameters\n\n**Parent Chain Client:**\n- Connection to the parent chain (Arbitrum One/Sepolia)\n- Used to read current network state\n- Validates deployment prerequisites\n\n**Configuration Object:**\n- \`chainId\`: Must match your chain config\n- \`owner\`: Initial chain owner address\n- \`chainConfig\`: Output from prepareChainConfig\n\n## Deployment Configuration Structure\n\nThe function returns a configuration object containing:\n- Contract deployment parameters\n- Gas settings and limits\n- Validator and batch poster requirements\n- Bridge configuration details\n\n## Custom Gas Token Considerations\n\n**For Custom Gas Tokens:**\n\`\`\`javascript\n// Additional step: approve token spending\nconst tokenContract = new ethers.Contract(\n  customTokenAddress,\n  ['function approve(address spender, uint256 amount)'],\n  signer\n);\n\n// Approve RollupCreator to spend tokens\nconst approveTx = await tokenContract.approve(\n  ROLLUP_CREATOR_ADDRESS,\n  ethers.parseEther('100') // Amount needed for deployment\n);\n\nawait approveTx.wait();\n\`\`\`\n\n## Parameter Validation\n\nThe function automatically validates:\n- Parent chain connectivity\n- Owner address format\n- Chain ID uniqueness\n- Configuration compatibility`,
+          questions: [
+            {
+              id: "deploy-params-q1",
+              question: "What additional step is required when deploying with a custom gas token?",
+              options: [
+                "Deploy a new token contract",
+                "Approve the RollupCreator contract to spend tokens",
+                "Set up a price oracle",
+                "Configure additional validators"
+              ],
+              correctAnswer: 1,
+              explanation: "When using a custom gas token, you must approve the RollupCreator contract to spend your tokens for the deployment process.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "config-validation",
@@ -215,6 +305,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "30 min",
+        content: {
+          story: `# Configuration Validation & Best Practices ✅\n\nProper configuration validation prevents deployment failures and ensures your Orbit chain operates securely and efficiently.\n\n## Pre-Deployment Checklist\n\n**Chain Identity Verification:**\n- ✅ Chain ID is unique and not conflicting\n- ✅ Chain ID is greater than 1000\n- ✅ No conflicts with existing networks\n- ✅ Reserved testnet chain ID (+1 from mainnet)\n\n**Ownership Configuration:**\n- ✅ Owner address is controlled by your team\n- ✅ Multi-signature setup for production\n- ✅ Backup key management procedures\n- ✅ Governance transition plan documented\n\n**Economic Parameters:**\n- ✅ Gas token has adequate liquidity\n- ✅ Token decimal places are appropriate\n- ✅ Economic sustainability modeled\n- ✅ Fee collection mechanisms planned\n\n## Security Best Practices\n\n**Key Management:**\n- Use hardware wallets for owner keys\n- Implement multi-signature wallets (3/5 minimum)\n- Regular key rotation procedures\n- Secure backup and recovery processes\n\n**Configuration Testing:**\n- Deploy to testnet first\n- Test all configuration parameters\n- Validate economic models\n- Stress test under load\n\n## Common Configuration Mistakes\n\n**Chain ID Issues:**\n- Using an existing chain ID\n- Not reserving testnet variants\n- Conflicting with popular networks\n\n**Ownership Problems:**\n- Single key ownership in production\n- Lost or compromised owner keys\n- No succession planning\n\n**Token Configuration:**\n- Insufficient token liquidity\n- Wrong decimal configuration\n- Missing approval allowances\n\n## Validation Tools\n\n\`\`\`javascript\n// Example validation script\nfunction validateConfig(config) {\n  const issues = [];\n  \n  // Check chain ID\n  if (config.chainId < 1000) {\n    issues.push('Chain ID should be >= 1000');\n  }\n  \n  // Check owner address\n  if (!ethers.isAddress(config.arbitrum.InitialChainOwner)) {\n    issues.push('Invalid owner address');\n  }\n  \n  // Check token configuration\n  if (config.arbitrum.nativeToken && \n      !ethers.isAddress(config.arbitrum.nativeToken)) {\n    issues.push('Invalid token address');\n  }\n  \n  return issues;\n}\n\`\`\``,
+          questions: [
+            {
+              id: "validation-q1",
+              question: "What is the recommended minimum chain ID for custom Orbit chains?",
+              options: [
+                "1",
+                "100",
+                "1000",
+                "10000"
+              ],
+              correctAnswer: 2,
+              explanation: "Chain IDs below 1000 are typically reserved for major networks. Using 1000+ reduces the risk of conflicts.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "gas-token-options",
@@ -269,7 +377,7 @@ export const orbitChapters: Chapter[] = [
     id: "chain-deployment",
     title: "Chain Deployment Process",
     description:
-      "Deploy your Orbit chain to Arbitrum Sepolia and understand the deployment contracts and process",
+      "Deploy flow end‑to‑end: overview, required contracts, roles (batch poster/validators), env setup, createRollup, execution, verification, validator design, ops runbook, and a quiz.",
     icon: "🏗️",
     level: "Intermediate",
     duration: "4-5 hours",
@@ -286,6 +394,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "25 min",
+        content: {
+          story: `# Deployment Process Overview 🏗️\n\nOrbit chain deployment follows a clear 3-phase flow: prepare configuration → prepare deployment parameters → execute rollup creation.\n\n## Phases\n\n1) Prepare Chain Configuration\n- Define \`chainId\`, \`InitialChainOwner\`, and DA mode (Rollup/AnyTrust)\n- Optionally set a custom gas token\n\n2) Prepare Deployment Parameters\n- Build the object consumed by the RollupCreator\n- Provide owner, validators, and batch poster\n\n3) Execute Deployment\n- Submit transaction to create the rollup\n- Wait for confirmations and extract core contract addresses\n\n## Key Actors\n- Owner: controls chain after deployment\n- Batch Poster: posts L2 batches\n- Validators: secure the chain state\n\nPlan testnet dry-runs before any production attempt.`,
+          questions: [
+            {
+              id: "deploy-overview-q1",
+              question: "Which is the correct high-level order for deployment?",
+              options: [
+                "Execute → Prepare Params → Prepare Config",
+                "Prepare Config → Prepare Params → Execute",
+                "Prepare Params → Execute → Prepare Config",
+                "Execute → Prepare Config → Prepare Params"
+              ],
+              correctAnswer: 1,
+              explanation: "You first prepare the chain configuration, then prepare deployment parameters, and finally execute the rollup creation.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "required-contracts",
@@ -293,6 +419,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Contracts Involved In Deployment 📜\n\nDeployment interacts with a set of core contracts on the parent chain to instantiate your Orbit rollup.\n\n## Core Components (conceptual)\n- RollupCreator: factory that creates new rollups\n- Bridge/Nitro Core: contracts enabling L1↔L2 messaging and rollup state\n- Inbox/Outbox: message ingress/egress between layers\n\n## Outputs\nAfter deployment you receive:\n- Rollup address and core contracts\n- Inbox/Outbox addresses\n- Sequencer/BatchPoster configuration expectations\n\nAlways store these addresses for explorers, monitoring, and clients.`,
+          questions: [
+            {
+              id: "req-contracts-q1",
+              question: "Why must you record core contract addresses post-deployment?",
+              options: [
+                "They change every block",
+                "They are needed for monitoring, UIs, and integrations",
+                "They are required to pay gas",
+                "They unlock validator rewards"
+              ],
+              correctAnswer: 1,
+              explanation: "Downstream tools, dashboards, and apps need stable addresses to interact with your chain.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "batch-poster-validator",
@@ -300,6 +444,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "30 min",
+        content: {
+          story: `# Batch Poster & Validators 👥\n\nTwo operational roles are essential when launching an Orbit chain.\n\n## Batch Poster\n- Submits L2 transaction batches to the parent chain\n- Needs funding and reliable infra\n- Can be rotated via governance\n\n## Validators\n- Observe state and attest to correctness\n- For tests, you can reuse the same address; production should decentralize\n\n## Practical Tips\n- Use separate keys for poster vs validator\n- Add alerting for liveness and failures\n- Document rotation and emergency procedures`,
+          questions: [
+            {
+              id: "bp-val-q1",
+              question: "In early testing, which is acceptable?",
+              options: [
+                "Never run a batch poster",
+                "Use the same address for poster and validator",
+                "Use no validators",
+                "Run validators without any monitoring"
+              ],
+              correctAnswer: 1,
+              explanation: "For testing you can reuse a single address; production should split roles and decentralize.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "environment-setup",
@@ -307,6 +469,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Environment Setup ⚙️\n\nBefore deployment, create a reproducible environment and secure configuration management.\n\n## Prerequisites\n- Node.js toolchain and package manager\n- Access to parent chain RPC (e.g., Arbitrum Sepolia)\n- Private key management via env files or secure vaults\n\n## Templates\n- .env with DEPLOYER_PRIVATE_KEY, BATCH_POSTER_ADDRESS, VALIDATOR_ADDRESS\n- Scripts for config generation and validation\n\n## Safety\n- Never commit secrets\n- Use different keys for test and prod\n- Enable logging for auditability`,
+          questions: [
+            {
+              id: "env-setup-q1",
+              question: "Which item belongs in your .env for deployment?",
+              options: [
+                "User mnemonic of random community member",
+                "Deployer private key and role addresses",
+                "All node logs",
+                "Block explorer API secrets in plaintext repos"
+              ],
+              correctAnswer: 1,
+              explanation: "You need the deployer and role addresses; store secrets securely and avoid committing them.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "create-rollup-function",
@@ -314,6 +494,24 @@ export const orbitChapters: Chapter[] = [
         type: "code-walkthrough",
         status: "available",
         estimatedTime: "50 min",
+        content: {
+          story: `# Using createRollup 🚀\n\nAfter preparing parameters, \`createRollup\` sends the deployment tx to the RollupCreator and waits for execution.\n\n## Minimal Flow\n1) Build params (owner, validators, batch poster, config)\n2) Call \`createRollup\` with an authenticated account\n3) Wait for receipt and parse returned core contracts\n\n## Common Pitfalls\n- Mismatch between \`chainId\` in params vs config\n- Missing allowance when deploying with custom gas token\n- Insufficient parent chain funds for the deployer`,
+          questions: [
+            {
+              id: "create-rollup-q1",
+              question: "What does createRollup do?",
+              options: [
+                "Generates documentation",
+                "Sends the deployment transaction to RollupCreator",
+                "Creates a wallet",
+                "Runs a local node"
+              ],
+              correctAnswer: 1,
+              explanation: "createRollup submits the deployment to the RollupCreator contract and returns core addresses when successful.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "deployment-execution",
@@ -321,6 +519,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "50 min",
+        content: {
+          story: `# Executing Deployment ▶️\n\nBring together config, prepared params, and operational addresses to launch.\n\n## Checklist\n- Parent RPC reachable and funded deployer key\n- Owner, validator(s), batch poster addresses confirmed\n- Config/params consistency validated\n\n## After Submission\n- Store tx hash and emitted contract addresses\n- Share artifacts with team (infra, explorers, wallets)\n- Begin liveness checks (RPC, blocks, fees)`,
+          questions: [
+            {
+              id: "deploy-exec-q1",
+              question: "Which artifact is most critical to save immediately after deployment?",
+              options: [
+                "Local cache files",
+                "Transaction hash and core contract addresses",
+                "Console colors",
+                "Random logs"
+              ],
+              correctAnswer: 1,
+              explanation: "You will repeatedly need the tx hash and deployed contract addresses for verification, monitoring, and clients.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "deployment-verification",
@@ -328,6 +544,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "25 min",
+        content: {
+          story: `# Verification Checklist ✅\n\nConfirm that the chain is live and configured as intended.\n\n## On-Chain/Infra Checks\n- Tx succeeded and core contracts are present\n- Chain ID matches configuration\n- Batch poster address is set and posting\n- Validator(s) are active\n\n## Functional Sanity\n- RPC responds and returns latest blocks\n- Fees estimations make sense\n- Bridge message paths are operable in tests`,
+          questions: [
+            {
+              id: "deploy-verify-q1",
+              question: "Which is NOT part of immediate post-deployment checks?",
+              options: [
+                "Confirm chain ID and core addresses",
+                "Ensure batch poster/validators configured",
+                "Publish marketing campaign",
+                "RPC/fee sanity checks"
+              ],
+              correctAnswer: 2,
+              explanation: "Marketing can wait; first verify on-chain configuration, roles, and basic liveness/fee behavior.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "validator-designs",
@@ -387,7 +621,7 @@ export const orbitChapters: Chapter[] = [
     id: "chain-testing",
     title: "Testing Your Orbit Chain",
     description:
-      "Learn how to test your deployed chain by sending transactions, deploying contracts, and verifying functionality",
+      "Test your chain: strategy, RPC checks, wallet config, first tx, contract deploy, bridge tests, gas‑token UX, observability, wallet UX templates, and a quiz.",
     icon: "🧪",
     level: "Intermediate",
     duration: "3-4 hours",
@@ -404,6 +638,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "20 min",
+        content: {
+          story: `# Testing Strategy 🎯\n\nA structured approach ensures your Orbit chain behaves correctly before opening access to users.\n\n## Layers of Testing\n- Unit tests: contract-level invariants\n- Integration tests: cross-contract flows\n- End-to-end: RPC, wallet, bridge paths\n- Chaos & load: liveness and performance under stress\n\n## Objectives\n- Prove core flows work (transfers, deployments, bridging)\n- Verify monitoring and alerting paths\n- Exercise validator and batch poster operations`,
+          questions: [
+            {
+              id: "test-overview-q1",
+              question: "Which test best validates on-chain + infra together?",
+              options: ["Unit tests", "End-to-end tests", "Static analysis", "Linters"],
+              correctAnswer: 1,
+              explanation: "End-to-end tests traverse RPC, nodes, and contracts together.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "rpc-connection",
@@ -411,6 +658,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "25 min",
+        content: {
+          story: `# RPC Connectivity 🔌\n\nConfirm your RPC endpoint exposes basic chain data and handles load.\n\n## Checks\n- Get latest block and fee data\n- Fetch peer count/health from node metrics\n- Verify HTTPS/TLS and rate limits\n\n## Template (read-only)\n\n\`\`\`ts\nimport { ethers } from 'ethers';\nexport async function ping(rpc: string){\n  const p = new ethers.JsonRpcProvider(rpc);\n  const net = await p.getNetwork();\n  const block = await p.getBlockNumber();\n  const fees = await p.getFeeData();\n  return { chainId: Number(net.chainId), block, maxFee: fees.maxFeePerGas?.toString() };\n}\n\`\`\``,
+          questions: [
+            {
+              id: "rpc-q1",
+              question: "Which read validates liveness most directly?",
+              options: ["getNetwork()", "getBlockNumber()", "getCode()", "getLogs()"],
+              correctAnswer: 1,
+              explanation: "A monotonically increasing block number is a quick liveness signal.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "wallet-configuration",
@@ -418,6 +678,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "20 min",
+        content: {
+          story: `# Wallet Configuration 👛\n\nUsers must add your network to interact. Provide copy/paste or one-click add-network.\n\n## Required Fields\n- Chain ID\n- RPC URL\n- Currency symbol\n- Block explorer URL\n\n## UX Tips\n- Detect wrong chain and prompt switch\n- Fail with clear actions when network is missing`,
+          questions: [
+            {
+              id: "wallet-q1",
+              question: "Which field is mandatory for add-network?",
+              options: ["Logo URL", "Chain ID", "Twitter handle", "Governance link"],
+              correctAnswer: 1,
+              explanation: "Chain ID uniquely identifies your network to wallets.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "first-transaction",
@@ -425,6 +698,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "30 min",
+        content: {
+          story: `# First Transaction ✉️\n\nValidate writes: send a transfer or simple contract call and confirm it lands in a block.\n\n## Steps\n1) Ensure account funded for gas\n2) Build and send tx with sensible gas params\n3) Wait for receipt and verify status\n\n## Example (pseudo)\n\n\`\`\`ts\nimport { ethers } from 'ethers';\nasync function send(provider: ethers.Provider, signer: ethers.Signer, to: string, amountWei: bigint){\n  const tx = await signer.sendTransaction({ to, value: amountWei });\n  const r = await tx.wait();\n  return r?.status === 1;\n}\n\`\`\``,
+          questions: [
+            {
+              id: "tx-q1",
+              question: "What confirms a successful write?",
+              options: ["Signed transaction", "Receipt status = 1", "Nonce increased", "Gas used > 0"],
+              correctAnswer: 1,
+              explanation: "A status of 1 indicates successful execution.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "contract-deployment",
@@ -432,6 +718,19 @@ export const orbitChapters: Chapter[] = [
         type: "code-walkthrough",
         status: "available",
         estimatedTime: "45 min",
+        content: {
+          story: `# Contract Deployment 📦\n\nDeploy a small contract to validate toolchain and gas economics.\n\n## Checklist\n- Compiler version matches\n- Correct constructor params\n- Verify bytecode and source mapping on explorer\n\n## Tips\n- Use deterministic builds\n- Keep deployment scripts idempotent\n- Record addresses and ABIs in a registry`,
+          questions: [
+            {
+              id: "deploy-ct-q1",
+              question: "What should you do after deployment for transparency?",
+              options: ["Nothing", "Verify the contract on an explorer", "Delete the bytecode", "Rotate RPC"],
+              correctAnswer: 1,
+              explanation: "Verification enables users and tools to read your source and ABIs.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "bridge-testing",
@@ -439,6 +738,24 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "40 min",
+        content: {
+          story: `# Bridge Testing 🌉\n\nExercise lock/mint and burn/release paths with small amounts and clear tracing.\n\n## Flow\n- Lock or deposit on source\n- Relay/validate message\n- Mint/release on destination\n- Reverse with burn/withdraw\n\n## Safety\n- Start with test tokens\n- Track message ids and confirmations\n- Monitor retries and failure states`,
+          questions: [
+            {
+              id: "bridge-test-q1",
+              question: "Which sequence is correct for lock-mint?",
+              options: [
+                "Mint → Lock → Release",
+                "Lock → Relay → Mint",
+                "Relay → Mint → Lock",
+                "Burn → Release → Mint"
+              ],
+              correctAnswer: 1,
+              explanation: "Lock on source, relay/verify, then mint on destination.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "gas-token-testing",
@@ -446,6 +763,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Custom Gas Token Tests ⛽\n\nIf using a custom gas token, validate UX and economics.\n\n## Cases\n- Add-network and balances visible in wallets\n- Fee estimation stable\n- Allowance/approval flows work\n- Bridges/liquidity available for gas token acquisition`,
+          questions: [
+            {
+              id: "gas-test-q1",
+              question: "Which is a key UX risk with custom gas tokens?",
+              options: ["Block size", "Wallet support and token acquisition", "Node version", "Log verbosity"],
+              correctAnswer: 1,
+              explanation: "Users must easily acquire and spend the gas token; poor support blocks activity.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "observability",
@@ -501,7 +831,7 @@ export const orbitChapters: Chapter[] = [
     id: "advanced-features",
     title: "Advanced Orbit Features",
     description:
-      "Explore advanced features like custom precompiles, data availability committees, and governance",
+      "Deep‑dive: custom precompiles, DAC setup, governance/upgrades, implementing precompiles, DAC keysets, performance monitoring, Timeboost/MEV, DAC ops, security best practices, and a quiz.",
     icon: "🔬",
     level: "Advanced",
     duration: "4-5 hours",
@@ -518,6 +848,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Custom Precompiles 🧩\n\nExpose native functionality to contracts with custom precompiles.\n\n## Design\n- Define deterministic address space\n- Specify gas cost model\n- Document ABI-like interface\n\n## Risks\n- Consensus-critical logic\n- Auditing complexity\n- Backwards compatibility across upgrades`,
+          questions: [
+            {
+              id: "precomp-q1",
+              question: "What must be documented for a precompile?",
+              options: ["Logo color", "Deterministic address and interface", "Testnet faucets", "UI themes"],
+              correctAnswer: 1,
+              explanation: "Callers need stable address and well-defined input/output semantics.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "data-availability-committee",
@@ -525,6 +868,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "40 min",
+        content: {
+          story: `# DAC Setup 🧑‍⚖️\n\nFor AnyTrust, define committee membership, attestation policies, and incident response.\n\n## Elements\n- Membership list and rotation cadence\n- Attestation thresholds and timeouts\n- Transparency page with contacts and status`,
+          questions: [
+            {
+              id: "dac-setup-q1",
+              question: "Which is essential for AnyTrust transparency?",
+              options: ["Private keys", "Committee membership and procedures", "Gas token symbol", "RPC theme"],
+              correctAnswer: 1,
+              explanation: "Users must know who attests and how operations are handled.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "governance-mechanisms",
@@ -532,6 +888,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Governance & Upgrades 🗳️\n\nEstablish safe upgrade paths with timelocks and staged releases.\n\n## Practices\n- RFCs and public review windows\n- Timelocked execution with multi-sig\n- Rollback and hotfix runbooks`,
+          questions: [
+            {
+              id: "gov-up-q1",
+              question: "Why use timelocks on upgrades?",
+              options: ["Lower gas", "Allow community review and reaction", "Increase block size", "Reduce validator set"],
+              correctAnswer: 1,
+              explanation: "Delays create visibility and mitigate surprise changes.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "custom-precompile-implementation",
@@ -539,6 +908,19 @@ export const orbitChapters: Chapter[] = [
         type: "code-walkthrough",
         status: "available",
         estimatedTime: "60 min",
+        content: {
+          story: `# Implementing Precompiles 🔧\n\nWalk through a reference implementation: interface, gas, and tests.\n\n## Steps\n- Define call convention\n- Implement and benchmark\n- Fuzz and differential test against spec`,
+          questions: [
+            {
+              id: "impl-precomp-q1",
+              question: "Which testing approach adds confidence?",
+              options: ["None", "Fuzzing and differential tests", "UI snapshots", "String comparisons"],
+              correctAnswer: 1,
+              explanation: "Precompile logic benefits from randomized and cross-impl checks.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "dac-implementation",
@@ -546,6 +928,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# DAC Keyset 🔑\n\nDefine keys and rotation for committee members with secure ceremonies.\n\n## Guidance\n- Thresholds and slashing policies\n- Revocation and rotation\n- Public key registry`,
+          questions: [
+            {
+              id: "dac-keys-q1",
+              question: "What should a registry expose?",
+              options: ["Private keys", "Public keys and metadata", "Wallet mnemonics", "Nothing"],
+              correctAnswer: 1,
+              explanation: "Public keys allow verification and discovery by clients.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "chain-monitoring",
@@ -553,6 +948,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Monitoring 📊\n\nTrack RPC error rates, latency, and sequencer throughput.\n\n## Dashboards\n- Time-series metrics for RPC, node, and DA posting\n- Alerts on thresholds\n- SLOs for availability and latency`,
+          questions: [
+            {
+              id: "monitor-q1",
+              question: "Which metric best signals RPC stress?",
+              options: ["Logo color", "Error rate and latency", "Header size", "Trace length"],
+              correctAnswer: 1,
+              explanation: "Error rate and latency are primary health indicators.",
+              type: "multiple-choice",
+            },
+          ],
+        },
       },
       {
         id: "timeboost-mev",
@@ -600,13 +1008,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "30 min",
-      },
-      {
-        id: "advanced-challenge",
-        title: "Implement Advanced Features",
-        type: "challenge",
-        status: "available",
-        estimatedTime: "90 min",
+        content: {
+          story: `# Security Best Practices 🔐\n\nSecurity spans keys, contracts, infra, governance, and operations. Bake safety into every layer.\n\n## Key Management\n- Use hardware wallets/HSMs for admins\n- Multi-signature for sensitive actions\n- Rotation procedures and access logs\n\n## Smart Contracts\n- Multiple audits for consensus-critical code\n- Formal verification where feasible\n- Immutable configs or timelocked upgrades\n\n## Infrastructure\n- Least-privilege IAM, secrets in vaults\n- Redundancy and DDoS protection for RPC\n- Backups and disaster recovery playbooks\n\n## Governance & Ops\n- Timelocks and public RFCs for changes\n- Incident response ladder and status pages\n- Post-incident reviews and transparency`,
+          questions: [
+            {
+              id: "sec-best-q1",
+              question: "Which measure reduces blast radius of admin key compromise?",
+              options: ["Single EOA owner", "Multi-signature with timelock", "Plaintext keys in repo", "Disable logging"],
+              correctAnswer: 1,
+              explanation: "Multi-sig plus timelock distributes control and adds time for community response.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "advanced-quiz",
@@ -621,7 +1035,7 @@ export const orbitChapters: Chapter[] = [
     id: "production-deployment",
     title: "Production Deployment & Maintenance",
     description:
-      "Learn how to deploy to mainnet, set up monitoring, and maintain your Orbit chain in production",
+      "Production readiness: mainnet prep, audits, monitoring/alerting, validator ops, upgrade procedures, incident response, community building, ops playbook, and launch runbook (coming soon).",
     icon: "🏭",
     level: "Advanced",
     duration: "5-6 hours",
@@ -638,6 +1052,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "40 min",
+        content: {
+          story: `# Mainnet Preparation 🚦\n\nDefine readiness criteria and freeze windows before mainnet.\n\n## Readiness Checklist\n- All critical issues closed; audits completed\n- Incident runbooks and on-call rotation set\n- Multi-sig owners verified and hardware keys ready\n- Funding plan for poster/validators and ops costs\n\n## Launch Plan\n- Change-freeze window with rollback steps\n- Dry-run on testnets mirroring production params\n- Communication plan for community and partners`,
+          questions: [
+            {
+              id: "mainnet-prep-q1",
+              question: "What should exist before mainnet launch?",
+              options: ["Marketing only", "Runbooks and on-call rotation", "No audits", "One EOA admin"],
+              correctAnswer: 1,
+              explanation: "Operational readiness (runbooks, on-call) is essential for mainnet safety.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "security-audit",
@@ -645,6 +1072,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Security Auditing 🔍\n\nAudit both contracts and operational posture.\n\n## Scope\n- Consensus/bridge contracts and custom logic\n- Governance mechanisms and upgrade paths\n- Key management, access control, and deployments\n\n## Process\n- Multiple firms and internal reviews\n- Remediation with verification\n- Public summary for transparency`,
+          questions: [
+            {
+              id: "audit-q1",
+              question: "Which adds most confidence pre-mainnet?",
+              options: ["UI snapshot tests", "Independent multi-firm audits", "Single manual test", "Skipping tests"],
+              correctAnswer: 1,
+              explanation: "Independent reviews reduce blind spots and increase assurance.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "monitoring-setup",
@@ -652,6 +1092,19 @@ export const orbitChapters: Chapter[] = [
         type: "hands-on",
         status: "available",
         estimatedTime: "50 min",
+        content: {
+          story: `# Monitoring & Alerting 📈\n\nEstablish 24/7 visibility into RPC, sequencer, DA posting, and validators.\n\n## Metrics\n- RPC: error rate, latency, rate limits\n- Sequencer: throughput, backlog, time to inclusion\n- DA: posting failures, retries\n- Validators: liveness, stake, slashing events\n\n## Alerts\n- Breach of SLOs (availability/latency)\n- Posting stalls and backlog spikes\n- Validator downtime or stake drops`,
+          questions: [
+            {
+              id: "monitor-q1-prod",
+              question: "Which metric pair is core for RPC health?",
+              options: ["Theme & logo", "Error rate & latency", "Tx nonce & tip", "Peer names"],
+              correctAnswer: 1,
+              explanation: "Error rate and latency best capture RPC health and UX impact.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "validator-nodes",
@@ -659,6 +1112,19 @@ export const orbitChapters: Chapter[] = [
         type: "hands-on",
         status: "available",
         estimatedTime: "60 min",
+        content: {
+          story: `# Validator Nodes 🧩\n\nOperate robust validator infrastructure with clear procedures.\n\n## Operations\n- Provisioning with IaC and secrets management\n- Health checks and auto-recovery\n- Version pinning and rollout strategy\n\n## Governance\n- Rotation policies and access reviews\n- Slashing and appeals procedures\n- Transparency of validator set`,
+          questions: [
+            {
+              id: "val-prod-q1",
+              question: "What improves validator reliability?",
+              options: ["Single box", "IaC + health checks + rollout plan", "Plaintext keys", "No monitoring"],
+              correctAnswer: 1,
+              explanation: "Automated infra, health checks, and controlled rollouts harden operations.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "upgrade-mechanisms",
@@ -666,6 +1132,19 @@ export const orbitChapters: Chapter[] = [
         type: "code-walkthrough",
         status: "available",
         estimatedTime: "45 min",
+        content: {
+          story: `# Upgrade Procedures 🛠️\n\nSafe upgrades require staged rollouts, timelocks, and communication.\n\n## Process\n- RFC → review window → queued via timelock → execute\n- Staged rollout with canary and monitoring\n- Rollback plan and signed announcements`,
+          questions: [
+            {
+              id: "upgrade-q1",
+              question: "Why add a timelock to upgrades?",
+              options: ["Cheaper gas", "Public review and reaction time", "Faster blocks", "Private ops"],
+              correctAnswer: 1,
+              explanation: "Timelocks allow stakeholders to react and reduce surprise changes.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "incident-response",
@@ -673,6 +1152,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "30 min",
+        content: {
+          story: `# Incident Response 🚨\n\nDefine severity levels, comms, and decision trees before an incident.\n\n## Essentials\n- Severity matrix and escalation paths\n- War-room procedures and roles\n- Public status updates and timelines\n\n## Aftermath\n- Root-cause analysis\n- Action items with owners and deadlines\n- Post-incident report`,
+          questions: [
+            {
+              id: "ir-q1",
+              question: "What should every incident have?",
+              options: ["No logs", "A root-cause analysis and action items", "Hidden timeline", "Private keys"],
+              correctAnswer: 1,
+              explanation: "RCAs with actionable follow-ups improve resilience over time.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "community-building",
@@ -680,6 +1172,19 @@ export const orbitChapters: Chapter[] = [
         type: "theory",
         status: "available",
         estimatedTime: "35 min",
+        content: {
+          story: `# Ecosystem Building 🌱\n\nCommunicate roadmaps, support builders, and publish standards to grow adoption.\n\n## Tracks\n- Grants and hackathons\n- Developer docs and SDKs\n- Partner integrations and listings\n\n## Transparency\n- Public roadmap and changelogs\n- Governance participation and proposals`,
+          questions: [
+            {
+              id: "eco-q1",
+              question: "What accelerates third‑party integrations?",
+              options: ["Private docs", "Clear SDKs and standards", "Closed repos", "Hidden addresses"],
+              correctAnswer: 1,
+              explanation: "Well-documented SDKs and standards reduce friction for partners.",
+              type: "multiple-choice"
+            }
+          ]
+        }
       },
       {
         id: "monitoring-operations",
@@ -701,22 +1206,14 @@ export const orbitChapters: Chapter[] = [
           ],
         },
       },
-      
+      {
+        id: "launch-your-orbit-chain",
+        title: "Launch Your Orbit Chain (Coming Soon)",
+        type: "theory",
+        status: "coming-soon",
+        estimatedTime: "—",
+      },
     ],
-    capstoneProject: {
-      title: "Launch Your Production Orbit Chain",
-      description:
-        "Deploy a fully functional Orbit chain to mainnet with all production-ready features",
-      requirements: [
-        "Complete security audit checklist",
-        "Set up monitoring and alerting",
-        "Configure multiple validator nodes",
-        "Implement governance mechanisms",
-        "Create upgrade procedures",
-        "Deploy to Arbitrum mainnet",
-        "Document deployment process",
-      ],
-    },
   },
 ];
 

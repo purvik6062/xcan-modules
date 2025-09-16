@@ -52,7 +52,7 @@ export const defiChapters: Chapter[] = [
     id: "intro-to-defi",
     title: "Introduction to DeFi",
     description:
-      "Master the fundamentals of Decentralized Finance and understand how Arbitrum enhances the DeFi ecosystem",
+      "Foundations: what DeFi is, TradFi vs DeFi, Arbitrum’s role, wallet setup, bridging, basic contract interactions, and a fundamentals quiz.",
     icon: "🎓",
     level: "Beginner",
     duration: "2-3 hours",
@@ -125,7 +125,7 @@ export const defiChapters: Chapter[] = [
     id: "decentralized-exchanges",
     title: "Decentralized Exchanges (DEXs)",
     description:
-      "Learn how AMMs work, explore major DEXs on Arbitrum, and master token swapping and liquidity provision",
+      "DEXs: AMMs vs order books, Uniswap & SushiSwap, Arbitrum‑native GMX and Camelot, swapping mechanics, LPing, Uniswap integrations, arbitrage, and a DEX quiz.",
     icon: "🔄",
     level: "Beginner",
     duration: "3-4 hours",
@@ -198,7 +198,7 @@ export const defiChapters: Chapter[] = [
     id: "vaults-yield-aggregation",
     title: "Vaults & Yield Aggregation",
     description:
-      "Understand yield farming, vault mechanics, and automated strategies for maximizing DeFi returns",
+      "Vaults: concepts and types, automated yield strategies, Arbitrum platforms (Yearn, Beefy), deposits/withdrawals, performance monitoring, simulator concepts, and a yield quiz.",
     icon: "🏛️",
     level: "Intermediate",
     duration: "4-5 hours",
@@ -271,7 +271,7 @@ export const defiChapters: Chapter[] = [
     id: "risks-security",
     title: "Risks & Security in DeFi",
     description:
-      "Learn to identify and mitigate DeFi risks, understand security best practices, and analyze smart contract vulnerabilities",
+      "Security: impermanent loss, common DeFi risks, audits, vulnerability analysis, major hack case studies, secure coding, methodology, and a security quiz.",
     icon: "🛡️",
     level: "Intermediate",
     duration: "3-4 hours",
@@ -344,7 +344,7 @@ export const defiChapters: Chapter[] = [
     id: "ai-defi",
     title: "AI & DeFi Integration",
     description:
-      "Explore how artificial intelligence enhances DeFi through automated trading, portfolio management, and predictive analytics",
+      "AI x DeFi: applications, portfolio management, predictive trading, tools and workflows, modeling best practices, bot architecture and safety, plus an AI‑DeFi quiz.",
     icon: "🤖",
     level: "Advanced",
     duration: "4-6 hours",
@@ -368,7 +368,7 @@ export const defiChapters: Chapter[] = [
     id: "build-defi-app",
     title: "Build Your First DeFi App",
     description:
-      "Put everything together by building and deploying a complete DeFi application on Arbitrum",
+      "dApp assembly: environment setup, Solidity patterns, deployment concepts, frontend integration, contract interaction flows, DEX integration concepts, and a build quiz.",
     icon: "🚀",
     level: "Advanced",
     duration: "6-8 hours",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+// import confetti from "canvas-confetti";
 import { motion } from "framer-motion";
 import { orbitChapters } from "../../../data/orbitChapters";
 import ChapterCard from "../../../components/ChapterCard";
@@ -11,6 +12,16 @@ export default function LearnOrbitPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const { address, isReady } = useWalletProtection();
   const [chapterProgress, setChapterProgress] = useState<Record<string, { completed: number; total: number }>>({});
+  const [isModuleCompleted, setIsModuleCompleted] = useState(false);
+
+  // Aggregate totals across all chapters
+  const overall = useMemo(() => {
+    const values = Object.values(chapterProgress);
+    const total = values.reduce((sum, v) => sum + (v?.total ?? 0), 0);
+    const completed = values.reduce((sum, v) => sum + (v?.completed ?? 0), 0);
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return { total, completed, percent };
+  }, [chapterProgress]);
 
   const totalsByChapter = useMemo(() => {
     const totals: Record<string, number> = {};
@@ -37,12 +48,20 @@ export default function LearnOrbitPage() {
           next[ch.id] = { completed: done.length, total };
         }
         setChapterProgress(next);
+        setIsModuleCompleted(Boolean(data?.isCompleted));
       } catch (e) {
         console.error("learn-orbit: failed to fetch progress", e);
       }
     };
     load();
   }, [address, isReady, totalsByChapter]);
+
+  // Celebrate when entire module completed
+  // useEffect(() => {
+  //   if (isModuleCompleted) {
+  //     confetti({ particleCount: 160, spread: 70, origin: { y: 0.6 } });
+  //   }
+  // }, [isModuleCompleted]);
 
   const filteredChapters =
     selectedLevel === "all"
@@ -70,8 +89,9 @@ export default function LearnOrbitPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Launch your own Layer 3 blockchain with full control. Learn from
-            configuration to production deployment through hands-on tutorials.
+            Configure, deploy, test, and operate your own Orbit L3. This module is
+            theory and quiz driven with code walkthroughs where helpful, aligned to
+            the exact chapters and sections below.
           </motion.p>
 
           {/* Key Stats */}
@@ -94,9 +114,9 @@ export default function LearnOrbitPage() {
               </div>
             </div>
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
-              <div className="text-2xl font-bold text-blue-600">50+</div>
+              <div className="text-2xl font-bold text-blue-600">{overall.total}</div>
               <div className="text-sm text-gray-300">
-                Hands-on Lessons
+                Total Sections
               </div>
             </div>
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
@@ -124,19 +144,19 @@ export default function LearnOrbitPage() {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-emerald-900/20 rounded-lg p-4">
-                <div className="text-2xl font-bold text-emerald-600">0/42</div>
+                <div className="text-2xl font-bold text-emerald-600">{overall.completed}/{overall.total}</div>
                 <div className="text-sm text-emerald-300">
                   Sections Completed
                 </div>
               </div>
               <div className="bg-teal-900/20 rounded-lg p-4">
-                <div className="text-2xl font-bold text-teal-600">0</div>
+                <div className="text-2xl font-bold text-teal-600">{Object.values(chapterProgress).filter(v => v.total > 0 && v.completed === v.total).length}</div>
                 <div className="text-sm text-teal-300">
                   Badges Earned
                 </div>
               </div>
               <div className="bg-blue-900/20 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-600">0%</div>
+                <div className="text-2xl font-bold text-blue-600">{overall.percent}%</div>
                 <div className="text-sm text-blue-300">
                   Overall Progress
                 </div>
@@ -182,8 +202,8 @@ export default function LearnOrbitPage() {
         >
           <h2 className="text-3xl font-bold mb-4">Recommended Learning Path</h2>
           <p className="text-lg mb-6 max-w-3xl mx-auto">
-            Follow our structured approach from Orbit fundamentals to launching your own
-            production-ready Layer 3 blockchain. Each chapter builds comprehensive knowledge.
+            Follow the sequence: Introduction → Configuration → Deployment → Testing → Advanced Features → Production.
+            Each chapter offers theory, checklists, and targeted quizzes that mirror the data in this module.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {orbitChapters.map((chapter, index) => (

@@ -63,7 +63,7 @@ export const crossChainChapters: CrossChainChapter[] = [
     id: "cross-chain-foundations",
     title: "Cross-Chain Foundations",
     description:
-      "Discover the revolutionary world of cross-chain technology and interoperability. Learn how different blockchain networks communicate and share value, breaking down the silos that once separated the decentralized ecosystem.",
+      "Foundations: story-driven intro, real‑world analogies, a read‑only code template, a mapping exercise, and Alex’s bridge journey — ending with beginner quizzes.",
     icon: "🌉",
     level: "Beginner",
     duration: "2 hours",
@@ -530,7 +530,7 @@ Welcome to the multi-chain future! 🌉✨`,
     id: "token-bridging",
     title: "Cross-Chain Token Bridging",
     description:
-      "Master the art of token bridging between different blockchain networks. Learn how to safely move assets across chains, understand bridge architectures, and implement your own token bridge solutions.",
+      "Token bridging: mechanics (lock/mint, burn/release, LP models), security and architectures, hands‑on simplified bridge build, analogies, UI approve+lock template, and double‑minting prevention quiz.",
     icon: "🔗",
     level: "Intermediate",
     duration: "3 hours",
@@ -1533,7 +1533,7 @@ This simple concept of message tracking is what keeps billions of dollars safe i
     id: "advanced-cross-chain",
     title: "Advanced Cross-Chain Protocols",
     description:
-      "Dive deep into sophisticated cross-chain protocols and security considerations. Learn about oracles, message passing, and advanced bridge architectures that power the interconnected blockchain ecosystem.",
+      "Advanced topics: deep security dive, oracle and messaging designs, validator economics (beginner view), security checklist, and focused security quizzes.",
     icon: "⚡",
     level: "Advanced",
     duration: "3 hours",
@@ -2453,7 +2453,7 @@ Without proper replay protection, cross-chain bridges become vulnerable to simpl
     id: "cross-chain-development",
     title: "Cross-Chain Development",
     description:
-      "Learn how to build cross-chain applications and protocols. Master the tools, frameworks, and patterns for developing interoperable blockchain solutions that work across multiple networks.",
+      "Dev guide: tools/frameworks, multi‑chain SDKs (CCIP/LayerZero/Axelar/Wormhole), environments, patterns, testing, deployment & ops, trends — plus Arbitrum dev setup, message‑pattern code, testing workflow, and analogies.",
     icon: "🛠️",
     level: "Intermediate",
     duration: "4 hours",
@@ -2855,7 +2855,7 @@ Flights (messages) queue, get clearances (validation), and land once (idempotent
     id: "arbitrum-bridge-basics",
     title: "Arbitrum Bridge Basics",
     description:
-      "Get started with the official Arbitrum bridge flow. Learn deposits (L1→L2), withdrawals (L2→L1), timelines, and simple UI hooks.",
+      "Arbitrum basics: deposits vs withdrawals, escalator analogy, UI component patterns, hands‑on explore official bridge, and timing/safety guidance.",
     icon: "🧭",
     level: "Beginner",
     duration: "2 hours",
@@ -3171,7 +3171,7 @@ Understanding these timing differences helps users and developers make informed 
     id: "arbitrum-troubleshooting",
     title: "Troubleshooting & Best Practices (Arbitrum)",
     description:
-      "Resolve common bridging issues: stuck approvals, wrong chain, nonce/gas problems, and safe UX patterns.",
+      "Troubleshooting: common issues, missed‑connection analogy, code snippets (allowance reset/gas tips), hands‑on diagnose failed tx, and quick‑fixes quiz.",
     icon: "🧯",
     level: "Beginner",
     duration: "2 hours",

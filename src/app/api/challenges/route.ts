@@ -153,15 +153,16 @@ export async function POST(request: NextRequest) {
       : web3BasicsChapters;
     
     for (const ch of chaptersDataForModule) {
-      const availableSections = ch.sections.filter(
-        (s) => s.status === "available"
-      );
-      const done = new Set(chapters[ch.id] || []);
-
+      const availableSections = ch.sections.filter((s) => s.status === "available");
+      
       // If client asked to finalize a chapter, backfill its completed sections to all available
       if (finalizeChapter && ch.id === chapterId) {
         chapters[chapterId] = availableSections.map((s) => s.id);
       }
+
+      // IMPORTANT: compute done AFTER potentially applying finalizeChapter update above
+      const done = new Set(chapters[ch.id] || []);
+
       if (
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))

@@ -70,8 +70,8 @@ export default function LearnDeFiPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            From absolute beginner to DeFi expert. Learn through interactive
-            lessons, hands-on practice, and real-world projects on Arbitrum.
+            Learn DeFi on Arbitrum through theory and quizzes aligned to six chapters:
+            Introduction → DEXs → Vaults & Yield → Risks & Security → AI & DeFi → Build a DeFi App.
           </motion.p>
 
           {/* Key Stats */}
@@ -149,9 +149,9 @@ export default function LearnDeFiPage() {
         >
           <h2 className="text-3xl font-bold mb-4">Recommended Learning Path</h2>
           <p className="text-lg mb-6 max-w-3xl mx-auto">
-            Follow our structured path from DeFi fundamentals to building your
-            own applications. Each chapter builds upon the previous one,
-            ensuring a solid foundation.
+            Follow the sequence: fundamentals, decentralized exchanges, vaults & yield,
+            risks & security, AI integrations, then assemble a minimal dApp. Each chapter’s
+            story and quiz content maps directly to the curriculum data.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {defiChapters.map((chapter, index) => (
@@ -183,8 +183,14 @@ export default function LearnDeFiPage() {
               { name: "SushiSwap", logo: "🍣" },
               { name: "GMX", logo: "⚡" },
               { name: "Camelot", logo: "🏰" },
-              { name: "Beefy", logo: "🥩" },
+              { name: "Aave", logo: "🏦" },
+              { name: "Compound", logo: "🏛️" },
+              { name: "Curve", logo: "💧" },
+              { name: "Balancer", logo: "⚖️" },
               { name: "Yearn", logo: "🔷" },
+              { name: "Beefy", logo: "🥩" },
+              { name: "Radiant", logo: "✨" },
+              { name: "Arbitrum Bridge", logo: "🌉" },
             ].map((protocol) => (
               <div
                 key={protocol.name}

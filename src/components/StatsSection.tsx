@@ -10,20 +10,22 @@ export default function StatsSection() {
             </div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">59+</div>
-            <div className=" text-gray-300">
-              Interactive Challenges
-            </div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">4</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">6</div>
             <div className=" text-gray-300">
               Available Now
             </div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">2</div>
-            <div className=" text-gray-300">Coming Soon</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">40+</div>
+            <div className=" text-gray-300">
+              Interactive Challenges
+            </div>
+          </div>
+          <div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">130+</div>
+            <div className=" text-gray-300">
+              Interactive Sessions
+            </div>
           </div>
         </div>
       </div>

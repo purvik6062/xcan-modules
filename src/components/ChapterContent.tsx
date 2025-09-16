@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Section } from "../data/defiChapters";
 import { getTheoryContent, TheoryContent } from "../data/defiContent";
 import CodeEditor from "./CodeEditor";
+import ReactMarkdown from "react-markdown";
 
 interface ChapterContentProps {
   section: Section;
@@ -19,10 +20,16 @@ export default function ChapterContent({
 }: ChapterContentProps) {
   const [completed, setCompleted] = useState(false);
   const [currentSubSection, setCurrentSubSection] = useState(0);
+  // Inline quiz state for sections that provide direct content with a single question
+  const [inlineAnswered, setInlineAnswered] = useState(false);
+  const [inlineSelectedIndex, setInlineSelectedIndex] = useState<number | null>(null);
 
   // Reset subsection index when section changes to avoid out-of-range access
   useEffect(() => {
     setCurrentSubSection(0);
+    // reset inline quiz states when section changes
+    setInlineAnswered(false);
+    setInlineSelectedIndex(null);
   }, [section.id, chapterId]);
 
   const handleComplete = () => {
@@ -30,8 +37,12 @@ export default function ChapterContent({
     onComplete();
   };
 
-  // Get comprehensive theory content
-  const theoryContent = getTheoryContent(chapterId, section.id);
+  // Check if section has content directly (for orbit and other modules with inline content)
+  const hasDirectContent = section.content && typeof section.content === 'object' && 
+    ('story' in section.content || 'questions' in section.content);
+
+  // Get comprehensive theory content (for DeFi module)
+  const theoryContent = !hasDirectContent ? getTheoryContent(chapterId, section.id) : null;
 
   // Fallback content for sections without comprehensive content
   const getFallbackContent = () => {
@@ -467,11 +478,29 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
 
   const content = theoryContent || getFallbackContent();
 
-  const renderTheoryContent = (content: TheoryContent) => {
+  const renderTypeBadge = (type: string) => {
+    const base = "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border";
+    switch (type) {
+      case "code-walkthrough":
+        return <span className={`${base} border-purple-500 bg-purple-900/30 text-purple-200`}>Code Walkthrough</span>;
+      case "hands-on":
+        return <span className={`${base} border-emerald-500 bg-emerald-900/30 text-emerald-200`}>Hands‑On</span>;
+      case "quiz":
+        return <span className={`${base} border-amber-500 bg-amber-900/30 text-amber-200`}>Quiz</span>;
+      case "challenge":
+        return <span className={`${base} border-pink-500 bg-pink-900/30 text-pink-200`}>Challenge</span>;
+      case "theory":
+      default:
+        return <span className={`${base} border-blue-500 bg-blue-900/30 text-blue-200`}>Theory</span>;
+    }
+  };
+
+  const renderTheoryContent = (content: TheoryContent, displayType?: string) => {
     return (
       <div className="max-w-4xl mx-auto">
         {/* Content Header */}
         <div className="mb-8">
+          <div className="mb-3">{renderTypeBadge(displayType || "theory")}</div>
           <h2 className="text-3xl font-bold text-white mb-4">
             {content.title}
           </h2>
@@ -662,6 +691,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
             Hands-On Practice
           </h3>
         </div>
+        <div className="mb-4">{renderTypeBadge("hands-on")}</div>
         <div className="text-green-200">
           <p className="mb-4">
             This hands-on section will guide you through practical
@@ -686,6 +716,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
             Code Walkthrough
           </h3>
         </div>
+        <div className="mb-4">{renderTypeBadge("code-walkthrough")}</div>
         <div className="text-purple-200 mb-6">
           <p>
             Detailed code walkthroughs with interactive examples are being
@@ -734,6 +765,225 @@ async function interactWithProtocol() {
       </div>
     </div>
   );
+
+  // If section has direct content with story and questions, render it
+  if (hasDirectContent && section.content && section.content.story) {
+    return (
+      <div className="w-full">
+        {/* Story + Quiz Content (if there are questions) */}
+        {section.content.questions && section.content.questions.length > 0 && (
+          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <div className="w-full max-w-4xl mx-auto px-4">
+              <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+                <div className="mb-3">{renderTypeBadge(section.type)}</div>
+                {/* Story Content */}
+                <div className="prose prose-lg max-w-none prose-invert mb-8">
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ children }) => (
+                        <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-2xl font-semibold text-emerald-300 mb-4 mt-8">{children}</h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-xl font-semibold text-teal-300 mb-3 mt-6">{children}</h3>
+                      ),
+                      p: ({ children }) => (
+                        <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
+                      ),
+                      strong: ({ children }) => <strong className="text-emerald-300 font-semibold">{children}</strong>,
+                      em: ({ children }) => <em className="text-teal-300 italic">{children}</em>,
+                      ul: ({ children }) => (
+                        <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
+                      ),
+                      li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
+                      code: ({ children }) => (
+                        <code className="bg-gray-700 text-emerald-300 px-2 py-1 rounded text-sm">{children}</code>
+                      ),
+                      pre: ({ children }) => (
+                        <pre className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto mb-4 border border-gray-600">{children}</pre>
+                      ),
+                    }}
+                  >
+                    {section.content.story}
+                  </ReactMarkdown>
+                </div>
+
+                {/* Question */}
+                <div className="bg-slate-700 rounded-xl p-6 border border-slate-600">
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    {section.content.questions[0].question}
+                  </h3>
+                  <div className="space-y-3 mb-6">
+                    {section.content.questions[0].options.map((option: string, index: number) => {
+                      const correctIndex = section.content!.questions![0].correctAnswer;
+                      const isSelected = inlineSelectedIndex === index;
+                      const isCorrect = inlineAnswered && index === correctIndex;
+                      const isWrongSelected = inlineAnswered && isSelected && index !== correctIndex;
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            if (inlineAnswered) return;
+                            setInlineSelectedIndex(index);
+                            setInlineAnswered(true);
+                            // Mark complete shortly after showing feedback
+                            setTimeout(() => handleComplete(), 1200);
+                          }}
+                          disabled={inlineAnswered}
+                          className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
+                            inlineAnswered
+                              ? isCorrect
+                                ? "border-green-500 bg-green-900/20 text-green-300"
+                                : isWrongSelected
+                                  ? "border-red-500 bg-red-900/20 text-red-300"
+                                  : "border-slate-600 bg-slate-700 text-gray-400"
+                              : "border-slate-500 hover:border-emerald-500 hover:bg-slate-600 text-gray-200 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-bold ${
+                                inlineAnswered
+                                  ? isCorrect
+                                    ? "border-green-500 bg-green-500 text-white"
+                                    : isWrongSelected
+                                      ? "border-red-500 bg-red-500 text-white"
+                                      : "border-gray-600"
+                                  : "border-gray-600"
+                              }`}
+                            >
+                              {inlineAnswered && isCorrect && "✓"}
+                              {inlineAnswered && isWrongSelected && "✗"}
+                              {!inlineAnswered && String.fromCharCode(65 + index)}
+                            </div>
+                            <span className="flex-1">{option}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Explanation */}
+                  {inlineAnswered && (
+                    <div
+                      className={`p-4 rounded-lg ${
+                        inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                          ? "bg-green-900/20 border border-green-700"
+                          : "bg-orange-900/20 border border-orange-700"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xl">
+                          {inlineSelectedIndex === section.content!.questions![0].correctAnswer ? "🎉" : "💡"}
+                        </span>
+                        <span
+                          className={`font-bold ${
+                            inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                              ? "text-green-300"
+                              : "text-orange-300"
+                          }`}
+                        >
+                          {inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                            ? "Correct!"
+                            : "Not quite right"}
+                        </span>
+                      </div>
+                      {section.content!.questions![0].explanation && (
+                        <p
+                          className={`text-sm ${
+                            inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                              ? "text-green-400"
+                              : "text-orange-400"
+                          }`}
+                        >
+                          {section.content!.questions![0].explanation}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Story-only Content (no questions) */}
+        {(!section.content.questions || section.content.questions.length === 0) && (
+          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <div className="w-full max-w-4xl mx-auto px-4">
+              <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+                <div className="mb-3">{renderTypeBadge(section.type)}</div>
+                <div className="prose prose-lg max-w-none prose-invert">
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ children }) => (
+                        <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-2xl font-semibold text-emerald-300 mb-4 mt-8">{children}</h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-xl font-semibold text-teal-300 mb-3 mt-6">{children}</h3>
+                      ),
+                      p: ({ children }) => (
+                        <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
+                      ),
+                      strong: ({ children }) => <strong className="text-emerald-300 font-semibold">{children}</strong>,
+                      em: ({ children }) => <em className="text-teal-300 italic">{children}</em>,
+                      ul: ({ children }) => (
+                        <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
+                      ),
+                      li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
+                      code: ({ children }) => (
+                        <code className="bg-gray-700 text-emerald-300 px-2 py-1 rounded text-sm">{children}</code>
+                      ),
+                      pre: ({ children }) => (
+                        <pre className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto mb-4 border border-gray-600">{children}</pre>
+                      ),
+                    }}
+                  >
+                    {section.content.story}
+                  </ReactMarkdown>
+                </div>
+
+                {/* Completion Button */}
+                <div className="mt-8 pt-6 border-t border-gray-600">
+                  <div className="flex justify-center">
+                    <motion.button
+                      onClick={handleComplete}
+                      disabled={completed}
+                      className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${
+                        completed
+                          ? "bg-green-600 text-white cursor-default"
+                          : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl"
+                      }`}
+                      whileHover={!completed ? { scale: 1.05 } : {}}
+                      whileTap={!completed ? { scale: 0.95 } : {}}
+                    >
+                      {completed ? (
+                        <span className="flex items-center gap-2">
+                          <span>✓</span>
+                          Section Completed!
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <span>📝</span>
+                          Mark as Complete
+                        </span>
+                      )}
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto">

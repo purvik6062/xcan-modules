@@ -175,6 +175,70 @@ export const defiGlossary: { [key: string]: GlossaryTerm } = {
     relatedTerms: ["Cross-chain", "Layer 2", "Interoperability"],
     examples: ["Arbitrum Bridge", "Polygon Bridge"],
   },
+
+  // Additional terms referenced across sections
+  TVL: {
+    term: "TVL",
+    definition:
+      "Total Value Locked — the aggregate dollar value of assets deposited in a DeFi protocol or ecosystem.",
+    category: "basic",
+    relatedTerms: ["APY", "Yield", "Liquidity"],
+    examples: ["$2.5B TVL on Arbitrum"],
+  },
+
+  TWAP: {
+    term: "TWAP",
+    definition:
+      "Time-Weighted Average Price — an average price over a time window, often used to resist short-term manipulation.",
+    category: "intermediate",
+    relatedTerms: ["Oracle", "Price Feed", "Slippage"],
+    examples: ["Uniswap TWAP oracle"],
+  },
+
+  MEV: {
+    term: "MEV",
+    definition:
+      "Maximal Extractable Value — value extractable by ordering, including, or censoring transactions in a block.",
+    category: "advanced",
+    relatedTerms: ["Front-running", "Slippage", "Fair Ordering"],
+    examples: ["Sandwich attacks on AMMs"],
+  },
+
+  "Concentrated Liquidity": {
+    term: "Concentrated Liquidity",
+    definition:
+      "A Uniswap V3 mechanism where LPs provide liquidity over chosen price ranges to increase capital efficiency.",
+    category: "intermediate",
+    relatedTerms: ["Uniswap V3", "AMM", "Liquidity Provider"],
+    examples: ["Providing liquidity between $1800–$2200 for ETH/USDC"],
+  },
+
+  Perpetuals: {
+    term: "Perpetuals",
+    definition:
+      "Derivative contracts without expiry that track an index price via funding payments between longs and shorts.",
+    category: "advanced",
+    relatedTerms: ["Funding Rate", "Leverage", "GMX"],
+    examples: ["Opening a 5x long on GMX"],
+  },
+
+  GLP: {
+    term: "GLP",
+    definition:
+      "GMX Liquidity Provider token representing a share of the multi-asset pool backing leveraged trading on GMX.",
+    category: "intermediate",
+    relatedTerms: ["GMX", "Perpetuals", "Liquidity Provider"],
+    examples: ["Earning fees by holding GLP"],
+  },
+
+  "Delta-Neutral": {
+    term: "Delta-Neutral",
+    definition:
+      "A strategy targeting near-zero net exposure to price movements, often by hedging a spot position with a derivative.",
+    category: "advanced",
+    relatedTerms: ["Hedging", "Perpetuals", "Yield"],
+    examples: ["LP + short perp to hedge price risk"],
+  },
 };
 
 // Utility functions for glossary management

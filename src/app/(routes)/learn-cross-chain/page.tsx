@@ -113,9 +113,9 @@ export default function LearnCrossChainPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Build the future of blockchain interoperability. Learn to create bridges, 
-            develop cross-chain protocols, and master the tools that connect different 
-            blockchain ecosystems into a unified network.
+            Learn cross‑chain in the same flow as the curriculum: Foundations → Token Bridging →
+            Advanced Protocols → Development (tools, patterns) → Arbitrum Bridge Basics → Troubleshooting.
+            Lessons are story/analogy, code templates, hands‑on labs and targeted quizzes, matching the chapter data.
           </motion.p>
 
           {/* Key Stats */}
@@ -333,10 +333,12 @@ export default function LearnCrossChainPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-4">Cross-Chain Learning Path</h2>
+          <h2 className="text-3xl font-bold mb-4">Cross‑Chain Learning Path</h2>
           <p className="text-lg mb-6 max-w-3xl mx-auto">
-            Master cross-chain development through comprehensive lessons on bridge technology, 
-            security protocols, and development tools. Build the future of blockchain interoperability.
+            Follow the chapter sequence from the data: Cross‑Chain Foundations, Cross‑Chain Token Bridging,
+            Advanced Cross‑Chain Protocols, Cross‑Chain Development, Arbitrum Bridge Basics, and
+            Troubleshooting & Best Practices. Each chapter’s description and sections on this page reflect
+            the content defined in the course data.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {crossChainChapters.map((chapter, index) => (

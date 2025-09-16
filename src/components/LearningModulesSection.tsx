@@ -66,10 +66,18 @@ export default function LearningModulesSection() {
                   <p className=" text-gray-300 mb-4">{module.description}</p>
 
                   {module.duration && module.challenges !== undefined && (
-                    <div className="flex items-center gap-4 text-sm  text-gray-400 mb-4">
-                      <span>{module.duration}</span>
-                      <span>•</span>
-                      <span>{module.challenges} challenges</span>
+                    <div className="flex items-center gap-2 text-sm mb-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-sky-500 bg-sky-900/40 text-white">
+                        {module.duration}
+                      </span>
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-emerald-500 bg-emerald-900/40 text-white">
+                        {module.challenges} challenges
+                      </span>
+                      {(module.sections !== undefined && module.sections > 0) && (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-indigo-500 bg-indigo-900/40 text-white">
+                          {module.sections} sections
+                        </span>
+                      )}
                     </div>
                   )}
 
