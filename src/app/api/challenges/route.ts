@@ -26,17 +26,17 @@ type UserChallengesDoc = {
 
 function computeProgress(chaptersCompletedSections: {
   [chapterId: string]: string[];
-}, module: string = "web3-basics") {
+}, currentModule: string = "web3-basics") {
   const progressByChapter: Record<
     string,
     { completedSectionIds: string[]; totalSections: number; percent: number }
   > = {};
 
-  const chapters = module === "cross-chain"
+  const chapters = currentModule === "cross-chain"
     ? crossChainChapters
-    : module === "master-defi"
+    : currentModule === "master-defi"
     ? defiChapters
-    : module === "master-orbit"
+    : currentModule === "master-orbit"
     ? orbitChapters
     : web3BasicsChapters;
 
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userAddress = (searchParams.get("userAddress") || "").toLowerCase();
-    const module = searchParams.get("module") || "web3-basics";
+    const currentModule = searchParams.get("module") || "web3-basics";
     
     if (!userAddress) {
       return NextResponse.json(
@@ -73,11 +73,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const collectionName = module === "cross-chain"
+    const collectionName = currentModule === "cross-chain"
       ? "challenges-cross-chain"
-      : module === "master-defi"
+      : currentModule === "master-defi"
       ? "challenges-master-defi"
-      : module === "master-orbit"
+      : currentModule === "master-orbit"
       ? "challenges-orbit-chain"
       : "challenges-web3-basics";
 
@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
     const isCompleted = Boolean(doc?.isCompleted);
     const certification = doc?.certification || null;
 
-    const progressByChapter = computeProgress(chapters, module);
+    const progressByChapter = computeProgress(chapters, currentModule);
 
     return NextResponse.json({
       userAddress,
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     const userAddress: string = (body.userAddress || "").toLowerCase();
     const chapterId: string = body.chapterId;
     const sectionId: string = body.sectionId;
-    const module: string = body.module || "web3-basics";
+    const currentModule: string = body.module || "web3-basics";
     const finalizeChapter: boolean = Boolean(body.finalizeChapter);
     
     if (!userAddress || !chapterId || !sectionId) {
@@ -125,11 +125,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const collectionName = module === "cross-chain"
+    const collectionName = currentModule === "cross-chain"
       ? "challenges-cross-chain"
-      : module === "master-defi"
+      : currentModule === "master-defi"
       ? "challenges-master-defi"
-      : module === "master-orbit"
+      : currentModule === "master-orbit"
       ? "challenges-orbit-chain"
       : "challenges-web3-basics";
 
@@ -144,11 +144,11 @@ export async function POST(request: NextRequest) {
 
     // Recompute completedChapters
     const completedChapters: any[] = [];
-    const chaptersDataForModule = module === "cross-chain"
+    const chaptersDataForModule = currentModule === "cross-chain"
       ? crossChainChapters
-      : module === "master-defi"
+      : currentModule === "master-defi"
       ? defiChapters
-      : module === "master-orbit"
+      : currentModule === "master-orbit"
       ? orbitChapters
       : web3BasicsChapters;
     
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        if (module === "cross-chain" || module === "master-defi" || module === "master-orbit") {
+        if (currentModule === "cross-chain" || currentModule === "master-defi" || currentModule === "master-orbit") {
           // Enrich with level and points for Cross-Chain and Master DeFi
           const level: string = (ch as any).level || "Beginner";
           const points = level === "Advanced" ? 30 : level === "Intermediate" ? 20 : 10;
@@ -190,11 +190,11 @@ export async function POST(request: NextRequest) {
     };
 
     // Determine if module is fully completed (all chapters complete)
-    const chaptersData2 = module === "cross-chain"
+    const chaptersData2 = currentModule === "cross-chain"
       ? crossChainChapters
-      : module === "master-defi"
+      : currentModule === "master-defi"
       ? defiChapters
-      : module === "master-orbit"
+      : currentModule === "master-orbit"
       ? orbitChapters
       : web3BasicsChapters;
 
@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
       { upsert: true }
     );
 
-    const progressByChapter = computeProgress(chapters, module);
+    const progressByChapter = computeProgress(chapters, currentModule);
 
     return NextResponse.json({
       userAddress,
