@@ -95,6 +95,21 @@ export async function GET(
       );
     }
 
+    // Validate module against possible certification levelNames
+    const validModules = [
+      "web3-basics",
+      "core-stylus",
+      "arbitrum-orbit",
+      "defi-arbitrum",
+      "cross-chain",
+    ];
+    if (!validModules.includes(module)) {
+      return NextResponse.json(
+        { error: "Unsupported module" },
+        { status: 400 }
+      );
+    }
+
     const collectionName =
       module === "core-stylus"
         ? "challenges-core-stylus"
@@ -116,20 +131,25 @@ export async function GET(
     }
 
     const { db } = await connectToDatabase();
-    const collection = db.collection(collectionName);
+    const collection = db.collection(collectionName); // Updated collection name
     const doc = await collection.findOne(
       { userAddress },
-      { projection: { _id: 0, certification: 1 } }
+      { projection: { _id: 0, certification: 1, isCompleted: 1 } }
     );
 
-    const certification = Array.isArray(doc?.certification)
-      ? doc?.certification?.[doc.certification.length - 1]
-      : doc?.certification || null;
+    // Find certification matching the requested module
+    const certifications = Array.isArray(doc?.certification)
+      ? doc.certification
+      : [];
+    const matchingCertification = certifications.find(
+      (cert: any) => cert.levelName === module
+    );
 
     return NextResponse.json({
-      claimed: Boolean(certification?.claimed),
-      certification: certification || null,
-    });
+      claimed: Boolean(matchingCertification?.claimed),
+      certification: matchingCertification || null,
+      isCompleted: Boolean(doc?.isCompleted),
+  });
   } catch (error: any) {
     console.error("Get certification (dynamic) error", error);
     return NextResponse.json(

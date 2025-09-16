@@ -8,7 +8,6 @@ import { ModuleCard } from "@/components/nft/ModuleCard";
 import { useRouter } from "next/navigation";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
 import { useChainId, useSwitchChain } from "wagmi";
-import { useModuleStatus } from "@/hooks/useModuleStatus";
 import {
   Wallet,
   Shield,
@@ -43,7 +42,6 @@ const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;
 export default function HomePage() {
   const { isReady, isLoading, address: userAddress, isWalletConnected } = useWalletProtection();
   const router = useRouter();
-  const { moduleStatuses, claimModule, isClaiming } = useModuleStatus(userAddress || null);
 
   // Chain management hooks
   const chainId = useChainId();
@@ -52,15 +50,6 @@ export default function HomePage() {
 
   const handleSwitchNetwork = () => {
     switchChain({ chainId: ARBITRUM_SEPOLIA_CHAIN_ID });
-  };
-
-  const handleClaimModule = async (moduleId: string) => {
-    await claimModule(moduleId);
-  };
-
-  const handleViewClaimed = (moduleId: string) => {
-    // Navigate to view the claimed NFT
-    router.push(`/nft/${moduleId}`);
   };
 
   const getNetworkName = (chainId: number) => {
@@ -458,12 +447,6 @@ export default function HomePage() {
                       {/* Spotlight vertical list (no claim buttons) */}
                       <div className="space-y-5">
                         {nftModules.map((module, index) => {
-                          const status = moduleStatuses[module.id] || {
-                            isCompleted: false,
-                            isClaimed: false,
-                            isLoading: true,
-                            error: null,
-                          };
 
                           const handleOpen = () => {
                             if (module.id === "arbitrum-stylus" || module.database === "postgres") {
@@ -494,18 +477,11 @@ export default function HomePage() {
                                       <div>
                                         <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
                                         <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
-                                        <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-gray-400">
-                                          <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{module.duration}</span>
-                                          <span className="flex items-center gap-1"><Target className="w-3 h-3" />{module.challenges} challenges</span>
-                                          <span className="flex items-center gap-1"><Trophy className="w-3 h-3" />{module.level}</span>
-                                        </div>
                                       </div>
                                     </div>
 
                                     <div className="hidden sm:flex items-center">
-                                      <div className={`px-3 py-1 rounded-full text-xs border ${status.isClaimed ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" : status.isCompleted ? "bg-blue-500/15 text-blue-300 border-blue-500/30" : "bg-gray-500/10 text-gray-300 border-white/10"}`}>
-                                        {status.isClaimed ? "Claimed" : status.isCompleted ? "Ready" : "In Progress"}
-                                      </div>
+                                      <button className="px-3 py-1 rounded-full text-xs border bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" onClick={handleOpen}>View Module</button>
                                     </div>
                                   </div>
                                 </div>

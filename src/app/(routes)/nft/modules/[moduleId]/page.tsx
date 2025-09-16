@@ -7,7 +7,6 @@ import { GlassCard } from "@/components/nft/GlassCard";
 import { FloatingParticles } from "@/components/nft/FloatingParticles";
 import { nftModules } from "@/data/nftModules";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
-import { useModuleStatus } from "@/hooks/useModuleStatus";
 import { useMint } from "@/hooks/useMint";
 import { useMintedStatus } from "@/hooks/useMintedStatus";
 import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
@@ -19,11 +18,14 @@ export default function ModuleDetailPage() {
   const currentModule = useMemo(() => nftModules.find((m) => m.id === moduleId), [moduleId]);
 
   const { isReady, isLoading: walletLoading, address: userAddress, isWalletConnected } = useWalletProtection();
-  const { moduleStatuses } = useModuleStatus(userAddress || null);
-  const status = currentModule ? moduleStatuses[currentModule.id] : undefined;
+
 
   const { certificationMint, isCertificationMinting } = useMint();
-  const { hasMinted, nft, isLoading: mintedLoading, refetch } = useMintedStatus(userAddress || null);
+
+  // Certification claim status via certification-claim GET API
+  const [isCheckingClaim, setIsCheckingClaim] = useState(false);
+  const [claimedCertification, setClaimedCertification] = useState<any | null>(null);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -32,6 +34,30 @@ export default function ModuleDetailPage() {
       router.replace("/nft/arbitrum-stylus");
     }
   }, [currentModule, router]);
+
+  // Fetch claimed certification (authoritative) for this module
+  useEffect(() => {
+    const fetchClaimed = async () => {
+      if (!currentModule || !userAddress) return;
+      setIsCheckingClaim(true);
+      try {
+        const res = await fetch(`/api/certification/claim/${currentModule.id}?userAddress=${userAddress}`);
+        const data = await res.json();
+        if (res.ok) {
+          setClaimedCertification(data.certification || null);
+          setIsCompleted(data.isCompleted || false);
+        } else {
+          setClaimedCertification(null);
+        }
+      } catch (err) {
+        // fail silently; UI will still allow mint if other status says completed
+        setClaimedCertification(null);
+      } finally {
+        setIsCheckingClaim(false);
+      }
+    };
+    fetchClaimed();
+  }, [currentModule, userAddress]);
 
   if (!isReady || walletLoading) {
     return (
@@ -60,7 +86,7 @@ export default function ModuleDetailPage() {
   const handleClaim = async () => {
     try {
       setError(null);
-      if (!status?.isCompleted) return;
+      if (!isCompleted) return;
 
       const minted = await certificationMint(currentModule.id);
       await fetch(`/api/certification/claim/${currentModule.id}`, {
@@ -74,16 +100,25 @@ export default function ModuleDetailPage() {
         }),
       });
 
-      await refetch();
+      // Optimistically mark claimed to disable button immediately
+      setClaimedCertification({
+        level: 1,
+        levelName: currentModule.id,
+        claimed: true,
+        mintedAt: new Date().toISOString(),
+        transactionHash: minted?.transactionHash,
+        metadataUrl: minted?.metadataUrl,
+        imageUrl: minted?.imageUrl,
+      });
       router.push(`/nft/certification/${currentModule.id}?justMinted=true`);
     } catch (e: any) {
       setError(e?.message || "Mint failed");
     }
   };
 
-  const alreadyClaimed = Boolean(status?.isClaimed || hasMinted);
-  const isClaimDisabled = !status?.isCompleted || isCertificationMinting || mintedLoading || alreadyClaimed;
-
+  const alreadyClaimed = Boolean(claimedCertification?.claimed);
+  const isClaimDisabled = !claimedCertification?.claimed || isCertificationMinting || isCheckingClaim || alreadyClaimed;
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden">
       <FloatingParticles />
@@ -130,7 +165,7 @@ export default function ModuleDetailPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    {status?.isCompleted ? (
+                    {isCompleted ? (
                       <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>
                         <CheckCircle className="w-5 h-5 text-emerald-400" />
                       </motion.div>
@@ -138,8 +173,8 @@ export default function ModuleDetailPage() {
                       <AlertTriangle className="w-5 h-5 text-amber-400" />
                     )}
                     <div>
-                      <p className="text-white font-semibold">{alreadyClaimed ? "Already Claimed" : status?.isCompleted ? "Module Completed" : "In Progress"}</p>
-                      <p className="text-gray-400 text-sm">{alreadyClaimed ? "Your certification NFT has been minted." : status?.isCompleted ? "You can claim your certification NFT." : "Complete all required challenges to enable claim."}</p>
+                      <p className="text-white font-semibold">{alreadyClaimed ? "Already Claimed" : isCompleted ? "Module Completed" : "In Progress"}</p>
+                      <p className="text-gray-400 text-sm">{alreadyClaimed ? "Your certification NFT has been minted." : isCompleted ? "You can claim your certification NFT." : "Complete all required challenges to enable claim."}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -162,6 +197,10 @@ export default function ModuleDetailPage() {
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" /> Minting...
                         </>
+                      ) : isCheckingClaim ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" /> Checking...
+                        </>
                       ) : (
                         <>Claim NFT</>
                       )}
@@ -169,6 +208,9 @@ export default function ModuleDetailPage() {
                   </div>
                 </div>
                 {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
+                {!alreadyClaimed && (isCheckingClaim) && (
+                  <p className="text-gray-400 text-sm mt-3">Validating your claim status...</p>
+                )}
               </motion.div>
             </div>
 
@@ -196,17 +238,17 @@ export default function ModuleDetailPage() {
                     <p className="text-gray-300">View the minted NFT on the certification page after success.</p>
                   </div>
 
-                  {(status?.isCompleted && !alreadyClaimed) && (
+                  {(isCompleted && !alreadyClaimed) && (
                     <motion.p className="text-emerald-300 text-sm" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}>
                       You're ready to claim!
                     </motion.p>
                   )}
 
-                  {(alreadyClaimed && nft) && (
+                  {/* {(alreadyClaimed && (nft || claimedCertification)) && (
                     <div className="pt-2">
-                      <MintedNFTDisplay nft={{ ...nft, mintedAt: new Date(nft.mintedAt) as any }} levelKey={currentModule.id} />
+                      <MintedNFTDisplay nft={{ ...(nft || claimedCertification), mintedAt: new Date((nft?.mintedAt || claimedCertification?.mintedAt) as any) as any }} levelKey={currentModule.id} />
                     </div>
-                  )}
+                  )} */}
                 </div>
               </motion.div>
             </div>

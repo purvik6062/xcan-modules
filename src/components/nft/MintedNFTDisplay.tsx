@@ -156,7 +156,7 @@ export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayPr
           >
             You have already minted your
             <span className="text-emerald-300 font-bold bg-emerald-400/10 px-3 py-1 rounded-lg mx-2">
-              Speedrun Stylus Achievement Badge!
+              {platform} Achievement Badge!
             </span>
           </motion.p>
         </div>
