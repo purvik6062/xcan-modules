@@ -13,8 +13,8 @@ type UserChallengesDoc = {
   // For cross-chain module we store objects with level/points. Keep type broad.
   completedChapters: any[];
   // Whether the entire module is completed (all chapters fully done)
-  isCompleted?: boolean;
   updatedAt: Date;
+  isCompleted?: boolean;
   certification?: {
     claimed: boolean;
     claimedAt: Date;
@@ -177,6 +177,9 @@ export async function POST(request: NextRequest) {
         }
       }
     }
+
+    // Check if all 6 chapters are completed for Web3 Basics
+    const isCompleted = completedChapters.length >= 6;
 
     const doc: UserChallengesDoc = {
       userAddress,

@@ -26,6 +26,7 @@ interface MintedLevel {
 interface MintedNFTDisplayProps {
   nft: MintedLevel;
   levelKey: string;
+  platform?: string;
 }
 
 const LEVEL_NAME_MAP = {
@@ -38,7 +39,7 @@ const LEVEL_NAME_MAP = {
   "farcaster-miniapps": "Farcaster Miniapps Challenge",
 };
 
-export const MintedNFTDisplay = ({ nft, levelKey }: MintedNFTDisplayProps) => {
+export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayProps) => {
   const imageCardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -322,7 +323,7 @@ export const MintedNFTDisplay = ({ nft, levelKey }: MintedNFTDisplayProps) => {
                   ),
                 }}
               >
-                Speedrun Stylus
+                {platform || "Speedrun Stylus"}
               </motion.h3>
 
               <motion.p

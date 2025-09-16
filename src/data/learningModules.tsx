@@ -193,26 +193,6 @@ export const learningModules: LearningModule[] = [
     ],
   },
   {
-    id: "arbitrum-stylus",
-    title: "Arbitrum Stylus",
-    description:
-      "Build high-performance smart contracts with Rust, C, and C++ on Arbitrum",
-    icon: CpuChipIcon,
-    level: "Intermediate to Advanced",
-    duration: "3-5 weeks",
-    challenges: 11,
-    status: "available",
-    href: "https://www.speedrunstylus.com/",
-    target: "_blank",
-    gradient: "from-purple-500 to-pink-600",
-    features: [
-      "Rust Development",
-      "WebAssembly",
-      "Performance Optimization",
-      "Multi-language Support",
-    ],
-  },
-  {
     id: "arbitrum-precompiles",
     title: "Stylus Core Concepts",
     description:
@@ -230,6 +210,26 @@ export const learningModules: LearningModule[] = [
       "Real-world Examples",
       "Gas Optimization",
       "L1-L2 Messaging",
+    ],
+  },
+  {
+    id: "arbitrum-stylus",
+    title: "Arbitrum Stylus",
+    description:
+      "Build high-performance smart contracts with Rust, C, and C++ on Arbitrum",
+    icon: CpuChipIcon,
+    level: "Intermediate to Advanced",
+    duration: "3-5 weeks",
+    challenges: 11,
+    status: "available",
+    href: "https://www.speedrunstylus.com/",
+    target: "_blank",
+    gradient: "from-purple-500 to-pink-600",
+    features: [
+      "Rust Development",
+      "WebAssembly",
+      "Performance Optimization",
+      "Multi-language Support",
     ],
   },
   {

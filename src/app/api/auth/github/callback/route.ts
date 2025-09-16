@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/config/connectDB";
+import { connectToDatabase } from "@/lib/database/mongodb";
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -84,25 +84,36 @@ export async function GET(req: NextRequest) {
     }
 
     // Store GitHub username in database
-    let client;
     try {
-      client = await connectDB();
-      const db = client.db();
+      const { client, db } = await connectToDatabase();
       const collection = db.collection("users");
 
-      // Update user document with GitHub username
-      await collection.updateOne(
-        { address: walletAddress },
-        {
-          $set: {
-            socialHandles: {
-              githubUsername: userData.login,
-              githubConnectedAt: new Date(),
-            },
+      // Check if user exists
+      const existingUser = await collection.findOne({ address: walletAddress });
+
+      if (!existingUser) {
+        // Create new user with GitHub username
+        await collection.insertOne({
+          address: walletAddress,
+          isEmailVisible: false,
+          createdAt: new Date(),
+          socialHandles: {
+            githubUsername: userData.login,
+            githubConnectedAt: new Date(),
           },
-        },
-        { upsert: true }
-      );
+        });
+      } else {
+        // Update existing user with GitHub username
+        await collection.updateOne(
+          { address: walletAddress },
+          {
+            $set: {
+              "socialHandles.githubUsername": userData.login,
+              "socialHandles.githubConnectedAt": new Date(),
+            },
+          }
+        );
+      }
 
       // Redirect back to the originating page with GitHub info in query params
       const fallback = process.env.NEXT_PUBLIC_BASE_URL;
@@ -116,10 +127,11 @@ export async function GET(req: NextRequest) {
       target.searchParams.set("github_id", String(userData.id));
       target.searchParams.set("github_username", userData.login);
       return NextResponse.redirect(target.toString());
-    } finally {
-      if (client) {
-        await client.close();
-      }
+    } catch (dbError) {
+      console.error("Database error:", dbError);
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/error?error=database_error`
+      );
     }
   } catch (error) {
     console.error("GitHub callback error:", error);

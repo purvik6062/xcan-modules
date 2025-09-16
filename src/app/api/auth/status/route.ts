@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/config/connectDB";
+import { connectToDatabase } from "@/lib/database/mongodb";
 import { AuthTokenClaims, PrivyClient } from "@privy-io/server-auth";
 
 const privyClient = new PrivyClient(
@@ -8,7 +8,6 @@ const privyClient = new PrivyClient(
 );
 
 export async function GET(req: NextRequest) {
-  let client;
   try {
     // Get request wallet address from header
     const requestWalletAddress = req.headers.get("x-wallet-address");
@@ -23,8 +22,7 @@ export async function GET(req: NextRequest) {
     // In production, you should implement proper token verification
 
     // Connect to database and check GitHub connection status
-    client = await connectDB();
-    const db = client.db();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection("users");
 
     const user = await collection.findOne({
@@ -54,9 +52,5 @@ export async function GET(req: NextRequest) {
       { error: "Internal Server Error" },
       { status: 500 }
     );
-  } finally {
-    if (client) {
-      await client.close();
-    }
   }
 }

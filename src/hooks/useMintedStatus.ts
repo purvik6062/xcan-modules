@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { MintedNFT } from "@/lib/database/mongodb";
 
 interface MintedLevel {
   level: number;

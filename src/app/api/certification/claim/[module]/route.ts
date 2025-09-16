@@ -21,14 +21,18 @@ export async function POST(
     }
 
     const collectionName =
-      module === "core-stylus"
-        ? "challenges-core-stylus"
-        : module === "web3-basics"
-        ? "challenges-web3-basics"
-        : module === "cross-chain"
-        ? "challenges-cross-chain"
-        : module === "master-defi"
-        ? "challenges-master-defi"
+    module === "core-stylus"
+    ? "challenges-core-stylus"
+    : module === "web3-basics"
+    ? "challenges-web3-basics"
+    : module === "master-defi"
+    ? "challenges-master-defi"
+    : module === "master-orbit"
+    ? "challenges-orbit-chain"
+    : module === "master-defi"
+    ? "challenges-master-defi"
+    : module === "cross-chain"
+    ? "challenges-cross-chain"
         : null;
 
     if (!collectionName) {
@@ -38,7 +42,7 @@ export async function POST(
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection(collectionName);
 
     const baseSetOnInsert =
@@ -50,13 +54,17 @@ export async function POST(
       $set: {
         userAddress,
         updatedAt: new Date(),
-        certification: {
-          claimed: true,
-          claimedAt: new Date(),
-          ...(transactionHash ? { transactionHash } : {}),
-          ...(metadataUrl ? { metadataUrl } : {}),
-          ...(imageUrl ? { imageUrl } : {}),
-        },
+        certification: [
+          {
+            level: 1,
+            levelName: module,
+            claimed: true,
+            mintedAt: new Date(),
+            ...(transactionHash ? { transactionHash } : {}),
+            ...(metadataUrl ? { metadataUrl } : {}),
+            ...(imageUrl ? { imageUrl } : {}),
+          },
+        ],
       },
       $setOnInsert: baseSetOnInsert,
     };
@@ -81,7 +89,7 @@ export async function GET(
     const { module } = await context.params;
     const { searchParams } = new URL(request.url);
     const userAddress = (searchParams.get("userAddress") || "").toLowerCase();
-    
+
     if (!userAddress) {
       return NextResponse.json(
         { error: "Missing userAddress" },
@@ -94,12 +102,16 @@ export async function GET(
         ? "challenges-core-stylus"
         : module === "web3-basics"
         ? "challenges-web3-basics"
-        : module === "cross-chain"
-        ? "challenges-cross-chain"
         : module === "master-defi"
         ? "challenges-master-defi"
+        : module === "master-orbit"
+        ? "challenges-orbit-chain"
+        : module === "master-defi"
+        ? "challenges-master-defi"
+        : module === "cross-chain"
+        ? "challenges-cross-chain"
         : null;
-        
+
     if (!collectionName) {
       return NextResponse.json(
         { error: "Unsupported module" },
@@ -114,9 +126,13 @@ export async function GET(
       { projection: { _id: 0, certification: 1 } }
     );
 
+    const certification = Array.isArray(doc?.certification)
+      ? doc?.certification?.[doc.certification.length - 1]
+      : doc?.certification || null;
+
     return NextResponse.json({
-      claimed: Boolean(doc?.certification?.claimed),
-      certification: doc?.certification || null,
+      claimed: Boolean(certification?.claimed),
+      certification: certification || null,
     });
   } catch (error: any) {
     console.error("Get certification (dynamic) error", error);

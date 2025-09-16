@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase, MintedNFT } from "@/lib/database/mongodb";
+import { connectToDatabase } from "@/lib/database/mongodb";
+import { MintedNFT } from "@/components/nft/types";
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +22,8 @@ export async function POST(request: NextRequest) {
       !metadataUrl ||
       !imageUrl ||
       !levelName ||
-      !level
+      level === undefined ||
+      level === null
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -29,7 +31,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection("minted-nft");
 
     // Check if user already has a document
@@ -83,6 +85,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Create new user document with first minted level
+
       const newMintedLevel = {
         level: level,
         levelKey: levelKey,

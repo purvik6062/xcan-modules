@@ -292,7 +292,7 @@ export async function POST(request: NextRequest) {
 
       // Persist successful result for progress tracking
       try {
-        const { db } = await connectToDatabase();
+        const { client, db } = await connectToDatabase();
         const collection = db.collection("challenges-core-stylus");
         if (userAddress && typeof userAddress === "string") {
           const lower = userAddress.toLowerCase();
@@ -302,6 +302,25 @@ export async function POST(request: NextRequest) {
             completedAt: new Date(),
             success: true,
           };
+
+          // Get current document to check completion status
+          const currentDoc = await collection.findOne({ userAddress: lower });
+          const currentChallenges = currentDoc?.challenges || [];
+          const newChallenges = [...new Set([...currentChallenges, slug])];
+
+          // Check if all 6 challenges are completed
+          const allChallenges = [
+            "l1-fee-calculation",
+            "block-number-check",
+            "chain-id-verification",
+            "gas-price-components",
+            "arbos-version",
+            "l2-to-l1-message",
+          ];
+          const isCompleted = allChallenges.every((challenge) =>
+            newChallenges.includes(challenge)
+          );
+
           await collection.updateOne(
             { userAddress: lower },
             {
@@ -309,6 +328,7 @@ export async function POST(request: NextRequest) {
                 userAddress: lower,
                 updatedAt: new Date(),
                 [`results.${slug}`]: resultEntry,
+                isCompleted: isCompleted,
               },
               $setOnInsert: { createdAt: new Date() },
               $addToSet: { challenges: slug },
@@ -349,7 +369,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { client, db } = await connectToDatabase();
     const collection = db.collection("challenges-core-stylus");
 
     const doc = await collection.findOne(
@@ -361,6 +381,7 @@ export async function GET(request: NextRequest) {
       userAddress: userAddress.toLowerCase(),
       challenges: [],
       results: {},
+      isCompleted: false,
     };
 
     if (slug) {
@@ -372,10 +393,14 @@ export async function GET(request: NextRequest) {
         completed,
         result,
         challenges: progress.challenges || [],
+        isCompleted: doc?.isCompleted || false,
       });
     }
 
-    return NextResponse.json({ progress });
+    return NextResponse.json({
+      progress,
+      isCompleted: progress.isCompleted || false,
+    });
   } catch (error: any) {
     console.error("GET progress error:", error);
     return NextResponse.json(

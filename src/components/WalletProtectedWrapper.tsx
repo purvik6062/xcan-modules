@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
 import ConnectWallet from "./ConnectWallet";
 import { motion } from "framer-motion";
@@ -13,45 +13,15 @@ interface WalletProtectedWrapperProps {
 export default function WalletProtectedWrapper({
   children,
 }: WalletProtectedWrapperProps) {
-  const {
-    isWalletConnected,
-    githubUsername,
-    isReady,
-    isLoading,
-    address,
-    refreshAuthStatus
-  } = useWalletProtection();
+  const { isWalletConnected, isReady, isLoading } = useWalletProtection();
 
-  // Capture GitHub params after OAuth and store them locally, then refresh auth status
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const url = new URL(window.location.href);
-    const ghUser = url.searchParams.get("github_username");
-    if (ghUser) {
-      if (!localStorage.getItem("github_username")) {
-        localStorage.setItem("github_username", ghUser);
-      }
-      refreshAuthStatus();
-    }
-  }, [refreshAuthStatus]);
-
-  // When wallet is connected and API reports a GitHub username, store it locally if missing
-  useEffect(() => {
-    if (!isWalletConnected) return;
-    if (!githubUsername) return;
-    if (typeof window === "undefined") return;
-    if (!localStorage.getItem("github_username")) {
-      localStorage.setItem("github_username", githubUsername);
-    }
-  }, [isWalletConnected, githubUsername]);
-
-  // Show loading state only while Privy is initializing (not during auth checks)
+  // Show loading state while Privy is initializing
   if (!isReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid mx-auto mb-4"></div>
-          <p className="text-white text-lg">Initializing authentication...</p>
+          <p className="text-white text-lg">Initializing wallet connection...</p>
         </div>
       </div>
     );
@@ -78,8 +48,7 @@ export default function WalletProtectedWrapper({
             </motion.div>
 
             <h1 className="text-2xl font-bold text-white mb-4">Wallet Required</h1>
-
-            <p className="text-gray-300 mb-6 leading-relaxed">Connect your wallet to access content.</p>
+            <p className="text-gray-300 mb-6 leading-relaxed">Connect your wallet to access this application.</p>
 
             <div className="space-y-4 w-full mx-auto">
               <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
@@ -99,8 +68,6 @@ export default function WalletProtectedWrapper({
               <FiWifi className="w-4 h-4" />
               <span>Secure • Fast • Easy</span>
             </div>
-
-            <div className="text-xs text-gray-500 mt-4"></div>
           </div>
 
           <motion.div
@@ -126,14 +93,14 @@ export default function WalletProtectedWrapper({
     );
   }
 
-  // Show a subtle loading indicator only when checking auth status (not blocking navigation)
+  // Show a subtle loading indicator when connecting
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="fixed top-4 right-4 z-50">
           <div className="bg-blue-500/20 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center space-x-2">
             <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-blue-400 border-solid"></div>
-            <span className="text-white text-sm">Checking authentication...</span>
+            <span className="text-white text-sm">Connecting wallet...</span>
           </div>
         </div>
         {children}
@@ -141,6 +108,6 @@ export default function WalletProtectedWrapper({
     );
   }
 
-  // If wallet is connected, render the protected content immediately
+  // If wallet is connected, render the protected content
   return <>{children}</>;
-} 
+}
