@@ -10,7 +10,8 @@ import { XCAN_ABI, XCAN_CONTRACT_ADDRESS } from "@/utils/mintContract";
 
 // Level to NFT image mapping (IPFS gateway URLs)
 const LEVEL_NFT_IMAGES = {
-  "first-blood": "https://gateway.pinata.cloud/ipfs/QmNruJWZFoSBg6n3B5F3ZKHTGMVpiWEj5eTr5ckvWjFvvV",
+  "first-blood":
+    "https://gateway.pinata.cloud/ipfs/QmNruJWZFoSBg6n3B5F3ZKHTGMVpiWEj5eTr5ckvWjFvvV",
   "web3-basics":
     "https://gateway.pinata.cloud/ipfs/QmerZ3D4gLKkJDrEZDPShqmXThftcuQb2NULMgBG8BkfTh",
   "core-stylus":
@@ -41,16 +42,34 @@ const LEVEL_METADATA_HASHES = {
 
 const modulesHashes = {
   "web3-basics": {
-    metadataHash: "QmdGYhDPfFXhqNT9jx6KucHJZDMk9BNYVffS3yM4Bcw61L",
+    metadataHash: "QmcMmMDS4AdwMkLiLpZTmUW8gC5XZePNvqiRdjq1U2xMYH",
     imageUrl:
       "https://gateway.pinata.cloud/ipfs/QmcyiBHVJtZwzhiF83iWvDouHqbTN2r3RkP7vkXVRxWwdG",
     name: "Web3 Basics",
   },
   "core-stylus": {
-    metadataHash: "Qmb9CirahKamo1bhbfjbSvnvokGoqDTMGxrSnYfssrsR8R",
+    metadataHash: "QmUR4E9jWWBNGHrrqq6yWJxgnP2vnaF6RDGgqRDhWHBJjG",
     imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmfFbkTHYhGw8goQL3eZENcD2Kh6niAV4JHmKjtD9QuKL6",
+      "https://gateway.pinata.cloud/ipfs/QmfMdtwVrfph4gvwxAWVQCVEanXN2ECgdrHq4FsrEbHSJR",
     name: "Stylus Core Concepts",
+  },
+  "arbitrum-orbit": {
+    metadataHash: "QmR17Qvj3U5xtivLvX46SAozuk6QyuNqhyuKMz2FGUf6yu",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmdVc9QdCSEqerG9aRD3D7RJb6a5xhB1FnrzjsKjQ65GmQ",
+    name: "Arbitrum Orbit",
+  },
+  "defi-arbitrum": {
+    metadataHash: "QmPSiUP1KSDzHPTnNUyoxy5EdWPVqTaKmGb6vAvfPCMCa9",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmREkeNjViKammnHkFtH7wau4VmnsfND39Ra7vXvbwQQ5W",
+    name: "DeFi on Arbitrum",
+  },
+  "cross-chain": {
+    metadataHash: "QmXqX85EaGU9DNJdB5YG2kVJnSAYWmiCyBnbJYLQWKFJ7B",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmTZihtUGNZiMvHoYD2fk3tL4JQpXjpZtuQMLBT684wB4p",
+    name: "Cross-Chain Development",
   },
 };
 
@@ -166,7 +185,8 @@ export const useMint = () => {
     try {
       const metadata = {
         name: "Speedrun Stylus: First Blood Challenge",
-        description: "Awarded for completing the First Challenge on Speedrun Stylus",
+        description:
+          "Awarded for completing the First Challenge on Speedrun Stylus",
         image: imageIpfsUrl, // Use ipfs:// URL in metadata
         attributes: [
           {

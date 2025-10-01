@@ -7,12 +7,15 @@ import { orbitChapters } from "../../../data/orbitChapters";
 import ChapterCard from "../../../components/ChapterCard";
 import ProgressOverview from "../../../components/ProgressOverview";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
+import { useMint } from "../../../hooks/useMint";
 
 export default function LearnOrbitPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const { address, isReady } = useWalletProtection();
   const [chapterProgress, setChapterProgress] = useState<Record<string, { completed: number; total: number }>>({});
   const [isModuleCompleted, setIsModuleCompleted] = useState(false);
+  const { certificationMint, isCertificationMinting } = useMint();
+  const [alreadyClaimed, setAlreadyClaimed] = useState(false);
 
   // Aggregate totals across all chapters
   const overall = useMemo(() => {
@@ -49,6 +52,8 @@ export default function LearnOrbitPage() {
         }
         setChapterProgress(next);
         setIsModuleCompleted(Boolean(data?.isCompleted));
+        // If backend marks module as completed and optionally returns certificate status, set claimed
+        if (data?.isCertificationClaimed) setAlreadyClaimed(true);
       } catch (e) {
         console.error("learn-orbit: failed to fetch progress", e);
       }
@@ -69,6 +74,13 @@ export default function LearnOrbitPage() {
       : orbitChapters.filter(
         (chapter) => chapter.level.toLowerCase() === selectedLevel
       );
+
+  const claimNFT = async () => {
+    try {
+      const minted = await certificationMint("arbitrum-orbit");
+      if (minted) setAlreadyClaimed(true);
+    } catch { }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
@@ -161,6 +173,73 @@ export default function LearnOrbitPage() {
                   Overall Progress
                 </div>
               </div>
+            </div>
+            {/* Claim Certification */}
+            <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+              <div className="text-center w-full">
+                {overall.percent !== 100 ? (
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-gray-400">
+                      Complete all sections to unlock your certificate
+                    </h3>
+                  </div>
+                ) : alreadyClaimed ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center space-x-2 text-green-600">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <h3 className="text-lg font-semibold">Certification claimed — check your wallet</h3>
+                    </div>
+                    <p className="text-sm text-gray-400">
+                      Your NFT certification has been minted to your wallet.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-emerald-400">Ready to claim</h3>
+                    <p className="text-sm text-gray-400">
+                      Great work—everything's complete. Claim your NFT certification now.
+                    </p>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={claimNFT}
+                disabled={overall.percent !== 100 || isCertificationMinting || alreadyClaimed}
+                className={`${alreadyClaimed
+                  ? "bg-green-100 text-green-700 border-2 border-green-300 cursor-default"
+                  : overall.percent === 100 && !isCertificationMinting
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-600 hover:to-teal-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-400/30"
+                  } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
+              >
+                {alreadyClaimed ? (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Certification Claimed</span>
+                  </>
+                ) : isCertificationMinting ? (
+                  <>
+                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Claiming...</span>
+                  </>
+                ) : overall.percent === 100 ? (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
+                    </svg>
+                    <span>Claim NFT Certification</span>
+                  </>
+                ) : (
+                  <span>Complete All Challenges</span>
+                )}
+              </button>
             </div>
           </motion.div>
         </div>
