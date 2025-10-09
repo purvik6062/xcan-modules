@@ -22,7 +22,7 @@ const CERTIFICATION_LEVELS = {
     ],
     level: 1,
   },
-  "core-stylus": {
+  "precompiles-overview": {
     name: "Core Stylus Engineering",
     description: "Complete challenges 1-5 to earn your second NFT badge",
     requiredChallenges: [

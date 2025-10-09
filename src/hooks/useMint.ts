@@ -14,7 +14,7 @@ const LEVEL_NFT_IMAGES = {
     "https://gateway.pinata.cloud/ipfs/QmNruJWZFoSBg6n3B5F3ZKHTGMVpiWEj5eTr5ckvWjFvvV",
   "web3-basics":
     "https://gateway.pinata.cloud/ipfs/QmerZ3D4gLKkJDrEZDPShqmXThftcuQb2NULMgBG8BkfTh",
-  "core-stylus":
+  "precompiles-overview":
     "https://gateway.pinata.cloud/ipfs/QmPDvY2NSKrge7MaRsreRAWrYTQzwmE7YR5EETzzqfgyjh",
   "zkp-basics":
     "https://gateway.pinata.cloud/ipfs/QmeGdBuzGsWuvMQXUmZNNr59Xx7JSsUrzCsZeARkW6RYET",
@@ -32,7 +32,7 @@ const LEVEL_NFT_IMAGES = {
 const LEVEL_METADATA_HASHES = {
   "first-blood": "QmP4qxFaQzW8cvWVSwzBAJUYA1TyF9xHVPsy7WYYKap2AC",
   "web3-basics": "QmV8NzexZhbqexqocJgiNBzxV5998mrj9mgGTP2sMWpnnm",
-  "core-stylus": "QmUWNFmQP7V4J2f53HgkHamLEGMA5X8pf5Gkcb5d34Bsev",
+  "precompiles-overview": "QmUWNFmQP7V4J2f53HgkHamLEGMA5X8pf5Gkcb5d34Bsev",
   "zkp-basics": "QmSQDsc4fXh2se73UftjVGcWX2ynf3YRw54BGLgTyksh71",
   "zkp-advanced": "Qmf6mU31WonnqUy9YWCsHvcKTAv8vwR16pw1wWyLosAci6",
   "agentic-defi": "QmR5ZhpFZEwkDZ8Usgfcatf4r6R18Lu3fHdSdjhijfr1iR",
@@ -47,11 +47,11 @@ const modulesHashes = {
       "https://gateway.pinata.cloud/ipfs/QmcyiBHVJtZwzhiF83iWvDouHqbTN2r3RkP7vkXVRxWwdG",
     name: "Web3 Basics",
   },
-  "core-stylus": {
+  "precompiles-overview": {
     metadataHash: "QmUR4E9jWWBNGHrrqq6yWJxgnP2vnaF6RDGgqRDhWHBJjG",
     imageUrl:
       "https://gateway.pinata.cloud/ipfs/QmfMdtwVrfph4gvwxAWVQCVEanXN2ECgdrHq4FsrEbHSJR",
-    name: "Stylus Core Concepts",
+    name: "Precompile Playground",
   },
   "arbitrum-orbit": {
     metadataHash: "QmR17Qvj3U5xtivLvX46SAozuk6QyuNqhyuKMz2FGUf6yu",

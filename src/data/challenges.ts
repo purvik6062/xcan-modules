@@ -1,6 +1,6 @@
 import { Challenge } from "../types/challenge";
 
-// Mocked challenge data with Stylus Core Concepts challenges
+// Mocked challenge data with Precompile Playground challenges
 export const challengesData: Record<string, Challenge> = {
   "l1-fee-calculation": {
     id: 1,

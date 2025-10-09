@@ -21,16 +21,16 @@ export async function POST(
     }
 
     const collectionName =
-    module === "core-stylus"
-    ? "challenges-core-stylus"
+    module === "precompiles-overview"
+    ? "challenges-precompiles-overview"
     : module === "web3-basics"
     ? "challenges-web3-basics"
+    : module === "stylus-core-concepts"
+    ? "challenges-stylus-core-concepts"
     : module === "master-defi"
     ? "challenges-master-defi"
     : module === "master-orbit"
     ? "challenges-orbit-chain"
-    : module === "master-defi"
-    ? "challenges-master-defi"
     : module === "cross-chain"
     ? "challenges-cross-chain"
         : null;
@@ -46,7 +46,7 @@ export async function POST(
     const collection = db.collection(collectionName);
 
     const baseSetOnInsert =
-      collectionName === "challenges-core-stylus"
+      collectionName === "challenges-precompiles-overview"
         ? { createdAt: new Date(), challenges: [], results: {} }
         : { createdAt: new Date(), chapters: {}, completedChapters: [] };
 
@@ -100,7 +100,8 @@ export async function GET(
     // Validate module against possible certification levelNames
     const validModules = [
       "web3-basics",
-      "core-stylus",
+      "precompiles-overview",
+      "stylus-core-concepts",
       "arbitrum-orbit",
       "defi-arbitrum",
       "cross-chain",
@@ -113,16 +114,16 @@ export async function GET(
     }
 
     const collectionName =
-      module === "core-stylus"
-        ? "challenges-core-stylus"
+      module === "precompiles-overview"
+        ? "challenges-precompiles-overview"
         : module === "web3-basics"
         ? "challenges-web3-basics"
+        : module === "stylus-core-concepts"
+        ? "challenges-stylus-core-concepts"
         : module === "master-defi"
         ? "challenges-master-defi"
         : module === "master-orbit"
         ? "challenges-orbit-chain"
-        : module === "master-defi"
-        ? "challenges-master-defi"
         : module === "cross-chain"
         ? "challenges-cross-chain"
         : null;

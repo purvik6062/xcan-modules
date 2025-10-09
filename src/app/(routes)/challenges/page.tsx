@@ -10,9 +10,9 @@ import { useMint } from "../../../hooks/useMint";
 import toast from "react-hot-toast";
 
 // export const metadata = {
-//   title: "Stylus Core Concepts Challenges - CodeQuest",
+//   title: "Precompile Playground Challenges - CodeQuest",
 //   description:
-//     "Learn how to use Stylus Core Concepts through interactive coding challenges",
+//     "Learn how to use Precompile Playground through interactive coding challenges",
 // };
 
 export default function ChallengesPage() {
@@ -34,7 +34,7 @@ export default function ChallengesPage() {
         const slugs = data?.progress?.challenges || [];
         if (Array.isArray(slugs)) setCompletedSlugs(slugs);
         try {
-          const certRes = await fetch(`/api/certification/claim/core-stylus?userAddress=${address}`, { cache: "no-store" });
+          const certRes = await fetch(`/api/certification/claim/precompiles-overview?userAddress=${address}`, { cache: "no-store" });
           if (certRes.ok) {
             const cert = await certRes.json();
             setAlreadyClaimed(Boolean(cert?.claimed));
@@ -89,8 +89,8 @@ export default function ChallengesPage() {
         toast.error("Complete all challenges to claim certification");
         return;
       }
-      const minted = await certificationMint("core-stylus");
-      await fetch("/api/certification/claim/core-stylus", {
+      const minted = await certificationMint("precompiles-overview");
+      await fetch("/api/certification/claim/precompiles-overview", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

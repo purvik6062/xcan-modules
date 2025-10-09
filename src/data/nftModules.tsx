@@ -142,8 +142,8 @@ export const nftModules: NFTModule[] = [
     ],
   },
   {
-    id: "core-stylus",
-    title: "Stylus Core Concepts",
+    id: "precompiles-overview",
+    title: "Precompile Playground",
     description:
       "Master Arbitrum's powerful precompiles through interactive coding challenges",
     icon: CodeBracketIcon,
@@ -153,13 +153,34 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-blue-500 to-indigo-600",
     database: "mongodb",
-    collectionName: "challenges-core-stylus",
+    collectionName: "challenges-precompiles-overview",
     href: "/challenges",
     features: [
       "Interactive Challenges",
       "Real-world Examples",
       "Gas Optimization",
       "L1-L2 Messaging",
+    ],
+  },
+  {
+    id: "stylus-core-concepts",
+    title: "Stylus Core Concepts",
+    description:
+      "Master Arbitrum Stylus and build high-performance smart contracts with Rust",
+    icon: CpuChipIcon,
+    level: "Beginner to Advanced",
+    duration: "2-3 weeks",
+    challenges: 18,
+    status: "available",
+    gradient: "from-pink-500 to-rose-600",
+    database: "mongodb",
+    collectionName: "challenges-stylus-core-concepts",
+    href: "/learn-stylus",
+    features: [
+      "Rust & WASM Fundamentals",
+      "Constructors & Storage",
+      "Functions & Events",
+      "10-100x Performance Gains",
     ],
   },
   {

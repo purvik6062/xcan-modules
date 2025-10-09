@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const { client, db } = await connectToDatabase();
 
     // Fetch data from all collections in parallel
-    const [userData, mintedNFTData, web3BasicsData, coreStylusData] =
+    const [userData, mintedNFTData, web3BasicsData, coreStylusData, stylusCoreConceptsData] =
       await Promise.all([
         // User collection
         db.collection("users").findOne({ address: userAddress }),
@@ -33,7 +33,12 @@ export async function GET(request: NextRequest) {
 
         // Core Stylus challenges collection
         db
-          .collection("challenges-core-stylus")
+          .collection("challenges-precompiles-overview")
+          .findOne({ userAddress: userAddress.toLowerCase() }),
+
+        // Stylus Core Concepts collection
+        db
+          .collection("challenges-stylus-core-concepts")
           .findOne({ userAddress: userAddress.toLowerCase() }),
       ]);
 
@@ -68,8 +73,19 @@ export async function GET(request: NextRequest) {
           return sum + (Number(result?.points) || 0);
         }, 0)
       : 0;
+    
+    const stylusCoreConceptsPoints = Array.isArray(stylusCoreConceptsData?.completedChapters)
+      ? stylusCoreConceptsData.completedChapters.reduce(
+          (
+            sum: number,
+            chapter: { id: string; level?: string; points?: number }
+          ) => sum + (Number(chapter.points) || 0),
+          0
+        )
+      : 0;
+    
     const nftPoints = totalMinted * 25; // 25 points per NFT level
-    const totalPoints = web3Points + coreStylusPoints;
+    const totalPoints = web3Points + coreStylusPoints + stylusCoreConceptsPoints;
     // const totalPoints = web3Points + coreStylusPoints + nftPoints;
 
     // Determine user level based on total points
@@ -134,7 +150,7 @@ export async function GET(request: NextRequest) {
           points: Number(challengeResult?.points) || 0,
           level: challengeResult?.level || "Beginner",
           slug: `challenges/${challengeId}`,
-          module: "core-stylus",
+          module: "precompiles-overview",
         });
       });
     }

@@ -4,6 +4,7 @@ import { web3BasicsChapters } from "@/data/web3BasicsChapters";
 import { crossChainChapters } from "@/data/crossChainChapters";
 import { defiChapters } from "@/data/defiChapters";
 import { orbitChapters } from "@/data/orbitChapters";
+import { stylusChapters } from "@/data/stylusChapters";
 
 type UserChallengesDoc = {
   userAddress: string;
@@ -38,6 +39,8 @@ function computeProgress(chaptersCompletedSections: {
     ? defiChapters
     : currentModule === "master-orbit"
     ? orbitChapters
+    : currentModule === "stylus-core-concepts"
+    ? stylusChapters
     : web3BasicsChapters;
 
   for (const chapter of chapters) {
@@ -79,6 +82,8 @@ export async function GET(request: NextRequest) {
       ? "challenges-master-defi"
       : currentModule === "master-orbit"
       ? "challenges-orbit-chain"
+      : currentModule === "stylus-core-concepts"
+      ? "challenges-stylus-core-concepts"
       : "challenges-web3-basics";
 
     const { db } = await connectToDatabase();
@@ -131,6 +136,8 @@ export async function POST(request: NextRequest) {
       ? "challenges-master-defi"
       : currentModule === "master-orbit"
       ? "challenges-orbit-chain"
+      : currentModule === "stylus-core-concepts"
+      ? "challenges-stylus-core-concepts"
       : "challenges-web3-basics";
 
     const { db } = await connectToDatabase();
@@ -150,6 +157,8 @@ export async function POST(request: NextRequest) {
       ? defiChapters
       : currentModule === "master-orbit"
       ? orbitChapters
+      : currentModule === "stylus-core-concepts"
+      ? stylusChapters
       : web3BasicsChapters;
     
     for (const ch of chaptersDataForModule) {
@@ -167,8 +176,8 @@ export async function POST(request: NextRequest) {
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        if (currentModule === "cross-chain" || currentModule === "master-defi" || currentModule === "master-orbit") {
-          // Enrich with level and points for Cross-Chain and Master DeFi
+        if (currentModule === "cross-chain" || currentModule === "master-defi" || currentModule === "master-orbit" || currentModule === "stylus-core-concepts") {
+          // Enrich with level and points for Cross-Chain, Master DeFi, and Stylus
           const level: string = (ch as any).level || "Beginner";
           const points = level === "Advanced" ? 30 : level === "Intermediate" ? 20 : 10;
           completedChapters.push({ id: ch.id, level, points });
@@ -178,8 +187,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check if all 6 chapters are completed for Web3 Basics
-    const isCompleted = completedChapters.length >= 6;
+    // Check if all chapters are completed for the current module
+    const totalChaptersInModule = chaptersDataForModule.length;
+    const isCompleted = completedChapters.length >= totalChaptersInModule;
 
     const doc: UserChallengesDoc = {
       userAddress,
@@ -196,6 +206,8 @@ export async function POST(request: NextRequest) {
       ? defiChapters
       : currentModule === "master-orbit"
       ? orbitChapters
+      : currentModule === "stylus-core-concepts"
+      ? stylusChapters
       : web3BasicsChapters;
 
     const allChapterIds = chaptersData2.map((c) => c.id);
