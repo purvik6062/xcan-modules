@@ -117,6 +117,10 @@ export default function ModuleDetailPage() {
   };
 
   const alreadyClaimed = Boolean(claimedCertification?.claimed);
+  console.log("alreadyClaimed", alreadyClaimed);
+  console.log("claimedCertification", claimedCertification);
+  console.log("isCertificationMinting", isCertificationMinting);
+  console.log("isCheckingClaim", isCheckingClaim);
   const isClaimDisabled = !claimedCertification?.claimed || isCertificationMinting || isCheckingClaim || alreadyClaimed;
   
   return (

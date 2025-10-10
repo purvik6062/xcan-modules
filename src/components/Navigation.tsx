@@ -88,7 +88,7 @@ export default function Navigation() {
                     Playground
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="/leaderboard"
                     className={`text-white hover:text-blue-200 transition-colors ${isActive("/leaderboard") ? "font-semibold" : ""
@@ -96,7 +96,7 @@ export default function Navigation() {
                   >
                     Leaderboard
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     href="/profile"

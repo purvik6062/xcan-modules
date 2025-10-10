@@ -12,36 +12,28 @@ interface ProfileData {
   email: string;
   avatar: string;
   joinDate: string;
+  userAddress: string;
   level: string;
   points: number;
-  rank: number;
-  streak: number;
+  totalChallengesCompleted: number;
+  totalSectionsCompleted: number;
+  totalModulesCompleted: number;
+  totalMinted: number;
+  completedModules: Array<{
+    id: string;
+    name: string;
+    completedAt: string;
+  }>;
   completedChallenges: Array<{
     id: string;
+    moduleId: string;
+    moduleName: string;
     title: string;
     completedOn: string;
     points: number;
     level: string;
-    slug: string;
-    module?: string;
   }>;
-  inProgressChallenges: Array<{
-    id: string;
-    title: string;
-    progress: number;
-    level: string;
-    slug: string;
-  }>;
-  achievements: Array<{
-    id: number;
-    name: string;
-    description: string;
-    date: string;
-    icon: string;
-  }>;
-  totalMinted: number;
-  completedWeb3Chapters: number;
-  completedCoreStylusChallenges: number;
+  levelDistribution: Record<string, number>;
   mintedNFTs: Array<{
     level: number;
     levelKey: string;
@@ -52,11 +44,10 @@ interface ProfileData {
     mintedAt: string;
     network: string;
   }>;
-  userAddress: string;
 }
 
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState("overview"); // overview, challenges, achievements, nfts
+  const [activeTab, setActiveTab] = useState("overview"); // overview, challenges, modules, nfts
   const [userData, setUserData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -159,16 +150,10 @@ export default function ProfilePage() {
 
   // Calculate stats
   const totalPoints = userData.points;
-  const completedCount = userData.completedChallenges.length;
-  const beginnerCount = userData.completedChallenges.filter(
-    (c) => c.level === "Beginner"
-  ).length;
-  const intermediateCount = userData.completedChallenges.filter(
-    (c) => c.level === "Intermediate"
-  ).length;
-  const advancedCount = userData.completedChallenges.filter(
-    (c) => c.level === "Advanced"
-  ).length;
+  const completedCount = userData.totalChallengesCompleted;
+  const beginnerCount = userData.levelDistribution.Beginner || 0;
+  const intermediateCount = userData.levelDistribution.Intermediate || 0;
+  const advancedCount = userData.levelDistribution.Advanced || 0;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -264,13 +249,13 @@ export default function ProfilePage() {
               </li>
               <li className="mr-2">
                 <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "achievements"
+                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "modules"
                     ? " text-blue-300 border-blue-300"
                     : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
                     }`}
-                  onClick={() => setActiveTab("achievements")}
+                  onClick={() => setActiveTab("modules")}
                 >
-                  Achievements
+                  Modules
                 </button>
               </li>
               <li>
@@ -292,55 +277,77 @@ export default function ProfilePage() {
             {/* Overview Tab */}
             {activeTab === "overview" && (
               <div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                   <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
                     <div className="text-3xl font-bold text-blue-300">
                       {totalPoints}
                     </div>
-                    <div className=" text-gray-300">
+                    <div className="text-sm text-gray-300">
                       Total Points
                     </div>
                   </div>
                   <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-300">
+                    <div className="text-3xl font-bold text-green-300">
                       {completedCount}
                     </div>
-                    <div className=" text-gray-300">
-                      Completed Challenges
+                    <div className="text-sm text-gray-300">
+                      Challenges
                     </div>
                   </div>
                   <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-300">
+                    <div className="text-3xl font-bold text-purple-300">
+                      {userData.totalSectionsCompleted}
+                    </div>
+                    <div className="text-sm text-gray-300">
+                      Sections
+                    </div>
+                  </div>
+                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
+                    <div className="text-3xl font-bold text-pink-300">
+                      {userData.totalModulesCompleted}
+                    </div>
+                    <div className="text-sm text-gray-300">
+                      Modules
+                    </div>
+                  </div>
+                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
+                    <div className="text-3xl font-bold text-yellow-300">
                       {userData.totalMinted}
                     </div>
-                    <div className=" text-gray-300">
-                      NFTs Minted
+                    <div className="text-sm text-gray-300">
+                      NFTs
                     </div>
                   </div>
                   <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-300">
-                      {userData.achievements.length}
+                    <div className="text-3xl font-bold text-cyan-300">
+                      {userData.completedModules.length}
                     </div>
-                    <div className=" text-gray-300">
-                      Achievements
+                    <div className="text-sm text-gray-300">
+                      Completed
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
                   <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <h3 className="text-lg font-semibold mb-2">Web3 Basics Progress</h3>
-                    <div className="text-2xl font-bold text-green-400 mb-1">
-                      {userData.completedWeb3Chapters}
-                    </div>
-                    <div className="text-sm text-gray-400">Chapters Completed</div>
-                  </div>
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <h3 className="text-lg font-semibold mb-2">Core Stylus Progress</h3>
-                    <div className="text-2xl font-bold text-yellow-400 mb-1">
-                      {userData.completedCoreStylusChallenges}
-                    </div>
-                    <div className="text-sm text-gray-400">Challenges Completed</div>
+                    <h3 className="text-lg font-semibold mb-3">Completed Modules</h3>
+                    {userData.completedModules.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {userData.completedModules.map((module) => (
+                          <div key={module.id} className="bg-[#1a2332] rounded-lg p-3 flex items-center justify-between">
+                            <div>
+                              <div className="font-medium text-white">{module.name}</div>
+                              <div className="text-xs text-gray-400">{module.completedAt}</div>
+                            </div>
+                            <div className="text-green-400">✓</div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-4 text-gray-400">
+                        No modules completed yet
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -437,7 +444,7 @@ export default function ProfilePage() {
                   <h2 className="text-lg font-bold mb-4">Recent Activity</h2>
                   <div className="space-y-4">
                     {userData.completedChallenges
-                      .slice(0, 3)
+                      .slice(0, 5)
                       .map((challenge) => (
                         <div key={challenge.id} className="flex items-start">
                           <div className="flex-shrink-0 bg-green-900 p-2 rounded-full">
@@ -458,42 +465,20 @@ export default function ProfilePage() {
                           </div>
                           <div className="ml-3">
                             <div className="text-sm font-medium">
-                              Completed{" "}
-                              <Link
-                                href={challenge.module === "web3-basics"
-                                  ? `/learn-web3-basics/${challenge.slug.split('/')[1]}`
-                                  : `/challenges/${challenge.slug}`
-                                }
-                                className="text-blue-300 hover:underline"
-                              >
-                                {challenge.title}
-                              </Link>
+                              <span className="text-gray-400">{challenge.moduleName}:</span>{" "}
+                              <span className="text-white">{challenge.title}</span>
                             </div>
                             <div className="text-xs text-gray-400">
-                              {challenge.completedOn}
+                              {challenge.completedOn} • {challenge.points} points
                             </div>
                           </div>
                         </div>
                       ))}
-
-                    {userData.achievements.slice(0, 2).map((achievement) => (
-                      <div key={achievement.id} className="flex items-start">
-                        <div className="flex-shrink-0 bg-yellow-900 p-2 rounded-full">
-                          <span className="text-xl">{achievement.icon}</span>
-                        </div>
-                        <div className="ml-3">
-                          <div className="text-sm font-medium">
-                            Earned achievement:{" "}
-                            <span className="font-semibold">
-                              {achievement.name}
-                            </span>
-                          </div>
-                          <div className="text-xs text-gray-400">
-                            {achievement.date}
-                          </div>
-                        </div>
+                    {userData.completedChallenges.length === 0 && (
+                      <div className="text-center py-4 text-gray-400">
+                        No challenges completed yet
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
@@ -502,24 +487,21 @@ export default function ProfilePage() {
             {/* Challenges Tab */}
             {activeTab === "challenges" && (
               <div>
-                <h2 className="text-xl font-bold mb-4">Completed Challenges</h2>
+                <h2 className="text-xl font-bold mb-4">Completed Challenges ({userData.completedChallenges.length})</h2>
                 <div className="space-y-4 mb-8">
                   {userData.completedChallenges.map((challenge) => (
                     <div
                       key={challenge.id}
                       className=" bg-[#0A142A] rounded-lg shadow-md p-4 flex justify-between items-center"
                     >
-                      <div>
-                        <Link
-                          href={challenge.module === "web3-basics"
-                            ? `/learn-web3-basics/${challenge.slug.split('/')[1]}`
-                            : `/challenges/${challenge.slug}`
-                          }
-                          className="font-medium hover:text-blue-300 hover:underline"
-                        >
+                      <div className="flex-1">
+                        <div className="font-medium text-white">
                           {challenge.title}
-                        </Link>
-                        <div className="flex items-center mt-1">
+                        </div>
+                        <div className="text-sm text-gray-400 mt-1">
+                          {challenge.moduleName}
+                        </div>
+                        <div className="flex items-center mt-2">
                           <span
                             className={`text-xs px-2 py-0.5 rounded mr-2 ${challenge.level === "Beginner"
                               ? "  bg-green-900 text-green-200"
@@ -536,13 +518,22 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold">
-                          {challenge.points} points
+                        <div className="font-bold text-blue-300">
+                          {challenge.points} pts
                         </div>
-                        <div className="text-xs text-green-600">Completed</div>
+                        <div className="text-xs text-green-400">✓ Completed</div>
                       </div>
                     </div>
                   ))}
+                  {userData.completedChallenges.length === 0 && (
+                    <div className="text-center py-12">
+                      <div className="text-gray-500 text-6xl mb-4">📚</div>
+                      <h3 className="text-xl font-bold mb-2">No Challenges Completed</h3>
+                      <p className="text-gray-400">
+                        Start learning to complete your first challenge!
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* <h2 className="text-xl font-bold mb-4">In Progress</h2>
@@ -585,57 +576,72 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {/* Achievements Tab */}
-            {activeTab === "achievements" && (
+            {/* Modules Tab */}
+            {activeTab === "modules" && (
               <div>
-                <h2 className="text-xl font-bold mb-4">Your Achievements</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {userData.achievements.map((achievement) => (
+                <h2 className="text-xl font-bold mb-4">Learning Modules</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-[#0A142A] rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-semibold mb-2 text-green-400">Completed</h3>
+                    <div className="text-3xl font-bold">{userData.totalModulesCompleted}</div>
+                    <div className="text-sm text-gray-400">modules completed</div>
+                  </div>
+                  <div className="bg-[#0A142A] rounded-lg shadow-md p-6">
+                    <h3 className="text-lg font-semibold mb-2 text-blue-400">In Progress</h3>
+                    <div className="text-3xl font-bold">{6 - userData.totalModulesCompleted}</div>
+                    <div className="text-sm text-gray-400">modules available</div>
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-bold mb-3">Completed Modules</h3>
+                <div className="space-y-3 mb-6">
+                  {userData.completedModules.map((module) => (
                     <div
-                      key={achievement.id}
-                      className=" bg-[#0A142A] rounded-lg shadow-md p-6 flex items-center"
+                      key={module.id}
+                      className="bg-[#0A142A] rounded-lg shadow-md p-4 flex items-center justify-between"
                     >
-                      <div className="flex-shrink-0  bg-yellow-900 p-3 rounded-full text-center">
-                        <span className="text-2xl">{achievement.icon}</span>
+                      <div className="flex items-center">
+                        <div className="bg-green-900 p-2 rounded-full mr-4">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 text-green-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-white">{module.name}</h4>
+                          <p className="text-sm text-gray-400">Completed on {module.completedAt}</p>
+                        </div>
                       </div>
-                      <div className="ml-4">
-                        <h3 className="font-bold">{achievement.name}</h3>
-                        <p className="text-sm  text-gray-300">
-                          {achievement.description}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Earned on {achievement.date}
-                        </p>
+                      <div className="bg-green-900 text-green-300 px-3 py-1 rounded-full text-sm font-medium">
+                        ✓ Complete
                       </div>
                     </div>
                   ))}
-
-                  {/* Locked achievements */}
-                  <div className="bg-[#0A142A] rounded-lg shadow-md p-6 flex items-center opacity-50">
-                    <div className="flex-shrink-0  bg-[#0A142A] p-3 rounded-full text-center">
-                      <span className="text-2xl">🏆</span>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="font-bold">Code Master</h3>
-                      <p className="text-sm  text-gray-300">
-                        Complete 10 advanced challenges
+                  {userData.completedModules.length === 0 && (
+                    <div className="text-center py-12 bg-[#0A142A] rounded-lg">
+                      <div className="text-gray-500 text-6xl mb-4">🎯</div>
+                      <h3 className="text-xl font-bold mb-2">No Modules Completed</h3>
+                      <p className="text-gray-400 mb-4">
+                        Complete all challenges in a module to mark it as complete!
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">Locked</p>
+                      <Link
+                        href="/"
+                        className="inline-block bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Browse Modules
+                      </Link>
                     </div>
-                  </div>
-
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-6 flex items-center opacity-50">
-                    <div className="flex-shrink-0 bg-[#0A142A] p-3 rounded-full text-center">
-                      <span className="text-2xl">⚡</span>
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="font-bold">Speed Demon</h3>
-                      <p className="text-sm  text-gray-300">
-                        Complete 5 challenges in a single day
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">Locked</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}

@@ -149,6 +149,10 @@ export async function GET(
     const matchingCertification = certifications.find(
       (cert: any) => cert.levelName === module
     );
+    console.log("matchingCertification", matchingCertification);
+    console.log("certifications", certifications);
+    console.log("module", module);
+    
 
     return NextResponse.json({
       claimed: Boolean(matchingCertification?.claimed),

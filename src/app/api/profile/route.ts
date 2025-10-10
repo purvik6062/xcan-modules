@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
 
+// Module configuration with display names
+const MODULE_CONFIG = {
+  "challenges-web3-basics": { name: "Web3 Basics", id: "web3-basics" },
+  "challenges-stylus-core-concepts": { name: "Stylus Core Concepts", id: "stylus-core-concepts" },
+  "challenges-precompiles-overview": { name: "Precompile Playground", id: "precompiles-overview" },
+  "challenges-cross-chain": { name: "Cross-Chain Development", id: "cross-chain" },
+  "challenges-master-defi": { name: "Master DeFi on Arbitrum", id: "master-defi" },
+  "challenges-orbit-chain": { name: "Master Arbitrum Orbit", id: "master-orbit" },
+} as const;
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -13,210 +23,136 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { client, db } = await connectToDatabase();
+    const { db } = await connectToDatabase();
+    const normalizedAddress = userAddress.toLowerCase();
 
-    // Fetch data from all collections in parallel
-    const [userData, mintedNFTData, web3BasicsData, coreStylusData, stylusCoreConceptsData] =
-      await Promise.all([
-        // User collection
-        db.collection("users").findOne({ address: userAddress }),
+    // Projection for optimal performance - only fetch needed fields
+    const projection = {
+      _id: 0,
+      chapters: 1,
+      completedChapters: 1,
+      isCompleted: 1,
+      updatedAt: 1,
+    };
 
-        // Minted NFT collection
-        db
-          .collection("minted-nft")
-          .findOne({ userAddress: userAddress.toLowerCase() }),
+    // Fetch all module data in parallel for maximum performance
+    const [userData, mintedNFTData, ...moduleDataArray] = await Promise.all([
+      // User collection
+      db.collection("users").findOne(
+        { address: userAddress },
+        { projection: { _id: 0, address: 1, socialHandles: 1, createdAt: 1, isEmailVisible: 1 } }
+      ),
 
-        // Web3 Basics challenges collection
-        db
-          .collection("challenges-web3-basics")
-          .findOne({ userAddress: userAddress.toLowerCase() }),
+      // Minted NFT collection
+      db.collection("minted-nft").findOne(
+        { userAddress: normalizedAddress },
+        { projection: { _id: 0, totalMinted: 1, mintedLevels: 1, lastMintedAt: 1 } }
+      ),
 
-        // Core Stylus challenges collection
-        db
-          .collection("challenges-precompiles-overview")
-          .findOne({ userAddress: userAddress.toLowerCase() }),
+      // All learning module collections
+      ...Object.keys(MODULE_CONFIG).map(collectionName =>
+        db.collection(collectionName).findOne(
+          { userAddress: normalizedAddress },
+          { projection }
+        )
+      ),
+    ]);
 
-        // Stylus Core Concepts collection
-        db
-          .collection("challenges-stylus-core-concepts")
-          .findOne({ userAddress: userAddress.toLowerCase() }),
-      ]);
+    // Map module data with collection names for reference
+    const collectionNames = Object.keys(MODULE_CONFIG);
+    const moduleData = moduleDataArray.map((data, index) => ({
+      collectionName: collectionNames[index],
+      moduleName: MODULE_CONFIG[collectionNames[index] as keyof typeof MODULE_CONFIG].name,
+      moduleId: MODULE_CONFIG[collectionNames[index] as keyof typeof MODULE_CONFIG].id,
+      data,
+    }));
 
-    // Calculate user stats
+    // Aggregate statistics efficiently
+    let totalChallengesCompleted = 0;
+    let totalSectionsCompleted = 0;
+    let totalModulesCompleted = 0;
+    let totalPoints = 0;
+
+    const completedModules: Array<{ id: string; name: string; completedAt: string }> = [];
+    const allCompletedChapters: Array<{
+      id: string;
+      moduleId: string;
+      moduleName: string;
+      title: string;
+      completedOn: string;
+      points: number;
+      level: string;
+    }> = [];
+
+    // Process each module's data
+    moduleData.forEach(({ collectionName, moduleName, moduleId, data }) => {
+      if (!data) return;
+
+      // Count completed challenges (chapters)
+      if (Array.isArray(data.completedChapters)) {
+        totalChallengesCompleted += data.completedChapters.length;
+
+        // Sum points from completed chapters
+        data.completedChapters.forEach((chapter: { id: string; level?: string; points?: number }) => {
+          const points = Number(chapter.points) || 0;
+          totalPoints += points;
+
+          // Add to completed chapters list
+          allCompletedChapters.push({
+            id: `${moduleId}-${chapter.id}`,
+            moduleId,
+            moduleName,
+            title: chapter.id.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+            completedOn: data.updatedAt ? new Date(data.updatedAt).toLocaleDateString() : "Unknown",
+            points,
+            level: chapter.level || "Beginner",
+          });
+        });
+      }
+
+      // Count total sections completed
+      if (data.chapters && typeof data.chapters === 'object') {
+        Object.values(data.chapters).forEach((sections) => {
+          if (Array.isArray(sections)) {
+            totalSectionsCompleted += sections.length;
+          }
+        });
+      }
+
+      // Check if module is completed
+      if (data.isCompleted === true) {
+        totalModulesCompleted += 1;
+        completedModules.push({
+          id: moduleId,
+          name: moduleName,
+          completedAt: data.updatedAt ? new Date(data.updatedAt).toLocaleDateString() : "Unknown",
+        });
+      }
+    });
+
     const totalMinted = mintedNFTData?.totalMinted || 0;
-    const completedWeb3Chapters = Array.isArray(
-      web3BasicsData?.completedChapters
-    )
-      ? web3BasicsData.completedChapters.length
-      : 0;
-    const completedCoreStylusChallenges = Array.isArray(
-      coreStylusData?.challenges
-    )
-      ? coreStylusData.challenges.length
-      : 0;
-
-    // Calculate total points (you can adjust this scoring system)
-    // New schema-based point calculations
-    const web3Points = Array.isArray(web3BasicsData?.completedChapters)
-      ? web3BasicsData.completedChapters.reduce(
-          (
-            sum: number,
-            chapter: { id: string; level?: string; points?: number }
-          ) => sum + (Number(chapter.points) || 0),
-          0
-        )
-      : 0;
-
-    const coreStylusPoints = Array.isArray(coreStylusData?.challenges)
-      ? coreStylusData.challenges.reduce((sum: number, challengeId: string) => {
-          const result = coreStylusData?.results?.[challengeId];
-          return sum + (Number(result?.points) || 0);
-        }, 0)
-      : 0;
-    
-    const stylusCoreConceptsPoints = Array.isArray(stylusCoreConceptsData?.completedChapters)
-      ? stylusCoreConceptsData.completedChapters.reduce(
-          (
-            sum: number,
-            chapter: { id: string; level?: string; points?: number }
-          ) => sum + (Number(chapter.points) || 0),
-          0
-        )
-      : 0;
-    
-    const nftPoints = totalMinted * 25; // 25 points per NFT level
-    const totalPoints = web3Points + coreStylusPoints + stylusCoreConceptsPoints;
-    // const totalPoints = web3Points + coreStylusPoints + nftPoints;
 
     // Determine user level based on total points
     let level = "Beginner";
     if (totalPoints >= 200) level = "Advanced";
     else if (totalPoints >= 100) level = "Intermediate";
 
-    // Calculate rank (this would need to be calculated against all users)
-    // For now, we'll use a placeholder
-    const rank = 1; // This should be calculated based on total points across all users
+    // Sort completed chapters by date (most recent first)
+    allCompletedChapters.sort((a, b) => {
+      const dateA = new Date(a.completedOn).getTime();
+      const dateB = new Date(b.completedOn).getTime();
+      return dateB - dateA;
+    });
 
-    // Calculate streak (this would need to be tracked in the database)
-    // For now, we'll use a placeholder
-    const streak = 0;
+    // Calculate level distribution
+    const levelDistribution = allCompletedChapters.reduce((acc, chapter) => {
+      acc[chapter.level] = (acc[chapter.level] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
-    // Build completed challenges array
-    type CompletedChallenge = {
-      id: string;
-      title: string;
-      completedOn: string;
-      points: number;
-      level: string;
-      slug: string;
-      module: string;
-    };
-    const completedChallenges: CompletedChallenge[] = [];
-
-    // Add Web3 Basics challenges
-    if (Array.isArray(web3BasicsData?.completedChapters)) {
-      web3BasicsData.completedChapters.forEach(
-        (chapter: { id: string; level?: string; points?: number }) => {
-          const chapterId = chapter.id;
-          completedChallenges.push({
-            id: `web3-${chapterId}`,
-            title: `Web3 Basics: ${chapterId
-              .replace(/-/g, " ")
-              .replace(/\b\w/g, (l) => l.toUpperCase())}`,
-            completedOn: web3BasicsData.updatedAt
-              ? new Date(web3BasicsData.updatedAt).toLocaleDateString()
-              : "Unknown",
-            points: Number(chapter.points) || 0,
-            level: chapter.level || "Beginner",
-            slug: `web3-basics/${chapterId}`,
-            module: "web3-basics",
-          });
-        }
-      );
-    }
-
-    // Add Core Stylus challenges
-    if (Array.isArray(coreStylusData?.challenges)) {
-      coreStylusData.challenges.forEach((challengeId: string) => {
-        const challengeResult = coreStylusData.results?.[challengeId];
-        completedChallenges.push({
-          id: `core-${challengeId}`,
-          title: challengeId
-            .replace(/-/g, " ")
-            .replace(/\b\w/g, (l) => l.toUpperCase()),
-          completedOn: challengeResult?.completedAt
-            ? new Date(challengeResult.completedAt).toLocaleDateString()
-            : "Unknown",
-          points: Number(challengeResult?.points) || 0,
-          level: challengeResult?.level || "Beginner",
-          slug: `challenges/${challengeId}`,
-          module: "precompiles-overview",
-        });
-      });
-    }
-
-    // Build achievements array based on completed milestones
-    const achievements = [];
-
-    if (completedChallenges.length >= 1) {
-      achievements.push({
-        id: 1,
-        name: "First Steps",
-        description: "Complete your first challenge",
-        date: completedChallenges[0]?.completedOn || "Unknown",
-        icon: "🏆",
-      });
-    }
-
-    if (completedChallenges.length >= 3) {
-      achievements.push({
-        id: 2,
-        name: "Quick Learner",
-        description: "Complete 3 challenges",
-        date: completedChallenges[2]?.completedOn || "Unknown",
-        icon: "🚀",
-      });
-    }
-
-    if (totalMinted >= 1) {
-      achievements.push({
-        id: 3,
-        name: "NFT Collector",
-        description: "Mint your first NFT",
-        date: mintedNFTData?.lastMintedAt
-          ? new Date(mintedNFTData.lastMintedAt).toLocaleDateString()
-          : "Unknown",
-        icon: "🎨",
-      });
-    }
-
-    if (totalMinted >= 4) {
-      achievements.push({
-        id: 4,
-        name: "Master Collector",
-        description: "Mint all available NFT levels",
-        date: mintedNFTData?.lastMintedAt
-          ? new Date(mintedNFTData.lastMintedAt).toLocaleDateString()
-          : "Unknown",
-        icon: "👑",
-      });
-    }
-
-    // Build in-progress challenges (challenges that are started but not completed)
-    type InProgressChallenge = {
-      id: string;
-      title: string;
-      progress: number;
-      level: string;
-      slug: string;
-    };
-    const inProgressChallenges: InProgressChallenge[] = [];
-
-    // You can add logic here to determine which challenges are in progress
-    // For now, we'll leave this empty as the current data doesn't show partial progress
-
-    // Build profile data
+    // Build profile data with all the requested metrics
     const profileData = {
+      // User info
       username: userData?.socialHandles?.githubUsername || "Anonymous",
       fullName: userData?.socialHandles?.githubUsername || "Anonymous User",
       email: userData?.isEmailVisible ? "user@example.com" : "Hidden",
@@ -230,19 +166,21 @@ export async function GET(request: NextRequest) {
             year: "numeric",
           })
         : "Unknown",
+      userAddress: normalizedAddress,
+
+      // Core statistics
       level,
       points: totalPoints,
-      rank,
-      streak,
-      completedChallenges,
-      inProgressChallenges,
-      achievements,
-      // Additional data for the UI
+      totalChallengesCompleted,
+      totalSectionsCompleted,
+      totalModulesCompleted,
       totalMinted,
-      completedWeb3Chapters,
-      completedCoreStylusChallenges,
+
+      // Detailed data
+      completedModules,
+      completedChallenges: allCompletedChapters,
+      levelDistribution,
       mintedNFTs: mintedNFTData?.mintedLevels || [],
-      userAddress: userAddress.toLowerCase(),
     };
 
     return NextResponse.json(profileData);
