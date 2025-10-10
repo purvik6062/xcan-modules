@@ -183,7 +183,7 @@ export default function ChapterPage() {
               className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
             >
               {/* Section Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-2xl font-bold mb-2">
@@ -296,7 +296,7 @@ export default function ChapterPage() {
             {/* Chapter Completion Reward */}
             {progress === 100 && chapter.badge && (
               <motion.div
-                className="mt-8 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-8 text-center"
+                className="mt-8 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-2xl p-8 text-center"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
@@ -317,7 +317,7 @@ export default function ChapterPage() {
                   <div className="mt-6">
                     <Link
                       href={`/learn-defi/${nextChapter.id}`}
-                      className="inline-block px-6 py-3 mt-2 rounded-lg bg-white text-purple-700 font-semibold hover:bg-purple-100 transition-colors"
+                      className="inline-block px-6 py-3 mt-2 rounded-lg bg-white text-blue-700 font-semibold hover:bg-blue-100 transition-colors"
                     >
                       Continue to Next Chapter →
                     </Link>

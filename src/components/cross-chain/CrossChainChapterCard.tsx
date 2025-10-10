@@ -119,14 +119,14 @@ export default function CrossChainChapterCard({
                 Coming Soon
               </span>
             ) : (
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-900 text-purple-200">
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-200">
                 Available
               </span>
             )}
           </div>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">
+        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
           {chapter.title}
         </h3>
 
@@ -140,7 +140,7 @@ export default function CrossChainChapterCard({
         <div className="px-6 py-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               <span className="text-sm font-medium text-gray-300">
                 Progress
               </span>
@@ -149,14 +149,14 @@ export default function CrossChainChapterCard({
               <span className="text-sm text-gray-400">
                 {completedSections}/{availableSections.length} sections
               </span>
-              <span className="text-sm font-medium text-purple-400">
+              <span className="text-sm font-medium text-blue-400">
                 {Math.round(progressPercentage)}%
               </span>
             </div>
           </div>
           <div className="w-full bg-gray-700 rounded-full h-2">
             <motion.div
-              className="bg-gradient-to-r from-purple-500 to-cyan-500 h-2 rounded-full"
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
               transition={{ duration: 0.5 }}
@@ -190,7 +190,7 @@ export default function CrossChainChapterCard({
       <div className="p-6 border-t border-gray-700">
         <Link
           href={`${basePath}/${chapter.id}`}
-          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-all duration-200 text-center block group-hover:shadow-lg"
+          className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 text-center block group-hover:shadow-lg"
         >
           {chapter.status === "coming-soon" ? "Coming Soon" : "Start Learning"}
         </Link>

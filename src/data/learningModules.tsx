@@ -182,7 +182,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-web3-basics",
     target: "_self",
-    gradient: "from-purple-500 to-blue-600",
+    gradient: "from-blue-500 to-cyan-500",
     features: [
       "Story-Based Learning",
       "Interactive Quizzes",
@@ -205,7 +205,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-stylus",
     target: "_self",
-    gradient: "from-pink-500 to-rose-600",
+    gradient: "from-pink-500 to-rose-400",
     features: [
       "Rust & WASM Fundamentals",
       "Constructors & Storage",
@@ -271,7 +271,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-defi",
     target: "_self",
-    gradient: "from-cyan-500 to-blue-600",
+    gradient: "from-blue-500 to-cyan-500",
     features: [
       "Fundamentals, DEXs, Vaults, Security",
       "Story-Based Lessons",
@@ -293,7 +293,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-cross-chain",
     target: "_self",
-    gradient: "from-violet-500 to-purple-600",
+    gradient: "from-blue-500 to-cyan-500",
     features: [
       "Foundations & Real‑World Analogies",
       "Token Bridging Mechanics",

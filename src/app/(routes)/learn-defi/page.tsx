@@ -113,7 +113,7 @@ export default function LearnDeFiPage() {
               </div>
             </div>
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
-              <div className="text-2xl font-bold text-purple-600">50+</div>
+              <div className="text-2xl font-bold text-blue-600">50+</div>
               <div className="text-sm text-gray-300">
                 Interactive Lessons
               </div>
@@ -150,9 +150,9 @@ export default function LearnDeFiPage() {
                 <div className="text-2xl font-bold text-indigo-400">{Object.values(chapterProgress).filter(v => v.total > 0 && v.completed === v.total).length}</div>
                 <div className="text-sm text-indigo-300">Badges Earned</div>
               </div>
-              <div className="bg-purple-900/20 rounded-lg p-4">
-                <div className="text-2xl font-bold text-purple-400">{overall.percent}%</div>
-                <div className="text-sm text-purple-300">Overall Progress</div>
+              <div className="bg-blue-900/20 rounded-lg p-4">
+                <div className="text-2xl font-bold text-blue-400">{overall.percent}%</div>
+                <div className="text-sm text-blue-300">Overall Progress</div>
               </div>
             </div>
 
@@ -192,7 +192,7 @@ export default function LearnDeFiPage() {
                 className={`${alreadyClaimed
                   ? "bg-green-100 text-green-700 border-2 border-green-300 cursor-default"
                   : overall.percent === 100 && !isCertificationMinting
-                    ? "bg-gradient-to-r from-purple-600 via-cyan-600 to-blue-600 hover:from-purple-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                    ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-400/30"
                   } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
               >
@@ -256,8 +256,7 @@ export default function LearnDeFiPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-[#825291] to-[#614793] rounded-2xl p-8 text-white text-center"
-          // className="mt-16 bg-gradient-to-r from-[#010229] to-[#01056b] rounded-2xl p-8 text-white text-center"
+          className="mt-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl p-8 text-white text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}

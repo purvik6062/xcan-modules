@@ -166,12 +166,12 @@ export default function StylusChapterPage() {
         <div className="container mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600 mb-2">{chapter.title}</h1>
+              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 mb-2">{chapter.title}</h1>
               <p className="text-gray-300">{chapter.description}</p>
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-400 mb-1">Chapter Progress</div>
-              <div className="text-2xl font-bold text-pink-400">
+              <div className="text-2xl font-bold text-blue-400">
                 {Math.round(progress)}%
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function StylusChapterPage() {
           {/* Progress Bar */}
           <div className="w-full bg-gray-700 rounded-full h-3">
             <motion.div
-              className="bg-gradient-to-r from-pink-500 to-rose-500 h-3 rounded-full"
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.5 }}
@@ -190,7 +190,7 @@ export default function StylusChapterPage() {
           <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
             <span>{completedSections.length}/{availableSections.length} sections completed</span>
             <div className="flex items-center gap-2">
-              <span className="text-pink-400">{chapter.points} points</span>
+            <span className="text-blue-400">{chapter.points} points</span>
               <span>{chapter.duration}</span>
             </div>
           </div>

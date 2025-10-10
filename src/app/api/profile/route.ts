@@ -88,12 +88,20 @@ export async function GET(request: NextRequest) {
     moduleData.forEach(({ collectionName, moduleName, moduleId, data }) => {
       if (!data) return;
 
-      // Count completed challenges (chapters)
+      console.log(`Processing ${moduleName}:`, {
+        completedChaptersCount: data.completedChapters?.length || 0,
+        chaptersKeys: data.chapters ? Object.keys(data.chapters) : [],
+        isCompleted: data.isCompleted
+      });
+
+      // Count completed challenges (chapters) - this should be the completedChapters array length
       if (Array.isArray(data.completedChapters)) {
         totalChallengesCompleted += data.completedChapters.length;
 
         // Sum points from completed chapters
-        data.completedChapters.forEach((chapter: { id: string; level?: string; points?: number }) => {
+        data.completedChapters.forEach((chapter: { id?: string; level?: string; points?: number }) => {
+          if (!chapter.id) return; // Skip if chapter.id is undefined
+          
           const points = Number(chapter.points) || 0;
           totalPoints += points;
 
@@ -110,13 +118,16 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      // Count total sections completed
+      // Count total sections completed - sum all arrays inside chapters object
       if (data.chapters && typeof data.chapters === 'object') {
+        let moduleSections = 0;
         Object.values(data.chapters).forEach((sections) => {
           if (Array.isArray(sections)) {
+            moduleSections += sections.length;
             totalSectionsCompleted += sections.length;
           }
         });
+        console.log(`${moduleName} sections:`, moduleSections);
       }
 
       // Check if module is completed
@@ -131,6 +142,14 @@ export async function GET(request: NextRequest) {
     });
 
     const totalMinted = mintedNFTData?.totalMinted || 0;
+
+    console.log('Final totals:', {
+      totalChallengesCompleted,
+      totalSectionsCompleted,
+      totalModulesCompleted,
+      totalPoints,
+      totalMinted
+    });
 
     // Determine user level based on total points
     let level = "Beginner";

@@ -53,7 +53,7 @@ export default function CrossChainContent({
                         <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
                       ),
                       h2: ({ children }) => (
-                        <h2 className="text-2xl font-semibold text-purple-300 mb-4 mt-8">{children}</h2>
+                        <h2 className="text-2xl font-semibold text-blue-300 mb-4 mt-8">{children}</h2>
                       ),
                       h3: ({ children }) => (
                         <h3 className="text-xl font-semibold text-cyan-300 mb-3 mt-6">{children}</h3>
@@ -61,7 +61,7 @@ export default function CrossChainContent({
                       p: ({ children }) => (
                         <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
                       ),
-                      strong: ({ children }) => <strong className="text-purple-300 font-semibold">{children}</strong>,
+                      strong: ({ children }) => <strong className="text-blue-300 font-semibold">{children}</strong>,
                       em: ({ children }) => <em className="text-cyan-300 italic">{children}</em>,
                       ul: ({ children }) => (
                         <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
@@ -87,7 +87,7 @@ export default function CrossChainContent({
                     className={`px-8 py-3 rounded-lg font-medium transition-all duration-200 ${
                       completed
                         ? "bg-green-600 text-white cursor-default"
-                        : "bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl"
+                        : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl"
                     }`}
                     whileHover={!completed ? { scale: 1.05 } : {}}
                     whileTap={!completed ? { scale: 0.95 } : {}}
@@ -150,7 +150,7 @@ export default function CrossChainContent({
               disabled={completed}
               className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${completed
                 ? "bg-green-600 text-white cursor-default"
-                : "bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl"
+                : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl"
                 }`}
               whileHover={!completed ? { scale: 1.05 } : {}}
               whileTap={!completed ? { scale: 0.95 } : {}}

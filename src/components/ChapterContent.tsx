@@ -482,7 +482,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
     const base = "inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold border";
     switch (type) {
       case "code-walkthrough":
-        return <span className={`${base} border-purple-500 bg-purple-900/30 text-purple-200`}>Code Walkthrough</span>;
+        return <span className={`${base} border-blue-500 bg-blue-900/30 text-blue-200`}>Code Walkthrough</span>;
       case "hands-on":
         return <span className={`${base} border-emerald-500 bg-emerald-900/30 text-emerald-200`}>Hands‑On</span>;
       case "quiz":
@@ -540,7 +540,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
           className="mb-8"
         >
           <div className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
               <h3 className="text-2xl font-bold mb-2">
                 {content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].title}
               </h3>
@@ -640,10 +640,10 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
         {/* Additional Resources */}
         {content.additionalResources &&
           content.additionalResources.length > 0 && (
-            <div className="bg-purple-900/20 rounded-xl p-6 mb-8 border border-purple-700">
+            <div className="bg-blue-900/20 rounded-xl p-6 mb-8 border border-blue-700">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-2xl">📚</span>
-                <h4 className="text-xl font-bold text-purple-100">
+                <h4 className="text-xl font-bold text-blue-100">
                   Additional Resources
                 </h4>
               </div>
@@ -654,7 +654,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
                     href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-purple-700 hover:border-purple-500 transition-colors duration-200"
+                    className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-blue-700 hover:border-blue-500 transition-colors duration-200"
                   >
                     <span className="text-xl">
                       {resource.type === "tool"
@@ -709,15 +709,15 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
 
   const renderCodeWalkthroughContent = () => (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-purple-900/20 rounded-xl p-6">
+      <div className="bg-blue-900/20 rounded-xl p-6">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-2xl">💻</span>
-          <h3 className="text-xl font-bold text-purple-100">
+          <h3 className="text-xl font-bold text-blue-100">
             Code Walkthrough
           </h3>
         </div>
         <div className="mb-4">{renderTypeBadge("code-walkthrough")}</div>
-        <div className="text-purple-200 mb-6">
+        <div className="text-blue-200 mb-6">
           <p>
             Detailed code walkthroughs with interactive examples are being
             developed to help you understand the technical implementation.

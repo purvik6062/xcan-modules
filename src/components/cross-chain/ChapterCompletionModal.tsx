@@ -53,17 +53,17 @@ export default function ChapterCompletionModal({
 
           {/* Chapter Completion Message */}
           <p className="text-xl text-gray-300 mb-6">
-            You've successfully completed <span className="text-purple-400 font-semibold">{chapterTitle}</span>!
+            You've successfully completed <span className="text-blue-400 font-semibold">{chapterTitle}</span>!
           </p>
 
           {/* Next Chapter Info */}
           {nextChapterId && nextChapterTitle ? (
-            <div className="bg-purple-900/20 border border-purple-500 rounded-xl p-6 mb-8">
+            <div className="bg-blue-900/20 border border-blue-500 rounded-xl p-6 mb-8">
               <div className="text-4xl mb-3">🚀</div>
-              <h3 className="text-lg font-semibold text-purple-400 mb-2">
+              <h3 className="text-lg font-semibold text-blue-400 mb-2">
                 Ready for the Next Challenge?
               </h3>
-              <p className="text-purple-300 text-sm mb-4">
+              <p className="text-blue-300 text-sm mb-4">
                 Your next adventure awaits: <span className="font-semibold">{nextChapterTitle}</span>
               </p>
 
@@ -71,7 +71,7 @@ export default function ChapterCompletionModal({
               <Link
                 href={`/learn-cross-chain/${nextChapterId}`}
                 onClick={onClose}
-                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-cyan-600 text-white rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-all duration-200 font-medium text-lg"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium text-lg"
               >
                 Continue to Next Chapter →
               </Link>
@@ -101,7 +101,7 @@ export default function ChapterCompletionModal({
                 <Link
                   href={`/learn-cross-chain/${nextChapterId}`}
                   onClick={onClose}
-                  className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 text-white rounded-lg hover:from-purple-700 hover:to-cyan-700 transition-colors"
+                  className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors"
                 >
                   Continue Learning
                 </Link>

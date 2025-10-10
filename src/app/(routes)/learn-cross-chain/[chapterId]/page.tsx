@@ -161,7 +161,7 @@ export default function CrossChainChapterPage() {
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-400 mb-1">Chapter Progress</div>
-              <div className="text-2xl font-bold text-purple-400">
+              <div className="text-2xl font-bold text-blue-400">
                 {Math.round(progress)}%
               </div>
             </div>
@@ -170,7 +170,7 @@ export default function CrossChainChapterPage() {
           {/* Progress Bar */}
           <div className="w-full bg-gray-700 rounded-full h-3">
             <motion.div
-              className="bg-gradient-to-r from-purple-500 to-cyan-500 h-3 rounded-full"
+              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.5 }}

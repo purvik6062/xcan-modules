@@ -103,7 +103,7 @@ export default function LearnStylusPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <motion.h1
-            className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600 mb-4"
+            className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 mb-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -128,13 +128,13 @@ export default function LearnStylusPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-pink-400">🦀</div>
+              <div className="text-2xl font-bold text-blue-400">🦀</div>
               <div className="text-sm text-gray-300">
                 Rust Programming
               </div>
             </div>
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-rose-400">{stylusChapters.length}</div>
+              <div className="text-2xl font-bold text-cyan-400">{stylusChapters.length}</div>
               <div className="text-sm text-gray-300">
                 Complete Chapters
               </div>
@@ -162,7 +162,7 @@ export default function LearnStylusPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600 mb-4">
+            <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 mb-4">
               🦀 Your Stylus Learning Journey
             </h2>
             <p className="text-gray-300 mb-4">
@@ -183,7 +183,7 @@ export default function LearnStylusPage() {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <motion.div
-                  className="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full"
+                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${overallProgress.percentage}%` }}
                   transition={{ duration: 0.5 }}
@@ -193,15 +193,15 @@ export default function LearnStylusPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-pink-400">
+                <div className="text-2xl font-bold text-blue-400">
                   {overallProgress.completed}/{overallProgress.total}
                 </div>
-                <div className="text-sm text-pink-300">
+                <div className="text-sm text-blue-300">
                   Sections Completed
                 </div>
               </div>
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-rose-400">
+                <div className="text-2xl font-bold text-cyan-400">
                   {Object.keys(progressData).filter(chapterId => {
                     const chapter = stylusChapters.find(ch => ch.id === chapterId);
                     if (!chapter) return false;
@@ -210,7 +210,7 @@ export default function LearnStylusPage() {
                     return availableSections.every(s => completed.includes(s.id));
                   }).length}
                 </div>
-                <div className="text-sm text-rose-300">
+                <div className="text-sm text-cyan-300">
                   Chapters Completed
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function LearnStylusPage() {
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
                 : overallProgress.percentage === 100 && !isCertificationMinting
-                  ? "bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600 hover:from-pink-600 hover:via-rose-500 hover:to-purple-500 text-white shadow-lg hover:shadow-rose-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
@@ -328,7 +328,7 @@ export default function LearnStylusPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-pink-600 to-rose-600 rounded-2xl p-8 text-white text-center"
+          className="mt-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
@@ -359,7 +359,7 @@ export default function LearnStylusPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600 mb-6 text-center">
+          <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 mb-6 text-center">
             Concepts You'll Master
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -412,7 +412,7 @@ export default function LearnStylusPage() {
               const firstChapter = document.getElementById(stylusChapters[0].id);
               firstChapter?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

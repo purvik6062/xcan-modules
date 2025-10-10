@@ -126,7 +126,7 @@ export default function LearnCrossChainPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <div className="text-2xl font-bold text-purple-400">🌉</div>
+              <div className="text-2xl font-bold text-blue-400">🌉</div>
               <div className="text-sm text-gray-300">
                 Bridge Technology
               </div>
@@ -172,7 +172,7 @@ export default function LearnCrossChainPage() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   <span className="text-sm font-medium text-gray-300">Progress</span>
                 </div>
                 <div className="text-sm text-gray-400">
@@ -181,7 +181,7 @@ export default function LearnCrossChainPage() {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <motion.div
-                  className="bg-gradient-to-r from-purple-500 to-cyan-500 h-2 rounded-full"
+                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${overallProgress.percentage}%` }}
                   transition={{ duration: 0.5 }}
@@ -191,10 +191,10 @@ export default function LearnCrossChainPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-purple-400">
+                <div className="text-2xl font-bold text-blue-400">
                   {overallProgress.completed}/{overallProgress.total}
                 </div>
-                <div className="text-sm text-purple-300">
+                <div className="text-sm text-blue-300">
                   Sections Completed
                 </div>
               </div>
@@ -258,7 +258,7 @@ export default function LearnCrossChainPage() {
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
                 : overallProgress.percentage === 100 && !isCertificationMinting
-                  ? "bg-gradient-to-r from-purple-600 via-cyan-600 to-blue-600 hover:from-purple-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
@@ -303,7 +303,7 @@ export default function LearnCrossChainPage() {
               key={level}
               onClick={() => setSelectedLevel(level)}
               className={`px-6 py-2 rounded-full transition-all duration-200 ${selectedLevel === level
-                ? "bg-gradient-to-r from-purple-600 to-cyan-600 text-white shadow-lg"
+                ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600"
                 }`}
             >
@@ -328,7 +328,7 @@ export default function LearnCrossChainPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-purple-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
+          className="mt-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
@@ -414,7 +414,7 @@ export default function LearnCrossChainPage() {
               const firstChapter = document.getElementById(crossChainChapters[0].id);
               firstChapter?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="bg-gradient-to-r from-purple-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

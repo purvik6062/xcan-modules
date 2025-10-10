@@ -62,7 +62,7 @@ export default function StylusContent({
               disabled={completed}
               className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${completed
                 ? "bg-green-600 text-white cursor-default"
-                : "bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white shadow-lg hover:shadow-xl"
+                : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white shadow-lg hover:shadow-xl"
                 }`}
               whileHover={!completed ? { scale: 1.05 } : {}}
               whileTap={!completed ? { scale: 0.95 } : {}}

@@ -27,7 +27,7 @@ export default function StylusChapterCompletionModal({
         particleCount: 150,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#EC4899', '#F43F5E', '#DB2777', '#F59E0B'],
+        colors: ['#3B82F6', '#06B6D4', '#22D3EE', '#F59E0B'],
       });
     }
   }, [isOpen]);
@@ -52,18 +52,18 @@ export default function StylusChapterCompletionModal({
           </h2>
 
           {/* Chapter Completion Message */}
-          <p className="text-xl text-gray-300 mb-6">
-            You've successfully completed <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-600 font-semibold">{chapterTitle}</span>!
+            <p className="text-xl text-gray-300 mb-6">
+            You've successfully completed <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 font-semibold">{chapterTitle}</span>!
           </p>
 
           {/* Next Chapter Info */}
           {nextChapterId && nextChapterTitle ? (
-            <div className="bg-pink-900/20 border border-pink-500 rounded-xl p-6 mb-8">
+            <div className="bg-blue-900/20 border border-blue-500 rounded-xl p-6 mb-8">
               <div className="text-4xl mb-3">🚀</div>
-              <h3 className="text-lg font-semibold text-pink-400 mb-2">
+              <h3 className="text-lg font-semibold text-blue-400 mb-2">
                 Ready for the Next Challenge?
               </h3>
-              <p className="text-pink-300 text-sm mb-4">
+              <p className="text-blue-300 text-sm mb-4">
                 Your next adventure awaits: <span className="font-semibold">{nextChapterTitle}</span>
               </p>
 
@@ -71,7 +71,7 @@ export default function StylusChapterCompletionModal({
               <Link
                 href={`/learn-stylus/${nextChapterId}`}
                 onClick={onClose}
-                className="inline-block px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition-all duration-200 font-medium text-lg"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium text-lg"
               >
                 Continue to Next Chapter →
               </Link>
@@ -101,7 +101,7 @@ export default function StylusChapterCompletionModal({
                 <Link
                   href={`/learn-stylus/${nextChapterId}`}
                   onClick={onClose}
-                  className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-lg hover:from-pink-700 hover:to-rose-700 transition-colors"
+                  className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors"
                 >
                   Continue Learning
                 </Link>

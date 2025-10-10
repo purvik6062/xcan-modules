@@ -179,14 +179,14 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi", progres
 
         {/* Badge Preview */}
         {chapter.badge && (
-          <div className="mb-4 p-3 bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-lg border border-purple-800">
+          <div className="mb-4 p-3 bg-gradient-to-r from-blue-900/20 to-cyan-900/20 rounded-lg border border-blue-800">
             <div className="flex items-center gap-2">
               <div className="text-2xl">🏆</div>
               <div>
-                <p className="text-sm font-medium text-purple-300">
+                <p className="text-sm font-medium text-blue-300">
                   Earn: {chapter.badge.title}
                 </p>
-                <p className="text-xs text-purple-400">
+                <p className="text-xs text-blue-400">
                   {chapter.badge.description}
                 </p>
               </div>
@@ -221,7 +221,7 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi", progres
               whileTap={{ scale: 0.98 }}
               className={`w-full hover:cursor-pointer ${basePath === "/learn-orbit"
                 ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
-                : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
                 } text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}
             >
               {completedSections > 0 ? "Continue Learning" : "Start Chapter"}
