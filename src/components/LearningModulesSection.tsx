@@ -84,7 +84,7 @@ export default function LearningModulesSection() {
                   {module.features && module.features.length > 0 && (
                     <div className="mb-6">
                       <div className="text-sm font-medium mb-2">
-                        Key Features:
+                        {module.title === "Project Submission" ? "What You'll Get:" : "Key Features:"}
                       </div>
                       <div className="grid grid-cols-2 gap-1">
                         {module.features.map((feature, index) => (
@@ -107,7 +107,7 @@ export default function LearningModulesSection() {
                     target={module.target}
                     className={`block w-full text-center bg-gradient-to-r ${module.gradient} text-white font-semibold py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-300`}
                   >
-                    Start Learning
+                    {module.title === "Project Submission" ? "Submit Project" : "Start Learning"}
                   </Link>
                 ) : (
                   <button

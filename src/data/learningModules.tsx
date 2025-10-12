@@ -311,7 +311,7 @@ export const learningModules: LearningModule[] = [
     icon: CodeBracketIcon,
     level: "Beginner to Advanced",
     duration: "1-2 weeks",
-    challenges: 6,    
+    challenges: 6,
     status: "available",
     href: "/challenges",
     target: "_self",
@@ -329,13 +329,17 @@ export const learningModules: LearningModule[] = [
     description:
       "Built something cool with Stylus? Submit your project to get featured and reviewed by the community. Highlight your skills, gain visibility, and inspire others in the ecosystem.",
     icon: DocumentIcon,
-    level: "All Levels",
-    status: "coming-soon",
-    href: "#",
+    level: "",
+    status: "available",
+    href: "/project-submission",
     target: "_self",
     gradient: "from-orange-500 to-red-600",
-    features: [],
-    
+    features: [
+      "Project Showcase",
+      "Community Reviews",
+      "Team Collaboration",
+      "Portfolio Building",
+    ],
   },
 ];
 

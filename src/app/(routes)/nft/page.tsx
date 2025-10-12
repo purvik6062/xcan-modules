@@ -457,10 +457,9 @@ export default function HomePage() {
                           };
 
                           return (
-                            <motion.button
+                            <motion.div
                               key={module.id}
-                              onClick={handleOpen}
-                              className="group w-full text-left cursor-pointer"
+                              className="group w-full text-left"
                               initial={{ opacity: 0, y: 24 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.05 * index }}
@@ -481,12 +480,12 @@ export default function HomePage() {
                                     </div>
 
                                     <div className="hidden sm:flex items-center">
-                                      <button className="px-3 py-1 rounded-full text-xs border bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" onClick={handleOpen}>View Module</button>
+                                      <motion.button className="px-3 py-1 cursor-pointer rounded-full text-xs border bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" onClick={handleOpen}>View Module</motion.button>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </motion.button>
+                            </motion.div>
                           );
                         })}
                       </div>

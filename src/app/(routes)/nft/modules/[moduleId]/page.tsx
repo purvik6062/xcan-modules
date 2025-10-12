@@ -117,11 +117,7 @@ export default function ModuleDetailPage() {
   };
 
   const alreadyClaimed = Boolean(claimedCertification?.claimed);
-  console.log("alreadyClaimed", alreadyClaimed);
-  console.log("claimedCertification", claimedCertification);
-  console.log("isCertificationMinting", isCertificationMinting);
-  console.log("isCheckingClaim", isCheckingClaim);
-  const isClaimDisabled = !claimedCertification?.claimed || isCertificationMinting || isCheckingClaim || alreadyClaimed;
+  const isClaimDisabled = claimedCertification?.claimed || isCertificationMinting || isCheckingClaim || alreadyClaimed;
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden">
@@ -130,7 +126,7 @@ export default function ModuleDetailPage() {
       <div className="absolute top-8 left-8 z-20">
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-200 px-4 py-2 rounded-xl transition-all duration-200 border border-white/15"
+          className="cursor-pointer inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-200 px-4 py-2 rounded-xl transition-all duration-200 border border-white/15"
         >
           <ArrowLeft className="w-5 h-5" /> Back
         </button>
@@ -191,9 +187,9 @@ export default function ModuleDetailPage() {
                       </button>
                     )}
                     <button
-                      disabled={isClaimDisabled}
+                      disabled={isClaimDisabled || !isCompleted}
                       onClick={handleClaim}
-                      className={`cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"}`}
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled || !isCompleted ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"}`}
                     >
                       {alreadyClaimed ? (
                         <>Claimed</>
@@ -262,5 +258,3 @@ export default function ModuleDetailPage() {
     </div>
   );
 }
-
-
