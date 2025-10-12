@@ -1,232 +1,218 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client";
 
-export const metadata = {
-  title: "Leaderboard - CodeQuest",
-  description: "See the top performers on CodeQuest",
-};
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-// This would typically come from an API or database
-const leaderboardData = [
-  {
-    id: 1,
-    username: "codeMaster",
-    points: 450,
-    completedChallenges: 18,
-    level: "Advanced",
-    rank: 1,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=codeMaster&backgroundColor=b6e3f4,c0aede",
-  },
-  {
-    id: 2,
-    username: "algorithmQueen",
-    points: 420,
-    completedChallenges: 17,
-    level: "Advanced",
-    rank: 2,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=algorithmQueen&backgroundColor=d1d4f9",
-  },
-  {
-    id: 3,
-    username: "jsNinja",
-    points: 395,
-    completedChallenges: 16,
-    level: "Advanced",
-    rank: 3,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=jsNinja&backgroundColor=c0aede",
-  },
-  {
-    id: 4,
-    username: "debugHero",
-    points: 370,
-    completedChallenges: 15,
-    level: "Intermediate",
-    rank: 4,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=debugHero&backgroundColor=ffdfbf",
-  },
-  {
-    id: 5,
-    username: "syntaxSlayer",
-    points: 350,
-    completedChallenges: 14,
-    level: "Intermediate",
-    rank: 5,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=syntaxSlayer&backgroundColor=ffd5dc",
-  },
-  {
-    id: 6,
-    username: "codeWizard",
-    points: 325,
-    completedChallenges: 13,
-    level: "Intermediate",
-    rank: 6,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=codeWizard&backgroundColor=c1e5c1",
-  },
-  {
-    id: 7,
-    username: "techExplorer",
-    points: 300,
-    completedChallenges: 12,
-    level: "Intermediate",
-    rank: 7,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=techExplorer&backgroundColor=d1d4f9",
-  },
-  {
-    id: 8,
-    username: "bugHunter",
-    points: 280,
-    completedChallenges: 11,
-    level: "Intermediate",
-    rank: 8,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=bugHunter&backgroundColor=b6e3f4",
-  },
-  {
-    id: 9,
-    username: "devCoder",
-    points: 260,
-    completedChallenges: 10,
-    level: "Beginner",
-    rank: 9,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=devCoder&backgroundColor=c0aede",
-  },
-  {
-    id: 10,
-    username: "newProgrammer",
-    points: 240,
-    completedChallenges: 9,
-    level: "Beginner",
-    rank: 10,
-    avatar:
-      "https://api.dicebear.com/7.x/bottts/svg?seed=newProgrammer&backgroundColor=ffdfbf",
-  },
-];
+interface Submission {
+  walletAddress: string;
+  githubRepo: string;
+  contractAddress: string;
+  submittedAt: string;
+}
+
+interface LeaderboardData {
+  submissions: Submission[];
+  totalSubmissions: number;
+}
 
 export default function LeaderboardPage() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">Leaderboard</h1>
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-      <div className="bg-[#0A142A] rounded-lg shadow-md overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-[#0A142A] text-left">
-                <th className="px-6 py-3 text-gray-300 font-semibold">
-                  Rank
-                </th>
-                <th className="px-6 py-3 text-gray-300 font-semibold">
-                  User
-                </th>
-                <th className="px-6 py-3 text-gray-300 font-semibold">
-                  Level
-                </th>
-                <th className="px-6 py-3 text-gray-300 font-semibold">
-                  Challenges
-                </th>
-                <th className="px-6 py-3 text-gray-300 font-semibold">
-                  Points
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-700">
-              {leaderboardData.map((user) => (
-                <tr
-                  key={user.id}
-                  className={`
-                    ${user.rank <= 3 ? "bg-blue-900/20" : ""}
-                    hover:bg-gray-700/50 transition-colors
-                  `}
-                >
-                  <td className="px-6 py-4">
-                    <div
-                      className={`
-                      ${
-                        user.rank === 1
-                          ? "bg-yellow-400 text-yellow-900"
-                          : user.rank === 2
-                          ? "bg-gray-300 text-gray-300"
-                          : user.rank === 3
-                          ? "bg-amber-600 text-amber-100"
-                          : "bg-gray-700 text-gray-300"
-                      }
-                      w-8 h-8 rounded-full flex items-center justify-center font-bold
-                    `}
-                    >
-                      {user.rank}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 flex-shrink-0">
-                        <Image
-                          width={100}
-                          height={100}
-                          className="h-10 w-10 rounded-full"
-                          src={user.avatar}
-                          alt={user.username}
-                        />
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-medium">{user.username}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 text-xs rounded-full ${
-                        user.level === "Beginner"
-                          ? "bg-green-900 text-green-200"
-                          : user.level === "Intermediate"
-                          ? "bg-yellow-900 text-yellow-200"
-                          : "bg-red-900 text-red-200"
-                      }`}
-                    >
-                      {user.level}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    {user.completedChallenges} solved
-                  </td>
-                  <td className="px-6 py-4 font-bold">{user.points}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/leaderboard");
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch leaderboard data");
+        }
+
+        const data = await response.json();
+        setLeaderboardData(data);
+      } catch (err) {
+        console.error("Error fetching leaderboard:", err);
+        setError("Failed to load leaderboard data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
+  const shortenAddress = (address: string) => {
+    if (!address) return "N/A";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const shortenUrl = (url: string) => {
+    if (!url) return "N/A";
+    if (url.length <= 50) return url;
+    return `${url.slice(0, 47)}...`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-500 mx-auto mb-4"></div>
+          <p className="text-gray-300 text-lg">Loading submissions...</p>
         </div>
       </div>
+    );
+  }
 
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">How Points are Calculated</h2>
-        <div className="bg-[#0A142A] rounded-lg shadow-md p-6">
-          <p className="mb-4">
-            Points are awarded based on the difficulty of challenges completed
-            and the efficiency of your solutions.
-          </p>
-
-          <h3 className="text-lg font-semibold mb-2">Challenge Points:</h3>
-          <ul className="list-disc pl-5 mb-4 space-y-1">
-            <li>Beginner Challenges: 10-15 points</li>
-            <li>Intermediate Challenges: 25-30 points</li>
-            <li>Advanced Challenges: 45-50 points</li>
-          </ul>
-
-          <h3 className="text-lg font-semibold mb-2">Bonus Points:</h3>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Optimal Solution: +5 points</li>
-            <li>First Attempt Success: +3 points</li>
-            <li>Daily Streak: +2 points per day</li>
-            <li>Weekly Challenges: +10 points</li>
-          </ul>
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 text-lg">{error}</p>
         </div>
+      </div>
+    );
+  }
+
+  if (!leaderboardData || leaderboardData.submissions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold mb-6 text-center text-white">📋 Submissions</h1>
+          <div className="bg-slate-800 rounded-2xl shadow-xl p-8 text-center">
+            <p className="text-gray-300 text-lg">No submissions yet. Be the first to submit!</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-5xl font-bold text-white mb-4">📋 Submissions</h1>
+          <p className="text-xl text-gray-300">
+            All submissions from Arbitrum Stylus builders
+          </p>
+        </motion.div>
+
+        {/* Stats Overview */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8 max-w-md mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
+            <div className="text-4xl font-bold text-emerald-400">{leaderboardData.totalSubmissions}</div>
+            <div className="text-gray-300 mt-2 text-lg">Total Submissions</div>
+          </div>
+        </motion.div>
+
+        {/* Submissions Table */}
+        <motion.div
+          className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-slate-900 text-left border-b border-slate-700">
+                  <th className="px-6 py-4 text-gray-300 font-semibold">#</th>
+                  <th className="px-6 py-4 text-gray-300 font-semibold">Wallet Address</th>
+                  <th className="px-6 py-4 text-gray-300 font-semibold">GitHub Repo</th>
+                  <th className="px-6 py-4 text-gray-300 font-semibold">Contract Address</th>
+                  <th className="px-6 py-4 text-gray-300 font-semibold">Submitted At</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700">
+                {leaderboardData.submissions.map((submission, index) => (
+                  <motion.tr
+                    key={`${submission.walletAddress}-${submission.submittedAt}-${index}`}
+                    className="hover:bg-slate-700/50 transition-colors"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.02 }}
+                  >
+                    <td className="px-6 py-4">
+                      <div className="text-gray-400 font-semibold">{index + 1}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-mono text-white font-semibold">
+                        {shortenAddress(submission.walletAddress)}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1 font-mono">
+                        {submission.walletAddress}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      {submission.githubRepo ? (
+                        <a
+                          href={submission.githubRepo.startsWith('http') ? submission.githubRepo : `https://github.com/${submission.githubRepo}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 group"
+                        >
+                          <span className="truncate max-w-xs">{shortenUrl(submission.githubRepo)}</span>
+                          <svg
+                            className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="text-gray-500">N/A</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-mono text-teal-400 font-semibold">
+                        {shortenAddress(submission.contractAddress)}
+                      </div>
+                      {submission.contractAddress && (
+                        <div className="text-xs text-gray-500 mt-1 font-mono">
+                          {submission.contractAddress}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-white">
+                        {new Date(submission.submittedAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        {new Date(submission.submittedAt).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

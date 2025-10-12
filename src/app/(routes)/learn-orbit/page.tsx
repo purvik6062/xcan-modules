@@ -120,7 +120,7 @@ export default function LearnOrbitPage() {
               </div>
             </div>
             <div className="bg-slate-800 rounded-lg p-4 shadow-lg">
-              <div className="text-2xl font-bold text-teal-600">6</div>
+              <div className="text-2xl font-bold text-teal-600">7</div>
               <div className="text-sm text-gray-300">
                 Complete Chapters
               </div>

@@ -11,6 +11,8 @@ import SectionNavigation from "../../../../components/SectionNavigation";
 import ProgressBar from "../../../../components/ProgressBar";
 import QuizComponent from "../../../../components/QuizComponent";
 import ChallengeComponent from "../../../../components/ChallengeComponent";
+import DeployChainSection from "../../../../components/DeployChainSection";
+import DeployedChainsSection from "../../../../components/DeployedChainsSection";
 
 export default function OrbitChapterPage() {
   const params = useParams();
@@ -142,6 +144,18 @@ export default function OrbitChapterPage() {
           />
         </motion.div>
 
+        {/* Deployed Chains Section - Only show on hands-on-deployment chapter */}
+        {chapterId === "hands-on-deployment" && isReady && address && (
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <DeployedChainsSection userAddress={address} />
+          </motion.div>
+        )}
+
         {/* Chapter Content Layout */}
         <div className="flex gap-8">
           {/* Section Navigation */}
@@ -246,6 +260,12 @@ export default function OrbitChapterPage() {
                     ) : currentSection.type === "challenge" ? (
                       <ChallengeComponent
                         section={currentSection}
+                        onComplete={() =>
+                          handleSectionComplete(currentSection.id)
+                        }
+                      />
+                    ) : currentSection.id === "deploy-your-chain" || currentSection.id === "deploy-your-chain-live" ? (
+                      <DeployChainSection
                         onComplete={() =>
                           handleSectionComplete(currentSection.id)
                         }
