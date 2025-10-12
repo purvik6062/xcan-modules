@@ -33,7 +33,7 @@ export default function LearnStylusPage() {
 
       try {
         setIsLoading(true);
-        const params = new URLSearchParams({ 
+        const params = new URLSearchParams({
           userAddress: address,
           module: "stylus-core-concepts"
         });
@@ -90,8 +90,22 @@ export default function LearnStylusPage() {
         toast.error("Complete all sections to claim certification");
         return;
       }
-      await certificationMint("stylus-core-concepts");
-      toast.success("Certification claimed!");
+      const minted = await certificationMint("stylus-core-concepts");
+
+      const response = await fetch("/api/certification/claim/stylus-core-concepts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          transactionHash: minted?.transactionHash,
+          metadataUrl: minted?.metadataUrl,
+          imageUrl: minted?.imageUrl,
+        }),
+      });
+      if (response.ok) {
+        setAlreadyClaimed(true);
+      }
+      // toast.success("Certification claimed!");
     } catch (_) {
       // errors already handled
     }

@@ -88,17 +88,20 @@ export default function LearnWeb3BasicsPage() {
         return;
       }
       const minted = await certificationMint("web3-basics");
-      // await fetch("/api/certification/claim/web3-basics", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     userAddress: address,
-      //     transactionHash: minted?.transactionHash,
-      //     metadataUrl: minted?.metadataUrl,
-      //     imageUrl: minted?.imageUrl,
-      //   }),
-      // });
-      toast.success("Certification claimed!");
+      const response = await fetch("/api/certification/claim/web3-basics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          transactionHash: minted?.transactionHash,
+          metadataUrl: minted?.metadataUrl,
+          imageUrl: minted?.imageUrl,
+        }),
+      });
+      if (response.ok) {
+        setAlreadyClaimed(true);
+      }
+      // toast.success("Certification claimed!");
     } catch (_) {
       // errors already handled
     }
