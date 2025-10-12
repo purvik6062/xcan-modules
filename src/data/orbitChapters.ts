@@ -151,6 +151,16 @@ export const orbitChapters: Chapter[] = [
         },
       },
       {
+        id: "deploy-your-chain",
+        title: "Deploy Your Own Chain",
+        type: "hands-on",
+        status: "available",
+        estimatedTime: "30 min",
+        content: {
+          story: `# Deploy Your Own Orbit Chain 🚀\n\nNow it's time to put theory into practice! Deploy your own Arbitrum Orbit chain with a simple interface.\n\n## What You'll Do\n\nIn this hands-on section, you'll deploy a real Orbit chain by:\n- Configuring your chain parameters (name and chain ID)\n- Connecting your wallet to set the owner address\n- Initiating the deployment through our backend API\n- Monitoring the deployment progress in real-time\n\n## What Happens Behind The Scenes\n\nWhen you deploy your chain, the backend will:\n1. **Prepare Chain Configuration**: Set up the chain config with your parameters\n2. **Deploy Core Contracts**: Deploy the rollup contracts to the parent chain\n3. **Initialize Infrastructure**: Set up the chain infrastructure\n4. **Transfer Ownership**: Transfer control to your wallet address\n\n## Requirements\n\n- **Connected Wallet**: Your wallet address will be the chain owner\n- **Chain Name**: A descriptive name for your chain\n- **Chain ID**: A unique identifier (must be ≥ 1000)\n\n## Deployment Process\n\nThe deployment typically takes 2-5 minutes and includes:\n- Contract deployment to parent chain\n- Infrastructure initialization\n- Ownership transfer\n- Configuration validation\n\n## After Deployment\n\nOnce complete, you'll receive:\n- Chain address on the parent chain\n- Deployment transaction hash\n- Chain configuration details\n- Next steps for chain setup\n\nThis is a real deployment that creates an actual Orbit chain. Take your time to choose appropriate parameters!\n\n**Ready to deploy? Let's get started! 👇**`,
+        },
+      },
+      {
         id: "orbit-basics-quiz",
         title: "Orbit Fundamentals Quiz",
         type: "quiz",
@@ -1215,6 +1225,93 @@ export const orbitChapters: Chapter[] = [
       },
     ],
   },
+  {
+    id: "hands-on-deployment",
+    title: "Hands-On: Deploy Your Chain",
+    description:
+      "Deploy your own Arbitrum Orbit chain in real-time using our deployment API. Configure, launch, and monitor your chain from creation to completion.",
+    icon: "🚀",
+    level: "Intermediate",
+    duration: "30-45 min",
+    status: "available",
+    badge: {
+      title: "Chain Deployer",
+      description: "Successfully Deployed Your Own Orbit Chain",
+      image: "/badges/chain-deployer-live.png",
+    },
+    sections: [
+      {
+        id: "deployment-introduction",
+        title: "Introduction to Live Deployment",
+        type: "theory",
+        status: "available",
+        estimatedTime: "10 min",
+        content: {
+          story: `# Live Chain Deployment 🎯\n\nWelcome to the hands-on deployment experience! In this chapter, you'll deploy a real Arbitrum Orbit chain.\n\n## What You'll Accomplish\n\nBy the end of this chapter, you will have:\n- Deployed your own Layer 3 Orbit chain\n- Configured chain parameters (name, chain ID)\n- Monitored deployment progress in real-time\n- Received your chain's contract addresses\n\n## How It Works\n\nOur deployment system:\n1. **Accepts Your Configuration**: Chain name, ID, and owner address\n2. **Prepares Chain Config**: Uses Orbit SDK to prepare parameters\n3. **Deploys Contracts**: Deploys core contracts to parent chain\n4. **Initializes Infrastructure**: Sets up rollup infrastructure\n5. **Transfers Ownership**: Assigns control to your wallet\n\n## Prerequisites\n\n✅ **Wallet Connection**: Your connected wallet will be the chain owner\n✅ **Basic Understanding**: Complete previous chapters for context\n✅ **Internet Connection**: For API communication and monitoring\n## What Makes This Special\n\n The deployment:\n- Creates actual contracts on the parent chain\n- Establishes a functional Layer 3 blockchain\n- Can be used for testing and development\n- Demonstrates real-world Orbit deployment\n\n**Ready to become a chain deployer? Let's proceed! 🚀**`,
+          questions: [
+            {
+              id: "deploy-intro-q1",
+              question: "What role will your connected wallet address play in the deployment?",
+              options: [
+                "It will be used only for authentication",
+                "It will become the chain owner with full control",
+                "It will be the batch poster",
+                "It has no role in deployment"
+              ],
+              correctAnswer: 1,
+              explanation: "Your connected wallet address will become the chain owner, giving you full control over the deployed Orbit chain.",
+              type: "multiple-choice"
+            }
+          ]
+        }
+      },
+      {
+        id: "deploy-your-chain-live",
+        title: "Deploy Your Chain",
+        type: "hands-on",
+        status: "available",
+        estimatedTime: "20-30 min",
+      },
+      {
+        id: "post-deployment-steps",
+        title: "Next Steps After Deployment",
+        type: "theory",
+        status: "available",
+        estimatedTime: "15 min",
+        content: {
+          story: `# Post-Deployment Guide 📋\n\nCongratulations on deploying your Orbit chain! Here's what you can do next.\n\n## Immediate Next Steps\n\n### 1. Record Your Chain Information\n\nSave these critical details:\n- **Chain Address**: The contract address on the parent chain\n- **Deployment Transaction**: The tx hash for verification\n- **Chain ID**: Your unique chain identifier\n- **Owner Address**: Your wallet address (for governance)\n\n### 2. Set Up Chain Infrastructure\n\n**RPC Endpoint Configuration:**\n- Set up a node to serve RPC requests\n- Configure the node with your chain's parameters\n- Enable HTTPS/TLS for production use\n\n**Block Explorer:**\n- Deploy a block explorer (Blockscout or similar)\n- Configure it to index your chain\n- Make it publicly accessible for users\n\n### 3. Configure Operational Roles\n\n**Batch Poster:**\n- Designate an address to post batches\n- Fund it with sufficient parent chain gas\n- Set up monitoring for batch posting\n\n**Validators:**\n- Select validator addresses\n- Configure validator nodes\n- Establish validator communication channels\n\n## Development Activities\n\n### Test Your Chain\n\n\`\`\`javascript\n// Connect to your chain using ethers.js\nimport { ethers } from 'ethers';\n\nconst provider = new ethers.JsonRpcProvider(\n  'YOUR_CHAIN_RPC_URL'\n);\n\n// Check chain ID\nconst network = await provider.getNetwork();\nconsole.log('Chain ID:', network.chainId);\n\n// Get latest block\nconst block = await provider.getBlockNumber();\nconsole.log('Latest block:', block);\n\`\`\`\n\n### Add to MetaMask\n\n1. Open MetaMask\n2. Click "Add Network" → "Add Network Manually"\n3. Fill in:\n   - Network Name: Your chain name\n   - RPC URL: Your node's RPC endpoint\n   - Chain ID: Your chain ID\n   - Currency Symbol: ETH (or your custom token)\n\n### Deploy Your First Contract\n\n\`\`\`solidity\n// SimpleStorage.sol\npragma solidity ^0.8.0;\n\ncontract SimpleStorage {\n    uint256 private value;\n    \n    function setValue(uint256 _value) external {\n        value = _value;\n    }\n    \n    function getValue() external view returns (uint256) {\n        return value;\n    }\n}\n\`\`\`\n\nDeploy this to verify your chain is working!\n\n## Governance Setup\n\n### Transition to Multi-Sig\n\nFor production chains:\n1. Create a multi-signature wallet (Gnosis Safe)\n2. Transfer chain ownership to the multi-sig\n3. Document all ownership transfer steps\n4. Set up governance procedures\n\n### Define Upgrade Process\n\n- Establish proposal process\n- Implement timelocks for changes\n- Create public communication channels\n- Plan for emergency response\n\n## Monitoring & Maintenance\n\n### Set Up Monitoring\n\n**Key Metrics to Track:**\n- Block production rate\n- Transaction throughput\n- Gas prices and fees\n- Batch posting frequency\n- Validator uptime\n\n**Alerting:**\n- Configure alerts for downtime\n- Monitor for unusual activity\n- Track batch posting failures\n- Set up on-call rotation\n\n### Regular Maintenance\n\n- Keep nodes updated\n- Monitor disk space and resources\n- Review logs regularly\n- Perform periodic security audits\n\n## Community Building\n\n### Documentation\n\n- Create developer documentation\n- Publish RPC endpoints and chain info\n- Write integration guides\n- Maintain a public roadmap\n\n### Ecosystem Growth\n\n- Launch developer grants program\n- Host hackathons\n- Build partnerships\n- Support early adopters\n\n## Resources\n\n**Official Documentation:**\n- [Arbitrum Orbit Docs](https://docs.arbitrum.io/launch-orbit-chain/orbit-gentle-introduction)\n- [Orbit SDK GitHub](https://github.com/OffchainLabs/arbitrum-orbit-sdk)\n\n**Community:**\n- Arbitrum Discord\n- Developer Forums\n- Technical Support Channels\n\n## Troubleshooting\n\n**Chain Not Producing Blocks:**\n- Verify batch poster is funded\n- Check batch poster node is running\n- Review logs for errors\n\n**RPC Not Responding:**\n- Verify node is synced\n- Check network connectivity\n- Review node configuration\n\n**Bridge Issues:**\n- Verify bridge contracts are deployed\n- Check message relay configuration\n- Test with small amounts first\n\n## What's Next?\n\nNow that you have your chain, consider:\n\n1. **Building dApps**: Deploy applications to your chain\n2. **Custom Features**: Implement precompiles or custom gas tokens\n3. **Scaling**: Optimize for higher throughput\n4. **Governance**: Decentralize chain control\n5. **Ecosystem**: Grow your chain's user base\n\n**Congratulations on becoming a chain operator! 🎉**`,
+          questions: [
+            {
+              id: "post-deploy-q1",
+              question: "What is the first critical step after deploying your chain?",
+              options: [
+                "Launch a marketing campaign",
+                "Record chain address, deployment tx, and chain details",
+                "Deploy 100 smart contracts",
+                "Create a token"
+              ],
+              correctAnswer: 1,
+              explanation: "Recording your chain's critical information (addresses, tx hash, chain ID) is essential for all future operations and integration.",
+              type: "multiple-choice"
+            },
+            {
+              id: "post-deploy-q2",
+              question: "For production chains, what ownership structure is recommended?",
+              options: [
+                "Single EOA (externally owned account)",
+                "No owner at all",
+                "Multi-signature wallet with governance procedures",
+                "Smart contract with no keys"
+              ],
+              correctAnswer: 2,
+              explanation: "Multi-signature wallets with proper governance procedures distribute control and reduce single points of failure, making them ideal for production.",
+              type: "multiple-choice"
+            }
+          ]
+        }
+      },
+    ],
+  },
 ];
 
 // Quiz questions for each chapter
@@ -1424,6 +1521,47 @@ export const quizQuestions: { [chapterId: string]: Quiz[] } = {
       correctAnswer: 1,
       explanation:
         "Production chains require 24/7 monitoring and alerting systems to quickly detect and respond to any issues.",
+    },
+  ],
+  "hands-on-deployment": [
+    {
+      id: "q1",
+      question: "What is the primary purpose of the hands-on deployment chapter?",
+      options: [
+        "To read about deployment theory",
+        "To deploy a real Arbitrum Orbit chain using the deployment API",
+        "To configure a wallet",
+        "To learn about Ethereum",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The hands-on deployment chapter allows you to deploy a real Arbitrum Orbit chain in real-time using our deployment API.",
+    },
+    {
+      id: "q2",
+      question: "What becomes the chain owner address after deployment?",
+      options: [
+        "A random address",
+        "The deployment API address",
+        "Your connected wallet address",
+        "Arbitrum's address",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Your connected wallet address becomes the chain owner, giving you full control over the deployed Orbit chain.",
+    },
+    {
+      id: "q3",
+      question: "What is the minimum recommended chain ID value?",
+      options: [
+        "1",
+        "10",
+        "100",
+        "1000",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "Chain IDs should be greater than or equal to 1000 to avoid conflicts with existing networks.",
     },
   ],
 };
