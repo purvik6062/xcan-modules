@@ -1,20 +1,12 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
-import { Tektur } from "next/font/google";
+import { Rubik } from "next/font/google";
 import "./globals.css";
 import Providers from "../providers/Providers";
 import ConditionalLayout from "../components/ConditionalLayout";
 import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
-
-// Font configurations
-const tektur = Tektur({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-tektur",
-  display: "swap",
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -46,7 +38,6 @@ export default function RootLayout({
     >
       <body
         className={`
-          ${tektur.variable} 
           ${geistMono.variable}
           font-sans 
           antialiased 

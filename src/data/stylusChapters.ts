@@ -155,6 +155,34 @@ Execute compute-intensive algorithms for true onchain creation.`,
                 "True! Stylus provides full interoperability - Solidity and Rust programs can call each other seamlessly.",
               type: "true-false",
             },
+            {
+              id: "q3",
+              question: "What is WASM in the context of Stylus?",
+              options: [
+                "A new programming language",
+                "WebAssembly - a binary format for fast execution",
+                "A type of smart contract",
+                "An Ethereum upgrade",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "WASM (WebAssembly) is a binary instruction format that enables fast, efficient execution of code compiled from languages like Rust.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "How much cheaper are memory operations in Stylus compared to Solidity?",
+              options: [
+                "2-5x cheaper",
+                "10-50x cheaper",
+                "100-500x cheaper",
+                "Same cost",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Stylus memory operations are 100-500x cheaper than equivalent Solidity operations, making complex computations affordable.",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -247,6 +275,34 @@ cargo stylus deploy --private-key-path=.env
                 "True! Stylus contracts compile to WASM, so you need the wasm32-unknown-unknown target.",
               type: "true-false",
             },
+            {
+              id: "q3",
+              question: "What command creates a new Stylus project?",
+              options: [
+                "cargo new",
+                "cargo stylus new",
+                "stylus create",
+                "npm init stylus",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use 'cargo stylus new <project-name>' to create a new Stylus project with the proper structure.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "Which SDK is essential for Stylus development?",
+              options: [
+                "web3-sdk",
+                "ethers-sdk",
+                "stylus-sdk",
+                "hardhat-sdk",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "stylus-sdk provides the core functionality for building Stylus smart contracts in Rust.",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -332,16 +388,16 @@ Stylus writes a sentinel value to prevent re-initialization attacks.`,
           questions: [
             {
               id: "q1",
-              question: "Why use tx_origin() instead of msg_sender() in constructors?",
+              question: "What is the main purpose of a constructor?",
               options: [
-                "msg_sender() doesn't work",
-                "Stylus uses a factory, so msg_sender() returns the factory address",
-                "tx_origin() is faster",
-                "It's just a convention",
+                "To initialize contract state at deployment",
+                "To handle every external call",
+                "To calculate gas usage",
+                "To emit events automatically",
               ],
-              correctAnswer: 1,
+              correctAnswer: 0,
               explanation:
-                "Stylus uses a factory contract for deployment. In constructors, msg_sender() returns the factory's address, while tx_origin() returns the actual deployer.",
+                "Constructors run once at deployment to set up initial contract state (e.g., owner, initial values).",
               type: "multiple-choice",
             },
             {
@@ -352,6 +408,29 @@ Stylus writes a sentinel value to prevent re-initialization attacks.`,
               explanation:
                 "False! Stylus uses a sentinel value to ensure constructors run exactly once, preventing re-initialization.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "What annotation marks a constructor function?",
+              options: [
+                "#[init]",
+                "#[constructor]",
+                "#[deploy]",
+                "#[setup]",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "The #[constructor] annotation is required to mark a function as a constructor in Stylus.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What macro defines storage layout in Stylus?",
+              options: ["storage!", "sol_storage!", "define!", "contract!"],
+              correctAnswer: 1,
+              explanation:
+                "sol_storage! is the macro that defines storage using Solidity-style syntax in Stylus.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -420,11 +499,16 @@ sol_storage! {
           questions: [
             {
               id: "q1",
-              question: "What macro defines storage layout in Stylus?",
-              options: ["storage!", "sol_storage!", "define!", "contract!"],
+              question: "How do you read a storage value in Stylus?",
+              options: [
+                "self.value.read()",
+                "self.value.get()",
+                "self.value()",
+                "get(self.value)",
+              ],
               correctAnswer: 1,
               explanation:
-                "sol_storage! is the macro that defines storage using Solidity-style syntax in Stylus.",
+                "Use .get() method to read storage values in Stylus contracts.",
               type: "multiple-choice",
             },
             {
@@ -435,6 +519,34 @@ sol_storage! {
               explanation:
                 "True! Functions that modify state require &mut self, while read-only functions use &self.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "How do you write a value to storage?",
+              options: [
+                "self.count = value",
+                "self.count.set(value)",
+                "self.count.write(value)",
+                "storage.set(count, value)",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use .set() method to write values to storage in Stylus.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What annotation makes functions externally callable?",
+              options: [
+                "#[external]",
+                "#[public]",
+                "#[visible]",
+                "#[callable]",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "The #[public] annotation marks an impl block's functions as externally callable.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -537,6 +649,29 @@ impl Token {
                 "False! Mappings don't support iteration. Keep a separate array if you need to iterate.",
               type: "true-false",
             },
+            {
+              id: "q3",
+              question: "How do you access a nested mapping value?",
+              options: [
+                "self.map[key1][key2]",
+                "self.map.getter(key1).get(key2)",
+                "self.map.get(key1, key2)",
+                "get_nested(self.map, key1, key2)",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "For nested mappings, chain .getter() and .get() methods: self.map.getter(key1).get(key2).",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "How do you add an element to a Vec in Stylus?",
+              options: ["add()", "push()", "append()", "insert()"],
+              correctAnswer: 1,
+              explanation:
+                "Use the push() method to add elements to the end of a Vec.",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -612,11 +747,16 @@ impl Registry {
           questions: [
             {
               id: "q1",
-              question: "How do you add an element to a Vec?",
-              options: ["add()", "push()", "append()", "insert()"],
+              question: "What is the difference between Vec and fixed arrays?",
+              options: [
+                "Vec is fixed size, arrays are dynamic",
+                "Vec is dynamic, fixed arrays have a set size",
+                "No difference",
+                "Arrays are faster",
+              ],
               correctAnswer: 1,
               explanation:
-                "Use push() to add elements to the end of a Vec in Stylus.",
+                "Vec is a dynamic array that can grow, while fixed arrays have a predetermined size set at compile time.",
               type: "multiple-choice",
             },
             {
@@ -627,6 +767,34 @@ impl Registry {
               explanation:
                 "True! Keep a separate Vec of keys to enable iteration over mappings.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "How do you get the length of a Vec?",
+              options: [
+                "vec.size()",
+                "vec.length()",
+                "vec.len()",
+                "vec.count()",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Use the .len() method to get the number of elements in a Vec.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What should you check before accessing a Vec element by index?",
+              options: [
+                "The element exists",
+                "The index is within bounds",
+                "The Vec is not empty",
+                "All of the above",
+              ],
+              correctAnswer: 3,
+              explanation:
+                "Always validate index bounds to prevent out-of-bounds errors. Check that the index is less than vec.len().",
+              type: "multiple-choice",
             },
           ],
         },
@@ -721,11 +889,16 @@ pub fn transfer(&mut self, to: Address, amount: U256) -> Result<(), Vec<u8>> {
           questions: [
             {
               id: "q1",
-              question: "What annotation makes functions externally callable?",
-              options: ["#[external]", "#[public]", "#[visible]", "#[open]"],
+              question: "What does the #[payable] annotation do?",
+              options: [
+                "Makes the contract free to deploy",
+                "Allows the function to receive ETH",
+                "Reduces gas costs",
+                "Makes the function public",
+              ],
               correctAnswer: 1,
               explanation:
-                "#[public] annotation marks an impl block's functions as externally callable.",
+                "The #[payable] annotation allows a function to receive ETH along with the call.",
               type: "multiple-choice",
             },
             {
@@ -736,6 +909,34 @@ pub fn transfer(&mut self, to: Address, amount: U256) -> Result<(), Vec<u8>> {
               explanation:
                 "False! View functions only read state, so they use &self (not &mut self).",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "How do you return an error from a function?",
+              options: [
+                "panic!()",
+                "return Err(message)",
+                "throw new Error()",
+                "error!(message)",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use 'return Err(message.into())' to return an error from a function that returns Result<T, E>.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What type indicates a function can fail?",
+              options: [
+                "Option<T>",
+                "Result<T, E>",
+                "Error<T>",
+                "Maybe<T>",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Result<T, E> indicates a function can either succeed (Ok) or fail (Err).",
+              type: "multiple-choice",
             },
           ],
         },
@@ -818,6 +1019,34 @@ impl Contract {
               explanation:
                 "True! Fallback functions are called when a contract receives a call that doesn't match any function selector.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "What is a function selector derived from?",
+              options: [
+                "The function name only",
+                "The keccak256 hash of the function signature",
+                "The contract address",
+                "Random generation",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Function selectors are the first 4 bytes of the keccak256 hash of the complete function signature including parameter types.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What annotation marks a fallback function?",
+              options: [
+                "#[default]",
+                "#[fallback]",
+                "#[catch]",
+                "#[unknown]",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use #[fallback] to mark a function that handles calls to non-existent functions.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -913,6 +1142,34 @@ sol! {
               explanation:
                 "True! Events are logged on-chain and can be queried by frontends and indexers.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "What macro is used to declare events in Stylus?",
+              options: [
+                "event!",
+                "sol!",
+                "declare!",
+                "log!",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use the sol! macro to declare events with Solidity-style syntax in Stylus.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "How do you emit an event in Stylus?",
+              options: [
+                "emit(Event)",
+                "evm::log(Event)",
+                "log::emit(Event)",
+                "event.emit()",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use evm::log() to emit events in Stylus contracts.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -1010,6 +1267,34 @@ pub fn withdraw(&mut self, amount: U256) -> Result<(), Vec<u8>> {
               explanation:
                 "True! Custom errors can include parameters to provide detailed information about failures.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "What is the advantage of custom errors over string messages?",
+              options: [
+                "They are easier to write",
+                "They are gas-efficient and type-safe",
+                "They work only in Rust",
+                "They are optional",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Custom errors are more gas-efficient than string messages and provide type safety with structured data.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "How do you define a simple error in Stylus?",
+              options: [
+                "error MyError;",
+                "sol! { error MyError(); }",
+                "define_error!(MyError)",
+                "#[error] struct MyError",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use the sol! macro to define errors: sol! { error MyError(); }",
+              type: "multiple-choice",
             },
           ],
         },
@@ -1117,6 +1402,34 @@ pub fn delegate_call(&mut self, implementation: Address, data: Vec<u8>)
                 "False! Static calls are read-only and cannot modify state.",
               type: "true-false",
             },
+            {
+              id: "q3",
+              question: "How do you define an interface in Stylus?",
+              options: [
+                "interface! { }",
+                "sol! { interface IName { } }",
+                "#[interface] trait IName",
+                "define_interface!(IName)",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use the sol! macro to define interfaces with Solidity-style syntax for type-safe contract calls.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What is the purpose of the Call API?",
+              options: [
+                "To compile contracts",
+                "To interact with external contracts",
+                "To deploy new contracts",
+                "To test contracts",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "The Call API allows Stylus contracts to interact with other contracts (both Stylus and Solidity).",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -1207,6 +1520,34 @@ pub fn withdraw(&mut self, amount: U256) -> Result<(), Vec<u8>> {
               explanation:
                 "True! vm().block_timestamp() returns the timestamp of the current block.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question: "How do you access the amount of ETH sent with a call?",
+              options: [
+                "vm().value()",
+                "vm().msg_value()",
+                "vm().eth_amount()",
+                "vm().payment()",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Use vm().msg_value() to get the amount of ETH sent with the current call.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What does vm().tx_origin() return?",
+              options: [
+                "The current contract address",
+                "The immediate caller",
+                "The original transaction sender",
+                "The block proposer",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "vm().tx_origin() returns the address that originated the transaction (the very first caller in the call chain).",
+              type: "multiple-choice",
             },
           ],
         },

@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Chapter } from "../../data/stylusChapters";
 
 interface StylusChapterCardProps {
@@ -17,6 +19,8 @@ export default function StylusChapterCard({
   progressData = [],
   isLoading = false
 }: StylusChapterCardProps) {
+  const router = useRouter();
+  const [isNavigating, setIsNavigating] = useState(false);
   const availableSections = chapter.sections.filter(
     (section) => section.status === "available"
   );
@@ -112,8 +116,20 @@ export default function StylusChapterCard({
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className={`bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : ""}`}
+      className={`relative bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : ""}`}
     >
+      {isNavigating && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60">
+          <motion.div
+            className="relative w-24 h-24"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+          >
+            <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
+            <div className="absolute inset-2 rounded-full border-t-4 border-blue-400" />
+          </motion.div>
+        </div>
+      )}
       {/* Header */}
       <div className="p-6 border-b border-gray-700">
         <div className="flex items-center justify-between mb-3">
@@ -201,12 +217,16 @@ export default function StylusChapterCard({
 
       {/* Footer */}
       <div className="p-6 border-t border-gray-700">
-        <Link
-          href={`${basePath}/${chapter.id}`}
-          className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 text-center block group-hover:shadow-lg"
+        <button
+          onClick={() => {
+            if (chapter.status === "coming-soon") return;
+            setIsNavigating(true);
+            router.push(`${basePath}/${chapter.id}`);
+          }}
+          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "cursor-pointer bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
         >
           {chapter.status === "coming-soon" ? "Coming Soon" : "Start Learning"}
-        </Link>
+        </button>
       </div>
     </motion.div>
   );

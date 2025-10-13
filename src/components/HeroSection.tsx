@@ -10,7 +10,7 @@ export default function HeroSection() {
         <p className="text-xl mb-8 text-blue-100 max-w-3xl mx-auto">
           Learn, build, and master Arbitrum through comprehensive learning
           modules. From precompiles to Stylus, from DeFi to cross-chain
-          development.
+          development
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

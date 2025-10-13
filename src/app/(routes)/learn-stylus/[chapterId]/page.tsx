@@ -159,6 +159,21 @@ export default function StylusChapterPage() {
     ? stylusChapters[currentChapterIndex + 1]
     : null;
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <motion.div
+          className="relative w-24 h-24"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+        >
+          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
+          <div className="absolute inset-2 rounded-full border-t-4 border-blue-400" />
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Chapter Header with Progress */}

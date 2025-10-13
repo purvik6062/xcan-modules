@@ -198,7 +198,7 @@ export const learningModules: LearningModule[] = [
     description:
       "Master Arbitrum Stylus and build high-performance smart contracts with Rust. Learn WASM, constructors, storage, and advanced patterns through interactive lessons.",
     icon: CpuChipIcon,
-    level: "Beginner to Advanced",
+    level: "Beginner to Intermediate",
     duration: "1-2 weeks",
     challenges: 6,
     sections: 12,

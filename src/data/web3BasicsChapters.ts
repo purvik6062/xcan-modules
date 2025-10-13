@@ -687,7 +687,7 @@ Zara suddenly understands:
 
 Analogies That Click:
 - Trading Cards: Anyone can print a photo of a rare Pokemon card, but only one person owns the REAL card
-- Autographed Photos: You can copy a photo of a celebrity, but only one person owns the photo they actually signed
+- Autographed Photos: You can copy a celebrity signed photo, but only one person owns the photo they actually signed
 - Concert Tickets: You can photocopy a ticket, but only the real ticket gets you into the venue
 
 ## Chapter 5: Zara's First NFT Creation 🚀
@@ -917,6 +917,21 @@ Welcome to the future of finance! 🔄✨`,
                 "Tuples have fixed length and can mix different types.",
               type: "multiple-choice",
             },
+            {
+              id: "q3",
+              question:
+                "Which list correctly contains only Rust's scalar types?",
+              options: [
+                "i32, f64, bool, char",
+                "Tuple, Array, Vector, Slice",
+                "String, &str, Vec<T>, Option<T>",
+                "struct, enum, trait, impl",
+              ],
+              correctAnswer: 0,
+              explanation:
+                "Rust's scalar types are integers (e.g., i32), floating-point (e.g., f64), booleans (bool), and characters (char). Tuples/arrays are compound; String, Vec, and Option are library/container types.",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -927,7 +942,7 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "35 min",
         content: {
-          story: `# Control Flow & Pattern Matching 🔀\n\nRust provides expressive control structures and powerful pattern matching to write concise and safe logic.\n\n## Control Flow as Expressions\n\n\`\`\`rust\nlet score = 87;\nlet grade = if score >= 90 { "A" } else if score >= 80 { "B" } else { "C" };\n\`\`\`\n\n- Loops: loop, while, for. Use break with a value to return from loop.\n\n\`\`\`rust\nlet mut n = 0;\nlet found = loop {\n  n += 1;\n  if n == 5 { break n * 2; }\n};\n\nfor x in 0..3 { println!("{}", x); }\n\`\`\`\n\n## Pattern Matching with match\n- Exhaustiveness checking ensures all cases are handled.\n- Works with enums, integers, tuples, ranges, and more.\n\n\`\`\`rust\nenum Coin { Penny, Nickel, Dime, Quarter(u8) }\nfn value_in_cents(c: Coin) -> u8 {\n  match c {\n    Coin::Penny => 1,\n    Coin::Nickel => 5,\n    Coin::Dime => 10,\n    Coin::Quarter(state) => {\n      println!("State quarter: {}", state);\n      25\n    }\n  }\n}\n\`\`\`\n\n## if let / while let\n- Concise syntax when you only care about one pattern.\n\n\`\`\`rust\nlet opt = Some(10);\nif let Some(v) = opt { println!("{}", v); }\n\nlet mut it = (0..3).into_iter();\nwhile let Some(x) = it.next() { println!("{x}"); }\n\`\`\`\n\nThese tools make complex branching and data decomposition explicit and safe.`,
+          story: `# Control Flow & Pattern Matching 🔀\n\nRust provides expressive control structures and powerful pattern matching to write concise and safe logic.\n\n## Control Flow as Expressions\n\n\`\`\`rust\nlet score = 87;\nlet grade = if score >= 90 { "A" } else if score >= 80 { "B" } else { "C" };\n\`\`\`\n\n- Loops: loop, while, for. Use break with a value to return from loop.\n\n\`\`\`rust\nlet mut n = 0;\nlet found = loop {\n  n += 1;\n  if n == 5 { break n * 2; }\n};\n\nfor x in 0..3 { println!("{}", x); }\n\`\`\`\n\n## Pattern Matching with match\n- Exhaustiveness checking ensures all cases are handled.\n- Works with enums, integers, tuples, ranges, and more.\n\n\`\`\`rust\nenum Coin { Penny, Nickel, Dime, Quarter(u8) }\nfn value_in_cents(c: Coin) -> u8 {\n  match c {\n    Coin::Penny => 1,\n    Coin::Nickel => 5,\n    Coin::Dime => 10,\n    Coin::Quarter(state) => {\n      println!("State quarter: {}", state);\n      25\n    }\n  }\n}\n\`\`\`\n\n## Options with match and if let\nThe \`Option<T>\` type encodes presence (\`Some(T)\`) or absence (\`None\`) without nulls. Use \`match\` for exhaustive handling, or \`if let\` for the success path.\n\n\`\`\`rust\nfn double(opt: Option<i32>) -> i32 {\n  match opt {\n    Some(v) => v * 2,\n    None => 0,\n  }\n}\n\nlet opt = Some(10);\nif let Some(v) = opt {\n  println!("{}", v * 2);\n}\n\`\`\`\n\n## if let / while let\n- Concise syntax when you only care about one pattern.\n\n\`\`\`rust\nlet opt = Some(10);\nif let Some(v) = opt { println!("{}", v); }\n\nlet mut it = (0..3).into_iter();\nwhile let Some(x) = it.next() { println!("{x}"); }\n\`\`\`\n\nThese tools make complex branching and data decomposition explicit and safe.`,
           questions: [
             {
               id: "q1",
@@ -946,11 +961,16 @@ Welcome to the future of finance! 🔄✨`,
             {
               id: "q2",
               question:
-                "Which is idiomatic for handling Option values concisely?",
-              options: ["goto", "switch", "if let", "try/catch"],
-              correctAnswer: 2,
+                "Which is the idiomatic way to extract a value from Option<i32> if present?",
+              options: [
+                "if let Some(v) = opt { /* use v */ }",
+                "if (opt) { let v = opt.unwrap(); }",
+                "while opt { do_something(opt) }",
+                "match opt { Some => v, None => 0 }",
+              ],
+              correctAnswer: 0,
               explanation:
-                "'if let' matches and extracts a single successful pattern succinctly.",
+                "Use 'if let Some(v) = opt { ... }' for concise handling of the success case; use 'match' for exhaustive handling of Some/None.",
               type: "multiple-choice",
             },
           ],
@@ -1016,41 +1036,42 @@ Welcome to the future of finance! 🔄✨`,
         },
       },
       {
-        id: "rust-lifetimes",
-        title: "Lifetimes and References",
+        id: "rust-ownership-move-shadowing",
+        title: "Ownership Moves & Shadowing",
         type: "theory",
         status: "available",
-        estimatedTime: "40 min",
+        estimatedTime: "30 min",
         content: {
-          story: `# Lifetimes and References ⏱️\n\nLifetimes describe how long references remain valid. The compiler uses lifetime analysis to prevent dangling references.\n\n## Elision\nIn many simple cases, the compiler can infer lifetimes (elision rules), so you don't need to write them explicitly.\n- Methods with \`&self\` or \`&mut self\` often need no explicit lifetimes.\n\n## Function Signatures\nWhen multiple references relate, explicit lifetime parameters ensure returned references outlive inputs appropriately.\n\n\`\`\`rust\nfn longest<'a>(x: &'a str, y: &'a str) -> &'a str {\n  if x.len() > y.len() { x } else { y }\n}\n\`\`\`\n\n## Structs with References\nReferential fields require lifetime parameters on the struct.\n\n\`\`\`rust\nstruct Excerpt<'a> { part: &'a str }\nfn announce<'a>(e: Excerpt<'a>) { println!("{}", e.part); }\n\`\`\`\n\nLifetimes are about relationships between borrows, not about changing runtime behavior.`,
+          story: `# Ownership Moves & Shadowing 🔐\n\nRust enforces memory safety through ownership rules and allows ergonomic value transformation via shadowing.\n\n## Ownership Moves\n- Each value has a single owner. Assigning or passing ownership *moves* it to a new owner. The previous binding becomes invalid.\n\n\`\`\`rust\nlet s1 = String::from("rust");\nlet s2 = s1;          // move: ownership of the String goes to s2\n// println!("{}", s1); // error: s1 is no longer valid here\n\nlet s3 = s2.clone();  // deep copy; s2 and s3 both own independent Strings\nprintln!("{} {}", s2, s3);\n\`\`\`\n\nMoves prevent double-frees and data races by ensuring exactly one owner at a time.\n\n## Shadowing\n- Shadowing creates a new binding with the same name, leaving prior bindings inaccessible (and allowing type changes).\n\n\`\`\`rust\nlet x = 5;            // x: i32\nlet x = x + 1;        // new x: i32 (6) shadows the old x\nlet x = "six".len();  // new x: usize; type can change with shadowing\nprintln!("{}", x);   // prints 3\n\`\`\`\n\nShadowing differs from mutability: it rebinds a name rather than mutating an existing value.`,
           questions: [
             {
               id: "q1",
-              question: "What do lifetimes primarily prevent?",
+              question:
+                "After 'let s2 = s1;' where s1 is a String, what is true?",
               options: [
-                "Integer overflow",
-                "Dangling references/use-after-free",
-                "Network timeouts",
-                "Stack overflows",
+                "Both s1 and s2 are valid and point to the same String",
+                "s1 is moved and no longer valid; s2 owns the String",
+                "s1 is copied; both own separate deep copies",
+                "The compiler inserts a clone automatically",
               ],
               correctAnswer: 1,
               explanation:
-                "Lifetimes guarantee references stay valid for their required scope.",
+                "Assigning a String moves ownership to s2, invalidating s1. Use .clone() for a deep copy.",
               type: "multiple-choice",
             },
             {
               id: "q2",
               question:
-                "When are explicit lifetime annotations often unnecessary?",
+                "What does shadowing allow that 'mut' does not necessarily allow?",
               options: [
-                "Simple function signatures covered by elision rules",
-                "Always",
-                "In unsafe blocks",
-                "When using raw pointers",
+                "Changing the type of the binding",
+                "Mutating data behind an immutable reference",
+                "Creating multiple mutable aliases",
+                "Borrowing across threads without Sync",
               ],
               correctAnswer: 0,
               explanation:
-                "Elision rules let the compiler infer lifetimes in common patterns.",
+                "Shadowing creates a new binding (even with a different type), while 'mut' keeps the same binding and type.",
               type: "multiple-choice",
             },
           ],
@@ -1075,30 +1096,16 @@ Welcome to the future of finance! 🔄✨`,
     },
     sections: [
       {
-        id: "rust-error-handling",
-        title: "Error Handling in Rust",
+        id: "rust-advanced-references-structs",
+        title: "References, Memory Safety (No GC), self vs this, and Structs",
         type: "theory",
         status: "available",
         estimatedTime: "45 min",
         content: {
-          story: `# Error Handling in Rust ❗\n\nRust encourages explicit, recoverable error handling with \`Result<T, E>\` and optional values with \`Option<T>\`.\n\n## Result and the '?' Operator\nUse pattern matching or the '?' operator to propagate errors ergonomically.\n\n\`\`\`rust\nuse std::fs::File;\nuse std::io::{self, Read};\n\nfn read_file(path: &str) -> io::Result<String> {\n  let mut s = String::new();\n  File::open(path)?.read_to_string(&mut s)?;\n  Ok(s)\n}\n\`\`\`\n\n## Option\nRepresents presence (Some) or absence (None) of a value without using null.\n\n\`\`\`rust\nfn index<T>(v: &[T], i: usize) -> Option<&T> {\n  v.get(i) // returns Option<&T>\n}\n\`\`\`\n\n## Converting Between Types\nLeverage From/Into, map, and_then, and ok_or/ok_or_else to transform errors and options cleanly.\n\n## Panics\nReserve \`panic!\` for unrecoverable errors (invariants broken). Prefer Result for recoverable cases.`,
+          story: `# References, Memory Safety (No GC), self vs this, and Structs 🧠\n\n## Immutable vs Mutable References\n- Immutable (\`&T\`): Any number of readers, no writers in the same scope.\n- Mutable (\`&mut T\`): Exactly one writer, no other borrows at the same time.\n\nThese rules prevent data races at compile time.\n\n\`\`\`rust\nlet mut name = String::from("Maya");\nlet r1 = &name;\nlet r2 = &name;\nprintln!("{} {}", r1, r2); // many immutable borrows OK\n// let r3 = &mut name;     // error: cannot borrow as mutable while immutably borrowed\n\nlet r3 = &mut name;        // OK after r1/r2 no longer used\nr3.push_str(" Patel");\n\`\`\`\n\n## Memory Safety Without a Garbage Collector\nRust achieves memory safety *without* a GC via ownership, moves, and borrowing. Values are dropped deterministically when the owner goes out of scope.\n- No stop-the-world pauses.\n- Compiler enforces aliasing and mutability rules (via the borrow checker).\n- Use \`.clone()\` for explicit deep copies when needed.\n\n\`\`\`rust\nlet s1 = String::from("rust");\nlet s2 = s1;          // move; s1 invalidated\n// println!("{}", s1); // compile error\nlet s3 = s2.clone();  // explicit deep copy\n\`\`\`\n\n## self (Rust) vs this (Java)\n- Rust methods take an explicit receiver: \`self\`, \`&self\`, or \`&mut self\`.\n- Java's \`this\` is implicit; in Rust, the receiver is just the first parameter.\n- Choosing \`&self\` vs \`&mut self\` communicates borrowing/mutation at the type level.\n\n\`\`\`rust\nstruct Counter { value: i32 }\nimpl Counter {\n  fn get(&self) -> i32 { self.value }          // shared borrow\n  fn inc(&mut self) { self.value += 1; }       // unique mutable borrow\n  fn take(self) -> i32 { self.value }          // moves ownership\n}\n\`\`\`\n\n## Structs in Rust\nStructs compose named fields; they are not classes and hold no inherent methods without an \`impl\` block.\n\n\`\`\`rust\nstruct User { id: u64, name: String }\nimpl User {\n  fn rename(&mut self, to: String) { self.name = to; }\n}\n\nlet mut u = User { id: 1, name: "Maya".into() };\nu.rename("Luna".into());\n\`\`\`\n\nTogether, references, ownership without GC, explicit receivers, and structs form the backbone of Rust's safety and ergonomics.## Option\nRepresents presence (Some) or absence (None) of a value without using null.\n\n\`\`\`rust\nfn index<T>(v: &[T], i: usize) -> Option<&T> {\n  v.get(i) // returns Option<&T>\n}\n\`\`\`\n\n`,
           questions: [
             {
               id: "q1",
-              question: "What does the '?' operator do?",
-              options: [
-                "Converts a panic to a Result",
-                "Propagates errors by early-returning Err",
-                "Ignores errors at runtime",
-                "Forces unwrap",
-              ],
-              correctAnswer: 1,
-              explanation:
-                "'?' returns early with Err if the Result is an error, otherwise unwraps the value.",
-              type: "multiple-choice",
-            },
-            {
-              id: "q2",
               question: "Which type represents an optional value?",
               options: ["Try", "Result", "Option", "Any"],
               correctAnswer: 2,
@@ -1106,39 +1113,34 @@ Welcome to the future of finance! 🔄✨`,
                 "Option<T> encodes presence (Some) or absence (None) of a value.",
               type: "multiple-choice",
             },
-          ],
-        },
-      },
-      {
-        id: "rust-macros",
-        title: "Rust Macros",
-        type: "theory",
-        status: "available",
-        estimatedTime: "50 min",
-        content: {
-          story: `# Rust Macros ⚙️\n\nMacros are compile-time metaprogramming tools that generate code. They enable expressive APIs and reduce boilerplate, while compiling to efficient code.\n\n## Declarative (macro_rules!)\nPattern-match on token trees to expand into code. Great for small DSLs and reducing boilerplate.\n\n\`\`\`rust\nmacro_rules! vec_of_strings {\n  ( $( $x:expr ),* ) => {\n    { let mut v = Vec::new(); $( v.push($x.to_string()); )* v }\n  }\n}\n\nlet names = vec_of_strings!("maya", "luna");\n\`\`\`\n\n## Procedural Macros\nFunctions that operate on syntax to generate code: attribute, derive, and function-like macros.\n- Derive macros implement traits automatically (e.g., #[derive(Debug, Clone)]).\n- Attribute macros transform items (functions, modules).\n- Function-like macros look like calls but expand at compile time.\n\n## Best Practices\n- Prefer functions and generics first; reach for macros to remove boilerplate or build DSLs.\n- Keep expansions simple and well-documented to aid readability.`,
-          questions: [
             {
-              id: "q1",
-              question: "What is a key purpose of macros in Rust?",
+              id: "q2",
+              question:
+                "How does Rust provide memory safety compared to GC languages?",
               options: [
-                "Runtime reflection",
-                "Compile-time code generation",
-                "Manual memory management",
-                "Dynamic typing",
+                "Background garbage collector",
+                "Reference counting everywhere by default",
+                "Ownership and borrowing checked at compile time",
+                "Manual malloc/free by the programmer",
               ],
-              correctAnswer: 1,
+              correctAnswer: 2,
               explanation:
-                "Macros generate code at compile time, reducing boilerplate.",
+                "Rust enforces ownership and borrowing rules at compile time instead of using a GC.",
               type: "multiple-choice",
             },
             {
-              id: "q2",
-              question: "Which is a declarative macro system in Rust?",
-              options: ["proc_macro", "macro_rules!", "build.rs", "println"],
-              correctAnswer: 1,
+              id: "q3",
+              question:
+                "In a Rust method, what does &mut self indicate?",
+              options: [
+                "Consumes the value",
+                "Shared, read-only access",
+                "Unique, mutable access to the receiver",
+                "Unsafe access to the receiver",
+              ],
+              correctAnswer: 2,
               explanation:
-                "macro_rules! defines declarative macros via pattern matching on tokens.",
+                "&mut self grants exclusive, mutable access for the duration of the call.",
               type: "multiple-choice",
             },
           ],
