@@ -165,23 +165,23 @@ export const nftModules: NFTModule[] = [
     ],
   },
   {
-    id: "arbitrum-stylus",
-    title: "Arbitrum Stylus",
+    id: "stylus-foundation",
+    title: "Stylus Foundation",
     description:
-      "Build high-performance smart contracts with Rust, C, and C++ on Arbitrum",
+      "Build a complete ERC20 token system and mint your achievement certificate! Learn ERC20 and ERC721 standards with Rust contract development.",
     icon: CpuChipIcon,
-    level: "Intermediate to Advanced",
-    duration: "3-5 weeks",
-    challenges: 11,
+    level: "Beginner",
+    duration: "Less than 1 week",
+    challenges: 1,
     status: "available",
-    gradient: "from-purple-500 to-pink-600",
+    gradient: "from-green-500 to-emerald-600",
     database: "postgres",
-    href: "/nft/arbitrum-stylus", // Special route for Postgres module
+    href: "/nft/stylus-foundation",
     features: [
-      "Rust Development",
-      "WebAssembly",
-      "Performance Optimization",
-      "Multi-language Support",
+      "ERC20 Standard Implementation",
+      "ERC721 NFT Standard",
+      "Rust Contract Development",
+      "Interaction with Rust-based Smart Contracts",
     ],
   },
   {
@@ -205,6 +205,26 @@ export const nftModules: NFTModule[] = [
       "Testing & Bridge Validation",
       "Advanced Features & Governance",
       "Production Ops & Monitoring",
+    ],
+  },
+  {
+    id: "arbitrum-stylus",
+    title: "Arbitrum Stylus",
+    description:
+      "Build high-performance smart contracts with Rust, C, and C++ on Arbitrum",
+    icon: CpuChipIcon,
+    level: "Intermediate to Advanced",
+    duration: "3-5 weeks",
+    challenges: 11,
+    status: "available",
+    gradient: "from-purple-500 to-pink-600",
+    database: "postgres",
+    href: "/nft/arbitrum-stylus", // Special route for Postgres module
+    features: [
+      "Rust Development",
+      "WebAssembly",
+      "Performance Optimization",
+      "Multi-language Support",
     ],
   },
   {

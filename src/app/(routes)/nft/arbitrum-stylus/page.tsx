@@ -502,7 +502,7 @@ export default function ArbitrumStylusPage() {
                             Analyzing Your Achievements
                           </h3>
                           <p className="text-gray-300 text-lg">
-                            Scanning blockchain for completed challenges...
+                            Scanning for completed challenges...
                           </p>
                         </GlassCard>
                       </motion.div>

@@ -449,7 +449,11 @@ export default function HomePage() {
                         {nftModules.map((module, index) => {
 
                           const handleOpen = () => {
-                            if (module.id === "arbitrum-stylus" || module.database === "postgres") {
+                            if (module.id === "arbitrum-stylus") {
+                              router.push(`/nft/arbitrum-stylus`);
+                            } else if (module.id === "stylus-foundation") {
+                              router.push(`/nft/stylus-foundation`);
+                            } else if (module.database === "postgres") {
                               router.push(`/nft/arbitrum-stylus`);
                             } else {
                               router.push(`/nft/modules/${module.id}`);

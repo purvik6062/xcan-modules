@@ -113,8 +113,8 @@ export default function ChallengesPage() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-[#0D1221] p-6 rounded-lg shadow-md border border-gray-700">
           <div>
             <h1 className="text-3xl font-bold mb-2 text-white">
-              <span className="text-blue-400">Stylus</span>{" "}
-              Core Concepts
+              <span className="text-blue-400">Arbitrum</span>{" "}
+              Precompiles
             </h1>
             <p className="text-gray-300">
               Learn how to interact with Arbitrum&apos;s precompiles through

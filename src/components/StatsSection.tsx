@@ -4,13 +4,13 @@ export default function StatsSection() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
           <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">7</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">8</div>
             <div className=" text-gray-300">
               Learning Modules
             </div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-blue-600 mb-2">7</div>
+            <div className="text-3xl font-bold text-blue-600 mb-2">8</div>
             <div className=" text-gray-300">
               Available Now
             </div>
