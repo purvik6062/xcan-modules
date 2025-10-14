@@ -179,6 +179,7 @@ export const learningModules: LearningModule[] = [
     level: "Absolute Beginner",
     duration: "1-2 weeks",
     challenges: 6,
+    sections: 12,
     status: "available",
     href: "/learn-web3-basics",
     target: "_self",
