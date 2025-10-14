@@ -11,23 +11,20 @@ import { useMint } from "@/hooks/useMint";
 import { useMintedStatus } from "@/hooks/useMintedStatus";
 import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import { CheckCircle, ArrowLeft, Loader2, Trophy, Target, Clock, Rocket, AlertTriangle, Sparkles } from "lucide-react";
+import PromoCodeModal from "../../../../../components/PromoCodeModal";
 
 export default function ModuleDetailPage() {
   const router = useRouter();
   const { moduleId } = useParams();
   const currentModule = useMemo(() => nftModules.find((m) => m.id === moduleId), [moduleId]);
-
   const { isReady, isLoading: walletLoading, address: userAddress, isWalletConnected } = useWalletProtection();
-
-
   const { certificationMint, isCertificationMinting } = useMint();
-
   // Certification claim status via certification-claim GET API
   const [isCheckingClaim, setIsCheckingClaim] = useState(false);
   const [claimedCertification, setClaimedCertification] = useState<any | null>(null);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
-
   const [error, setError] = useState<string | null>(null);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   useEffect(() => {
     if (currentModule?.database === "postgres" || currentModule?.id === "arbitrum-stylus") {
@@ -89,7 +86,7 @@ export default function ModuleDetailPage() {
       if (!isCompleted) return;
 
       const minted = await certificationMint(currentModule.id);
-      await fetch(`/api/certification/claim/${currentModule.id}`, {
+      const res = await fetch(`/api/certification/claim/${currentModule.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -99,6 +96,12 @@ export default function ModuleDetailPage() {
           imageUrl: minted?.imageUrl,
         }),
       });
+
+      if (!res.ok) {
+        throw new Error("Mint failed");
+      } else {
+        setIsPromoOpen(false);
+      }
 
       // Optimistically mark claimed to disable button immediately
       setClaimedCertification({
@@ -118,7 +121,7 @@ export default function ModuleDetailPage() {
 
   const alreadyClaimed = Boolean(claimedCertification?.claimed);
   const isClaimDisabled = claimedCertification?.claimed || isCertificationMinting || isCheckingClaim || alreadyClaimed;
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden">
       <FloatingParticles />
@@ -188,7 +191,7 @@ export default function ModuleDetailPage() {
                     )}
                     <button
                       disabled={isClaimDisabled || !isCompleted}
-                      onClick={handleClaim}
+                      onClick={() => setIsPromoOpen(true)}
                       className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled || !isCompleted ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"}`}
                     >
                       {alreadyClaimed ? (
@@ -255,6 +258,11 @@ export default function ModuleDetailPage() {
           </div>
         </GlassCard>
       </div>
+      <PromoCodeModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        onMint={handleClaim}
+      />
     </div>
   );
 }

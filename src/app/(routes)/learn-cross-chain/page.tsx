@@ -6,6 +6,7 @@ import { crossChainChapters } from "../../../data/crossChainChapters";
 import CrossChainChapterCard from "../../../components/cross-chain/CrossChainChapterCard";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
+import PromoCodeModal from "../../../components/PromoCodeModal";
 import toast from "react-hot-toast";
 
 export default function LearnCrossChainPage() {
@@ -15,6 +16,7 @@ export default function LearnCrossChainPage() {
   const { address, isReady } = useWalletProtection();
   const { certificationMint, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   const filteredChapters =
     selectedLevel === "all"
@@ -253,12 +255,12 @@ export default function LearnCrossChainPage() {
 
             {/* Claim Button */}
             <button
-              onClick={claimNFT}
+              onClick={() => setIsPromoOpen(true)}
               disabled={overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
                 : overallProgress.percentage === 100 && !isCertificationMinting
-                  ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  ? "cursor-pointer bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
@@ -406,7 +408,7 @@ export default function LearnCrossChainPage() {
             Ready to Build Cross-Chain Solutions?
           </h2>
           <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-            Start your journey into cross-chain development and learn to create the interoperable 
+            Start your journey into cross-chain development and learn to create the interoperable
             blockchain solutions that will shape the future of decentralized technology.
           </p>
           <motion.button
@@ -422,6 +424,11 @@ export default function LearnCrossChainPage() {
           </motion.button>
         </motion.div>
       </div>
+      <PromoCodeModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        onMint={claimNFT}
+      />
     </div>
   );
 }

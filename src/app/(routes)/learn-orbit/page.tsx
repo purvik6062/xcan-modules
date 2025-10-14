@@ -8,6 +8,7 @@ import ChapterCard from "../../../components/ChapterCard";
 import ProgressOverview from "../../../components/ProgressOverview";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
+import PromoCodeModal from "../../../components/PromoCodeModal";
 
 export default function LearnOrbitPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
@@ -16,6 +17,7 @@ export default function LearnOrbitPage() {
   const [isModuleCompleted, setIsModuleCompleted] = useState(false);
   const { certificationMint, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   // Aggregate totals across all chapters
   const overall = useMemo(() => {
@@ -205,12 +207,12 @@ export default function LearnOrbitPage() {
                 )}
               </div>
               <button
-                onClick={claimNFT}
+                onClick={() => setIsPromoOpen(true)}
                 disabled={overall.percent !== 100 || isCertificationMinting || alreadyClaimed}
                 className={`${alreadyClaimed
                   ? "bg-green-100 text-green-700 border-2 border-green-300 cursor-default"
                   : overall.percent === 100 && !isCertificationMinting
-                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-600 hover:to-teal-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                    ? "cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-600 hover:to-teal-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-400/30"
                   } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
               >
@@ -240,6 +242,7 @@ export default function LearnOrbitPage() {
                   <span>Complete All Challenges</span>
                 )}
               </button>
+
             </div>
           </motion.div>
         </div>
@@ -367,6 +370,11 @@ export default function LearnOrbitPage() {
           </button>
         </motion.div>
       </div>
+      <PromoCodeModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        onMint={claimNFT}
+      />
     </div>
   );
 } 
