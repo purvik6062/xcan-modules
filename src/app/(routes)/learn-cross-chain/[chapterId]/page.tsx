@@ -114,33 +114,63 @@ export default function CrossChainChapterPage() {
       }
     }
 
-    // Check if all sections of this chapter are completed
-    const allSectionsCompleted = availableSections.every(section =>
-      updatedCompleted.includes(section.id)
-    );
+    // Check if we're at the last available section
+    const currentSectionIndexInAvailable = availableSections.findIndex(s => s.id === currentSection.id);
+    const isLastSection = currentSectionIndexInAvailable === availableSections.length - 1;
 
-    if (allSectionsCompleted) {
-      // Show completion modal immediately when module is finished
+    if (isLastSection) {
+      // Show completion modal when finishing the last section
       setShowCompletionModal(true);
     } else {
-      // Auto-advance to next available section for seamless flow
+      // Auto-advance to next available section
       setCurrentSectionIndex((prevIndex) => {
-        const nextIndex = chapter.sections.findIndex((s, idx) => idx > prevIndex && s.status === "available");
-        return nextIndex !== -1 ? nextIndex : prevIndex;
+        // Find the next available section after the current one
+        for (let i = prevIndex + 1; i < chapter.sections.length; i++) {
+          if (chapter.sections[i].status === "available") {
+            return i;
+          }
+        }
+        return prevIndex; // Stay on current if no next available section
       });
     }
   };
 
   const goToNextSection = () => {
-    if (currentSectionIndex < chapter.sections.length - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1);
+    // Find the next available section after the current one
+    for (let i = currentSectionIndex + 1; i < chapter.sections.length; i++) {
+      if (chapter.sections[i].status === "available") {
+        setCurrentSectionIndex(i);
+        break;
+      }
     }
   };
 
   const goToPreviousSection = () => {
-    if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(currentSectionIndex - 1);
+    // Find the previous available section before the current one
+    for (let i = currentSectionIndex - 1; i >= 0; i--) {
+      if (chapter.sections[i].status === "available") {
+        setCurrentSectionIndex(i);
+        break;
+      }
     }
+  };
+
+  const hasNextAvailableSection = () => {
+    for (let i = currentSectionIndex + 1; i < chapter.sections.length; i++) {
+      if (chapter.sections[i].status === "available") {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const hasPreviousAvailableSection = () => {
+    for (let i = currentSectionIndex - 1; i >= 0; i--) {
+      if (chapter.sections[i].status === "available") {
+        return true;
+      }
+    }
+    return false;
   };
 
   // Get next chapter info for the completion modal
@@ -229,8 +259,8 @@ export default function CrossChainChapterPage() {
                 <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
                   <button
                     onClick={goToPreviousSection}
-                    disabled={currentSectionIndex === 0}
-                    className={`px-6 py-3 ml-4 rounded-lg transition-all duration-200 ${currentSectionIndex === 0
+                    disabled={!hasPreviousAvailableSection()}
+                    className={`px-6 py-3 ml-4 rounded-lg transition-all duration-200 ${!hasPreviousAvailableSection()
                       ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                       : "bg-gray-700 text-white hover:bg-gray-600"
                       }`}
@@ -239,13 +269,13 @@ export default function CrossChainChapterPage() {
                   </button>
 
                   <div className="text-sm text-gray-400">
-                    Section {currentSectionIndex + 1} of {availableSections.length}
+                    Section {currentSectionIndex + 1} of {chapter.sections.length}
                   </div>
 
                   <button
                     onClick={goToNextSection}
-                    disabled={currentSectionIndex === availableSections.length - 1}
-                    className={`px-6 py-3 mr-4 rounded-lg transition-all duration-200 ${currentSectionIndex === availableSections.length - 1
+                    disabled={!hasNextAvailableSection()}
+                    className={`px-6 py-3 mr-4 rounded-lg transition-all duration-200 ${!hasNextAvailableSection()
                       ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                       : "bg-gray-700 text-white hover:bg-gray-600"
                       }`}

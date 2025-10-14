@@ -633,34 +633,44 @@ impl Token {
           questions: [
             {
               id: "q1",
-              question: "What do unset mapping keys return?",
-              options: ["null", "error", "zero value", "undefined"],
-              correctAnswer: 2,
+              question: "What best describes a mapping in Stylus?",
+              options: [
+                "A key → value store",
+                "An ordered list",
+                "A fixed-size array",
+                "A queue",
+              ],
+              correctAnswer: 0,
               explanation:
-                "Mappings return the zero value for unset keys (0 for uint256, false for bool, etc.).",
+                "Mappings store values by key (e.g., mapping(address => uint256)).",
               type: "multiple-choice",
             },
             {
               id: "q2",
-              question: "True or False: You can iterate over mapping keys.",
-              options: ["True", "False"],
-              correctAnswer: 1,
-              explanation:
-                "False! Mappings don't support iteration. Keep a separate array if you need to iterate.",
-              type: "true-false",
-            },
-            {
-              id: "q3",
-              question: "How do you access a nested mapping value?",
+              question: "How do you read a value from mapping balances by user?",
               options: [
-                "self.map[key1][key2]",
-                "self.map.getter(key1).get(key2)",
-                "self.map.get(key1, key2)",
-                "get_nested(self.map, key1, key2)",
+                "balances[user]",
+                "balances.get(user)",
+                "balances.read(user)",
+                "get(balances, user)",
               ],
               correctAnswer: 1,
               explanation:
-                "For nested mappings, chain .getter() and .get() methods: self.map.getter(key1).get(key2).",
+                "Use balances.get(user) to read from a mapping.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q3",
+              question: "How do you write/update balances[user] to amount?",
+              options: [
+                "balances[user] = amount",
+                "balances.set(user, amount)",
+                "balances.setter(user).set(amount)",
+                "set(balances, user, amount)",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Mappings are updated with the setter(...) API: balances.setter(user).set(amount).",
               type: "multiple-choice",
             },
             {
@@ -761,15 +771,6 @@ impl Registry {
             },
             {
               id: "q2",
-              question: "True or False: Arrays can track mapping keys for iteration.",
-              options: ["True", "False"],
-              correctAnswer: 0,
-              explanation:
-                "True! Keep a separate Vec of keys to enable iteration over mappings.",
-              type: "true-false",
-            },
-            {
-              id: "q3",
               question: "How do you get the length of a Vec?",
               options: [
                 "vec.size()",
@@ -780,20 +781,6 @@ impl Registry {
               correctAnswer: 2,
               explanation:
                 "Use the .len() method to get the number of elements in a Vec.",
-              type: "multiple-choice",
-            },
-            {
-              id: "q4",
-              question: "What should you check before accessing a Vec element by index?",
-              options: [
-                "The element exists",
-                "The index is within bounds",
-                "The Vec is not empty",
-                "All of the above",
-              ],
-              correctAnswer: 3,
-              explanation:
-                "Always validate index bounds to prevent out-of-bounds errors. Check that the index is less than vec.len().",
               type: "multiple-choice",
             },
           ],
@@ -1020,34 +1007,6 @@ impl Contract {
                 "True! Fallback functions are called when a contract receives a call that doesn't match any function selector.",
               type: "true-false",
             },
-            {
-              id: "q3",
-              question: "What is a function selector derived from?",
-              options: [
-                "The function name only",
-                "The keccak256 hash of the function signature",
-                "The contract address",
-                "Random generation",
-              ],
-              correctAnswer: 1,
-              explanation:
-                "Function selectors are the first 4 bytes of the keccak256 hash of the complete function signature including parameter types.",
-              type: "multiple-choice",
-            },
-            {
-              id: "q4",
-              question: "What annotation marks a fallback function?",
-              options: [
-                "#[default]",
-                "#[fallback]",
-                "#[catch]",
-                "#[unknown]",
-              ],
-              correctAnswer: 1,
-              explanation:
-                "Use #[fallback] to mark a function that handles calls to non-existent functions.",
-              type: "multiple-choice",
-            },
           ],
         },
       },
@@ -1269,20 +1228,6 @@ pub fn withdraw(&mut self, amount: U256) -> Result<(), Vec<u8>> {
               type: "true-false",
             },
             {
-              id: "q3",
-              question: "What is the advantage of custom errors over string messages?",
-              options: [
-                "They are easier to write",
-                "They are gas-efficient and type-safe",
-                "They work only in Rust",
-                "They are optional",
-              ],
-              correctAnswer: 1,
-              explanation:
-                "Custom errors are more gas-efficient than string messages and provide type safety with structured data.",
-              type: "multiple-choice",
-            },
-            {
               id: "q4",
               question: "How do you define a simple error in Stylus?",
               options: [
@@ -1386,24 +1331,6 @@ pub fn delegate_call(&mut self, implementation: Address, data: Vec<u8>)
           questions: [
             {
               id: "q1",
-              question: "Which call type is used for proxy patterns?",
-              options: ["call()", "delegate_call()", "static_call()", "transfer()"],
-              correctAnswer: 1,
-              explanation:
-                "delegate_call() executes code in the context of the calling contract, essential for proxy patterns.",
-              type: "multiple-choice",
-            },
-            {
-              id: "q2",
-              question: "True or False: Static calls can modify state.",
-              options: ["True", "False"],
-              correctAnswer: 1,
-              explanation:
-                "False! Static calls are read-only and cannot modify state.",
-              type: "true-false",
-            },
-            {
-              id: "q3",
               question: "How do you define an interface in Stylus?",
               options: [
                 "interface! { }",
@@ -1417,7 +1344,7 @@ pub fn delegate_call(&mut self, implementation: Address, data: Vec<u8>)
               type: "multiple-choice",
             },
             {
-              id: "q4",
+              id: "q2",
               question: "What is the purpose of the Call API?",
               options: [
                 "To compile contracts",
@@ -1535,246 +1462,9 @@ pub fn withdraw(&mut self, amount: U256) -> Result<(), Vec<u8>> {
                 "Use vm().msg_value() to get the amount of ETH sent with the current call.",
               type: "multiple-choice",
             },
-            {
-              id: "q4",
-              question: "What does vm().tx_origin() return?",
-              options: [
-                "The current contract address",
-                "The immediate caller",
-                "The original transaction sender",
-                "The block proposer",
-              ],
-              correctAnswer: 2,
-              explanation:
-                "vm().tx_origin() returns the address that originated the transaction (the very first caller in the call chain).",
-              type: "multiple-choice",
-            },
           ],
         },
       },
     ],
   },
 ];
-
-// Quiz questions for each chapter
-export const quizQuestions: { [chapterId: string]: Quiz[] } = {
-  "stylus-foundations": [
-    {
-      id: "q1",
-      question: "What is the main innovation that Stylus brings?",
-      options: [
-        "A faster EVM",
-        "A second WASM VM coequal with the EVM",
-        "A new blockchain",
-        "Lower fees for all contracts",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Stylus introduces a second, coequal WASM virtual machine (MultiVM) that runs alongside the EVM.",
-    },
-    {
-      id: "q2",
-      question: "Which languages can be used to write Stylus contracts?",
-      options: [
-        "Only Solidity",
-        "Only Rust",
-        "Rust, C, C++, and other WASM-compatible languages",
-        "JavaScript and Python",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "Stylus supports any language that compiles to WASM, with strong support for Rust, C, and C++.",
-    },
-    {
-      id: "q3",
-      question: "What tool manages Rust projects?",
-      options: ["rustc", "cargo", "npm", "stylus"],
-      correctAnswer: 1,
-      explanation:
-        "Cargo is Rust's package manager and build tool.",
-    },
-    {
-      id: "q4",
-      question: "True or False: You need the wasm32-unknown-unknown target.",
-      options: ["True", "False"],
-      correctAnswer: 0,
-      explanation:
-        "True! Stylus contracts compile to WASM, so you need this target.",
-    },
-  ],
-  "storage-fundamentals": [
-    {
-      id: "q1",
-      question: "Why use tx_origin() in constructors?",
-      options: [
-        "msg_sender() doesn't work",
-        "Stylus uses a factory, so msg_sender() returns the factory address",
-        "tx_origin() is faster",
-        "It's just a convention",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Stylus uses a factory contract. In constructors, msg_sender() returns the factory's address.",
-    },
-    {
-      id: "q2",
-      question: "Can constructors run multiple times?",
-      options: ["Yes", "No", "Only if you call them", "Depends on the contract"],
-      correctAnswer: 1,
-      explanation:
-        "No! Stylus uses a sentinel value to ensure constructors run exactly once.",
-    },
-    {
-      id: "q3",
-      question: "What macro defines storage layout?",
-      options: ["storage!", "sol_storage!", "define!", "contract!"],
-      correctAnswer: 1,
-      explanation:
-        "sol_storage! defines storage using Solidity-style syntax.",
-    },
-    {
-      id: "q4",
-      question: "True or False: Use &mut self for state-modifying functions.",
-      options: ["True", "False"],
-      correctAnswer: 0,
-      explanation:
-        "True! Functions that modify state require &mut self.",
-    },
-  ],
-  "mappings-arrays": [
-    {
-      id: "q1",
-      question: "What do unset mapping keys return?",
-      options: ["null", "error", "zero value", "undefined"],
-      correctAnswer: 2,
-      explanation:
-        "Mappings return the zero value for unset keys.",
-    },
-    {
-      id: "q2",
-      question: "Can you iterate over mapping keys?",
-      options: ["Yes", "No", "Only with special syntax", "Yes but it's expensive"],
-      correctAnswer: 1,
-      explanation:
-        "No! Mappings don't support iteration. Keep a separate array if needed.",
-    },
-    {
-      id: "q3",
-      question: "How do you add an element to a Vec?",
-      options: ["add()", "push()", "append()", "insert()"],
-      correctAnswer: 1,
-      explanation:
-        "Use push() to add elements to the end of a Vec.",
-    },
-    {
-      id: "q4",
-      question: "True or False: Arrays can track mapping keys for iteration.",
-      options: ["True", "False"],
-      correctAnswer: 0,
-      explanation:
-        "True! Keep a separate Vec of keys to enable iteration over mappings.",
-    },
-  ],
-  "functions-selectors": [
-    {
-      id: "q1",
-      question: "What annotation makes functions externally callable?",
-      options: ["#[external]", "#[public]", "#[visible]", "#[open]"],
-      correctAnswer: 1,
-      explanation:
-        "#[public] marks an impl block's functions as externally callable.",
-    },
-    {
-      id: "q2",
-      question: "Do view functions use &mut self?",
-      options: ["Yes", "No", "Sometimes", "Depends"],
-      correctAnswer: 1,
-      explanation:
-        "No! View functions only read state, so they use &self.",
-    },
-    {
-      id: "q3",
-      question: "How many bytes is a function selector?",
-      options: ["2 bytes", "4 bytes", "8 bytes", "32 bytes"],
-      correctAnswer: 1,
-      explanation:
-        "Function selectors are the first 4 bytes of the keccak256 hash.",
-    },
-    {
-      id: "q4",
-      question: "True or False: Fallback functions handle calls to non-existent functions.",
-      options: ["True", "False"],
-      correctAnswer: 0,
-      explanation:
-        "True! Fallback functions catch calls that don't match any function selector.",
-    },
-  ],
-  "events-errors": [
-    {
-      id: "q1",
-      question: "How many parameters can be indexed in an event?",
-      options: ["1", "2", "3", "Unlimited"],
-      correctAnswer: 2,
-      explanation:
-        "Events can have a maximum of 3 indexed parameters.",
-    },
-    {
-      id: "q2",
-      question: "Are events stored on-chain?",
-      options: ["Yes", "No", "Only sometimes", "Depends on gas"],
-      correctAnswer: 0,
-      explanation:
-        "Yes! Events are logged on-chain and can be queried.",
-    },
-    {
-      id: "q3",
-      question: "What derive macro is used for custom error types?",
-      options: ["#[Error]", "#[SolidityError]", "#[CustomError]", "#[Revert]"],
-      correctAnswer: 1,
-      explanation:
-        "#[derive(SolidityError)] creates custom error types.",
-    },
-    {
-      id: "q4",
-      question: "True or False: Errors can include parameters for debugging.",
-      options: ["True", "False"],
-      correctAnswer: 0,
-      explanation:
-        "True! Custom errors can include parameters to provide details.",
-    },
-  ],
-  "advanced-interactions": [
-    {
-      id: "q1",
-      question: "Which call type is used for proxy patterns?",
-      options: ["call()", "delegate_call()", "static_call()", "transfer()"],
-      correctAnswer: 1,
-      explanation:
-        "delegate_call() executes code in the context of the calling contract.",
-    },
-    {
-      id: "q2",
-      question: "Can static calls modify state?",
-      options: ["Yes", "No", "Only with permission", "Depends"],
-      correctAnswer: 1,
-      explanation:
-        "No! Static calls are read-only and cannot modify state.",
-    },
-    {
-      id: "q3",
-      question: "Which method returns the transaction sender?",
-      options: ["vm().sender()", "vm().msg_sender()", "vm().caller()", "vm().from()"],
-      correctAnswer: 1,
-      explanation:
-        "vm().msg_sender() returns the address of the caller.",
-    },
-    {
-      id: "q4",
-      question: "True or False: vm().block_timestamp() returns the current block time.",
-      options: ["True", "False"],
-      correctAnswer: 0,
-      explanation:
-        "True! vm().block_timestamp() returns the timestamp of the current block.",
-    },
-  ],
-};

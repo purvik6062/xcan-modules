@@ -155,7 +155,7 @@ export default function ModuleDetailPage() {
               </div>
 
               <div className="flex items-center gap-6 text-gray-300">
-                <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{currentModule.duration}</span>
+                {/* <span className="flex items-center gap-2"><Clock className="w-4 h-4" />{currentModule.duration}</span> */}
                 <span className="flex items-center gap-2"><Target className="w-4 h-4" />{currentModule.challenges} challenges</span>
                 <span className="flex items-center gap-2"><Trophy className="w-4 h-4" />{currentModule.level}</span>
               </div>

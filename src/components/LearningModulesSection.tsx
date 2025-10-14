@@ -67,9 +67,9 @@ export default function LearningModulesSection() {
 
                   {module.duration && module.challenges !== undefined && (
                     <div className="flex items-center gap-2 text-sm mb-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-sky-500 bg-sky-900/40 text-white">
+                      {/* <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-sky-500 bg-sky-900/40 text-white">
                         {module.duration}
-                      </span>
+                      </span> */}
                       <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-emerald-500 bg-emerald-900/40 text-white">
                         {module.challenges} challenges
                       </span>
