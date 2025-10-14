@@ -151,16 +151,6 @@ export const orbitChapters: Chapter[] = [
         },
       },
       {
-        id: "deploy-your-chain",
-        title: "Deploy Your Own Chain",
-        type: "hands-on",
-        status: "available",
-        estimatedTime: "30 min",
-        content: {
-          story: `# Deploy Your Own Orbit Chain 🚀\n\nNow it's time to put theory into practice! Deploy your own Arbitrum Orbit chain with a simple interface.\n\n## What You'll Do\n\nIn this hands-on section, you'll deploy a real Orbit chain by:\n- Configuring your chain parameters (name and chain ID)\n- Connecting your wallet to set the owner address\n- Initiating the deployment through our backend API\n- Monitoring the deployment progress in real-time\n\n## What Happens Behind The Scenes\n\nWhen you deploy your chain, the backend will:\n1. **Prepare Chain Configuration**: Set up the chain config with your parameters\n2. **Deploy Core Contracts**: Deploy the rollup contracts to the parent chain\n3. **Initialize Infrastructure**: Set up the chain infrastructure\n4. **Transfer Ownership**: Transfer control to your wallet address\n\n## Requirements\n\n- **Connected Wallet**: Your wallet address will be the chain owner\n- **Chain Name**: A descriptive name for your chain\n- **Chain ID**: A unique identifier (must be ≥ 1000)\n\n## Deployment Process\n\nThe deployment typically takes 2-5 minutes and includes:\n- Contract deployment to parent chain\n- Infrastructure initialization\n- Ownership transfer\n- Configuration validation\n\n## After Deployment\n\nOnce complete, you'll receive:\n- Chain address on the parent chain\n- Deployment transaction hash\n- Chain configuration details\n- Next steps for chain setup\n\nThis is a real deployment that creates an actual Orbit chain. Take your time to choose appropriate parameters!\n\n**Ready to deploy? Let's get started! 👇**`,
-        },
-      },
-      {
         id: "orbit-basics-quiz",
         title: "Orbit Fundamentals Quiz",
         type: "quiz",
@@ -480,7 +470,7 @@ export const orbitChapters: Chapter[] = [
         status: "available",
         estimatedTime: "35 min",
         content: {
-          story: `# Environment Setup ⚙️\n\nBefore deployment, create a reproducible environment and secure configuration management.\n\n## Prerequisites\n- Node.js toolchain and package manager\n- Access to parent chain RPC (e.g., Arbitrum Sepolia)\n- Private key management via env files or secure vaults\n\n## Templates\n- .env with DEPLOYER_PRIVATE_KEY, BATCH_POSTER_ADDRESS, VALIDATOR_ADDRESS\n- Scripts for config generation and validation\n\n## Safety\n- Never commit secrets\n- Use different keys for test and prod\n- Enable logging for auditability`,
+          story: `# Environment Setup ⚙️\n\nBefore deployment, create a reproducible environment and secure configuration management.\n\n## Prerequisites\n- Node.js toolchain and package manager\n- Access to parent chain RPC (e.g., Arbitrum Sepolia)\n- Private key management via env files or secure vaults\n\n## Templates\n- .env with DEPLOYER_PRIVATE_KEY, BATCH_POSTER_PRIVATE_KEY, VALIDATOR_PRIVATE_KEY\n- Scripts for config generation and validation\n\n## Safety\n- Never commit secrets\n- Use different keys for test and prod\n- Enable logging for auditability`,
           questions: [
             {
               id: "env-setup-q1",
@@ -505,7 +495,7 @@ export const orbitChapters: Chapter[] = [
         status: "available",
         estimatedTime: "50 min",
         content: {
-          story: `# Using createRollup 🚀\n\nAfter preparing parameters, \`createRollup\` sends the deployment tx to the RollupCreator and waits for execution.\n\n## Minimal Flow\n1) Build params (owner, validators, batch poster, config)\n2) Call \`createRollup\` with an authenticated account\n3) Wait for receipt and parse returned core contracts\n\n## Common Pitfalls\n- Mismatch between \`chainId\` in params vs config\n- Missing allowance when deploying with custom gas token\n- Insufficient parent chain funds for the deployer`,
+          story: `# Using createRollup 🚀\n\nAfter preparing parameters, \`createRollup\` sends the deployment tx to the RollupCreator and waits for execution.\n\n## Minimal Flow\n1) Build params (owner, validators, batch poster, config)\n2) Call \`createRollup\` with your deployer account\n3) Wait for receipt and parse returned core contracts\n\n## Common Pitfalls\n- Mismatch between \`chainId\` in params vs config\n- Missing allowance when deploying with custom gas token\n- Insufficient parent chain funds for the deployer`,
           questions: [
             {
               id: "create-rollup-q1",
@@ -559,15 +549,15 @@ export const orbitChapters: Chapter[] = [
           questions: [
             {
               id: "deploy-verify-q1",
-              question: "Which is NOT part of immediate post-deployment checks?",
+              question: "Which RPC-based check best verifies immediate liveness after deployment?",
               options: [
-                "Confirm chain ID and core addresses",
-                "Ensure batch poster/validators configured",
-                "Publish marketing campaign",
-                "RPC/fee sanity checks"
+                "Call eth_blockNumber twice to ensure it increases",
+                "Open the chain's marketing website",
+                "Check web3_clientVersion once",
+                "Read a cached explorer summary page"
               ],
-              correctAnswer: 2,
-              explanation: "Marketing can wait; first verify on-chain configuration, roles, and basic liveness/fee behavior.",
+              correctAnswer: 0,
+              explanation: "A monotonically increasing eth_blockNumber confirms block production/liveness right after deployment.",
               type: "multiple-choice"
             }
           ]
