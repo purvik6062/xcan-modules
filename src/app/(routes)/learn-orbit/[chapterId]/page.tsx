@@ -72,6 +72,12 @@ export default function OrbitChapterPage() {
     chapterIndex >= 0 && chapterIndex < orbitChapters.length - 1
       ? orbitChapters[chapterIndex + 1]
       : null;
+  
+  // Special handling for production-deployment and hands-on-deployment chapters
+  const isProductionDeployment = chapterId === "production-deployment";
+  const isHandsOnDeployment = chapterId === "hands-on-deployment";
+  const isLastSection = currentSectionIndex === chapter.sections.length - 1;
+  const isLastSectionComplete = isLastSection && completedSections.includes(currentSection.id);
 
   const handleSectionComplete = async (sectionId: string) => {
     const already = completedSections.includes(sectionId);
@@ -202,7 +208,7 @@ export default function OrbitChapterPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {isChapterComplete && (
+              {isChapterComplete && !isProductionDeployment && (
                 <div className="bg-emerald-900/30 border-b border-emerald-700 p-4 flex items-center justify-between">
                   <div className="text-emerald-200">
                     ✅ Chapter complete! {nextChapter ? "You can continue to the next chapter." : "You've reached the end of this module's chapters."}
@@ -256,6 +262,7 @@ export default function OrbitChapterPage() {
                         onComplete={() =>
                           handleSectionComplete(currentSection.id)
                         }
+                        chapterId={chapterId}
                       />
                     ) : currentSection.type === "challenge" ? (
                       <ChallengeComponent
@@ -297,29 +304,106 @@ export default function OrbitChapterPage() {
 
               {/* Navigation Controls */}
               <div className="border-t border-slate-700 p-6">
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={goToPreviousSection}
-                    disabled={currentSectionIndex === 0}
-                    className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    ← Previous
-                  </button>
+                {/* Special Continue Learning button for production-deployment chapter */}
+                {isProductionDeployment && isLastSectionComplete && nextChapter ? (
+                  <div className="flex flex-col gap-4">
+                    <div className="bg-emerald-900/30 border border-emerald-700 p-4 rounded-lg">
+                      <div className="text-emerald-200 mb-3">
+                        ✅ Chapter complete! Continue your learning journey with hands-on deployment.
+                      </div>
+                      <Link
+                        href={`/learn-orbit/${nextChapter.id}`}
+                        className="hover:cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 font-semibold w-full justify-center"
+                      >
+                        Continue Learning: {nextChapter.title} →
+                      </Link>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <button
+                        onClick={goToPreviousSection}
+                        disabled={currentSectionIndex === 0}
+                        className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        ← Previous
+                      </button>
 
-                  <div className="text-sm text-gray-400">
-                    {currentSectionIndex + 1} / {chapter.sections.length}
+                      <div className="text-sm text-gray-400">
+                        {currentSectionIndex + 1} / {chapter.sections.length}
+                      </div>
+
+                      <button
+                        onClick={goToNextSection}
+                        disabled={
+                          currentSectionIndex === chapter.sections.length - 1
+                        }
+                        className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Next →
+                      </button>
+                    </div>
                   </div>
+                ) : isHandsOnDeployment && isLastSectionComplete ? (
+                  <div className="flex flex-col gap-4">
+                    <div className="bg-emerald-900/30 border border-emerald-700 p-4 rounded-lg">
+                      <div className="text-emerald-200 mb-3">
+                        ✅ Chapter complete! You've successfully completed the hands-on deployment.
+                      </div>
+                      <Link
+                        href="/learn-orbit"
+                        className="hover:cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 font-semibold w-full justify-center"
+                      >
+                        Continue Learning: Back to Modules →
+                      </Link>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <button
+                        onClick={goToPreviousSection}
+                        disabled={currentSectionIndex === 0}
+                        className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        ← Previous
+                      </button>
 
-                  <button
-                    onClick={goToNextSection}
-                    disabled={
-                      currentSectionIndex === chapter.sections.length - 1
-                    }
-                    className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Next →
-                  </button>
-                </div>
+                      <div className="text-sm text-gray-400">
+                        {currentSectionIndex + 1} / {chapter.sections.length}
+                      </div>
+
+                      <button
+                        onClick={goToNextSection}
+                        disabled={
+                          currentSectionIndex === chapter.sections.length - 1
+                        }
+                        className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Next →
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <button
+                      onClick={goToPreviousSection}
+                      disabled={currentSectionIndex === 0}
+                      className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      ← Previous
+                    </button>
+
+                    <div className="text-sm text-gray-400">
+                      {currentSectionIndex + 1} / {chapter.sections.length}
+                    </div>
+
+                    <button
+                      onClick={goToNextSection}
+                      disabled={
+                        currentSectionIndex === chapter.sections.length - 1
+                      }
+                      className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Next →
+                    </button>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>

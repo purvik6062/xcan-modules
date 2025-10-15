@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Quiz } from "../data/defiChapters";
@@ -8,12 +9,15 @@ import { Quiz } from "../data/defiChapters";
 interface QuizComponentProps {
   questions: Quiz[];
   onComplete: () => void;
+  chapterId?: string;
 }
 
 export default function QuizComponent({
   questions,
   onComplete,
+  chapterId,
 }: QuizComponentProps) {
+  const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
@@ -88,6 +92,7 @@ export default function QuizComponent({
   if (showResults) {
     const score = calculateScore();
     const passed = score >= 70;
+    console.log("passed", score);
 
     return (
       <motion.div
@@ -118,7 +123,7 @@ export default function QuizComponent({
         >
           {passed
             ? "Excellent work! You've mastered this material."
-            : "Good effort! Review the material and try again."}
+            : "Good effort! You can review the material or continue learning."}
         </p>
 
         <div className="space-y-4 mb-8">
@@ -159,20 +164,18 @@ export default function QuizComponent({
         </div>
 
         <div className="flex gap-4 justify-center">
-          <button
+          {/* <button
             onClick={restartQuiz}
             className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
           >
             Retake Quiz
+          </button> */}
+          <button
+            onClick={() => window.history.back()}
+            className="hover:cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Continue Learning
           </button>
-          {passed && (
-            <button
-              onClick={() => (window.location.href = "/learn-defi")}
-              className="hover:cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Continue Learning
-            </button>
-          )}
         </div>
       </motion.div>
     );
