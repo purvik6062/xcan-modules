@@ -36,6 +36,7 @@ export default function StylusFoundationPage() {
       try {
         const res = await fetch(`/api/certification/claim/${currentModule.id}?userAddress=${userAddress}`);
         const data = await res.json();
+        console.log("stylus foundation data: ", data)
         if (res.ok) {
           setClaimedCertification(data.certification || null);
           setIsCompleted(data.isCompleted || false);
@@ -111,7 +112,7 @@ export default function StylusFoundationPage() {
       });
       router.push(`/nft/certification/${currentModule.id}?justMinted=true`);
     } catch (e: any) {
-      setError(e?.message || "Mint failed");
+      setError("Mint failed");
     }
   };
 

@@ -6,7 +6,7 @@ import { GlassCard } from "@/components/nft/GlassCard";
 import { FloatingParticles } from "@/components/nft/FloatingParticles";
 import { nftModules } from "@/data/nftModules";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
-import { Loader2, ArrowLeft, CheckCircle, AlertTriangle, Rocket, Trophy, Sparkles } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle, AlertTriangle, Rocket, Trophy, Sparkles, Award } from "lucide-react";
 import Link from "next/link";
 import { SuccessfulMint } from "@/components/nft/SuccessfulMint";
 import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
@@ -14,7 +14,19 @@ import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 export default function CertificationViewPage() {
   const router = useRouter();
   const { module } = useParams();
-  const mod = useMemo(() => nftModules.find((m) => m.id === module), [module]);
+  const mod = useMemo(() => {
+    const found = nftModules.find((m) => m.id === module);
+    if (found) return found;
+    if (module === "xcan-advocate") {
+      return {
+        id: "xcan-advocate",
+        title: "Xcan Advocate",
+        icon: Award,
+        gradient: "from-indigo-500/20 to-blue-500/20",
+      } as any;
+    }
+    return null;
+  }, [module]);
   const { isReady, isLoading: walletLoading, address } = useWalletProtection();
   const [nft, setNft] = useState<any | null>(null);
   const [loadingNft, setLoadingNft] = useState(false);

@@ -36,6 +36,7 @@ import {
   EyeIcon,
 } from "lucide-react";
 import { nftModules } from "@/data/nftModules";
+import { XcanAdvocateHighlight } from "@/components/nft/XcanAdvocateHighlight";
 
 // Arbitrum Sepolia Chain ID
 const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;
@@ -219,6 +220,8 @@ export default function HomePage() {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto">
+          {/* Xcan Advocate Highlight */}
+          <XcanAdvocateHighlight />
           <AnimatePresence mode="wait">
             {!isWalletConnected ? (
               <motion.div

@@ -105,6 +105,7 @@ export async function GET(
       "arbitrum-orbit",
       "defi-arbitrum",
       "cross-chain",
+      "xcan-advocate",
     ];
     if (!validModules.includes(module)) {
       return NextResponse.json(
@@ -126,6 +127,8 @@ export async function GET(
         ? "challenges-orbit-chain"
         : module === "cross-chain"
         ? "challenges-cross-chain"
+        : module === "xcan-advocate"
+        ? "advocates"
         : null;
 
     if (!collectionName) {
