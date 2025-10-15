@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { StoryContent } from "../../data/stylusChapters";
 import ReactMarkdown from "react-markdown";
 import GitHubAuthHandler from "../GitHubAuthHandler";
+import CodeBlock from "../CodeBlock";
 
 interface StylusStoryQuizComponentProps {
   content: StoryContent;
@@ -97,8 +98,12 @@ export default function StylusStoryQuizComponent({
                             ul: ({ children }) => <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>,
                             li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
                             blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-300 bg-gray-800/50 py-2 rounded-r my-4">{children}</blockquote>,
-                            code: ({ children }) => <code className="bg-gray-700 text-green-300 px-2 py-1 rounded text-sm font-mono">{children}</code>,
-                            pre: ({ children }) => <pre className="bg-gray-800 text-gray-200 p-4 rounded-lg overflow-x-auto my-4">{children}</pre>
+                            code: ({ node, className, children, ...props }: any) => {
+                              const codeString = String(children).replace(/\n$/, '');
+                              const isInline = !className;
+                              return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
+                            },
+                            pre: ({ children }) => <>{children}</>
                           }}
                         >
                           {content.story}

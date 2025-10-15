@@ -368,18 +368,7 @@ Yield Optimization:
         {
           id: "erc20-transfer",
           title: "ERC-20 Token Transfer",
-          content: `Understanding ERC-20 transfers is fundamental to DeFi. Here's how token transfers work:
-
-\`\`\`solidity
-// Basic ERC-20 transfer function
-function transfer(address to, uint256 amount) public returns (bool) {
-    require(balanceOf[msg.sender] >= amount, "Insufficient balance");
-    balanceOf[msg.sender] -= amount;
-    balanceOf[to] += amount;
-    emit Transfer(msg.sender, to, amount);
-    return true;
-}
-\`\`\`
+          content: `Understanding ERC-20 transfers is fundamental to DeFi.
 
 Key Components:
 - Balance Check: Ensures sender has sufficient tokens
@@ -391,7 +380,16 @@ Arbitrum Benefits:
 - Lower gas costs make small transfers economical
 - Faster confirmation times improve user experience
 - Same security as Ethereum mainnet`,
-          codeExample: `// Example: Transfer USDC on Arbitrum
+          codeExample: `// Basic ERC-20 transfer function
+function transfer(address to, uint256 amount) public returns (bool) {
+    require(balanceOf[msg.sender] >= amount, "Insufficient balance");
+    balanceOf[msg.sender] -= amount;
+    balanceOf[to] += amount;
+    emit Transfer(msg.sender, to, amount);
+    return true;
+}
+
+// Example: Transfer USDC on Arbitrum
 // 1. Check allowance first
 uint256 allowance = usdc.allowance(user, spender);
 require(allowance >= amount, "Insufficient allowance");
@@ -403,10 +401,14 @@ require(success, "Transfer failed");`
         {
           id: "transfer-from",
           title: "TransferFrom Pattern",
-          content: `The transferFrom pattern enables third-party token transfers, essential for DeFi protocols:
+          content: `The transferFrom pattern enables third-party token transfers, essential for DeFi protocols.
 
-\`\`\`solidity
-function transferFrom(address from, address to, uint256 amount) public returns (bool) {
+Use Cases:
+- DEX trading (swapping tokens)
+- Lending protocols (collateral deposits)
+- Yield farming (stake tokens)
+- Automated strategies`,
+          codeExample: `function transferFrom(address from, address to, uint256 amount) public returns (bool) {
     require(balanceOf[from] >= amount, "Insufficient balance");
     require(allowance[from][msg.sender] >= amount, "Insufficient allowance");
     
@@ -417,14 +419,8 @@ function transferFrom(address from, address to, uint256 amount) public returns (
     emit Transfer(from, to, amount);
     return true;
 }
-\`\`\`
 
-Use Cases:
-- DEX trading (swapping tokens)
-- Lending protocols (collateral deposits)
-- Yield farming (stake tokens)
-- Automated strategies`,
-          codeExample: `// Example: DEX swap using transferFrom
+// Example: DEX swap using transferFrom
 // 1. User approves DEX to spend tokens
 usdc.approve(uniswapRouter, swapAmount);
 
@@ -800,8 +796,13 @@ Sustainable Economics:
           title: "How Token Swaps Work",
           content: `Token swapping on DEXs involves several key steps:
 
-\`\`\`solidity
-// Uniswap V2 swap function
+Key Parameters:
+- amountIn: Exact input amount
+- amountOutMin: Minimum output (slippage protection)
+- path: Token swap route (e.g., [USDC, WETH, ARB])
+- to: Recipient address
+- deadline: Transaction expiration time`,
+          codeExample: `// Uniswap V2 swap function
 function swapExactTokensForTokens(
     uint amountIn,
     uint amountOutMin,
@@ -817,15 +818,8 @@ function swapExactTokensForTokens(
     );
     _swap(amounts, path, to);
 }
-\`\`\`
 
-Key Parameters:
-- amountIn: Exact input amount
-- amountOutMin: Minimum output (slippage protection)
-- path: Token swap route (e.g., [USDC, WETH, ARB])
-- to: Recipient address
-- deadline: Transaction expiration time`,
-          codeExample: `// Example: Swap USDC for ARB on Arbitrum
+// Example: Swap USDC for ARB on Arbitrum
 address[] memory path = new address[](3);
 path[0] = USDC;  // Input token
 path[1] = WETH;  // Intermediate token
@@ -845,23 +839,21 @@ uniswapRouter.swapExactTokensForTokens(
         {
           id: "slippage-protection",
           title: "Slippage Protection",
-          content: `Slippage occurs when the actual output differs from expected due to price movements:
-
-\`\`\`solidity
-// Calculate minimum output with slippage tolerance
-uint256 expectedOutput = getAmountOut(amountIn, reserveIn, reserveOut);
-uint256 slippageTolerance = 500; // 5% (500 basis points)
-uint256 minOutput = expectedOutput * (10000 - slippageTolerance) / 10000;
-
-require(actualOutput >= minOutput, "Slippage too high");
-\`\`\`
+          content: `Slippage occurs when the actual output differs from expected due to price movements.
 
 Slippage Factors:
 - Trade Size: Larger trades cause more slippage
 - Liquidity Depth: More liquidity = less slippage
 - Price Volatility: High volatility increases slippage
 - MEV: Front-running can worsen slippage`,
-          codeExample: `// Safe swap with slippage protection
+          codeExample: `// Calculate minimum output with slippage tolerance
+uint256 expectedOutput = getAmountOut(amountIn, reserveIn, reserveOut);
+uint256 slippageTolerance = 500; // 5% (500 basis points)
+uint256 minOutput = expectedOutput * (10000 - slippageTolerance) / 10000;
+
+require(actualOutput >= minOutput, "Slippage too high");
+
+// Safe swap with slippage protection
 function safeSwap(
     uint256 amountIn,
     uint256 maxSlippageBps
@@ -895,10 +887,14 @@ function safeSwap(
         {
           id: "add-liquidity",
           title: "Adding Liquidity to Pools",
-          content: `Liquidity providers deposit equal value of both tokens to earn trading fees:
+          content: `Liquidity providers deposit equal value of both tokens to earn trading fees.
 
-\`\`\`solidity
-function addLiquidity(
+Key Concepts:
+- Equal Value: Both tokens must have equal USD value
+- LP Tokens: Receipt tokens representing pool share
+- Fee Earning: Earn 0.3% of trading volume (Uniswap V2)
+- Impermanent Loss: Risk of value loss due to price changes`,
+          codeExample: `function addLiquidity(
     address tokenA,
     address tokenB,
     uint amountADesired,
@@ -914,14 +910,8 @@ function addLiquidity(
     TransferHelper.safeTransferFrom(tokenB, msg.sender, pair, amountB);
     liquidity = IUniswapV2Pair(pair).mint(to);
 }
-\`\`\`
 
-Key Concepts:
-- Equal Value: Both tokens must have equal USD value
-- LP Tokens: Receipt tokens representing pool share
-- Fee Earning: Earn 0.3% of trading volume (Uniswap V2)
-- Impermanent Loss: Risk of value loss due to price changes`,
-          codeExample: `// Example: Add USDC/ETH liquidity
+// Example: Add USDC/ETH liquidity
 uint256 usdcAmount = 1000 * 106; // 1000 USDC
 uint256 ethAmount = 0.5 * 1018;  // 0.5 ETH
 
@@ -940,10 +930,14 @@ uint256 ethAmount = 0.5 * 1018;  // 0.5 ETH
         {
           id: "remove-liquidity",
           title: "Removing Liquidity",
-          content: `Liquidity can be removed by burning LP tokens:
+          content: `Liquidity can be removed by burning LP tokens.
 
-\`\`\`solidity
-function removeLiquidity(
+Considerations:
+- Current Ratio: Tokens returned based on current pool ratio
+- Fees Earned: Accumulated fees are included in withdrawal
+- Gas Costs: Consider gas vs. accumulated fees
+- Timing: Market conditions affect withdrawal value`,
+          codeExample: `function removeLiquidity(
     address tokenA,
     address tokenB,
     uint liquidity,
@@ -960,14 +954,8 @@ function removeLiquidity(
     require(amountA >= amountAMin, 'UniswapV2Router: INSUFFICIENT_A_AMOUNT');
     require(amountB >= amountBMin, 'UniswapV2Router: INSUFFICIENT_B_AMOUNT');
 }
-\`\`\`
 
-Considerations:
-- Current Ratio: Tokens returned based on current pool ratio
-- Fees Earned: Accumulated fees are included in withdrawal
-- Gas Costs: Consider gas vs. accumulated fees
-- Timing: Market conditions affect withdrawal value`,
-          codeExample: `// Example: Remove liquidity
+// Example: Remove liquidity
 uint256 lpTokens = 100 * 1018; // 100 LP tokens
 
 (uint256 amountA, uint256 amountB) = router.removeLiquidity(
@@ -996,10 +984,14 @@ uint256 lpTokens = 100 * 1018; // 100 LP tokens
         {
           id: "router-interface",
           title: "Router Interface",
-          content: `The Router contract provides high-level functions for swapping and liquidity management:
+          content: `The Router contract provides high-level functions for swapping and liquidity management.
 
-\`\`\`solidity
-interface IUniswapV2Router02 {
+Key Functions:
+- addLiquidity: Add liquidity to a pool
+- removeLiquidity: Remove liquidity from a pool
+- swapExactTokensForTokens: Swap exact input for tokens
+- swapTokensForExactTokens: Swap tokens for exact output`,
+          codeExample: `interface IUniswapV2Router02 {
     function factory() external pure returns (address);
     function WETH() external pure returns (address);
     
@@ -1022,14 +1014,8 @@ interface IUniswapV2Router02 {
         uint deadline
     ) external returns (uint[] memory amounts);
 }
-\`\`\`
 
-Key Functions:
-- addLiquidity: Add liquidity to a pool
-- removeLiquidity: Remove liquidity from a pool
-- swapExactTokensForTokens: Swap exact input for tokens
-- swapTokensForExactTokens: Swap tokens for exact output`,
-          codeExample: `// Example: Complete swap integration
+// Example: Complete swap integration
 contract SwapContract {
     IUniswapV2Router02 public router;
     address public WETH;
@@ -1065,23 +1051,21 @@ contract SwapContract {
         {
           id: "factory-interface",
           title: "Factory Interface",
-          content: `The Factory contract creates and manages trading pairs:
-
-\`\`\`solidity
-interface IUniswapV2Factory {
-    function getPair(address tokenA, address tokenB) external view returns (address pair);
-    function createPair(address tokenA, address tokenB) external returns (address pair);
-    function allPairs(uint) external view returns (address pair);
-    function allPairsLength() external view returns (uint);
-}
-\`\`\`
+          content: `The Factory contract creates and manages trading pairs.
 
 Key Functions:
 - getPair: Get existing pair address
 - createPair: Create new trading pair
 - allPairs: Get all pairs by index
 - allPairsLength: Total number of pairs`,
-          codeExample: `// Example: Check if pair exists and create if needed
+          codeExample: `interface IUniswapV2Factory {
+    function getPair(address tokenA, address tokenB) external view returns (address pair);
+    function createPair(address tokenA, address tokenB) external returns (address pair);
+    function allPairs(uint) external view returns (address pair);
+    function allPairsLength() external view returns (uint);
+}
+
+// Example: Check if pair exists and create if needed
 function ensurePairExists(address tokenA, address tokenB) external {
     address pair = factory.getPair(tokenA, tokenB);
     if (pair == address(0)) {
@@ -1341,10 +1325,14 @@ Arbitrum Advantages:
         {
           id: "deposit-mechanics",
           title: "How Vault Deposits Work",
-          content: `Vault deposits involve depositing tokens and receiving vault shares:
+          content: `Vault deposits involve depositing tokens and receiving vault shares.
 
-\`\`\`solidity
-// Basic vault deposit function
+Key Components:
+- Asset Transfer: Tokens moved from user to vault
+- Share Calculation: Shares represent ownership percentage
+- State Updates: Total assets and user balance updated
+- Event Emission: Transaction logged for transparency`,
+          codeExample: `// Basic vault deposit function
 function deposit(uint256 amount) external {
     require(amount > 0, "Amount must be greater than 0");
     
@@ -1362,14 +1350,8 @@ function deposit(uint256 amount) external {
     
     emit Deposit(msg.sender, amount, shares);
 }
-\`\`\`
 
-Key Components:
-- Asset Transfer: Tokens moved from user to vault
-- Share Calculation: Shares represent ownership percentage
-- State Updates: Total assets and user balance updated
-- Event Emission: Transaction logged for transparency`,
-          codeExample: `// Example: Deposit USDC into yield vault
+// Example: Deposit USDC into yield vault
 uint256 depositAmount = 1000 * 106; // 1000 USDC
 
 // 1. Approve vault to spend USDC
@@ -1384,10 +1366,14 @@ uint256 userShares = vault.balanceOf(msg.sender);`
         {
           id: "share-calculation",
           title: "Share Calculation Logic",
-          content: `Shares represent proportional ownership of vault assets:
+          content: `Shares represent proportional ownership of vault assets.
 
-\`\`\`solidity
-function convertToShares(uint256 assets) public view returns (uint256) {
+Share Mechanics:
+- First Deposit: 1 asset = 1 share
+- Subsequent Deposits: Shares based on current ratio
+- Withdrawals: Assets based on share percentage
+- Yield Accrual: Shares remain constant, assets increase`,
+          codeExample: `function convertToShares(uint256 assets) public view returns (uint256) {
     uint256 supply = totalSupply();
     if (supply == 0) {
         return assets; // First deposit: 1:1 ratio
@@ -1402,14 +1388,8 @@ function convertToAssets(uint256 shares) public view returns (uint256) {
     }
     return (shares * totalAssets) / supply;
 }
-\`\`\`
 
-Share Mechanics:
-- First Deposit: 1 asset = 1 share
-- Subsequent Deposits: Shares based on current ratio
-- Withdrawals: Assets based on share percentage
-- Yield Accrual: Shares remain constant, assets increase`,
-          codeExample: `// Example: Understanding share calculations
+// Example: Understanding share calculations
 // Initial deposit: 1000 USDC = 1000 shares (1:1)
 uint256 initialShares = vault.deposit(1000e6, user);
 
@@ -1436,10 +1416,14 @@ uint256 assets = vault.withdraw(900, user, user);`
         {
           id: "performance-metrics",
           title: "Key Performance Metrics",
-          content: `Monitoring vault performance requires tracking several key metrics:
+          content: `Monitoring vault performance requires tracking several key metrics.
 
-\`\`\`solidity
-// Vault performance tracking
+Key Metrics:
+- Total Assets: Current value of all assets in vault
+- Price Per Share: Asset value per vault share
+- APY: Annual percentage yield
+- TVL: Total value locked in vault`,
+          codeExample: `// Vault performance tracking
 contract VaultMonitor {
     struct PerformanceData {
         uint256 totalAssets;
@@ -1468,14 +1452,8 @@ contract VaultMonitor {
         currentSnapshot++;
     }
 }
-\`\`\`
 
-Key Metrics:
-- Total Assets: Current value of all assets in vault
-- Price Per Share: Asset value per vault share
-- APY: Annual percentage yield
-- TVL: Total value locked in vault`,
-          codeExample: `// Example: Calculate vault performance
+// Example: Calculate vault performance
 function getVaultStats(address vault) external view returns (
     uint256 totalAssets,
     uint256 totalShares,
@@ -1491,10 +1469,14 @@ function getVaultStats(address vault) external view returns (
         {
           id: "yield-tracking",
           title: "Yield Tracking and Compounding",
-          content: `Yield tracking involves monitoring how vault strategies generate returns:
+          content: `Yield tracking involves monitoring how vault strategies generate returns.
 
-\`\`\`solidity
-// Yield tracking implementation
+Yield Sources:
+- Lending Rewards: Interest from lending protocols
+- Trading Fees: Fees from liquidity provision
+- Staking Rewards: Rewards from staking activities
+- Compounding: Reinvesting earned rewards`,
+          codeExample: `// Yield tracking implementation
 function trackYield() external {
     uint256 previousAssets = lastRecordedAssets;
     uint256 currentAssets = totalAssets();
@@ -1513,14 +1495,8 @@ function trackYield() external {
     lastRecordedAssets = currentAssets;
     lastYieldCheck = block.timestamp;
 }
-\`\`\`
 
-Yield Sources:
-- Lending Rewards: Interest from lending protocols
-- Trading Fees: Fees from liquidity provision
-- Staking Rewards: Rewards from staking activities
-- Compounding: Reinvesting earned rewards`,
-          codeExample: `// Example: Monitor yield over time
+// Example: Monitor yield over time
 function calculateYieldMetrics() external view returns (
     uint256 dailyYield,
     uint256 weeklyYield,
@@ -1786,10 +1762,14 @@ function withdraw() external {
         {
           id: "vulnerability-patterns",
           title: "Common Vulnerability Patterns",
-          content: `Understanding common vulnerability patterns helps in systematic contract analysis:
+          content: `Understanding common vulnerability patterns helps in systematic contract analysis.
 
-\`\`\`solidity
-// Example: Reentrancy vulnerability
+Common Patterns:
+- Reentrancy: External calls before state updates
+- Integer Overflow: Unchecked arithmetic operations
+- Access Control: Missing or incorrect permission checks
+- Logic Errors: Flawed business logic implementation`,
+          codeExample: `// Example: Reentrancy vulnerability
 contract VulnerableContract {
     mapping(address => uint256) public balances;
     
@@ -1804,14 +1784,8 @@ contract VulnerableContract {
         balances[msg.sender] -= amount;
     }
 }
-\`\`\`
 
-Common Patterns:
-- Reentrancy: External calls before state updates
-- Integer Overflow: Unchecked arithmetic operations
-- Access Control: Missing or incorrect permission checks
-- Logic Errors: Flawed business logic implementation`,
-          codeExample: `// Example: Fixed reentrancy vulnerability
+// Example: Fixed reentrancy vulnerability
 contract SecureContract {
     mapping(address => uint256) public balances;
     bool private locked;
@@ -1837,10 +1811,15 @@ contract SecureContract {
         {
           id: "analysis-methodology",
           title: "Systematic Analysis Methodology",
-          content: `A structured approach to contract analysis:
+          content: `A structured approach to contract analysis.
 
-\`\`\`solidity
-// Analysis checklist implementation
+Analysis Steps:
+1. Code Review: Manual inspection of contract logic
+2. Pattern Matching: Automated detection of known patterns
+3. State Analysis: Understanding state transitions
+4. External Dependencies: Analyzing external calls
+5. Economic Analysis: Understanding tokenomics and incentives`,
+          codeExample: `// Analysis checklist implementation
 contract ContractAnalyzer {
     struct AnalysisResult {
         bool hasReentrancy;
@@ -1868,15 +1847,8 @@ contract ContractAnalyzer {
         return result;
     }
 }
-\`\`\`
 
-Analysis Steps:
-1. Code Review: Manual inspection of contract logic
-2. Pattern Matching: Automated detection of known patterns
-3. State Analysis: Understanding state transitions
-4. External Dependencies: Analyzing external calls
-5. Economic Analysis: Understanding tokenomics and incentives`,
-          codeExample: `// Example: Automated vulnerability detection
+// Example: Automated vulnerability detection
 function checkReentrancy(address contractAddr) internal view returns (bool) {
     // Check if external calls happen before state updates
     // This is a simplified example - real analysis is more complex
@@ -1903,16 +1875,18 @@ function checkReentrancy(address contractAddr) internal view returns (bool) {
         {
           id: "the-dao-hack",
           title: "The DAO Hack (2016)",
-          content: `The DAO hack was one of the first major DeFi incidents:
+          content: `The DAO hack was one of the first major DeFi incidents.
 
 What Happened:
 - Attacker exploited reentrancy vulnerability
 - Stole 3.6 million ETH (worth $60M at the time)
 - Led to Ethereum hard fork (Ethereum Classic split)
 
-Technical Details:
-\`\`\`solidity
-// Vulnerable DAO code pattern
+Lessons Learned:
+- External calls before state updates are dangerous
+- Need for comprehensive testing and auditing
+- Importance of emergency pause mechanisms`,
+          codeExample: `// Vulnerable DAO code pattern
 function splitDAO(uint256 proposalID, address newCurator) external {
     // ... validation code ...
     
@@ -1925,13 +1899,8 @@ function splitDAO(uint256 proposalID, address newCurator) external {
     balances[msg.sender] = 0;
     withdrawRewardFor(msg.sender);
 }
-\`\`\`
 
-Lessons Learned:
-- External calls before state updates are dangerous
-- Need for comprehensive testing and auditing
-- Importance of emergency pause mechanisms`,
-          codeExample: `// Example: How the attack worked
+// Example: How the attack worked
 contract Attacker {
     function attack() external {
         // 1. Call splitDAO
@@ -1951,7 +1920,7 @@ contract Attacker {
         {
           id: "poly-network-hack",
           title: "Poly Network Hack (2021)",
-          content: `The largest DeFi hack in history:
+          content: `The largest DeFi hack in history.
 
 What Happened:
 - Attacker stole $611 million across multiple chains
