@@ -34,7 +34,10 @@ const LEVEL_NAME_MAP = {
   "farcaster-miniapps": "Farcaster Miniapps Challenge",
 };
 
-export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => {
+export const SuccessfulMint = ({
+  mintedNFT,
+  levelKey,
+}: SuccessfulMintProps) => {
   // 3D/hover state logic (copied from MintedNFTDisplay)
   const [isHovered, setIsHovered] = useState(false);
   const x = useMotionValue(0);
@@ -128,7 +131,8 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
           >
             Your
             <span className="text-amber-300 font-bold bg-amber-400/10 px-3 py-1 rounded-lg mx-2">
-              Speedrun Stylus: {LEVEL_NAME_MAP[levelKey as keyof typeof LEVEL_NAME_MAP]}
+              Speedrun Stylus:{" "}
+              {LEVEL_NAME_MAP[levelKey as keyof typeof LEVEL_NAME_MAP]}
             </span>
             has been minted successfully!
           </motion.p>
@@ -186,7 +190,8 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
                   background: useTransform(
                     [lightX, lightY],
                     ([lx, ly]: any) =>
-                      `radial-gradient(circle at ${50 + lx}% ${50 + ly
+                      `radial-gradient(circle at ${50 + lx}% ${
+                        50 + ly
                       }%, rgba(255,255,255,0.15) 0%, transparent 50%)`
                   ),
                 }}
@@ -236,12 +241,14 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
                         [rotateX, rotateY],
                         ([rx, ry]: any) =>
                           `linear-gradient(${45 + ry}deg, 
-                            rgba(251, 191, 36, ${0.15 + Math.abs(rx) * 0.01
-                          }) 0%,
+                            rgba(251, 191, 36, ${
+                              0.15 + Math.abs(rx) * 0.01
+                            }) 0%,
                             transparent 30%, 
                             transparent 70%, 
-                            rgba(251, 113, 133, ${0.15 + Math.abs(ry) * 0.01
-                          }) 100%)`
+                            rgba(251, 113, 133, ${
+                              0.15 + Math.abs(ry) * 0.01
+                            }) 100%)`
                       ),
                     }}
                   />
@@ -283,7 +290,8 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${ry * 0.1
+                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${
+                        ry * 0.1
                       }deg)`
                   ),
                 }}
@@ -296,12 +304,15 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(15px) rotateX(${rx * 0.05}deg) rotateY(${ry * 0.05
+                      `translateZ(15px) rotateX(${rx * 0.05}deg) rotateY(${
+                        ry * 0.05
                       }deg)`
                   ),
                 }}
               >
-                Awarded for completing the {LEVEL_NAME_MAP[levelKey as keyof typeof LEVEL_NAME_MAP]} challenge
+                Awarded for completing the{" "}
+                {LEVEL_NAME_MAP[levelKey as keyof typeof LEVEL_NAME_MAP]}{" "}
+                challenge
               </motion.p>
               <motion.p
                 className="text-xs text-slate-400"
@@ -309,7 +320,8 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${ry * 0.02
+                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${
+                        ry * 0.02
                       }deg)`
                   ),
                 }}
@@ -350,6 +362,18 @@ export const SuccessfulMint = ({ mintedNFT, levelKey }: SuccessfulMintProps) => 
           >
             <ExternalLink className="w-5 h-5" />
             View Metadata
+          </motion.a>
+          <motion.a
+            href={`/certificate`}
+            className="inline-flex items-center gap-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 hover:text-emerald-200 px-6 py-3 rounded-xl transition-all duration-200 border border-emerald-500/30 font-medium"
+            whileHover={{ scale: 1.05, rotateX: 5 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            Generate Certificate
           </motion.a>
         </div>
         <motion.p
