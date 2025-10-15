@@ -92,7 +92,13 @@ export async function GET(request: NextRequest) {
     const doc = await collection.findOne({ userAddress });
     const chapters = doc?.chapters || {};
     const completedChapters = doc?.completedChapters || [];
-    const isCompleted = Boolean(doc?.isCompleted);
+    let isCompleted = Boolean(doc?.isCompleted);
+    
+    // Special case for orbit module: enable NFT minting after completing first chapter
+    if (currentModule === "master-orbit" && completedChapters.length >= 1) {
+      isCompleted = true;
+    }
+    
     const certification = doc?.certification || null;
 
     const progressByChapter = computeProgress(chapters, currentModule);
@@ -189,7 +195,12 @@ export async function POST(request: NextRequest) {
 
     // Check if all chapters are completed for the current module
     const totalChaptersInModule = chaptersDataForModule.length;
-    const isCompleted = completedChapters.length >= totalChaptersInModule;
+    let isCompleted = completedChapters.length >= totalChaptersInModule;
+    
+    // Special case for orbit module: enable NFT minting after completing first chapter
+    if (currentModule === "master-orbit" && completedChapters.length >= 1) {
+      isCompleted = true;
+    }
 
     const doc: UserChallengesDoc = {
       userAddress,
@@ -217,7 +228,13 @@ export async function POST(request: NextRequest) {
       return available.length > 0 && available.every((sid) => done.has(sid));
     });
 
-    doc.isCompleted = allSectionsCompleted;
+    // For orbit module, enable NFT minting after first chapter completion
+    if (currentModule === "master-orbit") {
+      const firstChapterCompleted = completedChapters.length >= 1;
+      doc.isCompleted = firstChapterCompleted;
+    } else {
+      doc.isCompleted = allSectionsCompleted;
+    }
 
     const updateResult = await collection.updateOne(
       { userAddress },
