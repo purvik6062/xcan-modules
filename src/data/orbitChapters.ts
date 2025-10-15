@@ -1205,14 +1205,7 @@ export const orbitChapters: Chapter[] = [
             },
           ],
         },
-      },
-      {
-        id: "launch-your-orbit-chain",
-        title: "Launch Your Orbit Chain (Coming Soon)",
-        type: "theory",
-        status: "coming-soon",
-        estimatedTime: "—",
-      },
+      }
     ],
   },
   {
@@ -1270,34 +1263,6 @@ export const orbitChapters: Chapter[] = [
         estimatedTime: "15 min",
         content: {
           story: `# Post-Deployment Guide 📋\n\nCongratulations on deploying your Orbit chain! Here's what you can do next.\n\n## Immediate Next Steps\n\n### 1. Record Your Chain Information\n\nSave these critical details:\n- **Chain Address**: The contract address on the parent chain\n- **Deployment Transaction**: The tx hash for verification\n- **Chain ID**: Your unique chain identifier\n- **Owner Address**: Your wallet address (for governance)\n\n### 2. Set Up Chain Infrastructure\n\n**RPC Endpoint Configuration:**\n- Set up a node to serve RPC requests\n- Configure the node with your chain's parameters\n- Enable HTTPS/TLS for production use\n\n**Block Explorer:**\n- Deploy a block explorer (Blockscout or similar)\n- Configure it to index your chain\n- Make it publicly accessible for users\n\n### 3. Configure Operational Roles\n\n**Batch Poster:**\n- Designate an address to post batches\n- Fund it with sufficient parent chain gas\n- Set up monitoring for batch posting\n\n**Validators:**\n- Select validator addresses\n- Configure validator nodes\n- Establish validator communication channels\n\n## Development Activities\n\n### Test Your Chain\n\n\`\`\`javascript\n// Connect to your chain using ethers.js\nimport { ethers } from 'ethers';\n\nconst provider = new ethers.JsonRpcProvider(\n  'YOUR_CHAIN_RPC_URL'\n);\n\n// Check chain ID\nconst network = await provider.getNetwork();\nconsole.log('Chain ID:', network.chainId);\n\n// Get latest block\nconst block = await provider.getBlockNumber();\nconsole.log('Latest block:', block);\n\`\`\`\n\n### Add to MetaMask\n\n1. Open MetaMask\n2. Click "Add Network" → "Add Network Manually"\n3. Fill in:\n   - Network Name: Your chain name\n   - RPC URL: Your node's RPC endpoint\n   - Chain ID: Your chain ID\n   - Currency Symbol: ETH (or your custom token)\n\n### Deploy Your First Contract\n\n\`\`\`solidity\n// SimpleStorage.sol\npragma solidity ^0.8.0;\n\ncontract SimpleStorage {\n    uint256 private value;\n    \n    function setValue(uint256 _value) external {\n        value = _value;\n    }\n    \n    function getValue() external view returns (uint256) {\n        return value;\n    }\n}\n\`\`\`\n\nDeploy this to verify your chain is working!\n\n## Governance Setup\n\n### Transition to Multi-Sig\n\nFor production chains:\n1. Create a multi-signature wallet (Gnosis Safe)\n2. Transfer chain ownership to the multi-sig\n3. Document all ownership transfer steps\n4. Set up governance procedures\n\n### Define Upgrade Process\n\n- Establish proposal process\n- Implement timelocks for changes\n- Create public communication channels\n- Plan for emergency response\n\n## Monitoring & Maintenance\n\n### Set Up Monitoring\n\n**Key Metrics to Track:**\n- Block production rate\n- Transaction throughput\n- Gas prices and fees\n- Batch posting frequency\n- Validator uptime\n\n**Alerting:**\n- Configure alerts for downtime\n- Monitor for unusual activity\n- Track batch posting failures\n- Set up on-call rotation\n\n### Regular Maintenance\n\n- Keep nodes updated\n- Monitor disk space and resources\n- Review logs regularly\n- Perform periodic security audits\n\n## Community Building\n\n### Documentation\n\n- Create developer documentation\n- Publish RPC endpoints and chain info\n- Write integration guides\n- Maintain a public roadmap\n\n### Ecosystem Growth\n\n- Launch developer grants program\n- Host hackathons\n- Build partnerships\n- Support early adopters\n\n## Resources\n\n**Official Documentation:**\n- [Arbitrum Orbit Docs](https://docs.arbitrum.io/launch-orbit-chain/orbit-gentle-introduction)\n- [Orbit SDK GitHub](https://github.com/OffchainLabs/arbitrum-orbit-sdk)\n\n**Community:**\n- Arbitrum Discord\n- Developer Forums\n- Technical Support Channels\n\n## Troubleshooting\n\n**Chain Not Producing Blocks:**\n- Verify batch poster is funded\n- Check batch poster node is running\n- Review logs for errors\n\n**RPC Not Responding:**\n- Verify node is synced\n- Check network connectivity\n- Review node configuration\n\n**Bridge Issues:**\n- Verify bridge contracts are deployed\n- Check message relay configuration\n- Test with small amounts first\n\n## What's Next?\n\nNow that you have your chain, consider:\n\n1. **Building dApps**: Deploy applications to your chain\n2. **Custom Features**: Implement precompiles or custom gas tokens\n3. **Scaling**: Optimize for higher throughput\n4. **Governance**: Decentralize chain control\n5. **Ecosystem**: Grow your chain's user base\n\n**Congratulations on becoming a chain operator! 🎉**`,
-          questions: [
-            {
-              id: "post-deploy-q1",
-              question: "What is the first critical step after deploying your chain?",
-              options: [
-                "Launch a marketing campaign",
-                "Record chain address, deployment tx, and chain details",
-                "Deploy 100 smart contracts",
-                "Create a token"
-              ],
-              correctAnswer: 1,
-              explanation: "Recording your chain's critical information (addresses, tx hash, chain ID) is essential for all future operations and integration.",
-              type: "multiple-choice"
-            },
-            {
-              id: "post-deploy-q2",
-              question: "For production chains, what ownership structure is recommended?",
-              options: [
-                "Single EOA (externally owned account)",
-                "No owner at all",
-                "Multi-signature wallet with governance procedures",
-                "Smart contract with no keys"
-              ],
-              correctAnswer: 2,
-              explanation: "Multi-signature wallets with proper governance procedures distribute control and reduce single points of failure, making them ideal for production.",
-              type: "multiple-choice"
-            }
-          ]
         }
       },
     ],

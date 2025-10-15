@@ -221,7 +221,6 @@ export default function HomePage() {
         {/* Main Content */}
         <div className="max-w-7xl mx-auto">
           {/* Xcan Advocate Highlight */}
-          <XcanAdvocateHighlight />
           <AnimatePresence mode="wait">
             {!isWalletConnected ? (
               <motion.div
@@ -305,212 +304,215 @@ export default function HomePage() {
               </motion.div>
             ) : (
               /* Authenticated User Section */
-              <motion.div
-                key="authenticated"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="space-y-8"
-              >
-                {/* User Info with Network Status */}
+              <>
+                <XcanAdvocateHighlight />
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
+                  key="authenticated"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-8"
                 >
-                  <GlassCard className="p-8">
-                    <div className="flex w-full justify-between items-center">
-                      <div className="flex items-center gap-6">
-                        <motion.div
-                          className={`w-20 h-20 rounded-2xl flex items-center justify-center relative ${isCorrectNetwork
-                            ? "bg-gradient-to-br from-emerald-400/80 via-green-500/80 to-teal-500/80"
-                            : "bg-gradient-to-br from-amber-400/80 via-orange-500/80 to-red-500/80"
-                            }`}
-                          whileHover={{ rotate: 5 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          {isCorrectNetwork ? (
-                            <CheckCircle className="w-10 h-10 text-white" />
-                          ) : (
-                            <AlertTriangle className="w-10 h-10 text-white" />
-                          )}
+                  {/* User Info with Network Status */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <GlassCard className="p-8">
+                      <div className="flex w-full justify-between items-center">
+                        <div className="flex items-center gap-6">
                           <motion.div
-                            className={`absolute inset-0 rounded-2xl blur-lg ${isCorrectNetwork ? "bg-emerald-400/20" : "bg-amber-400/20"
+                            className={`w-20 h-20 rounded-2xl flex items-center justify-center relative ${isCorrectNetwork
+                              ? "bg-gradient-to-br from-emerald-400/80 via-green-500/80 to-teal-500/80"
+                              : "bg-gradient-to-br from-amber-400/80 via-orange-500/80 to-red-500/80"
                               }`}
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{
-                              duration: 2,
-                              repeat: Number.POSITIVE_INFINITY,
-                            }}
-                          />
-                        </motion.div>
+                            whileHover={{ rotate: 5 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                          >
+                            {isCorrectNetwork ? (
+                              <CheckCircle className="w-10 h-10 text-white" />
+                            ) : (
+                              <AlertTriangle className="w-10 h-10 text-white" />
+                            )}
+                            <motion.div
+                              className={`absolute inset-0 rounded-2xl blur-lg ${isCorrectNetwork ? "bg-emerald-400/20" : "bg-amber-400/20"
+                                }`}
+                              animate={{ scale: [1, 1.1, 1] }}
+                              transition={{
+                                duration: 2,
+                                repeat: Number.POSITIVE_INFINITY,
+                              }}
+                            />
+                          </motion.div>
 
-                        <div className="flex justify-between items-center">
-                          <div className="flex-1">
-                            <h3 className="text-2xl font-bold text-white mb-2">
-                              {isCorrectNetwork ? "Wallet Connected" : "Wrong Network"}
-                            </h3>
-                            <p className="text-gray-300 font-mono text-lg bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20 mb-2">
-                              {userAddress
-                                ? `${userAddress.slice(0, 8)}...${userAddress.slice(-6)}`
-                                : "Loading..."}
-                            </p>
-                            <div className="flex items-center justify-between">
-                              <div className="space-y-1">
-                                <p className={`text-sm flex items-center gap-2 ${isCorrectNetwork ? "text-emerald-300" : "text-amber-300"
-                                  }`}>
-                                  <Zap className="w-4 h-4" />
-                                  Current Network: {getNetworkName(chainId)}
-                                </p>
-                                {!isCorrectNetwork && (
-                                  <p className="text-sm text-gray-400 flex items-center gap-2">
-                                    <Target className="w-4 h-4" />
-                                    Required: Arbitrum Sepolia
+                          <div className="flex justify-between items-center">
+                            <div className="flex-1">
+                              <h3 className="text-2xl font-bold text-white mb-2">
+                                {isCorrectNetwork ? "Wallet Connected" : "Wrong Network"}
+                              </h3>
+                              <p className="text-gray-300 font-mono text-lg bg-blue-500/10 px-4 py-2 rounded-lg border border-blue-500/20 mb-2">
+                                {userAddress
+                                  ? `${userAddress.slice(0, 8)}...${userAddress.slice(-6)}`
+                                  : "Loading..."}
+                              </p>
+                              <div className="flex items-center justify-between">
+                                <div className="space-y-1">
+                                  <p className={`text-sm flex items-center gap-2 ${isCorrectNetwork ? "text-emerald-300" : "text-amber-300"
+                                    }`}>
+                                    <Zap className="w-4 h-4" />
+                                    Current Network: {getNetworkName(chainId)}
                                   </p>
-                                )}
+                                  {!isCorrectNetwork && (
+                                    <p className="text-sm text-gray-400 flex items-center gap-2">
+                                      <Target className="w-4 h-4" />
+                                      Required: Arbitrum Sepolia
+                                    </p>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      <>
-                        {!isCorrectNetwork && (
-                          <motion.button
-                            onClick={handleSwitchNetwork}
-                            disabled={isSwitchingChain}
-                            className="cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 disabled:from-gray-600 disabled:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3 }}
-                          >
-                            {isSwitchingChain ? (
-                              <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                Switching...
-                              </>
-                            ) : (
-                              <>
-                                <RefreshCw className="w-4 h-4" />
-                                Switch Network
-                              </>
-                            )}
-                          </motion.button>
-                        )}
-                      </>
-                    </div>
-
-                    {!isCorrectNetwork && (
-                      <motion.div
-                        className="mt-6 p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-400/30 rounded-xl"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
-                          <p className="text-amber-200 text-sm">
-                            Please switch to Arbitrum Sepolia network to mint your NFT badges and access all features.
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </GlassCard>
-                </motion.div>
-
-                {/* Modules Showcase - Non-grid interactive layout (horizontal carousel) */}
-                {isCorrectNetwork && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <GlassCard className="p-10">
-                      <div className="flex items-center gap-6 mb-10">
-                        <motion.div
-                          className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          <Trophy className="w-8 h-8 text-white" />
-                          <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
-                        </motion.div>
-                        <div>
-                          <h3 className="text-4xl font-bold text-white mb-2">
-                            Learning Modules
-                          </h3>
-                          <p className="text-gray-300 text-lg">
-                            Complete modules to unlock and claim your NFT badges
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Spotlight vertical list (no claim buttons) */}
-                      <div className="space-y-5">
-                        {nftModules.map((module, index) => {
-
-                          const handleOpen = () => {
-                            if (module.id === "arbitrum-stylus") {
-                              router.push(`/nft/arbitrum-stylus`);
-                            } else if (module.id === "stylus-foundation") {
-                              router.push(`/nft/stylus-foundation`);
-                            } else if (module.database === "postgres") {
-                              router.push(`/nft/arbitrum-stylus`);
-                            } else {
-                              router.push(`/nft/modules/${module.id}`);
-                            }
-                          };
-
-                          return (
-                            <motion.div
-                              key={module.id}
-                              className="group w-full text-left"
-                              initial={{ opacity: 0, y: 24 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.05 * index }}
+                        <>
+                          {!isCorrectNetwork && (
+                            <motion.button
+                              onClick={handleSwitchNetwork}
+                              disabled={isSwitchingChain}
+                              className="cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 disabled:from-gray-600 disabled:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              initial={{ opacity: 0, x: 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.3 }}
                             >
-                              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
-                                <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+                              {isSwitchingChain ? (
+                                <>
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                  Switching...
+                                </>
+                              ) : (
+                                <>
+                                  <RefreshCw className="w-4 h-4" />
+                                  Switch Network
+                                </>
+                              )}
+                            </motion.button>
+                          )}
+                        </>
+                      </div>
 
-                                <div className="relative p-6 sm:p-7">
-                                  <div className="flex items-start justify-between">
-                                    <div className="flex items-start gap-4">
-                                      <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
-                                        <module.icon className="w-8 h-8 text-white" />
-                                      </div>
-                                      <div>
-                                        <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
-                                        <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
-                                      </div>
-                                    </div>
+                      {!isCorrectNetwork && (
+                        <motion.div
+                          className="mt-6 p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-400/30 rounded-xl"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.4 }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                            <p className="text-amber-200 text-sm">
+                              Please switch to Arbitrum Sepolia network to mint your NFT badges and access all features.
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </GlassCard>
+                  </motion.div>
 
-                                    <div className="hidden sm:flex items-center">
-                                      <motion.button
-                                        className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea]  to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={handleOpen}
-                                      >
-                                        <span className="flex items-center gap-2">
-                                          <EyeIcon className="w-4 h-4" /> {/* Assuming you have an Eye icon from Heroicons or similar */}
-                                          View Module
-                                        </span>
-                                      </motion.button>
+                  {/* Modules Showcase - Non-grid interactive layout (horizontal carousel) */}
+                  {isCorrectNetwork && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <GlassCard className="p-10">
+                        <div className="flex items-center gap-6 mb-10">
+                          <motion.div
+                            className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
+                            whileHover={{ scale: 1.1 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                          >
+                            <Trophy className="w-8 h-8 text-white" />
+                            <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                          </motion.div>
+                          <div>
+                            <h3 className="text-4xl font-bold text-white mb-2">
+                              Learning Modules
+                            </h3>
+                            <p className="text-gray-300 text-lg">
+                              Complete modules to unlock and claim your NFT badges
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Spotlight vertical list (no claim buttons) */}
+                        <div className="space-y-5">
+                          {nftModules.map((module, index) => {
+
+                            const handleOpen = () => {
+                              if (module.id === "arbitrum-stylus") {
+                                router.push(`/nft/arbitrum-stylus`);
+                              } else if (module.id === "stylus-foundation") {
+                                router.push(`/nft/stylus-foundation`);
+                              } else if (module.database === "postgres") {
+                                router.push(`/nft/arbitrum-stylus`);
+                              } else {
+                                router.push(`/nft/modules/${module.id}`);
+                              }
+                            };
+
+                            return (
+                              <motion.div
+                                key={module.id}
+                                className="group w-full text-left"
+                                initial={{ opacity: 0, y: 24 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.05 * index }}
+                              >
+                                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
+                                  <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+
+                                  <div className="relative p-6 sm:p-7">
+                                    <div className="flex items-start justify-between">
+                                      <div className="flex items-start gap-4">
+                                        <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
+                                          <module.icon className="w-8 h-8 text-white" />
+                                        </div>
+                                        <div>
+                                          <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
+                                          <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
+                                        </div>
+                                      </div>
+
+                                      <div className="hidden sm:flex items-center">
+                                        <motion.button
+                                          className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea]  to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
+                                          whileHover={{ scale: 1.05 }}
+                                          whileTap={{ scale: 0.95 }}
+                                          onClick={handleOpen}
+                                        >
+                                          <span className="flex items-center gap-2">
+                                            <EyeIcon className="w-4 h-4" /> {/* Assuming you have an Eye icon from Heroicons or similar */}
+                                            View Module
+                                          </span>
+                                        </motion.button>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </motion.div>
-                          );
-                        })}
-                      </div>
-                    </GlassCard>
-                  </motion.div>
-                )}
-              </motion.div>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      </GlassCard>
+                    </motion.div>
+                  )}
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </div>
