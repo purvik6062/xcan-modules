@@ -41,7 +41,9 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    await collection.updateOne({ walletAddress: userAddress }, update, { upsert: true });
+    await collection.updateOne({ walletAddress: userAddress }, update, {
+      upsert: true,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
@@ -56,7 +58,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userAddress = (searchParams.get("userAddress") || "");
+    const userAddress = searchParams.get("userAddress") || "";
 
     if (!userAddress) {
       return NextResponse.json(
@@ -67,11 +69,18 @@ export async function GET(request: NextRequest) {
 
     const { db } = await connectToDatabase();
     const collection = db.collection("foundation-users");
-    
+
     // Check if user exists in foundation-users collection
     const doc = await collection.findOne(
-      { walletAddress: userAddress },
-      { projection: { _id: 0, walletAddress: 1} }
+      { walletAddress: RegExp(userAddress, "i") },
+      {
+        projection: {
+          _id: 0,
+          certification: 1,
+          isCompleted: 1,
+          walletAddress: 1,
+        },
+      }
     );
 
     console.log("doc", doc);
@@ -100,4 +109,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-

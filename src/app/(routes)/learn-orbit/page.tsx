@@ -179,10 +179,10 @@ export default function LearnOrbitPage() {
             {/* Claim Certification */}
             <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
               <div className="text-center w-full">
-                {overall.percent !== 100 ? (
+                {!isModuleCompleted ? (
                   <div className="space-y-2">
                     <h3 className="text-lg font-semibold text-gray-400">
-                      Complete all sections to unlock your certificate
+                      Complete the first chapter to unlock your certificate
                     </h3>
                   </div>
                 ) : alreadyClaimed ? (
@@ -208,10 +208,10 @@ export default function LearnOrbitPage() {
               </div>
               <button
                 onClick={() => setIsPromoOpen(true)}
-                disabled={overall.percent !== 100 || isCertificationMinting || alreadyClaimed}
+                disabled={!isModuleCompleted || isCertificationMinting || alreadyClaimed}
                 className={`${alreadyClaimed
                   ? "bg-green-100 text-green-700 border-2 border-green-300 cursor-default"
-                  : overall.percent === 100 && !isCertificationMinting
+                  : isModuleCompleted && !isCertificationMinting
                     ? "cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-600 hover:to-teal-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-400/30"
                   } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
@@ -231,7 +231,7 @@ export default function LearnOrbitPage() {
                     </svg>
                     <span>Claiming...</span>
                   </>
-                ) : overall.percent === 100 ? (
+                ) : isModuleCompleted ? (
                   <>
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
@@ -239,7 +239,7 @@ export default function LearnOrbitPage() {
                     <span>Claim NFT Certification</span>
                   </>
                 ) : (
-                  <span>Complete All Challenges</span>
+                  <span>Complete First Chapter</span>
                 )}
               </button>
 

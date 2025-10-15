@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Section } from "../data/defiChapters";
 import { getTheoryContent, TheoryContent } from "../data/defiContent";
-import CodeEditor from "./CodeEditor";
 import ReactMarkdown from "react-markdown";
+import CodeBlock from "./CodeBlock";
 
 interface ChapterContentProps {
   section: Section;
@@ -556,21 +556,12 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
               {/* Code Example */}
               {content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].codeExample && (
                 <div className="mt-8">
-                  <div className="bg-gray-800 rounded-lg p-4">
-                    <h4 className="text-white font-medium mb-4">
-                      Code Example
-                    </h4>
-                    <div className="h-64">
-                      <CodeEditor
-                        defaultValue={
-                          content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].codeExample
-                        }
-                        language="javascript"
-                        readOnly={true}
-                        height="100%"
-                      />
-                    </div>
-                  </div>
+                  <h4 className="text-white font-medium mb-4">
+                    Code Example
+                  </h4>
+                  <CodeBlock className="language-javascript">
+                    {content.sections[Math.min(currentSubSection, Math.max(0, content.sections.length - 1))].codeExample || ''}
+                  </CodeBlock>
                 </div>
               )}
             </div>
@@ -726,17 +717,14 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
 
         {/* Interactive code example for demonstration */}
         <div>
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h4 className="text-white font-medium mb-4">
-              Interactive Code Walkthrough
-            </h4>
-            <p className="text-gray-300 text-sm mb-4">
-              Example demonstrating how to interact with DeFi protocols using
-              ethers.js
-            </p>
-            <div className="h-80">
-              <CodeEditor
-                defaultValue={`// Example DeFi interaction
+          <h4 className="text-white font-medium mb-4">
+            Code Walkthrough Example
+          </h4>
+          <p className="text-gray-300 text-sm mb-4">
+            Example demonstrating how to interact with DeFi protocols using ethers.js
+          </p>
+          <CodeBlock className="language-javascript">
+{`// Example DeFi interaction
 import { ethers } from 'ethers';
 
 const provider = new ethers.providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');
@@ -755,12 +743,7 @@ async function interactWithProtocol() {
   
   console.log('Transaction completed:', tx.hash);
 }`}
-                language="javascript"
-                readOnly={true}
-                height="100%"
-              />
-            </div>
-          </div>
+          </CodeBlock>
         </div>
       </div>
     </div>
@@ -798,12 +781,12 @@ async function interactWithProtocol() {
                         <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
                       ),
                       li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
-                      code: ({ children }) => (
-                        <code className="bg-gray-700 text-emerald-300 px-2 py-1 rounded text-sm">{children}</code>
-                      ),
-                      pre: ({ children }) => (
-                        <pre className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto mb-4 border border-gray-600">{children}</pre>
-                      ),
+                      code: ({ node, className, children, ...props }: any) => {
+                        const codeString = String(children).replace(/\n$/, '');
+                        const isInline = !className;
+                        return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
+                      },
+                      pre: ({ children }) => <>{children}</>
                     }}
                   >
                     {section.content.story}
@@ -937,12 +920,12 @@ async function interactWithProtocol() {
                         <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
                       ),
                       li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
-                      code: ({ children }) => (
-                        <code className="bg-gray-700 text-emerald-300 px-2 py-1 rounded text-sm">{children}</code>
-                      ),
-                      pre: ({ children }) => (
-                        <pre className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto mb-4 border border-gray-600">{children}</pre>
-                      ),
+                      code: ({ node, className, children, ...props }: any) => {
+                        const codeString = String(children).replace(/\n$/, '');
+                        const isInline = !className;
+                        return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
+                      },
+                      pre: ({ children }) => <>{children}</>
                     }}
                   >
                     {section.content.story}

@@ -109,7 +109,7 @@ export default function ModuleDetailPage() {
 
   if (!isReady || walletLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
+      <div style={{ minHeight: 'calc(100vh - 72px)' }} className="bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
         <FloatingParticles />
         <GlassCard className="p-12 text-center">
           <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
@@ -121,7 +121,7 @@ export default function ModuleDetailPage() {
 
   if (!currentModule) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
+      <div style={{ minHeight: 'calc(100vh - 72px)' }} className="bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
         <FloatingParticles />
         <GlassCard className="p-12 text-center">
           <AlertTriangle className="w-12 h-12 text-amber-400 mx-auto mb-4" />
@@ -249,7 +249,7 @@ export default function ModuleDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden">
+    <div style={{ minHeight: 'calc(100vh - 72px)' }} className="bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden flex flex-col">
       <FloatingParticles />
 
       <div className="absolute top-8 left-8 z-20">
@@ -261,8 +261,8 @@ export default function ModuleDetailPage() {
         </button>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-12">
-        <GlassCard className="p-8 overflow-hidden">
+      <div className="relative z-10 container mx-auto px-4 flex-1 flex items-center justify-center">
+        <GlassCard className="p-8 overflow-hidden w-full">
           <div className="flex flex-col lg:flex-row gap-10">
             {/* Left: Hero and progress */}
             <div className="flex-1 space-y-6">

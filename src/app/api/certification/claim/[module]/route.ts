@@ -29,7 +29,7 @@ export async function POST(
     ? "challenges-stylus-core-concepts"
     : module === "master-defi"
     ? "challenges-master-defi"
-    : module === "master-orbit"
+    : module === "master-orbit" || module === "arbitrum-orbit"
     ? "challenges-orbit-chain"
     : module === "cross-chain"
     ? "challenges-cross-chain"
@@ -105,6 +105,7 @@ export async function GET(
       "arbitrum-orbit",
       "defi-arbitrum",
       "cross-chain",
+      "xcan-advocate",
     ];
     if (!validModules.includes(module)) {
       return NextResponse.json(
@@ -122,10 +123,12 @@ export async function GET(
         ? "challenges-stylus-core-concepts"
         : module === "master-defi"
         ? "challenges-master-defi"
-        : module === "master-orbit"
+        : module === "master-orbit" || module === "arbitrum-orbit"
         ? "challenges-orbit-chain"
         : module === "cross-chain"
         ? "challenges-cross-chain"
+        : module === "xcan-advocate"
+        ? "advocates"
         : null;
 
     if (!collectionName) {

@@ -35,7 +35,7 @@ export default function WalletProtectedWrapper({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-md w-full text-center"
+          className="max-w-lg w-full text-center"
         >
           <div className="bg-[#0D1221] p-8 rounded-2xl shadow-2xl border border-gray-700">
             <motion.div

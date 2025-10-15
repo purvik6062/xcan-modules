@@ -71,6 +71,24 @@ const modulesHashes = {
       "https://gateway.pinata.cloud/ipfs/QmTZihtUGNZiMvHoYD2fk3tL4JQpXjpZtuQMLBT684wB4p",
     name: "Cross-Chain Development",
   },
+  "precompiles-overview": {
+    metadataHash: "QmSQptXKNSQXEfv9nAUxCmqrFGjmEH7VoyfAQ5EiG7GrFJ",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmPpwR7ZZGVYkSeuZrBco1Qo188T2vPkbPvFpgMpnyQ8mx",
+    name: "Precompile Playground",
+  },
+  "stylus-foundation": {
+    metadataHash: "QmTLaQoTKv1ZZ9jiqeK7x24MTLuSQWZHCxnR7yWf7cE6KT",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/Qmbmio4LRs4CWubvTtYtbhH88ZtxfAAoWwsA29j7126fo4",
+    name: "Arbitrum Foundation Challenge",
+  },
+  "xcan-advocate": {
+    metadataHash: "QmP65TGZVkkHaMkjxzh8oxAcoBEB6tmjgbsaacJqwkjUMa",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmU9Uib2y8fYDFNAukW1CY9SsVmJDXa4jKPMMEumtvk7x8",
+    name: "Xcan Advocate",
+  },
 };
 
 export const useMint = () => {
