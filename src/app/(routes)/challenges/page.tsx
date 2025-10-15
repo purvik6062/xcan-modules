@@ -7,6 +7,7 @@ import { ChallengePreview } from "../../../types/challenge";
 import "../../../styles/gamify.css";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
+import PromoCodeModal from "../../../components/PromoCodeModal";
 import toast from "react-hot-toast";
 
 // export const metadata = {
@@ -23,6 +24,7 @@ export default function ChallengesPage() {
   const [completedSlugs, setCompletedSlugs] = useState<string[]>([]);
   const { certificationMint, isMinting, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserProgress = async () => {
@@ -186,12 +188,12 @@ export default function ChallengesPage() {
 
           {/* NFT Claim Button */}
           <button
-            onClick={claimNFT}
+            onClick={() => setIsPromoOpen(true)}
             disabled={!allCompleted || isCertificationMinting || alreadyClaimed}
             className={`${alreadyClaimed
               ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
               : allCompleted && !isMinting && !isCertificationMinting
-                ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                ? "cursor-pointer bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                 : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed opacity-60 border border-gray-400/30 dark:border-gray-600/40"
               } px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 w-full xs:w-auto flex items-center justify-center space-x-2 min-h-[40px]`}
           >
@@ -356,6 +358,11 @@ export default function ChallengesPage() {
           </div>
         </div>
       </div>
+      <PromoCodeModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        onMint={claimNFT}
+      />
     </div>
   );
 }

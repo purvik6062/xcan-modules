@@ -7,6 +7,7 @@ import ChapterCard from "../../../components/ChapterCard";
 import ProgressOverview from "../../../components/ProgressOverview";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
+import PromoCodeModal from "../../../components/PromoCodeModal";
 
 export default function LearnDeFiPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
@@ -14,6 +15,7 @@ export default function LearnDeFiPage() {
   const [chapterProgress, setChapterProgress] = useState<Record<string, { completed: number; total: number }>>({});
   const { certificationMint, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   const overall = useMemo(() => {
     const values = Object.values(chapterProgress);
@@ -187,12 +189,12 @@ export default function LearnDeFiPage() {
                 )}
               </div>
               <button
-                onClick={claimNFT}
+                onClick={() => setIsPromoOpen(true)}
                 disabled={overall.percent !== 100 || isCertificationMinting || alreadyClaimed}
                 className={`${alreadyClaimed
                   ? "bg-green-100 text-green-700 border-2 border-green-300 cursor-default"
                   : overall.percent === 100 && !isCertificationMinting
-                    ? "bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                    ? "cursor-pointer bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-400/30"
                   } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
               >
@@ -319,6 +321,11 @@ export default function LearnDeFiPage() {
           </div>
         </motion.div>
       </div>
+      <PromoCodeModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        onMint={claimNFT}
+      />
     </div>
   );
 }

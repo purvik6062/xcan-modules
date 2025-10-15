@@ -33,6 +33,7 @@ import {
   GraduationCap,
   RocketIcon,
   Link,
+  EyeIcon,
 } from "lucide-react";
 import { nftModules } from "@/data/nftModules";
 
@@ -484,7 +485,17 @@ export default function HomePage() {
                                     </div>
 
                                     <div className="hidden sm:flex items-center">
-                                      <motion.button className="px-3 py-1 cursor-pointer rounded-full text-xs border bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" onClick={handleOpen}>View Module</motion.button>
+                                      <motion.button
+                                        className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea]  to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={handleOpen}
+                                      >
+                                        <span className="flex items-center gap-2">
+                                          <EyeIcon className="w-4 h-4" /> {/* Assuming you have an Eye icon from Heroicons or similar */}
+                                          View Module
+                                        </span>
+                                      </motion.button>
                                     </div>
                                   </div>
                                 </div>

@@ -7,6 +7,7 @@ import StylusChapterCard from "../../../components/stylus/StylusChapterCard";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
 import toast from "react-hot-toast";
+import PromoCodeModal from "../../../components/PromoCodeModal";
 
 export default function LearnStylusPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
@@ -15,6 +16,7 @@ export default function LearnStylusPage() {
   const { address, isReady } = useWalletProtection();
   const { certificationMint, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   const filteredChapters =
     selectedLevel === "all"
@@ -269,12 +271,12 @@ export default function LearnStylusPage() {
 
             {/* Claim Button */}
             <button
-              onClick={claimNFT}
+              onClick={() => setIsPromoOpen(true)}
               disabled={overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
                 : overallProgress.percentage === 100 && !isCertificationMinting
-                  ? "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  ? "cursor-pointer bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
@@ -434,6 +436,11 @@ export default function LearnStylusPage() {
           </motion.button>
         </motion.div>
       </div>
+      <PromoCodeModal
+        isOpen={isPromoOpen}
+        onClose={() => setIsPromoOpen(false)}
+        onMint={claimNFT}
+      />
     </div>
   );
 }
