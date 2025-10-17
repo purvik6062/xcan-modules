@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
     // Update the certification for this user
     const update: any = {
       $set: {
-        walletAddress: userAddress,
         updatedAt: new Date(),
         certification: [
           {
@@ -41,7 +40,7 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    await collection.updateOne({ walletAddress: userAddress }, update, {
+    await collection.updateOne({ walletAddress: RegExp(userAddress, "i") }, update, {
       upsert: true,
     });
 
@@ -73,17 +72,9 @@ export async function GET(request: NextRequest) {
     // Check if user exists in foundation-users collection
     const doc = await collection.findOne(
       { walletAddress: RegExp(userAddress, "i") },
-      {
-        projection: {
-          _id: 0,
-          certification: 1,
-          isCompleted: 1,
-          walletAddress: 1,
-        },
-      }
     );
 
-    console.log("doc", doc);
+    // console.log("doc", doc);
 
     // If user exists in foundation-users collection, they have completed the challenge
     const isCompleted = Boolean(doc?.walletAddress);

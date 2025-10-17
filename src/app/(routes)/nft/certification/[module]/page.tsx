@@ -24,6 +24,13 @@ export default function CertificationViewPage() {
         icon: Award,
         gradient: "from-indigo-500/20 to-blue-500/20",
       } as any;
+    } else if (module === "stylus-foundation") {
+      return {
+        id: "stylus-foundation",
+        title: "Stylus Foundation",
+        icon: Award,
+        gradient: "from-indigo-500/20 to-blue-500/20",
+      } as any;
     }
     return null;
   }, [module]);
