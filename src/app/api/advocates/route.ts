@@ -63,7 +63,6 @@ export async function POST(request: NextRequest) {
     // Build update to support certification array entries
     const baseUpdate: any = {
       $set: {
-        userAddress: RegExp(userAddress, "i"),
         updatedAt: new Date(),
         ...(typeof isEligible === "boolean" ? { isEligible } : {}),
       },
@@ -87,7 +86,7 @@ export async function POST(request: NextRequest) {
       };
     }
 
-    await collection.updateOne({ userAddress }, baseUpdate, { upsert: true });
+    await collection.updateOne({ userAddress: RegExp(userAddress, "i") }, baseUpdate, { upsert: true });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
