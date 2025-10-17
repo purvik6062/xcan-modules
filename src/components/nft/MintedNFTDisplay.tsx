@@ -40,7 +40,11 @@ const LEVEL_NAME_MAP = {
   "farcaster-miniapps": "Farcaster Miniapps Challenge",
 };
 
-export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayProps) => {
+export const MintedNFTDisplay = ({
+  nft,
+  levelKey,
+  platform,
+}: MintedNFTDisplayProps) => {
   const imageCardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -217,7 +221,8 @@ export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayPr
                   background: useTransform(
                     [lightX, lightY],
                     ([x, y]: any) =>
-                      `radial-gradient(circle at ${50 + x}% ${50 + y
+                      `radial-gradient(circle at ${50 + x}% ${
+                        50 + y
                       }%, rgba(255,255,255,0.15) 0%, transparent 50%)`
                   ),
                 }}
@@ -270,12 +275,14 @@ export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayPr
                         [rotateX, rotateY],
                         ([rx, ry]: any) =>
                           `linear-gradient(${45 + ry}deg, 
-                            rgba(16, 185, 129, ${0.15 + Math.abs(rx) * 0.01
-                          }) 0%, // Increased from 0.1
+                            rgba(16, 185, 129, ${
+                              0.15 + Math.abs(rx) * 0.01
+                            }) 0%, // Increased from 0.1
                             transparent 30%, 
                             transparent 70%, 
-                            rgba(147, 51, 234, ${0.15 + Math.abs(ry) * 0.01
-                          }) 100%)` // Increased from 0.1
+                            rgba(147, 51, 234, ${
+                              0.15 + Math.abs(ry) * 0.01
+                            }) 100%)` // Increased from 0.1
                       ),
                     }}
                   />
@@ -319,7 +326,8 @@ export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayPr
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${ry * 0.1
+                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${
+                        ry * 0.1
                       }deg)`
                   ),
                 }}
@@ -333,12 +341,15 @@ export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayPr
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(15px) rotateX(${rx * 0.05}deg) rotateY(${ry * 0.05
+                      `translateZ(15px) rotateX(${rx * 0.05}deg) rotateY(${
+                        ry * 0.05
                       }deg)`
                   ),
                 }}
               >
-                Awarded for completing the {LEVEL_NAME_MAP[levelKey as keyof typeof LEVEL_NAME_MAP]} challenge
+                Awarded for completing the{" "}
+                {LEVEL_NAME_MAP[levelKey as keyof typeof LEVEL_NAME_MAP]}{" "}
+                challenge
               </motion.p>
 
               <motion.p
@@ -347,7 +358,8 @@ export const MintedNFTDisplay = ({ nft, levelKey, platform }: MintedNFTDisplayPr
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${ry * 0.02
+                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${
+                        ry * 0.02
                       }deg)`
                   ),
                 }}
