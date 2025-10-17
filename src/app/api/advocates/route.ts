@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     // Build update to support certification array entries
     const baseUpdate: any = {
       $set: {
-        userAddress,
+        userAddress: RegExp(userAddress, "i"),
         updatedAt: new Date(),
         ...(typeof isEligible === "boolean" ? { isEligible } : {}),
       },

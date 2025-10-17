@@ -59,6 +59,7 @@ export default function XcanAdvocatePage() {
       const res = await fetch(`/api/advocates?userAddress=${userAddress}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to load status");
+      console.log("data: ", data);
       setDoc(data);
     } catch (e: any) {
       setError(e?.message || "Failed to load");

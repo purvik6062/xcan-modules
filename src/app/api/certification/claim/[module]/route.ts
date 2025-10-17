@@ -121,7 +121,7 @@ export async function GET(
         ? "challenges-web3-basics"
         : module === "stylus-core-concepts"
         ? "challenges-stylus-core-concepts"
-        : module === "master-defi"
+        : module === "master-defi" || module === "defi-arbitrum"
         ? "challenges-master-defi"
         : module === "master-orbit" || module === "arbitrum-orbit"
         ? "challenges-orbit-chain"
