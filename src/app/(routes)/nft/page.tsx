@@ -78,7 +78,7 @@ export default function HomePage() {
   if (!isReady || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
-        <FloatingParticles />
+        {/* <FloatingParticles /> */}
 
         {/* Subtle background effects */}
         <div className="absolute inset-0">
@@ -139,7 +139,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden">
-      <FloatingParticles />
+      {/* <FloatingParticles /> */}
 
       {/* Subtle gradient orbs matching the theme */}
       <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/5 via-indigo-500/3 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -305,7 +305,7 @@ export default function HomePage() {
             ) : (
               /* Authenticated User Section */
               <>
-                <XcanAdvocateHighlight />
+
                 <motion.div
                   key="authenticated"
                   initial={{ opacity: 0 }}
@@ -424,92 +424,95 @@ export default function HomePage() {
 
                   {/* Modules Showcase - Non-grid interactive layout (horizontal carousel) */}
                   {isCorrectNetwork && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <GlassCard className="p-10">
-                        <div className="flex items-center gap-6 mb-10">
-                          <motion.div
-                            className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
-                            whileHover={{ scale: 1.1 }}
-                            transition={{ type: "spring", stiffness: 300 }}
-                          >
-                            <Trophy className="w-8 h-8 text-white" />
-                            <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
-                          </motion.div>
-                          <div>
-                            <h3 className="text-4xl font-bold text-white mb-2">
-                              Learning Modules
-                            </h3>
-                            <p className="text-gray-300 text-lg">
-                              Complete modules to unlock and claim your NFT badges
-                            </p>
+                    <>
+                      <XcanAdvocateHighlight />
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <GlassCard className="p-10">
+                          <div className="flex items-center gap-6 mb-10">
+                            <motion.div
+                              className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
+                              whileHover={{ scale: 1.1 }}
+                              transition={{ type: "spring", stiffness: 300 }}
+                            >
+                              <Trophy className="w-8 h-8 text-white" />
+                              <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                            </motion.div>
+                            <div>
+                              <h3 className="text-4xl font-bold text-white mb-2">
+                                Learning Modules
+                              </h3>
+                              <p className="text-gray-300 text-lg">
+                                Complete modules to unlock and claim your NFT badges
+                              </p>
+                            </div>
                           </div>
-                        </div>
 
-                        {/* Spotlight vertical list (no claim buttons) */}
-                        <div className="space-y-5">
-                          {nftModules.map((module, index) => {
+                          {/* Spotlight vertical list (no claim buttons) */}
+                          <div className="space-y-5">
+                            {nftModules.map((module, index) => {
 
-                            const handleOpen = () => {
-                              if (module.id === "arbitrum-stylus") {
-                                router.push(`/nft/arbitrum-stylus`);
-                              } else if (module.id === "stylus-foundation") {
-                                router.push(`/nft/stylus-foundation`);
-                              } else if (module.database === "postgres") {
-                                router.push(`/nft/arbitrum-stylus`);
-                              } else {
-                                router.push(`/nft/modules/${module.id}`);
-                              }
-                            };
+                              const handleOpen = () => {
+                                if (module.id === "arbitrum-stylus") {
+                                  router.push(`/nft/arbitrum-stylus`);
+                                } else if (module.id === "stylus-foundation") {
+                                  router.push(`/nft/stylus-foundation`);
+                                } else if (module.database === "postgres") {
+                                  router.push(`/nft/arbitrum-stylus`);
+                                } else {
+                                  router.push(`/nft/modules/${module.id}`);
+                                }
+                              };
 
-                            return (
-                              <motion.div
-                                key={module.id}
-                                className="group w-full text-left"
-                                initial={{ opacity: 0, y: 24 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.05 * index }}
-                              >
-                                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
-                                  <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+                              return (
+                                <motion.div
+                                  key={module.id}
+                                  className="group w-full text-left"
+                                  initial={{ opacity: 0, y: 24 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: 0.05 * index }}
+                                >
+                                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
 
-                                  <div className="relative p-6 sm:p-7">
-                                    <div className="flex items-start justify-between">
-                                      <div className="flex items-start gap-4">
-                                        <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
-                                          <module.icon className="w-8 h-8 text-white" />
+                                    <div className="relative p-6 sm:p-7">
+                                      <div className="flex items-start justify-between">
+                                        <div className="flex items-start gap-4">
+                                          <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
+                                            <module.icon className="w-8 h-8 text-white" />
+                                          </div>
+                                          <div>
+                                            <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
+                                            <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
+                                          </div>
                                         </div>
-                                        <div>
-                                          <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
-                                          <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
-                                        </div>
-                                      </div>
 
-                                      <div className="hidden sm:flex items-center">
-                                        <motion.button
-                                          className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea]  to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
-                                          whileHover={{ scale: 1.05 }}
-                                          whileTap={{ scale: 0.95 }}
-                                          onClick={handleOpen}
-                                        >
-                                          <span className="flex items-center gap-2">
-                                            <EyeIcon className="w-4 h-4" /> {/* Assuming you have an Eye icon from Heroicons or similar */}
-                                            View Module
-                                          </span>
-                                        </motion.button>
+                                        <div className="hidden sm:flex items-center">
+                                          <motion.button
+                                            className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea]  to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={handleOpen}
+                                          >
+                                            <span className="flex items-center gap-2">
+                                              <EyeIcon className="w-4 h-4" /> {/* Assuming you have an Eye icon from Heroicons or similar */}
+                                              View Module
+                                            </span>
+                                          </motion.button>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </motion.div>
-                            );
-                          })}
-                        </div>
-                      </GlassCard>
-                    </motion.div>
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+                        </GlassCard>
+                      </motion.div>
+                    </>
                   )}
                 </motion.div>
               </>

@@ -13,6 +13,12 @@ export async function POST(
     const metadataUrl: string | undefined = body.metadataUrl;
     const imageUrl: string | undefined = body.imageUrl;
 
+    console.log("module", module);
+    console.log("userAddress", userAddress);
+    console.log("transactionHash", transactionHash);
+    console.log("metadataUrl", metadataUrl);
+    console.log("imageUrl", imageUrl);
+
     if (!userAddress) {
       return NextResponse.json(
         { error: "Missing userAddress" },
@@ -21,18 +27,18 @@ export async function POST(
     }
 
     const collectionName =
-    module === "precompiles-overview"
-    ? "challenges-precompiles-overview"
-    : module === "web3-basics"
-    ? "challenges-web3-basics"
-    : module === "stylus-core-concepts"
-    ? "challenges-stylus-core-concepts"
-    : module === "master-defi"
-    ? "challenges-master-defi"
-    : module === "master-orbit" || module === "arbitrum-orbit"
-    ? "challenges-orbit-chain"
-    : module === "cross-chain"
-    ? "challenges-cross-chain"
+      module === "precompiles-overview"
+        ? "challenges-precompiles-overview"
+        : module === "web3-basics"
+        ? "challenges-web3-basics"
+        : module === "stylus-core-concepts"
+        ? "challenges-stylus-core-concepts"
+        : module === "master-defi" || module === "defi-arbitrum"
+        ? "challenges-master-defi"
+        : module === "master-orbit" || module === "arbitrum-orbit"
+        ? "challenges-orbit-chain"
+        : module === "cross-chain"
+        ? "challenges-cross-chain"
         : null;
 
     if (!collectionName) {
@@ -103,6 +109,8 @@ export async function GET(
       "precompiles-overview",
       "stylus-core-concepts",
       "arbitrum-orbit",
+      "master-orbit",
+      "master-defi",
       "defi-arbitrum",
       "cross-chain",
       "xcan-advocate",
@@ -141,7 +149,7 @@ export async function GET(
     const { db } = await connectToDatabase();
     const collection = db.collection(collectionName); // Updated collection name
     const doc = await collection.findOne(
-      { userAddress },
+      { userAddress: RegExp(userAddress, "i") },
       { projection: { _id: 0, certification: 1, isCompleted: 1 } }
     );
 
@@ -155,13 +163,12 @@ export async function GET(
     console.log("matchingCertification", matchingCertification);
     console.log("certifications", certifications);
     console.log("module", module);
-    
 
     return NextResponse.json({
       claimed: Boolean(matchingCertification?.claimed),
       certification: matchingCertification || null,
       isCompleted: Boolean(doc?.isCompleted),
-  });
+    });
   } catch (error: any) {
     console.error("Get certification (dynamic) error", error);
     return NextResponse.json(

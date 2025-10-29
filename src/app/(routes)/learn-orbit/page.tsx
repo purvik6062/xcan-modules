@@ -80,7 +80,19 @@ export default function LearnOrbitPage() {
   const claimNFT = async () => {
     try {
       const minted = await certificationMint("arbitrum-orbit");
-      if (minted) setAlreadyClaimed(true);
+      const response = await fetch("/api/certification/claim/arbitrum-orbit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          transactionHash: minted?.transactionHash,
+          metadataUrl: minted?.metadataUrl,
+          imageUrl: minted?.imageUrl,
+        }),
+      });
+      if (response.ok) {
+        setAlreadyClaimed(true);
+      }
     } catch { }
   };
 
