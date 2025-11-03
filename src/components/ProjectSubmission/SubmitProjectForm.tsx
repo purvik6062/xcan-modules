@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
+import ProjectPreview from "./ProjectPreview";
 
 interface TeamMember {
   name: string;
@@ -29,6 +30,22 @@ const SubmitProjectForm = () => {
   const { user } = usePrivy();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [submittedProject, setSubmittedProject] = useState<{
+    projectName: string;
+    projectDescription: string;
+    submittedBy: {
+      name: string;
+      address: string;
+      githubId: string;
+    };
+    teamMembers: TeamMember[];
+    githubRepository: string;
+    hostedProjectUrl: string;
+    projectImages: File[];
+    projectLogo: File | null;
+    demoVideoLink: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<ProjectSubmissionData>({
     projectName: "",
@@ -163,6 +180,19 @@ const SubmitProjectForm = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        // Save submitted project data for preview
+        setSubmittedProject({
+          projectName: formData.projectName,
+          projectDescription: formData.projectDescription,
+          submittedBy: formData.submittedBy,
+          teamMembers: formData.teamMembers,
+          githubRepository: formData.githubRepository,
+          hostedProjectUrl: formData.hostedProjectUrl,
+          projectImages: formData.projectImages,
+          projectLogo: formData.projectLogo, // Can be null
+          demoVideoLink: formData.demoVideoLink,
+        });
         setSubmitSuccess(true);
         // Reset form
         setFormData({
@@ -194,23 +224,49 @@ const SubmitProjectForm = () => {
 
   if (submitSuccess) {
     return (
-      <div className="bg-gradient-to-r from-emerald-900/20 to-teal-900/20 border border-emerald-500/30 rounded-2xl p-12 text-center backdrop-blur-sm">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full mb-6 shadow-lg">
-          <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+      <>
+        <div className="bg-gradient-to-r from-emerald-900/20 to-teal-900/20 border border-emerald-500/30 rounded-2xl p-12 text-center backdrop-blur-sm">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full mb-6 shadow-lg">
+            <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 className="text-3xl font-bold text-white mb-4">Project Submitted Successfully!</h3>
+          <p className="text-slate-300 mb-8 text-lg">
+            Your project has been submitted for review. It will appear in the showcase once approved.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {submittedProject && (
+              <button
+                onClick={() => setShowPreview(true)}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span>Preview Project</span>
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setSubmitSuccess(false);
+                setSubmittedProject(null);
+                setShowPreview(false);
+              }}
+              className="bg-gradient-to-r from-[#4eb991] to-[#31b085] hover:from-teal-600 hover:to-teal-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Submit Another Project
+            </button>
+          </div>
         </div>
-        <h3 className="text-3xl font-bold text-white mb-4">Project Submitted Successfully!</h3>
-        <p className="text-slate-300 mb-8 text-lg">
-          Your project has been submitted for review. It will appear in the showcase once approved.
-        </p>
-        <button
-          onClick={() => setSubmitSuccess(false)}
-          className="bg-gradient-to-r from-[#4eb991] to-[#31b085] hover:from-teal-600 hover:to-teal-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-        >
-          Submit Another Project
-        </button>
-      </div>
+        {showPreview && submittedProject && (
+          <ProjectPreview
+            project={submittedProject}
+            onClose={() => setShowPreview(false)}
+          />
+        )}
+      </>
     );
   }
 
@@ -292,14 +348,13 @@ const SubmitProjectForm = () => {
             </div>
             <div>
               <label className="block text-sm font-semibold text-slate-200 mb-3">
-                Wallet Address *
+                Wallet Address
               </label>
               <input
                 type="text"
                 name="submittedBy.address"
                 value={formData.submittedBy.address}
                 onChange={handleInputChange}
-                required
                 className="w-full px-6 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 placeholder="0x..."
               />

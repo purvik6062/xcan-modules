@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 import { Project } from "@/components/ProjectSubmission/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -89,14 +90,16 @@ const ProjectDetailsPage = () => {
               {/* Project Logo/Image */}
               <div className="flex-shrink-0">
                 {project.projectLogo ? (
-                  <Image
-                    src={project.projectLogo}
-                    alt={project.projectName}
-                    width={160}
-                    height={160}
-                    className="w-40 h-40 rounded-2xl object-cover shadow-lg"
-                    loading="eager"
-                  />
+                  <div className="w-40 h-40">
+                    <Image
+                      src={project.projectLogo}
+                      alt={project.projectName}
+                      width={600}
+                      height={600}
+                      className="w-full h-full rounded-2xl object-contain shadow-lg"
+                      loading="eager"
+                    />
+                  </div>
                 ) : (
                   <div className="w-40 h-40 bg-slate-700/50 rounded-2xl flex items-center justify-center shadow-lg">
                     <svg className="w-20 h-20 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,9 +114,41 @@ const ProjectDetailsPage = () => {
                 <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-[#4eb991] to-[#31b085] bg-clip-text text-transparent">
                   {project.projectName}
                 </h1>
-                <p className="text-slate-300 text-xl mb-8 leading-relaxed">
-                  {project.projectDescription}
-                </p>
+                <div className="prose prose-lg prose-invert max-w-none mb-8 text-slate-300 leading-relaxed">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="mb-4 last:mb-0 text-xl">{children}</p>,
+                      h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-4 mt-6 first:mt-0">{children}</h1>,
+                      h2: ({ children }) => <h2 className="text-2xl font-bold text-white mb-3 mt-5 first:mt-0">{children}</h2>,
+                      h3: ({ children }) => <h3 className="text-xl font-bold text-white mb-2 mt-4 first:mt-0">{children}</h3>,
+                      strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                      em: ({ children }) => <em className="italic">{children}</em>,
+                      code: ({ children }) => (
+                        <code className="bg-slate-700/50 px-2 py-1 rounded text-base text-blue-300 font-mono">{children}</code>
+                      ),
+                      pre: ({ children }) => (
+                        <pre className="bg-slate-900/50 p-4 rounded-lg overflow-x-auto my-4 border border-slate-700/50">
+                          {children}
+                        </pre>
+                      ),
+                      ul: ({ children }) => <ul className="list-disc list-inside mb-4 space-y-2">{children}</ul>,
+                      ol: ({ children }) => <ol className="list-decimal list-inside mb-4 space-y-2">{children}</ol>,
+                      li: ({ children }) => <li className="text-slate-300">{children}</li>,
+                      a: ({ children, href }) => (
+                        <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline">
+                          {children}
+                        </a>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-blue-500 pl-4 italic my-4 text-slate-400">
+                          {children}
+                        </blockquote>
+                      ),
+                    }}
+                  >
+                    {project.projectDescription}
+                  </ReactMarkdown>
+                </div>
 
                 {/* Submitted By */}
                 <div className="flex items-center space-x-4 mb-8">
@@ -189,13 +224,13 @@ const ProjectDetailsPage = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {project.projectImages.map((image, index) => (
-                  <div key={index} className="aspect-video bg-slate-700/50 rounded-2xl overflow-hidden shadow-lg group">
+                  <div key={index} className="aspect-auto max-h-[600px] bg-slate-700/50 rounded-2xl overflow-hidden shadow-lg group">
                     <Image
-                      width={800}
-                      height={450}
+                      width={900}
+                      height={900}
                       src={image}
                       alt={`${project.projectName} - Image ${index + 1}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
                   </div>
