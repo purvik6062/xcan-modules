@@ -117,7 +117,6 @@ export async function POST(request: NextRequest) {
       !projectName ||
       !projectDescription ||
       !submittedBy.name ||
-      !submittedBy.address ||
       !submittedBy.githubId ||
       !githubRepository ||
       !demoVideoLink
@@ -132,14 +131,6 @@ export async function POST(request: NextRequest) {
     if (projectImages.length < 2) {
       return NextResponse.json(
         { error: "At least 2 project images are required" },
-        { status: 400 }
-      );
-    }
-
-    // Validate project logo
-    if (!projectLogo) {
-      return NextResponse.json(
-        { error: "Project logo is required" },
         { status: 400 }
       );
     }

@@ -134,7 +134,6 @@ const SubmitProjectForm = () => {
         !formData.projectName ||
         !formData.projectDescription ||
         !formData.submittedBy.name ||
-        !formData.submittedBy.address ||
         !formData.submittedBy.githubId ||
         !formData.githubRepository ||
         !formData.demoVideoLink
@@ -146,12 +145,6 @@ const SubmitProjectForm = () => {
 
       if (formData.projectImages.length < 2) {
         setError("Please upload at least 2 project images");
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (!formData.projectLogo) {
-        setError("Please upload a project logo");
         setIsSubmitting(false);
         return;
       }
@@ -481,12 +474,11 @@ const SubmitProjectForm = () => {
         {/* Project Logo */}
         <div>
           <label className="block text-sm font-semibold text-slate-200 mb-3">
-            Project Logo *
+            Project Logo
           </label>
           <input
             type="file"
             accept="image/*"
-            required
             onChange={(e) => handleFileChange(e, "projectLogo")}
             className="w-full px-6 py-4 bg-slate-700/50 border border-slate-600 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gradient-to-r file:from-[#4eb991] file:to-[#31b085] file:text-white hover:file:from-teal-600 hover:file:to-teal-700 transition-all duration-200"
           />
