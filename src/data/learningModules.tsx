@@ -1,3 +1,4 @@
+import { Database } from "lucide-react";
 import React from "react";
 
 // Type definition for module icons
@@ -156,7 +157,7 @@ export interface LearningModule {
   id: string;
   title: string;
   description: string;
-  icon: (props: { className?: string }) => React.ReactElement;
+  icon: React.ComponentType<{ className?: string }>;
   level: string;
   duration?: string;
   challenges?: number;
@@ -198,7 +199,7 @@ export const learningModules: LearningModule[] = [
     title: "Stylus Core Concepts",
     description:
       "Master Arbitrum Stylus and build high-performance smart contracts with Rust. Learn WASM, constructors, storage, and advanced patterns through interactive lessons.",
-    icon: CpuChipIcon,
+    icon: CommandLineIcon,
     level: "Beginner to Intermediate",
     duration: "1-2 weeks",
     challenges: 6,
@@ -264,7 +265,7 @@ export const learningModules: LearningModule[] = [
     title: "Arbitrum Stylus",
     description:
       "Build high-performance smart contracts with Rust, C, and C++ on Arbitrum",
-    icon: CpuChipIcon,
+    icon: Database,
     level: "Intermediate to Advanced",
     duration: "3-5 weeks",
     challenges: 11,

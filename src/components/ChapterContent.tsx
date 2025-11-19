@@ -6,6 +6,7 @@ import { Section } from "../data/defiChapters";
 import { getTheoryContent, TheoryContent } from "../data/defiContent";
 import ReactMarkdown from "react-markdown";
 import CodeBlock from "./CodeBlock";
+import GitHubAuthHandler from "./GitHubAuthHandler";
 
 interface ChapterContentProps {
   section: Section;
@@ -38,7 +39,7 @@ export default function ChapterContent({
   };
 
   // Check if section has content directly (for orbit and other modules with inline content)
-  const hasDirectContent = section.content && typeof section.content === 'object' && 
+  const hasDirectContent = section.content && typeof section.content === 'object' &&
     ('story' in section.content || 'questions' in section.content);
 
   // Get comprehensive theory content (for DeFi module)
@@ -724,7 +725,7 @@ async function delegatedTransfer(signer, tokenAddr, spender, to, amount) {
             Example demonstrating how to interact with DeFi protocols using ethers.js
           </p>
           <CodeBlock className="language-javascript">
-{`// Example DeFi interaction
+            {`// Example DeFi interaction
 import { ethers } from 'ethers';
 
 const provider = new ethers.providers.JsonRpcProvider('https://arb1.arbitrum.io/rpc');
@@ -749,269 +750,315 @@ async function interactWithProtocol() {
     </div>
   );
 
-  // If section has direct content with story and questions, render it
-  if (hasDirectContent && section.content && section.content.story) {
-    return (
-      <div className="w-full">
-        {/* Story + Quiz Content (if there are questions) */}
-        {section.content.questions && section.content.questions.length > 0 && (
-          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-            <div className="w-full max-w-4xl mx-auto px-4">
-              <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
-                <div className="mb-3">{renderTypeBadge(section.type)}</div>
-                {/* Story Content */}
-                <div className="prose prose-lg max-w-none prose-invert mb-8">
-                  <ReactMarkdown
-                    components={{
-                      h1: ({ children }) => (
-                        <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
-                      ),
-                      h2: ({ children }) => (
-                        <h2 className="text-2xl font-semibold text-emerald-300 mb-4 mt-8">{children}</h2>
-                      ),
-                      h3: ({ children }) => (
-                        <h3 className="text-xl font-semibold text-teal-300 mb-3 mt-6">{children}</h3>
-                      ),
-                      p: ({ children }) => (
-                        <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
-                      ),
-                      strong: ({ children }) => <strong className="text-emerald-300 font-semibold">{children}</strong>,
-                      em: ({ children }) => <em className="text-teal-300 italic">{children}</em>,
-                      ul: ({ children }) => (
-                        <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
-                      ),
-                      li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
-                      code: ({ node, className, children, ...props }: any) => {
-                        const codeString = String(children).replace(/\n$/, '');
-                        const isInline = !className;
-                        return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
-                      },
-                      pre: ({ children }) => <>{children}</>
-                    }}
-                  >
-                    {section.content.story}
-                  </ReactMarkdown>
-                </div>
-
-                {/* Question */}
-                <div className="bg-slate-700 rounded-xl p-6 border border-slate-600">
-                  <h3 className="text-lg font-semibold text-white mb-4">
-                    {section.content.questions[0].question}
-                  </h3>
-                  <div className="space-y-3 mb-6">
-                    {section.content.questions[0].options.map((option: string, index: number) => {
-                      const correctIndex = section.content!.questions![0].correctAnswer;
-                      const isSelected = inlineSelectedIndex === index;
-                      const isCorrect = inlineAnswered && index === correctIndex;
-                      const isWrongSelected = inlineAnswered && isSelected && index !== correctIndex;
-
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            if (inlineAnswered) return;
-                            setInlineSelectedIndex(index);
-                            setInlineAnswered(true);
-                            // Mark complete shortly after showing feedback
-                            setTimeout(() => handleComplete(), 1200);
-                          }}
-                          disabled={inlineAnswered}
-                          className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
-                            inlineAnswered
-                              ? isCorrect
-                                ? "border-green-500 bg-green-900/20 text-green-300"
-                                : isWrongSelected
-                                  ? "border-red-500 bg-red-900/20 text-red-300"
-                                  : "border-slate-600 bg-slate-700 text-gray-400"
-                              : "border-slate-500 hover:border-emerald-500 hover:bg-slate-600 text-gray-200 hover:text-white"
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div
-                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-bold ${
-                                inlineAnswered
-                                  ? isCorrect
-                                    ? "border-green-500 bg-green-500 text-white"
-                                    : isWrongSelected
-                                      ? "border-red-500 bg-red-500 text-white"
-                                      : "border-gray-600"
-                                  : "border-gray-600"
-                              }`}
-                            >
-                              {inlineAnswered && isCorrect && "✓"}
-                              {inlineAnswered && isWrongSelected && "✗"}
-                              {!inlineAnswered && String.fromCharCode(65 + index)}
-                            </div>
-                            <span className="flex-1">{option}</span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Explanation */}
-                  {inlineAnswered && (
-                    <div
-                      className={`p-4 rounded-lg ${
-                        inlineSelectedIndex === section.content!.questions![0].correctAnswer
-                          ? "bg-green-900/20 border border-green-700"
-                          : "bg-orange-900/20 border border-orange-700"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xl">
-                          {inlineSelectedIndex === section.content!.questions![0].correctAnswer ? "🎉" : "💡"}
-                        </span>
-                        <span
-                          className={`font-bold ${
-                            inlineSelectedIndex === section.content!.questions![0].correctAnswer
-                              ? "text-green-300"
-                              : "text-orange-300"
-                          }`}
-                        >
-                          {inlineSelectedIndex === section.content!.questions![0].correctAnswer
-                            ? "Correct!"
-                            : "Not quite right"}
-                        </span>
-                      </div>
-                      {section.content!.questions![0].explanation && (
-                        <p
-                          className={`text-sm ${
-                            inlineSelectedIndex === section.content!.questions![0].correctAnswer
-                              ? "text-green-400"
-                              : "text-orange-400"
-                          }`}
-                        >
-                          {section.content!.questions![0].explanation}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Story-only Content (no questions) */}
-        {(!section.content.questions || section.content.questions.length === 0) && (
-          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-            <div className="w-full max-w-4xl mx-auto px-4">
-              <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
-                <div className="mb-3">{renderTypeBadge(section.type)}</div>
-                <div className="prose prose-lg max-w-none prose-invert">
-                  <ReactMarkdown
-                    components={{
-                      h1: ({ children }) => (
-                        <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
-                      ),
-                      h2: ({ children }) => (
-                        <h2 className="text-2xl font-semibold text-emerald-300 mb-4 mt-8">{children}</h2>
-                      ),
-                      h3: ({ children }) => (
-                        <h3 className="text-xl font-semibold text-teal-300 mb-3 mt-6">{children}</h3>
-                      ),
-                      p: ({ children }) => (
-                        <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
-                      ),
-                      strong: ({ children }) => <strong className="text-emerald-300 font-semibold">{children}</strong>,
-                      em: ({ children }) => <em className="text-teal-300 italic">{children}</em>,
-                      ul: ({ children }) => (
-                        <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
-                      ),
-                      li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
-                      code: ({ node, className, children, ...props }: any) => {
-                        const codeString = String(children).replace(/\n$/, '');
-                        const isInline = !className;
-                        return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
-                      },
-                      pre: ({ children }) => <>{children}</>
-                    }}
-                  >
-                    {section.content.story}
-                  </ReactMarkdown>
-                </div>
-
-                {/* Completion Button */}
-                <div className="mt-8 pt-6 border-t border-gray-600">
-                  <div className="flex justify-center">
-                    <motion.button
-                      onClick={handleComplete}
-                      disabled={completed}
-                      className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${
-                        completed
-                          ? "bg-green-600 text-white cursor-default"
-                          : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl"
-                      }`}
-                      whileHover={!completed ? { scale: 1.05 } : {}}
-                      whileTap={!completed ? { scale: 0.95 } : {}}
-                    >
-                      {completed ? (
-                        <span className="flex items-center gap-2">
-                          <span>✓</span>
-                          Section Completed!
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-2">
-                          <span>📝</span>
-                          Mark as Complete
-                        </span>
-                      )}
-                    </motion.button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Content based on section type */}
-      {section.type === "theory" && renderTheoryContent(content)}
+    <GitHubAuthHandler
+      onAuthComplete={() => {
+        if (!completed) {
+          handleComplete();
+        }
+      }}
+      onAuthError={(error) => {
+        console.error("GitHub authentication error:", error);
+      }}
+    >
+      {({ isAuthenticating, hasGithub, triggerAuth }) => {
+        const handleMarkAsCompleteClick = () => {
+          if (completed) return;
 
-      {section.type === "hands-on" && renderHandsOnContent()}
+          if (hasGithub) {
+            handleComplete();
+            return;
+          }
 
-      {section.type === "code-walkthrough" && renderCodeWalkthroughContent()}
+          triggerAuth();
+        };
 
-      {/* Default content for other types: show structured theory fallback */}
-      {!["theory", "code-walkthrough", "hands-on"].includes(section.type) &&
-        renderTheoryContent(content)}
-
-      {/* Completion Button */}
-      <div className="mt-12 pt-8 border-t border-slate-600">
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-300">
-            Estimated time: {section.estimatedTime}
-          </div>
-
-          <motion.button
-            onClick={handleComplete}
-            disabled={completed}
-            className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${completed
-              ? "bg-green-600 text-white cursor-default"
-              : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl"
-              }`}
-            whileHover={!completed ? { scale: 1.05 } : {}}
-            whileTap={!completed ? { scale: 0.95 } : {}}
-          >
-            {completed ? (
-              <span className="hover:cursor-pointer flex items-center gap-2">
+        const renderCompletionButtonContent = () => {
+          if (completed) {
+            return (
+              <span className="flex items-center gap-2">
                 <span>✓</span>
                 Section Completed!
               </span>
-            ) : (
-              <span className="hover:cursor-pointer flex items-center gap-2">
-                <span>📝</span>
-                Mark as Complete
+            );
+          }
+
+          if (isAuthenticating) {
+            return (
+              <span className="flex items-center gap-2">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span>Connecting GitHub...</span>
               </span>
-            )}
-          </motion.button>
-        </div>
-      </div>
-    </div>
+            );
+          }
+
+          return (
+            <span className="flex items-center gap-2">
+              <span>📝</span>
+              Mark as Complete
+            </span>
+          );
+        };
+
+        // If section has direct content with story and questions, render it
+        if (hasDirectContent && section.content && section.content.story) {
+          return (
+            <div className="w-full">
+              {/* Story + Quiz Content (if there are questions) */}
+              {section.content.questions && section.content.questions.length > 0 && (
+                <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+                  <div className="w-full max-w-4xl mx-auto px-4">
+                    <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+                      <div className="mb-3">{renderTypeBadge(section.type)}</div>
+                      {/* Story Content */}
+                      <div className="prose prose-lg max-w-none prose-invert mb-8">
+                        <ReactMarkdown
+                          components={{
+                            h1: ({ children }) => (
+                              <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
+                            ),
+                            h2: ({ children }) => (
+                              <h2 className="text-2xl font-semibold text-emerald-300 mb-4 mt-8">{children}</h2>
+                            ),
+                            h3: ({ children }) => (
+                              <h3 className="text-xl font-semibold text-teal-300 mb-3 mt-6">{children}</h3>
+                            ),
+                            p: ({ children }) => (
+                              <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
+                            ),
+                            strong: ({ children }) => <strong className="text-emerald-300 font-semibold">{children}</strong>,
+                            em: ({ children }) => <em className="text-teal-300 italic">{children}</em>,
+                            ul: ({ children }) => (
+                              <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
+                            ),
+                            li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
+                            code: ({ node, className, children, ...props }: any) => {
+                              const codeString = String(children).replace(/\n$/, '');
+                              const isInline = !className;
+                              return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
+                            },
+                            pre: ({ children }) => <>{children}</>
+                          }}
+                        >
+                          {section.content.story}
+                        </ReactMarkdown>
+                      </div>
+
+                      {/* Question */}
+                      <div className="bg-slate-700 rounded-xl p-6 border border-slate-600">
+                        <h3 className="text-lg font-semibold text-white mb-4">
+                          {section.content.questions[0].question}
+                        </h3>
+                        <div className="space-y-3 mb-6">
+                          {section.content.questions[0].options.map((option: string, index: number) => {
+                            const correctIndex = section.content!.questions![0].correctAnswer;
+                            const isSelected = inlineSelectedIndex === index;
+                            const isCorrect = inlineAnswered && index === correctIndex;
+                            const isWrongSelected = inlineAnswered && isSelected && index !== correctIndex;
+
+                            return (
+                              <button
+                                key={index}
+                                onClick={() => {
+                                  if (inlineAnswered) return;
+                                  setInlineSelectedIndex(index);
+                                  setInlineAnswered(true);
+                                  // Mark complete shortly after showing feedback
+                                  setTimeout(() => handleComplete(), 1200);
+                                }}
+                                disabled={inlineAnswered}
+                                className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${inlineAnswered
+                                  ? isCorrect
+                                    ? "border-green-500 bg-green-900/20 text-green-300"
+                                    : isWrongSelected
+                                      ? "border-red-500 bg-red-900/20 text-red-300"
+                                      : "border-slate-600 bg-slate-700 text-gray-400"
+                                  : "border-slate-500 hover:border-emerald-500 hover:bg-slate-600 text-gray-200 hover:text-white"
+                                  }`}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-bold ${inlineAnswered
+                                      ? isCorrect
+                                        ? "border-green-500 bg-green-500 text-white"
+                                        : isWrongSelected
+                                          ? "border-red-500 bg-red-500 text-white"
+                                          : "border-gray-600"
+                                      : "border-gray-600"
+                                      }`}
+                                  >
+                                    {inlineAnswered && isCorrect && "✓"}
+                                    {inlineAnswered && isWrongSelected && "✗"}
+                                    {!inlineAnswered && String.fromCharCode(65 + index)}
+                                  </div>
+                                  <span className="flex-1">{option}</span>
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        {/* Explanation */}
+                        {inlineAnswered && (
+                          <div
+                            className={`p-4 rounded-lg ${inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                              ? "bg-green-900/20 border border-green-700"
+                              : "bg-orange-900/20 border border-orange-700"
+                              }`}
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-xl">
+                                {inlineSelectedIndex === section.content!.questions![0].correctAnswer ? "🎉" : "💡"}
+                              </span>
+                              <span
+                                className={`font-bold ${inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                                  ? "text-green-300"
+                                  : "text-orange-300"
+                                  }`}
+                              >
+                                {inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                                  ? "Correct!"
+                                  : "Not quite right"}
+                              </span>
+                            </div>
+                            {section.content!.questions![0].explanation && (
+                              <p
+                                className={`text-sm ${inlineSelectedIndex === section.content!.questions![0].correctAnswer
+                                  ? "text-green-400"
+                                  : "text-orange-400"
+                                  }`}
+                              >
+                                {section.content!.questions![0].explanation}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Story-only Content (no questions) */}
+              {(!section.content.questions || section.content.questions.length === 0) && (
+                <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+                  <div className="w-full max-w-4xl mx-auto px-4">
+                    <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+                      <div className="mb-3">{renderTypeBadge(section.type)}</div>
+                      <div className="prose prose-lg max-w-none prose-invert">
+                        <ReactMarkdown
+                          components={{
+                            h1: ({ children }) => (
+                              <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>
+                            ),
+                            h2: ({ children }) => (
+                              <h2 className="text-2xl font-semibold text-emerald-300 mb-4 mt-8">{children}</h2>
+                            ),
+                            h3: ({ children }) => (
+                              <h3 className="text-xl font-semibold text-teal-300 mb-3 mt-6">{children}</h3>
+                            ),
+                            p: ({ children }) => (
+                              <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>
+                            ),
+                            strong: ({ children }) => <strong className="text-emerald-300 font-semibold">{children}</strong>,
+                            em: ({ children }) => <em className="text-teal-300 italic">{children}</em>,
+                            ul: ({ children }) => (
+                              <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>
+                            ),
+                            li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
+                            code: ({ node, className, children, ...props }: any) => {
+                              const codeString = String(children).replace(/\n$/, '');
+                              const isInline = !className;
+                              return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
+                            },
+                            pre: ({ children }) => <>{children}</>
+                          }}
+                        >
+                          {section.content.story}
+                        </ReactMarkdown>
+                      </div>
+
+                      {/* Completion Button */}
+                      <div className="mt-8 pt-6 border-t border-gray-600">
+                        <div className="flex justify-center">
+                          <motion.button
+                            onClick={handleMarkAsCompleteClick}
+                            disabled={completed || isAuthenticating}
+                            className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${completed
+                              ? "bg-green-600 text-white cursor-default"
+                              : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl"
+                              }`}
+                            whileHover={!completed && !isAuthenticating ? { scale: 1.05 } : {}}
+                            whileTap={!completed && !isAuthenticating ? { scale: 0.95 } : {}}
+                          >
+                            {renderCompletionButtonContent()}
+                          </motion.button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        return (
+          <div className="max-w-6xl mx-auto">
+            {/* Content based on section type */}
+            {section.type === "theory" && renderTheoryContent(content)}
+
+            {section.type === "hands-on" && renderHandsOnContent()}
+
+            {section.type === "code-walkthrough" && renderCodeWalkthroughContent()}
+
+            {/* Default content for other types: show structured theory fallback */}
+            {!["theory", "code-walkthrough", "hands-on"].includes(section.type) &&
+              renderTheoryContent(content)}
+
+            {/* Completion Button */}
+            <div className="mt-12 pt-8 border-t border-slate-600">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-300">
+                  Estimated time: {section.estimatedTime}
+                </div>
+
+                <motion.button
+                  onClick={handleMarkAsCompleteClick}
+                  disabled={completed || isAuthenticating}
+                  className={`px-8 py-4 rounded-lg font-medium transition-all duration-200 ${completed
+                    ? "bg-green-600 text-white cursor-default"
+                    : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl"
+                    }`}
+                  whileHover={!completed && !isAuthenticating ? { scale: 1.05 } : {}}
+                  whileTap={!completed && !isAuthenticating ? { scale: 0.95 } : {}}
+                >
+                  {renderCompletionButtonContent()}
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        );
+      }}
+    </GitHubAuthHandler>
   );
 }

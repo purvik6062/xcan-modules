@@ -8,6 +8,7 @@ import CrossChainContent from "../../../../components/cross-chain/CrossChainCont
 import ChapterCompletionModal from "../../../../components/cross-chain/ChapterCompletionModal";
 import QuizComponent from "../../../../components/QuizComponent";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
+import LearningModuleSidebar from "../../../../components/LearningModuleSidebar";
 
 export default function CrossChainChapterPage() {
   const params = useParams();
@@ -76,14 +77,19 @@ export default function CrossChainChapterPage() {
 
   if (!chapter) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">
-            Chapter Not Found
-          </h1>
-          <p className="text-gray-300">
-            The Cross-Chain Development chapter you're looking for doesn't exist.
-          </p>
+      <div className="min-h-screen bg-gray-900">
+        <div className="flex min-h-screen flex-col lg:flex-row">
+          <LearningModuleSidebar currentModuleId="cross-chain" backHref="/learn-cross-chain" />
+          <div className="flex flex-1 items-center justify-center px-6">
+            <div className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900/80 p-8 text-center shadow-lg">
+              <h1 className="mb-4 text-2xl font-bold text-white">
+                Chapter Not Found
+              </h1>
+              <p className="text-gray-300">
+                The Cross-Chain Development chapter you&apos;re looking for doesn&apos;t exist.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -181,124 +187,132 @@ export default function CrossChainChapterPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <motion.div
-          className="relative w-24 h-24"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-        >
-          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
-          <div className="absolute inset-2 rounded-full border-t-4 border-blue-400" />
-        </motion.div>
+      <div className="min-h-screen bg-gray-900">
+        <div className="flex min-h-screen flex-col lg:flex-row">
+          <LearningModuleSidebar currentModuleId="cross-chain" backHref="/learn-cross-chain" />
+          <div className="flex flex-1 items-center justify-center">
+            <motion.div
+              className="relative h-24 w-24"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+            >
+              <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
+              <div className="absolute inset-2 rounded-full border-t-4 border-blue-400" />
+            </motion.div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-900">
-      {/* Chapter Header with Progress */}
-      <div className="bg-gray-800 border-b border-gray-700 p-6">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{chapter.title}</h1>
-              <p className="text-gray-300">{chapter.description}</p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-400 mb-1">Chapter Progress</div>
-              <div className="text-2xl font-bold text-blue-400">
-                {Math.round(progress)}%
-              </div>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-700 rounded-full h-3">
-            <motion.div
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
-            <span>{completedSections.length}/{availableSections.length} sections completed</span>
-            <span>{chapter.duration}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Chapter Content */}
-      <div className="py-8">
-        {currentSection.status === "available" ? (
-          <>
-            {currentSection.type === "quiz" ? (
-              <QuizComponent
-                questions={(currentSection.content as any)?.questions || crossChainQuizQuestions[chapterId] || []}
-                onComplete={async () => {
-                  // Gate quiz attempt completion behind GitHub auth
-                  if (address && !localStorage.getItem("github_username")) {
-                    await ensureGitHubAuth();
-                    return;
-                  }
-                  handleSectionComplete(currentSection.id);
-                }}
-              />
-            ) : (
-              <div className="">
-                <CrossChainContent
-                  section={currentSection}
-                  chapterId={chapterId}
-                  onComplete={() =>
-                    handleSectionComplete(currentSection.id)
-                  }
-                />
-
-                {/* Section Navigation */}
-                <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
-                  <button
-                    onClick={goToPreviousSection}
-                    disabled={!hasPreviousAvailableSection()}
-                    className={`px-6 py-3 ml-4 rounded-lg transition-all duration-200 ${!hasPreviousAvailableSection()
-                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                      : "bg-gray-700 text-white hover:bg-gray-600"
-                      }`}
-                  >
-                    ← Previous Section
-                  </button>
-
-                  <div className="text-sm text-gray-400">
-                    Section {currentSectionIndex + 1} of {chapter.sections.length}
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        <LearningModuleSidebar currentModuleId="cross-chain" backHref="/learn-cross-chain" />
+        <div className="flex-1">
+          {/* Chapter Header with Progress */}
+          <div className="border-b border-gray-700 bg-gray-800 p-6">
+            <div className="container mx-auto">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h1 className="mb-2 text-3xl font-bold text-white">{chapter.title}</h1>
+                  <p className="text-gray-300">{chapter.description}</p>
+                </div>
+                <div className="text-right">
+                  <div className="mb-1 text-sm text-gray-400">Chapter Progress</div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {Math.round(progress)}%
                   </div>
-
-                  <button
-                    onClick={goToNextSection}
-                    disabled={!hasNextAvailableSection()}
-                    className={`px-6 py-3 mr-4 rounded-lg transition-all duration-200 ${!hasNextAvailableSection()
-                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                      : "bg-gray-700 text-white hover:bg-gray-600"
-                      }`}
-                  >
-                    Next Section →
-                  </button>
                 </div>
               </div>
-            )}
-          </>
-        ) : (
-          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-            <div className="text-left bg-gray-800 rounded-2xl p-8 border border-gray-700 max-w-2xl w-full">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">🧩</span>
-                <h3 className="text-xl font-bold text-white">
-                  Reference Code Template
-                </h3>
+
+              {/* Progress Bar */}
+              <div className="h-3 w-full rounded-full bg-gray-700">
+                <motion.div
+                  className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.5 }}
+                />
               </div>
-              <p className="text-gray-300 mb-4">
-                Review this minimal template to understand the concept before continuing. You don’t need to run it.
-              </p>
-              <pre className="bg-gray-900 text-gray-200 p-4 rounded-lg overflow-x-auto text-sm"><code>{`// Approve + Lock (conceptual)
+
+              <div className="mt-2 flex items-center justify-between text-sm text-gray-400">
+                <span>{completedSections.length}/{availableSections.length} sections completed</span>
+                <span>{chapter.duration}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Chapter Content */}
+          <div className="py-8">
+            {currentSection.status === "available" ? (
+              <>
+                {currentSection.type === "quiz" ? (
+                  <QuizComponent
+                    questions={(currentSection.content as any)?.questions || crossChainQuizQuestions[chapterId] || []}
+                    onComplete={async () => {
+                      // Gate quiz attempt completion behind GitHub auth
+                      if (address && !localStorage.getItem("github_username")) {
+                        await ensureGitHubAuth();
+                        return;
+                      }
+                      handleSectionComplete(currentSection.id);
+                    }}
+                  />
+                ) : (
+                  <div className="">
+                    <CrossChainContent
+                      section={currentSection}
+                      chapterId={chapterId}
+                      onComplete={() =>
+                        handleSectionComplete(currentSection.id)
+                      }
+                    />
+
+                    {/* Section Navigation */}
+                    <div className="mt-8 flex items-center justify-between border-t border-gray-700 pt-6">
+                      <button
+                        onClick={goToPreviousSection}
+                        disabled={!hasPreviousAvailableSection()}
+                        className={`ml-4 rounded-lg px-6 py-3 transition-all duration-200 ${!hasPreviousAvailableSection()
+                          ? "cursor-not-allowed bg-gray-700 text-gray-500"
+                          : "bg-gray-700 text-white hover:bg-gray-600"
+                          }`}
+                      >
+                        ← Previous Section
+                      </button>
+
+                      <div className="text-sm text-gray-400">
+                        Section {currentSectionIndex + 1} of {chapter.sections.length}
+                      </div>
+
+                      <button
+                        onClick={goToNextSection}
+                        disabled={!hasNextAvailableSection()}
+                        className={`mr-4 rounded-lg px-6 py-3 transition-all duration-200 ${!hasNextAvailableSection()
+                          ? "cursor-not-allowed bg-gray-700 text-gray-500"
+                          : "bg-gray-700 text-white hover:bg-gray-600"
+                          }`}
+                      >
+                        Next Section →
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex min-h-screen items-center justify-center bg-gray-900">
+                <div className="w-full max-w-2xl rounded-2xl border border-gray-700 bg-gray-800 p-8 text-left">
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="text-2xl">🧩</span>
+                    <h3 className="text-xl font-bold text-white">
+                      Reference Code Template
+                    </h3>
+                  </div>
+                  <p className="mb-4 text-gray-300">
+                    Review this minimal template to understand the concept before continuing. You don’t need to run it.
+                  </p>
+                  <pre className="overflow-x-auto rounded-lg bg-gray-900 p-4 text-sm text-gray-200"><code>{`// Approve + Lock (conceptual)
 import { ethers } from 'ethers';
 
 const erc20Abi = [
@@ -315,19 +329,21 @@ async function approveAndLock(signer, token, lock, amountEth) {
   const l = new ethers.Contract(lock, lockAbi, signer);
   await (await l.lockTokens(amount)).wait();
 }`}</code></pre>
-            </div>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      {/* Chapter Completion Modal */}
-      <ChapterCompletionModal
-        isOpen={showCompletionModal}
-        onClose={() => setShowCompletionModal(false)}
-        chapterTitle={chapter.title}
-        nextChapterId={nextChapter?.id}
-        nextChapterTitle={nextChapter?.title}
-      />
+          {/* Chapter Completion Modal */}
+          <ChapterCompletionModal
+            isOpen={showCompletionModal}
+            onClose={() => setShowCompletionModal(false)}
+            chapterTitle={chapter.title}
+            nextChapterId={nextChapter?.id}
+            nextChapterTitle={nextChapter?.title}
+          />
+        </div>
+      </div>
     </div>
   );
 }
