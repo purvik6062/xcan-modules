@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
+import {
+  getModuleData,
+  updateModuleField,
+  normalizeModuleId,
+  MODULE_ID_MAP,
+  type ModuleIdentifier,
+} from "@/lib/database/module-collections";
 
 // One-time certificate generation per module per address
 // POST: mark as generated with optional display name
 // GET: check if generated
-
-const MODULE_TO_COLLECTION: Record<string, string> = {
-  "precompiles-overview": "challenges-precompiles-overview",
-  "web3-basics": "challenges-web3-basics",
-  "stylus-core-concepts": "challenges-stylus-core-concepts",
-  "master-defi": "challenges-master-defi",
-  "master-orbit": "challenges-orbit-chain",
-  "cross-chain": "challenges-cross-chain",
-};
 
 export async function GET(
   request: NextRequest,
@@ -31,42 +29,41 @@ export async function GET(
     }
 
     const levelKey = searchParams.get("levelKey") || undefined;
-    const collectionName = MODULE_TO_COLLECTION[module];
-    if (!collectionName) {
-      // Special case: arbitrum-stylus uses minted-nft with multiple levels
-      if (module === "arbitrum-stylus") {
-        const { db } = await connectToDatabase();
-        const collection = db.collection("minted-nft");
-        const doc = await collection.findOne(
-          { userAddress },
-          { projection: { _id: 0, certificates: 1 } }
-        );
-        const certs: any[] = Array.isArray(doc?.certificates)
-          ? (doc as any).certificates
-          : [];
-        const matched = levelKey
-          ? certs.find((c: any) => c?.levelKey === levelKey)
-          : undefined;
-        return NextResponse.json({
-          generated: Boolean(matched),
-          name: matched?.name || null,
-        });
-      }
+
+    // Special case: arbitrum-stylus uses minted-nft with multiple levels
+    if (module === "arbitrum-stylus") {
+      const { db } = await connectToDatabase();
+      const collection = db.collection("minted-nft");
+      const doc = await collection.findOne(
+        { userAddress },
+        { projection: { _id: 0, certificates: 1 } }
+      );
+      const certs: any[] = Array.isArray(doc?.certificates)
+        ? (doc as any).certificates
+        : [];
+      const matched = levelKey
+        ? certs.find((c: any) => c?.levelKey === levelKey)
+        : undefined;
+      return NextResponse.json({
+        generated: Boolean(matched),
+        name: matched?.name || null,
+      });
+    }
+
+    if (!MODULE_ID_MAP[module]) {
       return NextResponse.json(
         { error: "Unsupported module" },
         { status: 400 }
       );
     }
+    const moduleId = normalizeModuleId(module as ModuleIdentifier);
 
     const { db } = await connectToDatabase();
-    const collection = db.collection(collectionName);
-    const doc = await collection.findOne(
-      { userAddress },
-      { projection: { _id: 0, certificateGenerated: 1, certificateName: 1 } }
-    );
+    const moduleData = await getModuleData(db, userAddress, moduleId);
+
     return NextResponse.json({
-      generated: Boolean(doc?.certificateGenerated),
-      name: doc?.certificateName || null,
+      generated: Boolean(moduleData?.certificateGenerated),
+      name: moduleData?.certificateName || null,
     });
   } catch (error: any) {
     console.error("Certificate generate GET error", error);
@@ -95,82 +92,89 @@ export async function POST(
       );
     }
 
-    const collectionName = MODULE_TO_COLLECTION[module];
-    if (!collectionName) {
-      if (module === "arbitrum-stylus") {
-        const { db } = await connectToDatabase();
-        const collection = db.collection("minted-nft");
-        if (!levelKey) {
-          return NextResponse.json(
-            { error: "Missing levelKey" },
-            { status: 400 }
-          );
-        }
-        // ensure that user minted this level
-        const existing = await collection.findOne(
-          { userAddress, "mintedLevels.levelKey": levelKey },
-          { projection: { _id: 0, certificates: 1 } }
+    // Special case: arbitrum-stylus uses minted-nft with multiple levels
+    if (module === "arbitrum-stylus") {
+      const { db } = await connectToDatabase();
+      const collection = db.collection("minted-nft");
+      if (!levelKey) {
+        return NextResponse.json(
+          { error: "Missing levelKey" },
+          { status: 400 }
         );
-        if (!existing) {
-          return NextResponse.json(
-            { error: "Level not minted" },
-            { status: 403 }
-          );
-        }
-        const already = Array.isArray((existing as any).certificates)
-          ? (existing as any).certificates.some(
-              (c: any) => c?.levelKey === levelKey
-            )
-          : false;
-        if (already) {
-          return NextResponse.json({ success: true, already: true });
-        }
-        await collection.updateOne(
-          { userAddress },
-          {
-            $set: { updatedAt: new Date() },
-            // Use $addToSet with $each to avoid TS array typing complaints and prevent duplicates
-            $addToSet: {
-              certificates: {
-                $each: [
-                  { levelKey, name: displayName, generatedAt: new Date() },
-                ],
-              },
-            },
-          } as any,
-          { upsert: true }
-        );
-        return NextResponse.json({ success: true });
       }
+      // ensure that user minted this level
+      const existing = await collection.findOne(
+        { userAddress, "mintedLevels.levelKey": levelKey },
+        { projection: { _id: 0, certificates: 1 } }
+      );
+      if (!existing) {
+        return NextResponse.json(
+          { error: "Level not minted" },
+          { status: 403 }
+        );
+      }
+      const already = Array.isArray((existing as any).certificates)
+        ? (existing as any).certificates.some(
+            (c: any) => c?.levelKey === levelKey
+          )
+        : false;
+      if (already) {
+        return NextResponse.json({ success: true, already: true });
+      }
+      await collection.updateOne(
+        { userAddress },
+        {
+          $set: { updatedAt: new Date() },
+          // Use $addToSet with $each to avoid TS array typing complaints and prevent duplicates
+          $addToSet: {
+            certificates: {
+              $each: [{ levelKey, name: displayName, generatedAt: new Date() }],
+            },
+          },
+        } as any,
+        { upsert: true }
+      );
+      return NextResponse.json({ success: true });
+    }
+
+    if (!MODULE_ID_MAP[module]) {
       return NextResponse.json(
         { error: "Unsupported module" },
         { status: 400 }
       );
     }
+    const moduleId = normalizeModuleId(module as ModuleIdentifier);
 
     const { db } = await connectToDatabase();
-    const collection = db.collection(collectionName);
 
     // Only set if not already generated
-    const existing = await collection.findOne(
-      { userAddress },
-      { projection: { certificateGenerated: 1 } }
-    );
+    const existing = await getModuleData(db, userAddress, moduleId);
     if (existing?.certificateGenerated) {
       return NextResponse.json({ success: true, already: true });
     }
 
-    await collection.updateOne(
-      { userAddress },
-      {
-        $set: {
-          certificateGenerated: true,
-          certificateName: displayName,
-          certificateGeneratedAt: new Date(),
-          updatedAt: new Date(),
-        },
-        $setOnInsert: { createdAt: new Date() },
-      },
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "certificateGenerated",
+      true,
+      { upsert: true }
+    );
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "certificateName",
+      displayName,
+      { upsert: true }
+    );
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "certificateGeneratedAt",
+      new Date(),
       { upsert: true }
     );
 

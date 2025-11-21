@@ -114,7 +114,6 @@ export interface NFTModule {
   status: "available" | "coming-soon";
   gradient: string;
   database: "mongodb" | "postgres";
-  collectionName?: string; // For MongoDB modules
   href: string; // For navigation
   features: string[];
 }
@@ -132,7 +131,6 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-purple-500 to-blue-600",
     database: "mongodb",
-    collectionName: "challenges-web3-basics",
     href: "/learn-web3-basics",
     features: [
       "Story-Based Learning",
@@ -153,7 +151,6 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-blue-500 to-cyan-500",
     database: "mongodb",
-    collectionName: "challenges-stylus-core-concepts",
     href: "/learn-stylus",
     features: [
       "Rust & WASM Fundamentals",
@@ -196,7 +193,6 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-emerald-500 to-teal-600",
     database: "mongodb",
-    collectionName: "challenges-arbitrum-orbit",
     href: "/learn-orbit",
     features: [
       "Orbit Fundamentals",
@@ -239,7 +235,6 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-blue-500 to-cyan-500",
     database: "mongodb",
-    collectionName: "challenges-defi-arbitrum",
     href: "/learn-defi",
     features: [
       "Fundamentals, DEXs, Vaults, Security",
@@ -261,7 +256,6 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-blue-500 to-cyan-500",
     database: "mongodb",
-    collectionName: "challenges-cross-chain",
     href: "/learn-cross-chain",
     features: [
       "Foundations & Real‑World Analogies",
@@ -284,7 +278,6 @@ export const nftModules: NFTModule[] = [
     status: "available",
     gradient: "from-blue-500 to-indigo-600",
     database: "mongodb",
-    collectionName: "challenges-precompiles-overview",
     href: "/challenges",
     features: [
       "Interactive Challenges",

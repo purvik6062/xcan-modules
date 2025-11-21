@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
+import { getAllModuleData } from "@/lib/database/module-collections";
 
-// Module configuration with display names
+// Module configuration with display names and IDs
 const MODULE_CONFIG = {
-  "challenges-web3-basics": { name: "Web3 Basics", id: "web3-basics" },
-  "challenges-stylus-core-concepts": { name: "Stylus Core Concepts", id: "stylus-core-concepts" },
-  "challenges-precompiles-overview": { name: "Precompile Playground", id: "precompiles-overview" },
-  "challenges-cross-chain": { name: "Cross-Chain Development", id: "cross-chain" },
-  "challenges-master-defi": { name: "Master DeFi on Arbitrum", id: "master-defi" },
-  "challenges-orbit-chain": { name: "Master Arbitrum Orbit", id: "master-orbit" },
+  "web3-basics": { name: "Web3 Basics", id: "web3-basics" },
+  "stylus-core-concepts": { name: "Stylus Core Concepts", id: "stylus-core-concepts" },
+  "precompiles-overview": { name: "Precompile Playground", id: "precompiles-overview" },
+  "cross-chain": { name: "Cross-Chain Development", id: "cross-chain" },
+  "master-defi": { name: "Master DeFi on Arbitrum", id: "master-defi" },
+  "master-orbit": { name: "Master Arbitrum Orbit", id: "master-orbit" },
 } as const;
 
 export async function GET(request: NextRequest) {
@@ -26,17 +27,8 @@ export async function GET(request: NextRequest) {
     const { db } = await connectToDatabase();
     const normalizedAddress = userAddress.toLowerCase();
 
-    // Projection for optimal performance - only fetch needed fields
-    const projection = {
-      _id: 0,
-      chapters: 1,
-      completedChapters: 1,
-      isCompleted: 1,
-      updatedAt: 1,
-    };
-
-    // Fetch all module data in parallel for maximum performance
-    const [userData, mintedNFTData, ...moduleDataArray] = await Promise.all([
+    // Fetch all data in parallel for maximum performance
+    const [userData, mintedNFTData, allModulesData] = await Promise.all([
       // User collection
       db.collection("users").findOne(
         { address: userAddress },
@@ -49,23 +41,19 @@ export async function GET(request: NextRequest) {
         { projection: { _id: 0, totalMinted: 1, mintedLevels: 1, lastMintedAt: 1 } }
       ),
 
-      // All learning module collections
-      ...Object.keys(MODULE_CONFIG).map(collectionName =>
-        db.collection(collectionName).findOne(
-          { userAddress: normalizedAddress },
-          { projection }
-        )
-      ),
+      // All learning module data from unified collection
+      getAllModuleData(db, normalizedAddress),
     ]);
 
-    // Map module data with collection names for reference
-    const collectionNames = Object.keys(MODULE_CONFIG);
-    const moduleData = moduleDataArray.map((data, index) => ({
-      collectionName: collectionNames[index],
-      moduleName: MODULE_CONFIG[collectionNames[index] as keyof typeof MODULE_CONFIG].name,
-      moduleId: MODULE_CONFIG[collectionNames[index] as keyof typeof MODULE_CONFIG].id,
-      data,
-    }));
+    // Process module data
+    const moduleData = Object.entries(allModulesData).map(([moduleId, data]) => {
+      const moduleConfig = MODULE_CONFIG[moduleId as keyof typeof MODULE_CONFIG];
+      return {
+        moduleId,
+        moduleName: moduleConfig?.name || moduleId,
+        data,
+      };
+    });
 
     // Aggregate statistics efficiently
     let totalChallengesCompleted = 0;
@@ -85,7 +73,7 @@ export async function GET(request: NextRequest) {
     }> = [];
 
     // Process each module's data
-    moduleData.forEach(({ collectionName, moduleName, moduleId, data }) => {
+    moduleData.forEach(({ moduleId, moduleName, data }) => {
       if (!data) return;
 
       console.log(`Processing ${moduleName}:`, {

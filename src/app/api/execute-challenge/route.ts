@@ -293,9 +293,10 @@ export async function POST(request: NextRequest) {
       // Persist successful result for progress tracking
       try {
         const { client, db } = await connectToDatabase();
-        const collection = db.collection("challenges-precompiles-overview");
         if (userAddress && typeof userAddress === "string") {
           const lower = userAddress.toLowerCase();
+          const { getModuleData, updateModuleData } = await import("@/lib/database/module-collections");
+          
           const resultEntry = {
             level: level,
             points: points,
@@ -303,10 +304,12 @@ export async function POST(request: NextRequest) {
             success: true,
           };
 
-          // Get current document to check completion status
-          const currentDoc = await collection.findOne({ userAddress: lower });
-          const currentChallenges = currentDoc?.challenges || [];
+          // Get current module data to check completion status
+          const currentModuleData = await getModuleData(db, lower, "precompiles-overview");
+          const currentChallenges = currentModuleData?.challenges || [];
+          const currentResults = currentModuleData?.results || {};
           const newChallenges = [...new Set([...currentChallenges, slug])];
+          const newResults = { ...currentResults, [slug]: resultEntry };
 
           // Check if all 6 challenges are completed
           const allChallenges = [
@@ -321,17 +324,20 @@ export async function POST(request: NextRequest) {
             newChallenges.includes(challenge)
           );
 
-          await collection.updateOne(
-            { userAddress: lower },
+          // Update module data with all changes
+          await updateModuleData(
+            db,
+            lower,
+            "precompiles-overview",
             {
-              $set: {
-                userAddress: lower,
-                updatedAt: new Date(),
-                [`results.${slug}`]: resultEntry,
-                isCompleted: isCompleted,
-              },
-              $setOnInsert: { createdAt: new Date() },
-              $addToSet: { challenges: slug },
+              challenges: newChallenges,
+              results: newResults,
+              isCompleted: isCompleted,
+              createdAt: currentModuleData?.createdAt || new Date(),
+              // Preserve other fields
+              ...(currentModuleData?.chapters ? { chapters: currentModuleData.chapters } : {}),
+              ...(currentModuleData?.completedChapters ? { completedChapters: currentModuleData.completedChapters } : {}),
+              ...(currentModuleData?.certification ? { certification: currentModuleData.certification } : {}),
             },
             { upsert: true }
           );
@@ -369,16 +375,12 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const { client, db } = await connectToDatabase();
-    const collection = db.collection("challenges-precompiles-overview");
+    const { db } = await connectToDatabase();
+    const { getModuleData } = await import("@/lib/database/module-collections");
+    
+    const moduleData = await getModuleData(db, userAddress.toLowerCase(), "precompiles-overview");
 
-    const doc = await collection.findOne(
-      { userAddress: userAddress.toLowerCase() },
-      { projection: { _id: 0 } }
-    );
-
-    const progress = doc || {
-      userAddress: userAddress.toLowerCase(),
+    const progress = moduleData || {
       challenges: [],
       results: {},
       isCompleted: false,
@@ -393,7 +395,7 @@ export async function GET(request: NextRequest) {
         completed,
         result,
         challenges: progress.challenges || [],
-        isCompleted: doc?.isCompleted || false,
+        isCompleted: progress.isCompleted || false,
       });
     }
 
