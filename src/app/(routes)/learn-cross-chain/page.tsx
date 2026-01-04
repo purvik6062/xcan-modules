@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { crossChainChapters } from "../../../data/crossChainChapters";
 import CrossChainChapterCard from "../../../components/cross-chain/CrossChainChapterCard";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
@@ -327,6 +328,60 @@ export default function LearnCrossChainPage() {
             </div>
           ))}
         </div>
+
+        {/* Interactive Simulator CTA */}
+        <motion.div
+          className="mb-8 mt-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+        >
+          <div className="bg-gradient-to-br from-blue-900/40 via-gray-800 to-cyan-900/40 rounded-2xl border border-blue-500/30 p-8 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-4 right-4 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-4 left-4 w-24 h-24 bg-cyan-500 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-4xl">🌉</span>
+                  <h3 className="text-2xl font-bold text-white">Interactive Bridge Simulator</h3>
+                </div>
+                <p className="text-gray-300 mb-4 max-w-xl">
+                  Visualize how cross-chain bridges work! Explore token transfer mechanisms,
+                  validation architectures, and compare real bridge protocols in our hands-on simulator.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-3 py-1 bg-blue-600/20 border border-blue-500/30 rounded-full text-xs text-blue-300">
+                    Lock-Mint Visualization
+                  </span>
+                  <span className="px-3 py-1 bg-cyan-600/20 border border-cyan-500/30 rounded-full text-xs text-cyan-300">
+                    Bridge Comparison
+                  </span>
+                  <span className="px-3 py-1 bg-green-600/20 border border-green-500/30 rounded-full text-xs text-green-300">
+                    Security Spectrum
+                  </span>
+                </div>
+              </div>
+              <Link
+                href="/cross-chain-ux"
+                className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/20"
+              >
+                <span>Try the Simulator</span>
+                <svg
+                  className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Learning Path Info */}
         <motion.div
