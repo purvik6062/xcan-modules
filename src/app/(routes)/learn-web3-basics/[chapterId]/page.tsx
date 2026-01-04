@@ -8,6 +8,7 @@ import Web3BasicsContent from "../../../../components/web3-basics/Web3BasicsCont
 import ChapterCompletionModal from "../../../../components/web3-basics/ChapterCompletionModal";
 import QuizComponent from "../../../../components/QuizComponent";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
+import LearningModuleSidebar from "../../../../components/LearningModuleSidebar";
 
 export default function Web3BasicsChapterPage() {
   const params = useParams();
@@ -76,14 +77,19 @@ export default function Web3BasicsChapterPage() {
 
   if (!chapter) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">
-            Chapter Not Found
-          </h1>
-          <p className="text-gray-300">
-            The Web3 Basics chapter you're looking for doesn't exist.
-          </p>
+      <div className="min-h-screen bg-gray-900">
+        <div className="flex min-h-screen flex-col lg:flex-row">
+          <LearningModuleSidebar currentModuleId="web3-basics" backHref="/learn-web3-basics" />
+          <div className="flex flex-1 items-center justify-center px-6">
+            <div className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900/80 p-8 text-center shadow-lg">
+              <h1 className="mb-4 text-2xl font-bold text-white">
+                Chapter Not Found
+              </h1>
+              <p className="text-gray-300">
+                The Web3 Basics chapter you&apos;re looking for doesn&apos;t exist.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -181,138 +187,148 @@ export default function Web3BasicsChapterPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <motion.div
-          className="relative w-24 h-24"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-        >
-          <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
-          <div className="absolute inset-2 rounded-full border-t-4 border-blue-400" />
-        </motion.div>
+      <div className="min-h-screen bg-gray-900">
+        <div className="flex min-h-screen flex-col lg:flex-row">
+          <LearningModuleSidebar currentModuleId="web3-basics" backHref="/learn-web3-basics" />
+          <div className="flex flex-1 items-center justify-center">
+            <motion.div
+              className="relative h-24 w-24"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+            >
+              <div className="absolute inset-0 rounded-full border-4 border-blue-500/20" />
+              <div className="absolute inset-2 rounded-full border-t-4 border-blue-400" />
+            </motion.div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-900">
-      {/* Chapter Header with Progress */}
-      <div className="bg-gray-800 border-b border-gray-700 p-6">
-        <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{chapter.title}</h1>
-              <p className="text-gray-300">{chapter.description}</p>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-400 mb-1">Chapter Progress</div>
-              <div className="text-2xl font-bold text-blue-400">
-                {Math.round(progress)}%
+      <div className="flex min-h-screen flex-col lg:flex-row">
+        <LearningModuleSidebar currentModuleId="web3-basics" backHref="/learn-web3-basics" />
+        <div className="flex-1">
+          {/* Chapter Header with Progress */}
+          <div className="border-b border-gray-700 bg-gray-800 p-6">
+            <div className="container mx-auto">
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h1 className="mb-2 text-3xl font-bold text-white">{chapter.title}</h1>
+                  <p className="text-gray-300">{chapter.description}</p>
+                </div>
+                <div className="text-right">
+                  <div className="mb-1 text-sm text-gray-400">Chapter Progress</div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {Math.round(progress)}%
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="h-3 w-full rounded-full bg-gray-700">
+                <motion.div
+                  className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+
+              <div className="mt-2 flex items-center justify-between text-sm text-gray-400">
+                <span>{completedSections.length}/{availableSections.length} sections completed</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-400">{chapter.points} points</span>
+                  <span>{chapter.duration}</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-700 rounded-full h-3">
-            <motion.div
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
+          {/* Chapter Content */}
+          <div className="py-8">
+            {currentSection.status === "available" ? (
+              <>
+                {currentSection.type === "quiz" ? (
+                  <QuizComponent
+                    questions={quizQuestions[chapterId] || []}
+                    onComplete={async () => {
+                      // Gate quiz attempt completion behind GitHub auth
+                      if (address && !localStorage.getItem("github_username")) {
+                        await ensureGitHubAuth();
+                        return;
+                      }
+                      handleSectionComplete(currentSection.id);
+                    }}
+                  />
+                ) : (
+                  <div className="">
+                    <Web3BasicsContent
+                      section={currentSection}
+                      chapterId={chapterId}
+                      onComplete={() =>
+                        handleSectionComplete(currentSection.id)
+                      }
+                    />
 
-          <div className="flex items-center justify-between mt-2 text-sm text-gray-400">
-            <span>{completedSections.length}/{availableSections.length} sections completed</span>
-            <div className="flex items-center gap-2">
-              <span className="text-blue-400">{chapter.points} points</span>
-              <span>{chapter.duration}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+                    {/* Section Navigation */}
+                    <div className="mt-8 flex items-center justify-between border-t border-gray-700 pt-6">
+                      <button
+                        onClick={goToPreviousSection}
+                        disabled={!hasPreviousAvailableSection()}
+                        className={`ml-4 rounded-lg px-6 py-3 transition-all duration-200 ${!hasPreviousAvailableSection()
+                          ? "cursor-not-allowed bg-gray-700 text-gray-500"
+                          : "bg-gray-700 text-white hover:bg-gray-600"
+                          }`}
+                      >
+                        ← Previous Section
+                      </button>
 
-      {/* Chapter Content */}
-      <div className="py-8">
-        {currentSection.status === "available" ? (
-          <>
-            {currentSection.type === "quiz" ? (
-              <QuizComponent
-                questions={quizQuestions[chapterId] || []}
-                onComplete={async () => {
-                  // Gate quiz attempt completion behind GitHub auth
-                  if (address && !localStorage.getItem("github_username")) {
-                    await ensureGitHubAuth();
-                    return;
-                  }
-                  handleSectionComplete(currentSection.id);
-                }}
-              />
-            ) : (
-              <div className="">
-                <Web3BasicsContent
-                  section={currentSection}
-                  chapterId={chapterId}
-                  onComplete={() =>
-                    handleSectionComplete(currentSection.id)
-                  }
-                />
+                      <div className="text-sm text-gray-400">
+                        Section {availableSections.findIndex(s => s.id === currentSection.id) + 1} of {availableSections.length}
+                      </div>
 
-                {/* Section Navigation */}
-                <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700">
-                  <button
-                    onClick={goToPreviousSection}
-                    disabled={!hasPreviousAvailableSection()}
-                    className={`px-6 py-3 ml-4 rounded-lg transition-all duration-200 ${!hasPreviousAvailableSection()
-                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                      : "bg-gray-700 text-white hover:bg-gray-600"
-                      }`}
-                  >
-                    ← Previous Section
-                  </button>
-
-                  <div className="text-sm text-gray-400">
-                    Section {availableSections.findIndex(s => s.id === currentSection.id) + 1} of {availableSections.length}
+                      <button
+                        onClick={goToNextSection}
+                        disabled={!hasNextAvailableSection()}
+                        className={`mr-4 rounded-lg px-6 py-3 transition-all duration-200 ${!hasNextAvailableSection()
+                          ? "cursor-not-allowed bg-gray-700 text-gray-500"
+                          : "bg-gray-700 text-white hover:bg-gray-600"
+                          }`}
+                      >
+                        Next Section →
+                      </button>
+                    </div>
                   </div>
-
-                  <button
-                    onClick={goToNextSection}
-                    disabled={!hasNextAvailableSection()}
-                    className={`px-6 py-3 mr-4 rounded-lg transition-all duration-200 ${!hasNextAvailableSection()
-                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                      : "bg-gray-700 text-white hover:bg-gray-600"
-                      }`}
-                  >
-                    Next Section →
-                  </button>
+                )}
+              </>
+            ) : (
+              <div className="flex min-h-screen items-center justify-center bg-gray-900">
+                <div className="max-w-md rounded-2xl border border-gray-700 bg-gray-800 p-8 text-center">
+                  <div className="mb-4 text-6xl">🔒</div>
+                  <h3 className="mb-2 text-xl font-bold text-white">
+                    Coming Soon
+                  </h3>
+                  <p className="text-gray-300">
+                    This section is currently under development and will be
+                    available soon.
+                  </p>
                 </div>
               </div>
             )}
-          </>
-        ) : (
-          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-            <div className="text-center bg-gray-800 rounded-2xl p-8 border border-gray-700 max-w-md">
-              <div className="text-6xl mb-4">🔒</div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                Coming Soon
-              </h3>
-              <p className="text-gray-300">
-                This section is currently under development and will be
-                available soon.
-              </p>
-            </div>
           </div>
-        )}
-      </div>
 
-      {/* Chapter Completion Modal */}
-      <ChapterCompletionModal
-        isOpen={showCompletionModal}
-        onClose={() => setShowCompletionModal(false)}
-        chapterTitle={chapter.title}
-        nextChapterId={nextChapter?.id}
-        nextChapterTitle={nextChapter?.title}
-      />
+          {/* Chapter Completion Modal */}
+          <ChapterCompletionModal
+            isOpen={showCompletionModal}
+            onClose={() => setShowCompletionModal(false)}
+            chapterTitle={chapter.title}
+            nextChapterId={nextChapter?.id}
+            nextChapterTitle={nextChapter?.title}
+          />
+        </div>
+      </div>
     </div>
   );
 }
