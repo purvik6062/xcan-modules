@@ -245,114 +245,58 @@ const BRIDGES: Record<string, BridgeInfo> = {
 };
 
 export default function BridgeComparator() {
-  const [selectedBridges, setSelectedBridges] = useState<string[]>([
-    "arbitrum",
-    "stargate",
-  ]);
   const [viewMode, setViewMode] = useState<"comparison" | "detailed">("comparison");
 
-  // Get bridge list alphabetically
+  // Get all bridges alphabetically - compare all by default
   const allBridges = Object.values(BRIDGES).sort((a, b) => a.name.localeCompare(b.name));
 
-  // Get selected bridge objects
-  const comparingBridges = allBridges.filter((b) =>
-    selectedBridges.includes(b.id)
-  );
-
-  const handleToggleBridge = (bridgeId: string) => {
-    setSelectedBridges((prev) =>
-      prev.includes(bridgeId)
-        ? prev.filter((id) => id !== bridgeId)
-        : [...prev, bridgeId]
-    );
-  };
-
   return (
-    <div className="w-full bg-gray-900 py-8 px-4 border-t border-gray-800">
+    <div className="w-full bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 py-12 px-4 border-t border-gray-800">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+        {/* Enhanced Section Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
+          className="text-center mb-10"
         >
-          <h2 className="text-3xl font-bold text-white mb-3">
-            🌉 Bridge Comparison
-          </h2>
-          <p className="text-gray-400">
-            Compare cross-chain bridges to find the best one for your needs
+          <div className="inline-flex items-center gap-3 mb-4">
+            <span className="text-4xl">🌉</span>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Bridge Comparison
+            </h2>
+          </div>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Compare all major cross-chain bridges side-by-side to find the perfect one for your needs
           </p>
-        </motion.div>
-
-        {/* Controls */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-wrap gap-4 justify-center mb-8"
-        >
-          {/* View Mode */}
-          <div className="flex gap-2 bg-gray-800 rounded-lg p-1">
-            {["comparison", "detailed"].map((mode) => (
-              <button
-                key={mode}
-                onClick={() => setViewMode(mode as typeof viewMode)}
-                className={`px-4 py-2 rounded transition-all font-medium text-sm ${viewMode === mode
-                  ? "bg-blue-600 text-white"
-                  : "bg-transparent text-gray-400 hover:text-white"
-                  }`}
-              >
-                {mode === "comparison" ? "📊 Comparison" : "📋 Details"}
-              </button>
-            ))}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <span className="px-3 py-1 bg-blue-600/20 border border-blue-500/30 rounded-full text-blue-300 text-sm font-medium">
+              {allBridges.length} Bridges Compared
+            </span>
           </div>
         </motion.div>
 
-        {/* Bridge Selection Grid */}
+        {/* View Mode Toggle */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center mb-10"
         >
-          <h2 className="text-2xl font-bold text-white mb-4">📌 Select Bridges to Compare</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {allBridges.map((bridge) => (
-              <motion.button
-                key={bridge.id}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleToggleBridge(bridge.id)}
-                className={`p-4 rounded-lg transition-all border-2 text-left ${selectedBridges.includes(bridge.id)
-                  ? "bg-blue-600/20 border-blue-500 bg-gradient-to-br from-blue-600/10 to-cyan-600/10"
-                  : "bg-gray-800 border-gray-700 hover:border-gray-600"
+          <div className="flex gap-1 bg-gray-800/80 backdrop-blur-sm rounded-xl p-1.5 border border-gray-700/50">
+            {[
+              { id: "comparison", icon: "📊", label: "Compare All" },
+              { id: "detailed", icon: "📋", label: "Detailed View" },
+            ].map((mode) => (
+              <button
+                key={mode.id}
+                onClick={() => setViewMode(mode.id as typeof viewMode)}
+                className={`px-5 py-2.5 rounded-lg transition-all font-medium text-sm flex items-center gap-2 ${viewMode === mode.id
+                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-600/25"
+                  : "bg-transparent text-gray-400 hover:text-white hover:bg-gray-700/50"
                   }`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <BridgeLogo logo={bridge.logo} name={bridge.name} size="md" />
-                    <div>
-                      <h3 className="text-white font-bold">{bridge.name}</h3>
-                      <p className="text-xs text-gray-400">{bridge.architecture}</p>
-                    </div>
-                  </div>
-                  {selectedBridges.includes(bridge.id) && (
-                    <span className="text-blue-400 text-xl">✓</span>
-                  )}
-                </div>
-                <div className="grid grid-cols-1 gap-2 text-xs">
-                  <div className="flex flex-wrap gap-1">
-                    {bridge.supportedChains.slice(0, 3).map((chain) => (
-                      <span key={chain} className="px-2 py-0.5 bg-gray-700 rounded text-gray-300">
-                        {chain}
-                      </span>
-                    ))}
-                    {bridge.supportedChains.length > 3 && (
-                      <span className="px-2 py-0.5 bg-gray-600 rounded text-gray-400">
-                        +{bridge.supportedChains.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.button>
+                <span>{mode.icon}</span>
+                {mode.label}
+              </button>
             ))}
           </div>
         </motion.div>
@@ -364,7 +308,7 @@ export default function BridgeComparator() {
             animate={{ opacity: 1 }}
             className="bg-gray-800 rounded-2xl p-8 border border-gray-700 overflow-x-auto"
           >
-            <h2 className="text-2xl font-bold text-white mb-6">📊 Detailed Comparison</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">📊 Compare All Bridges</h2>
 
             <table className="w-full text-sm">
               <thead>
@@ -372,7 +316,7 @@ export default function BridgeComparator() {
                   <th className="text-left py-3 px-4 text-gray-300 font-semibold">
                     Metric
                   </th>
-                  {comparingBridges.map((bridge) => (
+                  {allBridges.map((bridge) => (
                     <th
                       key={bridge.id}
                       className="text-center py-4 px-4 text-white font-semibold"
@@ -389,7 +333,7 @@ export default function BridgeComparator() {
                 {/* Architecture */}
                 <tr className="border-b border-gray-700 hover:bg-gray-700/30 transition-all">
                   <td className="py-3 px-4 text-gray-300 font-semibold">Architecture</td>
-                  {comparingBridges.map((bridge) => (
+                  {allBridges.map((bridge) => (
                     <td
                       key={bridge.id}
                       className="text-center py-3 px-4 text-purple-300 font-semibold"
@@ -402,7 +346,7 @@ export default function BridgeComparator() {
                 {/* Supported Chains */}
                 <tr className="border-b border-gray-700 hover:bg-gray-700/30 transition-all">
                   <td className="py-3 px-4 text-gray-300 font-semibold">Supported Chains</td>
-                  {comparingBridges.map((bridge) => (
+                  {allBridges.map((bridge) => (
                     <td
                       key={bridge.id}
                       className="text-center py-3 px-4 text-gray-300 text-xs"
@@ -419,7 +363,7 @@ export default function BridgeComparator() {
                 {/* Audit Status */}
                 <tr className="hover:bg-gray-700/30 transition-all">
                   <td className="py-3 px-4 text-gray-300 font-semibold">Audit Status</td>
-                  {comparingBridges.map((bridge) => (
+                  {allBridges.map((bridge) => (
                     <td
                       key={bridge.id}
                       className="text-center py-3 px-4"
@@ -447,7 +391,7 @@ export default function BridgeComparator() {
             animate={{ opacity: 1 }}
             className="space-y-6"
           >
-            {comparingBridges.map((bridge) => (
+            {allBridges.map((bridge) => (
               <motion.div
                 key={bridge.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -569,16 +513,6 @@ export default function BridgeComparator() {
           </motion.div>
         )}
 
-        {/* Empty State */}
-        {selectedBridges.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-12"
-          >
-            <p className="text-gray-400 text-lg">Select bridges to compare</p>
-          </motion.div>
-        )}
       </div>
     </div>
   );
