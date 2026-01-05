@@ -1,6 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import Providers from "../providers/Providers";
@@ -8,11 +8,7 @@ import ConditionalLayout from "../components/ConditionalLayout";
 import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
+const geistMono = GeistMono;
 
 export const metadata: Metadata = {
   title: "Modules (by Xcan) | Arbitrum Learning Platform",
