@@ -12,6 +12,16 @@ interface FoundationSubmission {
   transactionHash?: string;
 }
 
+interface AdvocateSubmission {
+  walletAddress: string;
+  moduleId: "xcan-advocate";
+  type: "advocate";
+  isEligible?: boolean;
+  transactionHash?: string;
+  certificationLevel?: string;
+  certificationLevelName?: string;
+}
+
 interface ModuleSubmission {
   walletAddress: string;
   moduleId: string;
@@ -26,7 +36,7 @@ interface ModuleSubmission {
   updatedAt?: string;
 }
 
-type Submission = FoundationSubmission | ModuleSubmission;
+type Submission = FoundationSubmission | AdvocateSubmission | ModuleSubmission;
 
 interface UserModuleCount {
   walletAddress: string;
@@ -464,6 +474,8 @@ export default function SubmissionsPage() {
                         <th className="px-6 py-4 text-gray-300 font-semibold">GitHub Repo</th>
                         <th className="px-6 py-4 text-gray-300 font-semibold">Contract Address</th>
                       </>
+                    ) : selectedModule === "xcan-advocate" ? (
+                      <th className="px-6 py-4 text-gray-300 font-semibold">Status</th>
                     ) : (
                       <>
                         <th className="px-6 py-4 text-gray-300 font-semibold">Chapters</th>
@@ -559,6 +571,25 @@ export default function SubmissionsPage() {
                             )}
                           </td>
                         </>
+                      ) : submission.type === "advocate" && selectedModule === "xcan-advocate" ? (
+                        <td className="px-6 py-4">
+                          <div className="space-y-1">
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-semibold ${
+                                submission.isEligible
+                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  : "bg-gray-500/20 text-gray-400"
+                              }`}
+                            >
+                              {submission.isEligible ? "Eligible" : "Not Eligible"}
+                            </span>
+                            {submission.certificationLevelName && (
+                              <div className="text-xs text-yellow-400 mt-1">
+                                {submission.certificationLevelName}
+                              </div>
+                            )}
+                          </div>
+                        </td>
                       ) : submission.type === "module" ? (
                         <>
                           <td className="px-6 py-4">
@@ -716,13 +747,32 @@ export default function SubmissionsPage() {
                         <div className="text-white font-semibold">
                           {submission.type === "foundation"
                             ? "Stylus Foundation"
-                            : submission.type === "module"
-                              ? submission.moduleName
-                              : "Unknown Module"}
+                            : submission.type === "advocate"
+                              ? "XCAN Advocate"
+                              : submission.type === "module"
+                                ? submission.moduleName
+                                : "Unknown Module"}
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        {submission.type === "foundation" ? (
+                        {submission.type === "advocate" ? (
+                          <div className="space-y-1">
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-semibold ${
+                                submission.isEligible
+                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  : "bg-gray-500/20 text-gray-400"
+                              }`}
+                            >
+                              {submission.isEligible ? "Eligible" : "Not Eligible"}
+                            </span>
+                            {submission.certificationLevelName && (
+                              <div className="text-xs text-yellow-400 mt-1">
+                                {submission.certificationLevelName}
+                              </div>
+                            )}
+                          </div>
+                        ) : submission.type === "foundation" ? (
                           <div className="space-y-1">
                             {submission.githubRepo && (
                               <a

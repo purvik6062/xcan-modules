@@ -20,6 +20,7 @@ const MODULE_CONFIG: Record<string, { name: string; id: string }> = {
   "master-defi": { name: "Master DeFi on Arbitrum", id: "master-defi" },
   "master-orbit": { name: "Master Arbitrum Orbit", id: "master-orbit" },
   "stylus-foundation": { name: "Stylus Foundation", id: "stylus-foundation" },
+  "xcan-advocate": { name: "XCAN Advocate", id: "xcan-advocate" },
 };
 
 const ALL_MODULE_IDS: ModuleId[] = [
@@ -37,6 +38,15 @@ interface FoundationSubmission {
   contractAddress?: string;
   moduleId: "stylus-foundation";
   transactionHash?: string;
+}
+
+interface AdvocateSubmission {
+  walletAddress: string;
+  moduleId: "xcan-advocate";
+  isEligible?: boolean;
+  transactionHash?: string;
+  certificationLevel?: string;
+  certificationLevelName?: string;
 }
 
 interface ModuleSubmission {
@@ -108,6 +118,45 @@ export async function GET(request: NextRequest) {
         };
       })
       .filter((s) => s.walletAddress); // Only include valid submissions
+
+    // Fetch advocates submissions with optimized projection including certification
+    const advocatesSubmissions = await db
+      .collection("advocates")
+      .find(
+        { isEligible: true },
+        {
+          projection: {
+            userAddress: 1,
+            isEligible: 1,
+            certification: 1,
+            _id: 0,
+          },
+        }
+      )
+      .toArray();
+
+    // Transform advocates submissions - only include eligible ones with certification
+    const advocatesData: AdvocateSubmission[] = advocatesSubmissions
+      .map((advocate: any) => {
+        const userAddress = (advocate.userAddress || "").toLowerCase();
+        const certification = Array.isArray(advocate.certification)
+          ? advocate.certification.find((c: any) => c.claimed === true) ||
+            advocate.certification[0]
+          : advocate.certification;
+        const transactionHash = certification?.transactionHash;
+        const certificationLevel = certification?.level;
+        const certificationLevelName = certification?.levelName;
+
+        return {
+          walletAddress: userAddress,
+          moduleId: "xcan-advocate" as const,
+          isEligible: advocate.isEligible || false,
+          transactionHash,
+          certificationLevel,
+          certificationLevelName,
+        };
+      })
+      .filter((s) => s.walletAddress && s.isEligible); // Only include valid eligible advocates
 
     // Fetch user-modules submissions with optimized projection
     // Only fetch userAddress and modules data
@@ -219,6 +268,32 @@ export async function GET(request: NextRequest) {
       }
     });
 
+    // Add advocates users
+    advocatesData.forEach((submission) => {
+      const address = submission.walletAddress.toLowerCase();
+      if (!processedUsers.has(address)) {
+        const existing = userModuleCountsMap.get(address) || {
+          count: 0,
+          modules: [],
+        };
+        allUserModuleCounts.push({
+          walletAddress: address,
+          moduleCount: existing.count + 1,
+          modules: [...existing.modules, "xcan-advocate"],
+        });
+        processedUsers.add(address);
+      } else {
+        // Update existing user to include advocate module
+        const existing = allUserModuleCounts.find(
+          (u) => u.walletAddress === address
+        );
+        if (existing && !existing.modules.includes("xcan-advocate")) {
+          existing.moduleCount += 1;
+          existing.modules.push("xcan-advocate");
+        }
+      }
+    });
+
     // Add user-modules users
     userModuleCountsMap.forEach((data, address) => {
       if (!processedUsers.has(address)) {
@@ -228,6 +303,19 @@ export async function GET(request: NextRequest) {
           modules: data.modules,
         });
         processedUsers.add(address);
+      } else {
+        // Update existing user to include their modules
+        const existing = allUserModuleCounts.find(
+          (u) => u.walletAddress === address
+        );
+        if (existing) {
+          data.modules.forEach((mod) => {
+            if (!existing.modules.includes(mod)) {
+              existing.moduleCount += 1;
+              existing.modules.push(mod);
+            }
+          });
+        }
       }
     });
 
@@ -256,11 +344,23 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Count advocates (eligible with certification)
+    const advocatesCount = advocatesData.length;
+    moduleUserCounts.push({
+      moduleId: "xcan-advocate",
+      moduleName: MODULE_CONFIG["xcan-advocate"]?.name || "XCAN Advocate",
+      userCount: advocatesCount,
+    });
+
     // Combine all submissions
     const allSubmissions = [
       ...foundationData.map((s) => ({
         ...s,
         type: "foundation" as const,
+      })),
+      ...advocatesData.map((s) => ({
+        ...s,
+        type: "advocate" as const,
       })),
       ...moduleSubmissions.map((s) => ({
         ...s,
@@ -313,6 +413,7 @@ export async function GET(request: NextRequest) {
       },
       stats: {
         totalFoundationSubmissions: foundationData.length,
+        totalAdvocatesSubmissions: advocatesData.length,
         totalModuleSubmissions: moduleSubmissions.length,
         averageModulesPerUser:
           allUserModuleCounts.length > 0
