@@ -90,11 +90,11 @@ export default function Navigation() {
                 </li>
                 <li>
                   <Link
-                    href="/leaderboard"
+                    href="/submissions"
                     className={`text-white hover:text-blue-200 transition-colors ${isActive("/leaderboard") ? "font-semibold" : ""
                       }`}
                   >
-                    Leaderboard
+                    Submissions
                   </Link>
                 </li>
                 <li>

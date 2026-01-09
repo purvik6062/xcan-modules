@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate:modules": "tsx scripts/migrate-challenges-to-user-modules.ts"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.4",
@@ -56,6 +57,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
