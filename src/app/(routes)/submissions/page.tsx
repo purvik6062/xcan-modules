@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import { useSubmissions } from "../../../hooks/useSubmissions";
 
 interface FoundationSubmission {
   walletAddress: string;
@@ -50,69 +51,36 @@ interface ModuleUserCount {
   userCount: number;
 }
 
-interface SubmissionsData {
-  submissions: Submission[];
-  submissionsByModule: Record<string, Submission[]>;
-  totalSubmissions: number;
-  uniqueUsers: number;
-  userModuleCounts: UserModuleCount[];
-  moduleUserCounts: ModuleUserCount[];
-  pagination: {
-    page: number;
-    limit: number;
-    totalPages: number;
-    totalCount: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
-  stats: {
-    totalFoundationSubmissions: number;
-    totalModuleSubmissions: number;
-    averageModulesPerUser: number;
-  };
-}
-
 export default function SubmissionsPage() {
-  const [submissionsData, setSubmissionsData] = useState<SubmissionsData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedModule, setSelectedModule] = useState<string>("web3-basics");
   const [viewMode, setViewMode] = useState<"all" | "by-module" | "by-user">("by-module");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const fetchSubmissions = async (module: string | null = null, page: number = 1) => {
-    try {
-      setIsLoading(true);
-      const params = new URLSearchParams();
-      if (module && module !== "all") {
-        params.append("module", module);
-      }
-      params.append("page", page.toString());
-
-      const response = await fetch(`/api/submissions?${params.toString()}`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch submissions data");
-      }
-
-      const data = await response.json();
-      setSubmissionsData(data);
-    } catch (err) {
-      console.error("Error fetching submissions:", err);
-      setError("Failed to load submissions data");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
+  // Determine which module to fetch based on view mode
+  const moduleToFetch = useMemo(() => {
     if (viewMode === "by-module") {
-      fetchSubmissions(selectedModule, currentPage);
-    } else {
-      fetchSubmissions(null, currentPage);
+      return selectedModule;
     }
-  }, [viewMode, selectedModule, currentPage]);
+    return null;
+  }, [viewMode, selectedModule]);
+
+  // Use React Query hook for data fetching with caching
+  const {
+    data: submissionsData,
+    isLoading,
+    isFetching,
+    error: queryError,
+  } = useSubmissions({
+    module: moduleToFetch,
+    page: currentPage,
+    enabled: true,
+  });
+
+  const error = queryError ? "Failed to load submissions data" : null;
+
+  // Show loading state when fetching (including background refetches)
+  const showLoading = isLoading || (isFetching && !submissionsData);
 
   const handleModuleClick = (moduleId: string) => {
     setSelectedModule(moduleId);
@@ -188,7 +156,7 @@ export default function SubmissionsPage() {
     </div>
   );
 
-  if (isLoading) {
+  if (showLoading) {
     return <SkeletonLoader />;
   }
 
@@ -240,7 +208,7 @@ export default function SubmissionsPage() {
         >
           <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
             <div className="text-4xl font-bold text-emerald-400">{submissionsData.totalSubmissions}</div>
-            <div className="text-gray-300 mt-2 text-sm">Total Submissions</div>
+            <div className="text-gray-300 mt-2 text-sm">Total Modules Completed</div>
           </div>
           {/* <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
             <div className="text-4xl font-bold text-blue-400">{submissionsData.uniqueUsers}</div>
@@ -268,37 +236,46 @@ export default function SubmissionsPage() {
         >
           <button
             onClick={() => {
-              setViewMode("all");
-              setCurrentPage(1);
+              if (!isFetching) {
+                setViewMode("all");
+                setCurrentPage(1);
+              }
             }}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all ${viewMode === "all"
-              ? "bg-emerald-500 text-white"
-              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
-              }`}
+            disabled={isFetching}
+            className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "all"
+                ? "bg-emerald-500 text-white"
+                : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+              } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             All Submissions
           </button>
           <button
             onClick={() => {
-              setViewMode("by-module");
-              setCurrentPage(1);
+              if (!isFetching) {
+                setViewMode("by-module");
+                setCurrentPage(1);
+              }
             }}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all ${viewMode === "by-module"
-              ? "bg-emerald-500 text-white"
-              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
-              }`}
+            disabled={isFetching}
+            className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "by-module"
+                ? "bg-emerald-500 text-white"
+                : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+              } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             By Module
           </button>
           <button
             onClick={() => {
-              setViewMode("by-user");
-              setCurrentPage(1);
+              if (!isFetching) {
+                setViewMode("by-user");
+                setCurrentPage(1);
+              }
             }}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all ${viewMode === "by-user"
-              ? "bg-emerald-500 text-white"
-              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
-              }`}
+            disabled={isFetching}
+            className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "by-user"
+                ? "bg-emerald-500 text-white"
+                : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+              } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             By User
           </button>
@@ -575,11 +552,10 @@ export default function SubmissionsPage() {
                         <td className="px-6 py-4">
                           <div className="space-y-1">
                             <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${
-                                submission.isEligible
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : "bg-gray-500/20 text-gray-400"
-                              }`}
+                              className={`px-2 py-1 rounded text-xs font-semibold ${submission.isEligible
+                                ? "bg-emerald-500/20 text-emerald-400"
+                                : "bg-gray-500/20 text-gray-400"
+                                }`}
                             >
                               {submission.isEligible ? "Eligible" : "Not Eligible"}
                             </span>
@@ -656,14 +632,25 @@ export default function SubmissionsPage() {
             {/* Pagination */}
             {submissionsData.pagination && (
               <div className="bg-slate-900 px-6 py-4 flex items-center justify-between border-t border-slate-700">
-                <div className="text-gray-300 text-sm">
-                  Showing {(currentPage - 1) * 30 + 1} to {Math.min(currentPage * 30, submissionsData.pagination.totalCount)} of {submissionsData.pagination.totalCount} results
+                <div className="flex items-center gap-3">
+                  <div className="text-gray-300 text-sm">
+                    Showing {(currentPage - 1) * 30 + 1} to {Math.min(currentPage * 30, submissionsData.pagination.totalCount)} of {submissionsData.pagination.totalCount} results
+                  </div>
+                  {isFetching && (
+                    <div className="flex items-center gap-2 text-emerald-400 text-sm">
+                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Loading...</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={!submissionsData.pagination.hasPrevPage}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasPrevPage
+                    disabled={!submissionsData.pagination.hasPrevPage || isFetching}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasPrevPage && !isFetching
                       ? "bg-slate-700 text-white hover:bg-slate-600"
                       : "bg-slate-800 text-gray-500 cursor-not-allowed"
                       }`}
@@ -672,8 +659,8 @@ export default function SubmissionsPage() {
                   </button>
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(submissionsData.pagination.totalPages, p + 1))}
-                    disabled={!submissionsData.pagination.hasNextPage}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasNextPage
+                    disabled={!submissionsData.pagination.hasNextPage || isFetching}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasNextPage && !isFetching
                       ? "bg-slate-700 text-white hover:bg-slate-600"
                       : "bg-slate-800 text-gray-500 cursor-not-allowed"
                       }`}
@@ -758,11 +745,10 @@ export default function SubmissionsPage() {
                         {submission.type === "advocate" ? (
                           <div className="space-y-1">
                             <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${
-                                submission.isEligible
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : "bg-gray-500/20 text-gray-400"
-                              }`}
+                              className={`px-2 py-1 rounded text-xs font-semibold ${submission.isEligible
+                                ? "bg-emerald-500/20 text-emerald-400"
+                                : "bg-gray-500/20 text-gray-400"
+                                }`}
                             >
                               {submission.isEligible ? "Eligible" : "Not Eligible"}
                             </span>
@@ -847,14 +833,25 @@ export default function SubmissionsPage() {
             {/* Pagination */}
             {submissionsData.pagination && (
               <div className="bg-slate-900 px-6 py-4 flex items-center justify-between border-t border-slate-700">
-                <div className="text-gray-300 text-sm">
-                  Showing {(currentPage - 1) * 30 + 1} to {Math.min(currentPage * 30, submissionsData.pagination.totalCount)} of {submissionsData.pagination.totalCount} results
+                <div className="flex items-center gap-3">
+                  <div className="text-gray-300 text-sm">
+                    Showing {(currentPage - 1) * 30 + 1} to {Math.min(currentPage * 30, submissionsData.pagination.totalCount)} of {submissionsData.pagination.totalCount} results
+                  </div>
+                  {isFetching && (
+                    <div className="flex items-center gap-2 text-emerald-400 text-sm">
+                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Loading...</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={!submissionsData.pagination.hasPrevPage}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasPrevPage
+                    disabled={!submissionsData.pagination.hasPrevPage || isFetching}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasPrevPage && !isFetching
                       ? "bg-slate-700 text-white hover:bg-slate-600"
                       : "bg-slate-800 text-gray-500 cursor-not-allowed"
                       }`}
@@ -863,8 +860,8 @@ export default function SubmissionsPage() {
                   </button>
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(submissionsData.pagination.totalPages, p + 1))}
-                    disabled={!submissionsData.pagination.hasNextPage}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasNextPage
+                    disabled={!submissionsData.pagination.hasNextPage || isFetching}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasNextPage && !isFetching
                       ? "bg-slate-700 text-white hover:bg-slate-600"
                       : "bg-slate-800 text-gray-500 cursor-not-allowed"
                       }`}

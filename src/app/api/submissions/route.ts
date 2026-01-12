@@ -83,22 +83,57 @@ export async function GET(request: NextRequest) {
     const limit = 30;
     const skip = (page - 1) * limit;
 
-    // Fetch foundation-users submissions with optimized projection including certification
-    const foundationSubmissions = await db
-      .collection("foundation-users")
-      .find(
-        {},
-        {
-          projection: {
-            walletAddress: 1,
-            githubRepo: 1,
-            contractAddress: 1,
-            certification: 1,
-            _id: 0,
-          },
-        }
-      )
-      .toArray();
+    // Fetch all data in parallel for better performance
+    const [foundationSubmissions, advocatesSubmissions, userModulesDocs] =
+      await Promise.all([
+        // Fetch foundation-users submissions with optimized projection including certification
+        db
+          .collection("foundation-users")
+          .find(
+            {},
+            {
+              projection: {
+                walletAddress: 1,
+                githubRepo: 1,
+                contractAddress: 1,
+                certification: 1,
+                _id: 0,
+              },
+            }
+          )
+          .toArray(),
+        // Fetch advocates submissions with optimized projection including certification
+        db
+          .collection("advocates")
+          .find(
+            { isEligible: true },
+            {
+              projection: {
+                userAddress: 1,
+                isEligible: 1,
+                certification: 1,
+                _id: 0,
+              },
+            }
+          )
+          .toArray(),
+        // Fetch user-modules submissions with optimized projection
+        // Only fetch userAddress and modules data
+        db
+          .collection("user-modules")
+          .find(
+            {},
+            {
+              projection: {
+                userAddress: 1,
+                modules: 1,
+                updatedAt: 1,
+                _id: 0,
+              },
+            }
+          )
+          .toArray(),
+      ]);
 
     // Transform foundation submissions - only include completed ones
     const foundationData: FoundationSubmission[] = foundationSubmissions
@@ -118,22 +153,6 @@ export async function GET(request: NextRequest) {
         };
       })
       .filter((s) => s.walletAddress); // Only include valid submissions
-
-    // Fetch advocates submissions with optimized projection including certification
-    const advocatesSubmissions = await db
-      .collection("advocates")
-      .find(
-        { isEligible: true },
-        {
-          projection: {
-            userAddress: 1,
-            isEligible: 1,
-            certification: 1,
-            _id: 0,
-          },
-        }
-      )
-      .toArray();
 
     // Transform advocates submissions - only include eligible ones with certification
     const advocatesData: AdvocateSubmission[] = advocatesSubmissions
@@ -157,23 +176,6 @@ export async function GET(request: NextRequest) {
         };
       })
       .filter((s) => s.walletAddress && s.isEligible); // Only include valid eligible advocates
-
-    // Fetch user-modules submissions with optimized projection
-    // Only fetch userAddress and modules data
-    const userModulesDocs = await db
-      .collection("user-modules")
-      .find(
-        {},
-        {
-          projection: {
-            userAddress: 1,
-            modules: 1,
-            updatedAt: 1,
-            _id: 0,
-          },
-        }
-      )
-      .toArray();
 
     // Transform user-modules submissions - only include completed modules
     const moduleSubmissions: ModuleSubmission[] = [];
@@ -332,17 +334,20 @@ export async function GET(request: NextRequest) {
     });
 
     // Count users per module from user-modules collection (only completed)
-    for (const moduleId of ALL_MODULE_IDS) {
+    // Use parallel queries for better performance
+    const moduleCountPromises = ALL_MODULE_IDS.map(async (modId) => {
       const count = await db.collection("user-modules").countDocuments({
-        [`modules.${moduleId}.isCompleted`]: true,
+        [`modules.${modId}.isCompleted`]: true,
       });
-
-      moduleUserCounts.push({
-        moduleId,
-        moduleName: MODULE_CONFIG[moduleId]?.name || moduleId,
+      return {
+        moduleId: modId,
+        moduleName: MODULE_CONFIG[modId]?.name || modId,
         userCount: count,
-      });
-    }
+      };
+    });
+
+    const moduleCounts = await Promise.all(moduleCountPromises);
+    moduleUserCounts.push(...moduleCounts);
 
     // Count advocates (eligible with certification)
     const advocatesCount = advocatesData.length;
@@ -376,6 +381,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Calculate total modules completed across all users
+    const totalModulesCompleted =
+      foundationData.length + moduleSubmissions.length;
+
     // Apply pagination
     const totalCount = filteredSubmissions.length;
     const paginatedSubmissions = filteredSubmissions.slice(skip, skip + limit);
@@ -391,11 +400,11 @@ export async function GET(request: NextRequest) {
       submissionsByModule[modId].push(submission);
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       submissions: paginatedSubmissions,
       submissionsByModule,
-      totalSubmissions: totalCount,
+      totalSubmissions: totalModulesCompleted, // Total modules completed across all users
       uniqueUsers: processedUsers.size,
       userModuleCounts: allUserModuleCounts.sort(
         (a, b) => b.moduleCount - a.moduleCount
@@ -422,6 +431,14 @@ export async function GET(request: NextRequest) {
             : 0,
       },
     });
+
+    // Add caching headers
+    response.headers.set(
+      "Cache-Control",
+      "public, s-maxage=60, stale-while-revalidate=300"
+    );
+
+    return response;
   } catch (error) {
     console.error("Error fetching submissions data:", error);
     return NextResponse.json(
