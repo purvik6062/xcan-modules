@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useSubmissions } from "../../../hooks/useSubmissions";
+import { NFTBadges } from "../../../components/submissions/NFTBadges";
 
 interface FoundationSubmission {
   walletAddress: string;
@@ -35,6 +36,16 @@ interface ModuleSubmission {
   certificationLevel?: string;
   certificationLevelName?: string;
   updatedAt?: string;
+  githubRepo?: string;
+  contractAddress?: string;
+  // New fields for Arbitrum Stylus
+  completedChallenges?: string[];
+  nftTransactionHashes?: Array<{
+    transactionHash: string;
+    levelName?: string;
+    level?: number;
+    mintedAt?: Date;
+  }>;
 }
 
 type Submission = FoundationSubmission | AdvocateSubmission | ModuleSubmission;
@@ -201,7 +212,7 @@ export default function SubmissionsPage() {
 
         {/* Stats Overview */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -210,22 +221,44 @@ export default function SubmissionsPage() {
             <div className="text-4xl font-bold text-emerald-400">{submissionsData.totalSubmissions}</div>
             <div className="text-gray-300 mt-2 text-sm">Total Modules Completed</div>
           </div>
-          {/* <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-4xl font-bold text-blue-400">{submissionsData.uniqueUsers}</div>
-            <div className="text-gray-300 mt-2 text-sm">Unique Users</div>
-          </div> */}
           <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-4xl font-bold text-purple-400">
-              {submissionsData.stats.averageModulesPerUser.toFixed(1)}
+            <div className="text-4xl font-bold text-yellow-400">
+              {submissionsData.stats.totalNFTsMinted || 0}
             </div>
-            <div className="text-gray-300 mt-2 text-sm">Avg Modules/User</div>
+            <div className="text-gray-300 mt-2 text-sm">Total NFTs Claimed</div>
           </div>
           <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            {/* <div className="text-4xl font-bold text-cyan-400">{submissionsData.moduleUserCounts.length}</div> */}
-            <div className="text-4xl font-bold text-cyan-400">8</div>
+            <div className="text-3xl font-bold text-blue-400">{submissionsData.uniqueUsers}</div>
+            <div className="text-gray-300 mt-2 text-sm">Total Unique Users</div>
+          </div>
+          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
+            <div className="text-3xl font-bold text-indigo-400">{submissionsData.moduleUserCounts.length}</div>
             <div className="text-gray-300 mt-2 text-sm">Active Modules</div>
           </div>
         </motion.div>
+
+        {/* Additional Stats Row */}
+        {/* <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
+            <div className="text-3xl font-bold text-blue-400">{submissionsData.uniqueUsers}</div>
+            <div className="text-gray-300 mt-2 text-sm">Total Unique Users</div>
+          </div>
+          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
+            <div className="text-3xl font-bold text-indigo-400">{submissionsData.moduleUserCounts.length}</div>
+            <div className="text-gray-300 mt-2 text-sm">Active Modules</div>
+          </div>
+          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
+            <div className="text-2xl font-bold text-pink-400 truncate">
+              {submissionsData.stats.mostActiveModule}
+            </div>
+            <div className="text-gray-300 mt-2 text-sm">Most Active Module</div>
+          </div>
+        </motion.div> */}
 
         {/* View Mode Toggle */}
         <motion.div
@@ -243,8 +276,8 @@ export default function SubmissionsPage() {
             }}
             disabled={isFetching}
             className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "all"
-                ? "bg-emerald-500 text-white"
-                : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+              ? "bg-emerald-500 text-white"
+              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
               } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             All Submissions
@@ -258,8 +291,8 @@ export default function SubmissionsPage() {
             }}
             disabled={isFetching}
             className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "by-module"
-                ? "bg-emerald-500 text-white"
-                : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+              ? "bg-emerald-500 text-white"
+              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
               } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             By Module
@@ -273,8 +306,8 @@ export default function SubmissionsPage() {
             }}
             disabled={isFetching}
             className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "by-user"
-                ? "bg-emerald-500 text-white"
-                : "bg-slate-700 text-gray-300 hover:bg-slate-600"
+              ? "bg-emerald-500 text-white"
+              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
               } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             By User
@@ -453,6 +486,12 @@ export default function SubmissionsPage() {
                       </>
                     ) : selectedModule === "xcan-advocate" ? (
                       <th className="px-6 py-4 text-gray-300 font-semibold">Status</th>
+                    ) : selectedModule === "arbitrum-stylus" ? (
+                      <>
+                        <th className="px-6 py-4 text-gray-300 font-semibold">Submissions</th>
+                        <th className="px-6 py-4 text-gray-300 font-semibold">Challenges</th>
+                        <th className="px-6 py-4 text-gray-300 font-semibold">Certification</th>
+                      </>
                     ) : (
                       <>
                         <th className="px-6 py-4 text-gray-300 font-semibold">Chapters</th>
@@ -566,6 +605,46 @@ export default function SubmissionsPage() {
                             )}
                           </div>
                         </td>
+                      ) : submission.type === "module" && submission.moduleId === "arbitrum-stylus" ? (
+                        <>
+                          <td className="px-6 py-4">
+                            <div className="text-white font-semibold">
+                              {submission.completedChaptersCount || 0}
+                            </div>
+                            <div className="text-xs text-gray-400 mt-1">submissions</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-emerald-400 font-semibold">
+                              {submission.completedChallenges?.length || 0}
+                            </div>
+                            <div className="text-xs text-gray-400 mt-1">challenges completed</div>
+                            {submission.completedChallenges && submission.completedChallenges.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {submission.completedChallenges.map((challengeId, idx) => (
+                                  <span
+                                    key={challengeId}
+                                    className="px-2 py-1 bg-slate-700 text-gray-300 rounded text-xs"
+                                    title={challengeId}
+                                  >
+                                    {challengeId}
+                                  </span>
+                                ))}
+                                {/* {submission.completedChallenges.length > 3 && (
+                                  <span className="px-2 py-1 bg-slate-600 text-gray-400 rounded text-xs">
+                                    +{submission.completedChallenges.length - 3}
+                                  </span>
+                                )} */}
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="space-y-1">
+                              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">
+                                Arbitrum Stylus
+                              </span>
+                            </div>
+                          </td>
+                        </>
                       ) : submission.type === "module" ? (
                         <>
                           <td className="px-6 py-4">
@@ -597,7 +676,9 @@ export default function SubmissionsPage() {
                         </>
                       ) : null}
                       <td className="px-6 py-4">
-                        {submission.transactionHash ? (
+                        {submission.moduleId === "arbitrum-stylus" && submission.nftTransactionHashes ? (
+                          <NFTBadges nfts={submission.nftTransactionHashes} />
+                        ) : submission.transactionHash ? (
                           <a
                             href={getTransactionUrl(submission.transactionHash)}
                             target="_blank"
@@ -793,12 +874,46 @@ export default function SubmissionsPage() {
                               </div>
                             )}
                           </div>
+                        ) : submission.moduleId === "arbitrum-stylus" ? (
+                          <div className="space-y-2">
+                            <div className="text-emerald-400 text-sm font-semibold">
+                              {submission.completedChaptersCount || 0} Submissions
+                            </div>
+                            <div className="text-blue-400 text-sm">
+                              {submission.completedChallenges?.length || 0} Challenges
+                            </div>
+                            {(submission as any).githubRepo && (
+                              <a
+                                href={(submission as any).githubRepo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-emerald-400 hover:text-emerald-300 flex items-center gap-2 group text-sm"
+                              >
+                                <span className="truncate max-w-xs">{shortenUrl((submission as any).githubRepo)}</span>
+                                <svg
+                                  className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                  />
+                                </svg>
+                              </a>
+                            )}
+                          </div>
                         ) : (
                           <div className="text-emerald-400 text-sm font-semibold">Completed</div>
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        {submission.transactionHash ? (
+                        {submission.moduleId === "arbitrum-stylus" && submission.nftTransactionHashes ? (
+                          <NFTBadges nfts={submission.nftTransactionHashes} />
+                        ) : submission.transactionHash ? (
                           <a
                             href={getTransactionUrl(submission.transactionHash)}
                             target="_blank"

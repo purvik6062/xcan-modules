@@ -31,6 +31,16 @@ interface ModuleSubmission {
   certificationLevel?: string;
   certificationLevelName?: string;
   updatedAt?: string;
+  githubRepo?: string;
+  contractAddress?: string;
+  // New fields for Arbitrum Stylus
+  completedChallenges?: string[];
+  nftTransactionHashes?: Array<{
+    transactionHash: string;
+    levelName?: string;
+    level?: number;
+    mintedAt?: Date;
+  }>;
 }
 
 type Submission = FoundationSubmission | AdvocateSubmission | ModuleSubmission;
@@ -66,7 +76,17 @@ export interface SubmissionsData {
     totalFoundationSubmissions: number;
     totalAdvocatesSubmissions: number;
     totalModuleSubmissions: number;
-    averageModulesPerUser: number;
+    totalArbitrumStylusSubmissions: number;
+    totalNFTsMinted: number;
+    nftBreakdown: {
+      mintedNFTCollection: number;
+      foundationUsers: number;
+      advocates: number;
+      userModules: number;
+    };
+    nftClaimRate: number;
+    completionRate: number;
+    mostActiveModule: string;
   };
 }
 
