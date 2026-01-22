@@ -452,32 +452,6 @@ export default function LearnCrossChainPage() {
           </div>
         </motion.div>
 
-        {/* Call to Action */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Ready to Build Cross-Chain Solutions?
-          </h2>
-          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-            Start your journey into cross-chain development and learn to create the interoperable
-            blockchain solutions that will shape the future of decentralized technology.
-          </p>
-          <motion.button
-            onClick={() => {
-              const firstChapter = document.getElementById(crossChainChapters[0].id);
-              firstChapter?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Begin Your Cross-Chain Journey →
-          </motion.button>
-        </motion.div>
       </div>
       <PromoCodeModal
         isOpen={isPromoOpen}

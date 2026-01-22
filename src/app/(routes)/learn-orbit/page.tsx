@@ -363,24 +363,6 @@ export default function LearnOrbitPage() {
           </div>
         </motion.div>
 
-        {/* Call to Action */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Ready to Launch Your Own Chain?
-          </h2>
-          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-            Start with the fundamentals and work your way up to deploying a production-ready
-            Arbitrum Orbit chain with custom features and governance.
-          </p>
-          <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300">
-            Begin Your Journey →
-          </button>
-        </motion.div>
       </div>
       <PromoCodeModal
         isOpen={isPromoOpen}

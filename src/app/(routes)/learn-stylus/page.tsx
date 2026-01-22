@@ -409,32 +409,6 @@ export default function LearnStylusPage() {
           </div>
         </motion.div>
 
-        {/* Call to Action */}
-        <motion.div
-          className="mt-16 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Ready to Build with Stylus?
-          </h2>
-          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-            Start your journey into high-performance smart contract development.
-            Learn Rust, master WASM, and unlock the full potential of Arbitrum Stylus!
-          </p>
-          <motion.button
-            onClick={() => {
-              const firstChapter = document.getElementById(stylusChapters[0].id);
-              firstChapter?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Begin Your Stylus Journey →
-          </motion.button>
-        </motion.div>
       </div>
       <PromoCodeModal
         isOpen={isPromoOpen}

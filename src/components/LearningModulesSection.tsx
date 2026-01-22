@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { learningModules, LearningModule } from "../data/learningModules";
+import { useRouter } from "next/navigation";
 
 const MODULE_PRICE = 50;
 const TOTAL_VALUE = 400;
 
 export default function LearningModulesSection() {
+  const router = useRouter();
+
   return (
     <section id="modules" className="py-16 container mx-auto px-4">
       <div className="text-center mb-12">
@@ -33,6 +38,11 @@ export default function LearningModulesSection() {
                 ? "transform hover:scale-105 transition-all duration-300 cursor-pointer"
                 : "opacity-75"
                 }`}
+                onClick={() => {
+                  if (module.status === "available") {
+                    router.push(module.href);
+                  }
+                }}
             >
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-10 group-hover:opacity-20 transition-opacity`}
