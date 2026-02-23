@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
 import { getAllModuleData } from "@/lib/database/module-collections";
+import { addressMatchQuery } from "@/lib/utils/address";
 
 // Module configuration with display names and IDs
 const MODULE_CONFIG = {
@@ -29,20 +30,20 @@ export async function GET(request: NextRequest) {
 
     // Fetch all data in parallel for maximum performance
     const [userData, mintedNFTData, allModulesData] = await Promise.all([
-      // User collection
+      // User collection - case-insensitive address match
       db.collection("users").findOne(
-        { address: userAddress },
+        { address: addressMatchQuery(userAddress) },
         { projection: { _id: 0, address: 1, socialHandles: 1, createdAt: 1, isEmailVisible: 1 } }
       ),
 
-      // Minted NFT collection
+      // Minted NFT collection - case-insensitive address match
       db.collection("minted-nft").findOne(
-        { userAddress: normalizedAddress },
+        { userAddress: addressMatchQuery(userAddress) },
         { projection: { _id: 0, totalMinted: 1, mintedLevels: 1, lastMintedAt: 1 } }
       ),
 
-      // All learning module data from unified collection
-      getAllModuleData(db, normalizedAddress),
+      // All learning module data - case-insensitive address match
+      getAllModuleData(db, userAddress),
     ]);
 
     // Process module data
@@ -55,11 +56,9 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Aggregate statistics efficiently
-    let totalChallengesCompleted = 0;
+    // Aggregate statistics - allCompletedChapters is the single source of truth
     let totalSectionsCompleted = 0;
     let totalModulesCompleted = 0;
-    let totalPoints = 0;
 
     const completedModules: Array<{ id: string; name: string; completedAt: string }> = [];
     const allCompletedChapters: Array<{
@@ -72,6 +71,18 @@ export async function GET(request: NextRequest) {
       level: string;
     }> = [];
 
+    // Helper to normalize chapter to { id, level, points } (handles both string and object formats)
+    const normalizeChapter = (chapter: string | { id?: string; level?: string; points?: number }) => {
+      if (typeof chapter === "string") {
+        return { id: chapter, level: "Beginner" as const, points: 0 };
+      }
+      return {
+        id: chapter.id ?? "",
+        level: chapter.level || "Beginner",
+        points: Number(chapter.points) || 0,
+      };
+    };
+
     // Process each module's data
     moduleData.forEach(({ moduleId, moduleName, data }) => {
       if (!data) return;
@@ -82,26 +93,55 @@ export async function GET(request: NextRequest) {
         isCompleted: data.isCompleted
       });
 
-      // Count completed challenges (chapters) - this should be the completedChapters array length
+      // Process completedChapters (handles both string and object formats)
       if (Array.isArray(data.completedChapters)) {
-        totalChallengesCompleted += data.completedChapters.length;
+        data.completedChapters.forEach((chapter: string | { id?: string; level?: string; points?: number }) => {
+          const { id, level, points } = normalizeChapter(chapter);
+          if (!id) return;
 
-        // Sum points from completed chapters
-        data.completedChapters.forEach((chapter: { id?: string; level?: string; points?: number }) => {
-          if (!chapter.id) return; // Skip if chapter.id is undefined
-          
-          const points = Number(chapter.points) || 0;
-          totalPoints += points;
-
-          // Add to completed chapters list
           allCompletedChapters.push({
-            id: `${moduleId}-${chapter.id}`,
+            id: `${moduleId}-${id}`,
             moduleId,
             moduleName,
-            title: chapter.id.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+            title: id.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
             completedOn: data.updatedAt ? new Date(data.updatedAt).toLocaleDateString() : "Unknown",
             points,
-            level: chapter.level || "Beginner",
+            level,
+          });
+        });
+      }
+
+      // Process challenges/results (e.g. precompiles-overview uses this structure)
+      const challenges = data.challenges;
+      const results = data.results;
+      if (Array.isArray(challenges) && results && typeof results === "object") {
+        challenges.forEach((challengeId: string) => {
+          const result = results[challengeId];
+          const points = result ? Number(result.points) || 0 : 0;
+          const level = result?.level || "Beginner";
+          const rawCompletedAt = result?.completedAt;
+          const completedAt = rawCompletedAt
+            ? (() => {
+                const dateStr =
+                  typeof rawCompletedAt === "string"
+                    ? rawCompletedAt
+                    : (rawCompletedAt as { $date?: string })?.$date;
+                return dateStr
+                  ? new Date(dateStr).toLocaleDateString()
+                  : new Date(rawCompletedAt as Date).toLocaleDateString();
+              })()
+            : data.updatedAt
+              ? new Date(data.updatedAt).toLocaleDateString()
+              : "Unknown";
+
+          allCompletedChapters.push({
+            id: `${moduleId}-${challengeId}`,
+            moduleId,
+            moduleName,
+            title: challengeId.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+            completedOn: completedAt,
+            points,
+            level,
           });
         });
       }
@@ -129,7 +169,55 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const totalMinted = mintedNFTData?.totalMinted || 0;
+    // Collect minted NFTs from user-modules certifications (claimed certs with mintedAt)
+    const userModulesNFTs: Array<{
+      level: number;
+      levelKey: string;
+      levelName: string;
+      transactionHash: string;
+      metadataUrl: string;
+      imageUrl: string;
+      mintedAt: string;
+      network: string;
+    }> = [];
+
+    moduleData.forEach(({ moduleId, moduleName, data }) => {
+      const certs = data?.certification;
+      if (!Array.isArray(certs)) return;
+      certs
+        .filter((c: any) => c?.claimed === true || c?.mintedAt != null)
+        .forEach((c: any) => {
+          const mintedAt = c?.mintedAt;
+          const mintedAtStr =
+            typeof mintedAt === "string"
+              ? mintedAt
+              : mintedAt?.$date
+                ? String(mintedAt.$date)
+                : mintedAt
+                  ? new Date(mintedAt).toISOString()
+                  : new Date().toISOString();
+          userModulesNFTs.push({
+            level: c?.level ?? 0,
+            levelKey: moduleId,
+            levelName: c?.levelName ?? moduleName,
+            transactionHash: c?.transactionHash ?? "",
+            metadataUrl: c?.metadataUrl ?? "",
+            imageUrl: c?.imageUrl ?? "",
+            mintedAt: mintedAtStr,
+            network: "arbitrum-sepolia",
+          });
+        });
+    });
+
+    const userModulesMintedCount = userModulesNFTs.length;
+
+    // Combine: minted-nft collection count + user-modules certification count
+    const totalMinted =
+      (mintedNFTData?.totalMinted || 0) + userModulesMintedCount;
+
+    // Single source of truth: derive totals from allCompletedChapters
+    const totalChallengesCompleted = allCompletedChapters.length;
+    const totalPoints = allCompletedChapters.reduce((sum, c) => sum + c.points, 0);
 
     console.log('Final totals:', {
       totalChallengesCompleted,
@@ -164,8 +252,8 @@ export async function GET(request: NextRequest) {
       fullName: userData?.socialHandles?.githubUsername || "Anonymous User",
       email: userData?.isEmailVisible ? "user@example.com" : "Hidden",
       avatar: userData?.socialHandles?.githubUsername
-        ? `https://api.dicebear.com/7.x/bottts/svg?seed=${userData.socialHandles.githubUsername}&backgroundColor=c1e5c1`
-        : "https://api.dicebear.com/7.x/bottts/svg?seed=anonymous&backgroundColor=c1e5c1",
+        ? `https://api.dicebear.com/7.x/bottts/png?seed=${encodeURIComponent(userData.socialHandles.githubUsername)}&backgroundColor=c1e5c1&size=128`
+        : "https://api.dicebear.com/7.x/bottts/png?seed=anonymous&backgroundColor=c1e5c1&size=128",
       joinDate: userData?.createdAt
         ? new Date(userData.createdAt).toLocaleDateString("en-US", {
             month: "long",
@@ -187,7 +275,23 @@ export async function GET(request: NextRequest) {
       completedModules,
       completedChallenges: allCompletedChapters,
       levelDistribution,
-      mintedNFTs: mintedNFTData?.mintedLevels || [],
+      mintedNFTs: [
+        ...(mintedNFTData?.mintedLevels || []).map((nft: any) => ({
+          ...nft,
+          mintedAt:
+            typeof nft.mintedAt === "string"
+              ? nft.mintedAt
+              : nft.mintedAt?.$date
+                ? String(nft.mintedAt.$date)
+                : nft.mintedAt
+                  ? new Date(nft.mintedAt).toISOString()
+                  : "",
+        })),
+        ...userModulesNFTs,
+      ].sort(
+        (a, b) =>
+          new Date(b.mintedAt).getTime() - new Date(a.mintedAt).getTime()
+      ),
     };
 
     return NextResponse.json(profileData);

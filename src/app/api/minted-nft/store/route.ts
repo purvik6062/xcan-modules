@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
 import { MintedNFT } from "@/components/nft/types";
+import { addressMatchQuery } from "@/lib/utils/address";
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,9 +35,9 @@ export async function POST(request: NextRequest) {
     const { client, db } = await connectToDatabase();
     const collection = db.collection("minted-nft");
 
-    // Check if user already has a document
+    // Check if user already has a document - case-insensitive address match
     const existingUser = await collection.findOne({
-      userAddress: userAddress.toLowerCase(),
+      userAddress: addressMatchQuery(userAddress),
     });
 
     if (existingUser) {
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
       };
 
       const updatedUser = await collection.findOneAndUpdate(
-        { userAddress: userAddress.toLowerCase() },
+        { userAddress: addressMatchQuery(userAddress) },
         {
           $push: { mintedLevels: newMintedLevel as any },
           $inc: { totalMinted: 1 },

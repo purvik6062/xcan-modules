@@ -17,6 +17,7 @@ export default function LearnCrossChainPage() {
   const { address, isReady } = useWalletProtection();
   const { certificationMint, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isClaimStatusLoading, setIsClaimStatusLoading] = useState(true);
   const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   const filteredChapters =
@@ -31,11 +32,13 @@ export default function LearnCrossChainPage() {
     const fetchProgress = async () => {
       if (!isReady || !address) {
         setIsLoading(false);
+        setIsClaimStatusLoading(false);
         return;
       }
 
       try {
         setIsLoading(true);
+        setIsClaimStatusLoading(true);
         const params = new URLSearchParams({ userAddress: address, module: "cross-chain" });
         const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
         if (res.ok) {
@@ -53,6 +56,7 @@ export default function LearnCrossChainPage() {
         console.error("Failed to fetch progress", e);
       } finally {
         setIsLoading(false);
+        setIsClaimStatusLoading(false);
       }
     };
 
@@ -226,7 +230,15 @@ export default function LearnCrossChainPage() {
           <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
             {/* Explanatory Text */}
             <div className="text-center w-full">
-              {overallProgress.percentage !== 100 ? (
+              {isClaimStatusLoading ? (
+                <div className="flex items-center justify-center space-x-2 text-gray-400 mb-2">
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <h3 className="text-lg font-semibold">Checking certification status...</h3>
+                </div>
+              ) : overallProgress.percentage !== 100 ? (
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold text-gray-400 dark:text-gray-200">
                     Complete all sections to unlock your certificate
@@ -257,15 +269,23 @@ export default function LearnCrossChainPage() {
             {/* Claim Button */}
             <button
               onClick={() => setIsPromoOpen(true)}
-              disabled={overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
+              disabled={isClaimStatusLoading || overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
-                : overallProgress.percentage === 100 && !isCertificationMinting
+                : overallProgress.percentage === 100 && !isCertificationMinting && !isClaimStatusLoading
                   ? "cursor-pointer bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
-              {alreadyClaimed ? (
+              {isClaimStatusLoading ? (
+                <div className="flex items-center justify-center space-x-2">
+                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Checking...</span>
+                </div>
+              ) : alreadyClaimed ? (
                 <>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

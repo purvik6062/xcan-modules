@@ -17,6 +17,7 @@ export default function LearnOrbitPage() {
   const [isModuleCompleted, setIsModuleCompleted] = useState(false);
   const { certificationMint, isCertificationMinting } = useMint();
   const [alreadyClaimed, setAlreadyClaimed] = useState(false);
+  const [isClaimStatusLoading, setIsClaimStatusLoading] = useState(true);
   const [isPromoOpen, setIsPromoOpen] = useState(false);
 
   // Aggregate totals across all chapters
@@ -38,8 +39,12 @@ export default function LearnOrbitPage() {
 
   useEffect(() => {
     const load = async () => {
-      if (!isReady || !address) return;
+      if (!isReady || !address) {
+        setIsClaimStatusLoading(false);
+        return;
+      }
       try {
+        setIsClaimStatusLoading(true);
         const params = new URLSearchParams({ userAddress: address, module: "master-orbit" });
         const res = await fetch(`/api/challenges?${params.toString()}`, { cache: "no-store" });
         if (!res.ok) return;
@@ -58,6 +63,8 @@ export default function LearnOrbitPage() {
         if (data?.isCertificationClaimed) setAlreadyClaimed(true);
       } catch (e) {
         console.error("learn-orbit: failed to fetch progress", e);
+      } finally {
+        setIsClaimStatusLoading(false);
       }
     };
     load();
@@ -191,7 +198,15 @@ export default function LearnOrbitPage() {
             {/* Claim Certification */}
             <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
               <div className="text-center w-full">
-                {!isModuleCompleted ? (
+                {isClaimStatusLoading ? (
+                  <div className="flex items-center justify-center space-x-2 text-gray-400 mb-2">
+                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <h3 className="text-lg font-semibold">Checking certification status...</h3>
+                  </div>
+                ) : !isModuleCompleted ? (
                   <div className="space-y-2">
                     <h3 className="text-lg font-semibold text-gray-400">
                       Complete the first chapter to unlock your certificate
@@ -220,15 +235,23 @@ export default function LearnOrbitPage() {
               </div>
               <button
                 onClick={() => setIsPromoOpen(true)}
-                disabled={!isModuleCompleted || isCertificationMinting || alreadyClaimed}
+                disabled={isClaimStatusLoading || !isModuleCompleted || isCertificationMinting || alreadyClaimed}
                 className={`${alreadyClaimed
                   ? "bg-green-100 text-green-700 border-2 border-green-300 cursor-default"
-                  : isModuleCompleted && !isCertificationMinting
+                  : isModuleCompleted && !isCertificationMinting && !isClaimStatusLoading
                     ? "cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-600 hover:to-teal-500 text-white shadow-lg ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed border border-gray-400/30"
                   } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
               >
-                {alreadyClaimed ? (
+                {isClaimStatusLoading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Checking...</span>
+                  </div>
+                ) : alreadyClaimed ? (
                   <>
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

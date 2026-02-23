@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:modules": "tsx scripts/migrate-challenges-to-user-modules.ts"
+    "migrate:modules": "tsx scripts/migrate-challenges-to-user-modules.ts",
+    "migrate:web3-basics-chapters": "tsx scripts/migrate-web3-basics-completed-chapters.ts"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.4",

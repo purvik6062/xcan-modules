@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/database/mongodb";
+import { addressMatchQuery } from "@/lib/utils/address";
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     const collection = db.collection("minted-nft");
 
     const existingUser = await collection.findOne({
-      userAddress: userAddress.toLowerCase(),
+      userAddress: addressMatchQuery(userAddress),
     });
 
     if (!existingUser) {

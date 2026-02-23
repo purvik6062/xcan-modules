@@ -177,20 +177,12 @@ export async function POST(request: NextRequest) {
         availableSections.length > 0 &&
         availableSections.every((s) => done.has(s.id))
       ) {
-        if (
-          currentModule === "cross-chain" ||
-          currentModule === "master-defi" ||
-          currentModule === "master-orbit" ||
-          currentModule === "stylus-core-concepts"
-        ) {
-          // Enrich with level and points for Cross-Chain, Master DeFi, and Stylus
-          const level: string = (ch as any).level || "Beginner";
-          const points =
-            level === "Advanced" ? 30 : level === "Intermediate" ? 20 : 10;
-          completedChapters.push({ id: ch.id, level, points });
-        } else {
-          completedChapters.push(ch.id);
-        }
+        // All modules use object format with id, level, points
+        const level: string = (ch as any).level || "Beginner";
+        const points =
+          Number((ch as any).points) ||
+          (level === "Advanced" ? 30 : level === "Intermediate" ? 20 : 10);
+        completedChapters.push({ id: ch.id, level, points });
       }
     }
 

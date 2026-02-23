@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { addressesMatch } from "@/lib/utils/address";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -44,7 +45,7 @@ export default function XcanAdvocatePage() {
 
   const canClaim = useMemo(() => {
     if (!userAddress || !doc) return false;
-    if (doc.userAddress && doc.userAddress.toLowerCase() !== userAddress.toLowerCase()) return false;
+    if (doc.userAddress && !addressesMatch(doc.userAddress, userAddress)) return false;
     if (latestCert?.mintedAt) return false; // already minted
     return Boolean(doc.isEligible);
   }, [doc, userAddress, latestCert]);

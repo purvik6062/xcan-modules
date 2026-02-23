@@ -26,14 +26,8 @@ export default function LearningModulesSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {learningModules.map((module: LearningModule) => {
           const IconComponent = module.icon;
-          return (
-            <div
-              key={module.id}
-              className={`relative group rounded-xl overflow-hidden ${module.status === "available"
-                ? "transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                : "opacity-75"
-                }`}
-            >
+          const cardContent = (
+            <>
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-10 group-hover:opacity-20 transition-opacity`}
               ></div>
@@ -132,13 +126,11 @@ export default function LearningModulesSection() {
                 </div>
 
                 {module.status === "available" ? (
-                  <Link
-                    href={module.href}
-                    target={module.target}
+                  <div
                     className={`block w-full text-center bg-gradient-to-r ${module.gradient} text-white font-semibold py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-300`}
                   >
                     {module.title === "Project Submission" ? "Submit Project" : "Start Learning"}
-                  </Link>
+                  </div>
                 ) : (
                   <button
                     disabled
@@ -148,6 +140,24 @@ export default function LearningModulesSection() {
                   </button>
                 )}
               </div>
+            </>
+          );
+
+          return (
+            <div
+              key={module.id}
+              className={`relative group rounded-xl overflow-hidden ${module.status === "available"
+                ? "transform hover:scale-105 transition-all duration-300 cursor-pointer"
+                : "opacity-75"
+                }`}
+            >
+              {module.status === "available" ? (
+                <Link href={module.href} target={module.target} className="block h-full">
+                  {cardContent}
+                </Link>
+              ) : (
+                cardContent
+              )}
             </div>
           );
         })}

@@ -294,7 +294,6 @@ export async function POST(request: NextRequest) {
       try {
         const { client, db } = await connectToDatabase();
         if (userAddress && typeof userAddress === "string") {
-          const lower = userAddress.toLowerCase();
           const { getModuleData, updateModuleData } = await import("@/lib/database/module-collections");
           
           const resultEntry = {
@@ -305,7 +304,7 @@ export async function POST(request: NextRequest) {
           };
 
           // Get current module data to check completion status
-          const currentModuleData = await getModuleData(db, lower, "precompiles-overview");
+          const currentModuleData = await getModuleData(db, userAddress, "precompiles-overview");
           const currentChallenges = currentModuleData?.challenges || [];
           const currentResults = currentModuleData?.results || {};
           const newChallenges = [...new Set([...currentChallenges, slug])];
@@ -327,7 +326,7 @@ export async function POST(request: NextRequest) {
           // Update module data with all changes
           await updateModuleData(
             db,
-            lower,
+            userAddress,
             "precompiles-overview",
             {
               challenges: newChallenges,
@@ -378,7 +377,7 @@ export async function GET(request: NextRequest) {
     const { db } = await connectToDatabase();
     const { getModuleData } = await import("@/lib/database/module-collections");
     
-    const moduleData = await getModuleData(db, userAddress.toLowerCase(), "precompiles-overview");
+    const moduleData = await getModuleData(db, userAddress, "precompiles-overview");
 
     const progress = moduleData || {
       challenges: [],

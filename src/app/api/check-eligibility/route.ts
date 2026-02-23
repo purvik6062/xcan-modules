@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/database/client";
 import { userChallenges } from "@/lib/database/schema";
 import { ReviewAction, ChallengeId } from "@/lib/database/schema";
-import { eq, and, or } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 // Define all certification levels with their required challenges
 const CERTIFICATION_LEVELS = {
@@ -103,10 +103,7 @@ export async function POST(request: NextRequest) {
       .from(userChallenges)
       .where(
         and(
-          or(
-            eq(userChallenges.userAddress, userAddress),
-            eq(userChallenges.userAddress, userAddress.toLowerCase())
-          ),
+          sql`lower(${userChallenges.userAddress}) = lower(${userAddress})`,
           eq(userChallenges.reviewAction, "ACCEPTED")
         )
       );

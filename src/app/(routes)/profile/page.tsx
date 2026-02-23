@@ -5,6 +5,29 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 
+// Fallback avatar component for when DiceBear image fails to load
+function AvatarImage({ src, alt }: { src: string; alt: string }) {
+  const [imgError, setImgError] = useState(false);
+  if (imgError) {
+    return (
+      <div className="w-32 h-32 rounded-full mb-4 bg-[#1a2332] flex items-center justify-center text-4xl">
+        👤
+      </div>
+    );
+  }
+  return (
+    <Image
+      width={128}
+      height={128}
+      src={src}
+      alt={alt}
+      className="w-32 h-32 rounded-full mb-4"
+      unoptimized
+      onError={() => setImgError(true)}
+    />
+  );
+}
+
 // Types for the profile data
 interface ProfileData {
   username: string;
@@ -162,13 +185,7 @@ export default function ProfilePage() {
         <div className="lg:col-span-1">
           <div className=" bg-[#0A142A] rounded-lg shadow-md p-6">
             <div className="flex flex-col items-center text-center">
-              <Image
-                width={128}
-                height={128}
-                src={userData.avatar}
-                alt={userData.username}
-                className="w-32 h-32 rounded-full mb-4"
-              />
+              <AvatarImage src={userData.avatar} alt={userData.username} />
               <h1 className="text-2xl font-bold">{userData.username}</h1>
               {/* <p className=" text-gray-300">
                 {userData.fullName}
@@ -651,8 +668,8 @@ export default function ProfilePage() {
               <div>
                 <h2 className="text-xl font-bold mb-4">Your Minted NFTs</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {userData.mintedNFTs.map((nft) => (
-                    <div key={nft.level} className="bg-[#0A142A] rounded-lg shadow-md p-6">
+                  {userData.mintedNFTs.map((nft, idx) => (
+                    <div key={nft.transactionHash || `${nft.level}-${nft.levelName}-${idx}`} className="bg-[#0A142A] rounded-lg shadow-md p-6">
                       <div className="text-center mb-4">
                         <Image
                           src={nft.imageUrl}

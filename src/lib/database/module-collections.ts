@@ -1,4 +1,5 @@
 import { Db } from "mongodb";
+import { addressMatchQuery } from "@/lib/utils/address";
 
 export type ModuleId =
   | "web3-basics"
@@ -49,7 +50,7 @@ export async function getModuleData(
   const doc = await db
     .collection("user-modules")
     .findOne(
-      { userAddress: normalizedAddress },
+      { userAddress: addressMatchQuery(userAddress) },
       { projection: { [`modules.${normalizedModuleId}`]: 1 } }
     );
 
@@ -65,7 +66,7 @@ export async function getAllModuleData(
   const doc = await db
     .collection("user-modules")
     .findOne(
-      { userAddress: normalizedAddress },
+      { userAddress: addressMatchQuery(userAddress) },
       { projection: { modules: 1 } }
     );
 
@@ -103,7 +104,7 @@ export async function updateModuleData(
 
   await db
     .collection("user-modules")
-    .updateOne({ userAddress: normalizedAddress }, update, {
+    .updateOne({ userAddress: addressMatchQuery(userAddress) }, update, {
       upsert: options.upsert || false,
     });
 }
@@ -139,7 +140,7 @@ export async function updateModuleField(
 
   await db
     .collection("user-modules")
-    .updateOne({ userAddress: normalizedAddress }, update, {
+    .updateOne({ userAddress: addressMatchQuery(userAddress) }, update, {
       upsert: options.upsert || false,
     });
 }
@@ -177,7 +178,7 @@ export async function addToModuleArray(
 
     await db
       .collection("user-modules")
-      .updateOne({ userAddress: normalizedAddress }, update, {
+      .updateOne({ userAddress: addressMatchQuery(userAddress) }, update, {
         upsert: options.upsert || false,
       });
     return;
@@ -209,7 +210,7 @@ export async function addToModuleArray(
 
   await db
     .collection("user-modules")
-    .updateOne({ userAddress: normalizedAddress }, update, {
+    .updateOne({ userAddress: addressMatchQuery(userAddress) }, update, {
       upsert: options.upsert || false,
     });
 }
