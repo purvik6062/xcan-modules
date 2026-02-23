@@ -2,8 +2,26 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import {
+  BookOpen,
+  Award,
+  Users,
+  Layers,
+  ClipboardList,
+  Copy,
+} from "lucide-react";
 import { useSubmissions } from "../../../hooks/useSubmissions";
 import { NFTBadges } from "../../../components/submissions/NFTBadges";
+import {
+  StatCard,
+  ViewToggle,
+  ModuleCard,
+  SearchInput,
+  DataTable,
+  Pagination,
+  PageHeader,
+  SkeletonStat,
+} from "../../../components/submissions";
 
 interface FoundationSubmission {
   walletAddress: string;
@@ -126,38 +144,29 @@ export default function SubmissionsPage() {
     return submission.walletAddress.toLowerCase().includes(query);
   }) || [];
 
-  // Skeleton Loader Component
   const SkeletonLoader = () => (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header Skeleton */}
-        <div className="text-center mb-8">
-          <div className="h-12 w-64 bg-slate-700 rounded-lg mx-auto mb-4 animate-pulse"></div>
-          <div className="h-6 w-96 bg-slate-700 rounded-lg mx-auto animate-pulse"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 h-12 w-64 animate-pulse rounded-lg bg-slate-700" />
+          <div className="mx-auto h-6 w-96 animate-pulse rounded-lg bg-slate-700" />
         </div>
-
-        {/* Stats Skeleton */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-slate-800 rounded-xl p-6 shadow-lg">
-              <div className="h-10 w-20 bg-slate-700 rounded mb-2 animate-pulse"></div>
-              <div className="h-4 w-32 bg-slate-700 rounded animate-pulse"></div>
-            </div>
+            <SkeletonStat key={i} />
           ))}
         </div>
-
-        {/* Table Skeleton */}
-        <div className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden">
+        <div className="overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 shadow-xl">
           <div className="p-6">
-            <div className="h-8 w-48 bg-slate-700 rounded mb-4 animate-pulse"></div>
+            <div className="mb-4 h-8 w-48 animate-pulse rounded bg-slate-700" />
             <div className="space-y-4">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <div key={i} className="flex gap-4">
-                  <div className="h-12 flex-1 bg-slate-700 rounded animate-pulse"></div>
-                  <div className="h-12 flex-1 bg-slate-700 rounded animate-pulse"></div>
-                  <div className="h-12 flex-1 bg-slate-700 rounded animate-pulse"></div>
-                  <div className="h-12 flex-1 bg-slate-700 rounded animate-pulse"></div>
-                  <div className="h-12 w-32 bg-slate-700 rounded animate-pulse"></div>
+                  <div className="h-12 flex-1 animate-pulse rounded bg-slate-700" />
+                  <div className="h-12 flex-1 animate-pulse rounded bg-slate-700" />
+                  <div className="h-12 flex-1 animate-pulse rounded bg-slate-700" />
+                  <div className="h-12 flex-1 animate-pulse rounded bg-slate-700" />
+                  <div className="h-12 w-32 animate-pulse rounded bg-slate-700" />
                 </div>
               ))}
             </div>
@@ -173,9 +182,9 @@ export default function SubmissionsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
         <div className="text-center">
-          <p className="text-red-400 text-lg">{error}</p>
+          <p className="text-lg text-red-400">{error}</p>
         </div>
       </div>
     );
@@ -183,365 +192,267 @@ export default function SubmissionsPage() {
 
   if (!submissionsData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-4xl font-bold mb-6 text-center text-white">📋 Submissions</h1>
-          <div className="bg-slate-800 rounded-2xl shadow-xl p-8 text-center">
-            <p className="text-gray-300 text-lg">No submissions yet. Be the first to submit!</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+          <PageHeader
+            title="Submissions"
+            subtitle="All submissions from Arbitrum Stylus builders"
+            icon={ClipboardList}
+          />
+          <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-8 text-center shadow-xl">
+            <p className="text-lg text-slate-300">No submissions yet. Be the first to submit!</p>
           </div>
         </div>
       </div>
     );
   }
 
+  const viewToggleOptions = [
+    { value: "all", label: "All Submissions" },
+    { value: "by-module", label: "By Module" },
+    { value: "by-user", label: "By User" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 className="text-5xl font-bold text-white mb-4">📋 Submissions</h1>
-          <p className="text-xl text-gray-300">
-            All submissions from Arbitrum Stylus builders
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <PageHeader
+          title="Submissions"
+          subtitle="All submissions from Arbitrum Stylus builders"
+          icon={ClipboardList}
+        />
 
-        {/* Stats Overview */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-4xl font-bold text-emerald-400">{submissionsData.totalSubmissions}</div>
-            <div className="text-gray-300 mt-2 text-sm">Total Modules Completed</div>
-          </div>
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-4xl font-bold text-yellow-400">
-              {submissionsData.stats.totalNFTsMinted || 0}
-            </div>
-            <div className="text-gray-300 mt-2 text-sm">Total NFTs Claimed</div>
-          </div>
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-3xl font-bold text-blue-400">{submissionsData.uniqueUsers}</div>
-            <div className="text-gray-300 mt-2 text-sm">Total Unique Users</div>
-          </div>
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-3xl font-bold text-indigo-400">{submissionsData.moduleUserCounts.length}</div>
-            <div className="text-gray-300 mt-2 text-sm">Active Modules</div>
-          </div>
-        </motion.div>
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+          <StatCard
+            value={submissionsData.totalSubmissions}
+            label="Total Modules Completed"
+            variant="emerald"
+            icon={BookOpen}
+            delay={0.1}
+          />
+          <StatCard
+            value={submissionsData.stats.totalNFTsMinted || 0}
+            label="Total NFTs Claimed"
+            variant="amber"
+            icon={Award}
+            delay={0.15}
+          />
+          <StatCard
+            value={submissionsData.uniqueUsers}
+            label="Total Unique Users"
+            variant="blue"
+            icon={Users}
+            delay={0.2}
+          />
+          <StatCard
+            value={submissionsData.moduleUserCounts.length}
+            label="Active Modules"
+            variant="indigo"
+            icon={Layers}
+            delay={0.25}
+          />
+        </div>
 
-        {/* Additional Stats Row */}
-        {/* <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-3xl font-bold text-blue-400">{submissionsData.uniqueUsers}</div>
-            <div className="text-gray-300 mt-2 text-sm">Total Unique Users</div>
-          </div>
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-3xl font-bold text-indigo-400">{submissionsData.moduleUserCounts.length}</div>
-            <div className="text-gray-300 mt-2 text-sm">Active Modules</div>
-          </div>
-          <div className="bg-slate-800 rounded-xl p-6 shadow-lg text-center">
-            <div className="text-2xl font-bold text-pink-400 truncate">
-              {submissionsData.stats.mostActiveModule}
-            </div>
-            <div className="text-gray-300 mt-2 text-sm">Most Active Module</div>
-          </div>
-        </motion.div> */}
-
-        {/* View Mode Toggle */}
-        <motion.div
-          className="mb-6 flex gap-4 justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <button
-            onClick={() => {
+        <div className="mb-6 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <ViewToggle
+            value={viewMode}
+            onChange={(v) => {
               if (!isFetching) {
-                setViewMode("all");
+                setViewMode(v as "all" | "by-module" | "by-user");
                 setCurrentPage(1);
               }
             }}
+            options={viewToggleOptions}
             disabled={isFetching}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "all"
-              ? "bg-emerald-500 text-white"
-              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
-              } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            All Submissions
-          </button>
-          <button
-            onClick={() => {
-              if (!isFetching) {
-                setViewMode("by-module");
-                setCurrentPage(1);
-              }
-            }}
-            disabled={isFetching}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "by-module"
-              ? "bg-emerald-500 text-white"
-              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
-              } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            By Module
-          </button>
-          <button
-            onClick={() => {
-              if (!isFetching) {
-                setViewMode("by-user");
-                setCurrentPage(1);
-              }
-            }}
-            disabled={isFetching}
-            className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer ${viewMode === "by-user"
-              ? "bg-emerald-500 text-white"
-              : "bg-slate-700 text-gray-300 hover:bg-slate-600"
-              } ${isFetching ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            By User
-          </button>
-        </motion.div>
+          />
+        </div>
 
-        {/* Search Bar */}
         {(viewMode === "all" || viewMode === "by-user") && (
-          <motion.div
-            className="mb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="bg-slate-800 rounded-xl p-4">
-              <input
-                type="text"
-                placeholder="Search by wallet address..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-          </motion.div>
+          <div className="mb-6 max-w-xl">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Search by wallet address..."
+            />
+          </div>
         )}
 
-        {/* Module List for By Module View */}
         {viewMode === "by-module" && (
           <motion.div
             className="mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h2 className="text-2xl font-bold text-white mb-4">Select Module</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {submissionsData.moduleUserCounts.map((module) => (
-                <div
+            <h2 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Select Module</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {submissionsData.moduleUserCounts.map((module, i) => (
+                <ModuleCard
                   key={module.moduleId}
-                  className={`bg-slate-800 rounded-xl p-4 shadow-lg cursor-pointer transition-all hover:bg-slate-700 ${selectedModule === module.moduleId ? "ring-2 ring-emerald-400" : ""
-                    }`}
+                  module={module}
+                  selected={selectedModule === module.moduleId}
                   onClick={() => handleModuleClick(module.moduleId)}
-                >
-                  <div className="text-lg font-semibold text-white mb-2">{module.moduleName}</div>
-                  <div className="text-3xl font-bold text-emerald-400">{module.userCount}</div>
-                  <div className="text-gray-400 text-sm mt-1">users completed</div>
-                </div>
+                  delay={0.02 * i}
+                />
               ))}
             </div>
           </motion.div>
         )}
 
-        {/* Current Module Display */}
         {viewMode === "by-module" && selectedModule && (
           <motion.div
-            className="mb-6 bg-slate-800 rounded-xl p-4"
+            className="mb-6 rounded-xl border border-slate-700/50 bg-slate-800/50 px-4 py-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <div className="flex items-center justify-between">
-              <span className="text-white font-semibold">
-                Showing: {submissionsData.moduleUserCounts.find((m) => m.moduleId === selectedModule)?.moduleName}
+            <span className="text-sm font-medium text-slate-300">
+              Showing:{" "}
+              <span className="font-semibold text-white">
+                {submissionsData.moduleUserCounts.find((m) => m.moduleId === selectedModule)?.moduleName}
               </span>
-            </div>
+            </span>
           </motion.div>
         )}
 
-        {/* Submissions Display */}
         {viewMode === "by-user" ? (
-          <motion.div
-            className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
+          <DataTable>
             <div className="p-6">
-              <h2 className="text-2xl font-bold text-white mb-4">Users by Module Count</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-slate-900 text-left border-b border-slate-700">
-                      <th className="px-6 py-4 text-gray-300 font-semibold">#</th>
-                      <th className="px-6 py-4 text-gray-300 font-semibold">Wallet Address</th>
-                      <th className="px-6 py-4 text-gray-300 font-semibold">Modules Completed</th>
-                      <th className="px-6 py-4 text-gray-300 font-semibold">Module List</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700">
-                    {submissionsData.userModuleCounts
-                      .filter((user) => {
-                        if (!searchQuery) return true;
-                        return user.walletAddress.toLowerCase().includes(searchQuery.toLowerCase());
-                      })
-                      .map((user, index) => (
-                        <motion.tr
-                          key={user.walletAddress}
-                          className="hover:bg-slate-700/50 transition-colors"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: index * 0.02 }}
-                        >
-                          <td className="px-6 py-4">
-                            <div className="text-gray-400 font-semibold">{index + 1}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-2">
-                              <div className="font-mono text-white font-semibold">
-                                {shortenAddress(user.walletAddress)}
-                              </div>
-                              <button
-                                onClick={() => copyToClipboard(user.walletAddress)}
-                                className="text-gray-400 hover:text-emerald-400 transition-colors"
-                                title="Copy address"
-                              >
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                                  />
-                                </svg>
-                              </button>
-                            </div>
-                            <div className="text-xs text-gray-500 mt-1 font-mono">
-                              {user.walletAddress}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-2xl font-bold text-emerald-400">{user.moduleCount}</div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-wrap gap-2">
-                              {user.modules.map((moduleId) => {
-                                const module = submissionsData.moduleUserCounts.find((m) => m.moduleId === moduleId);
-                                return (
-                                  <span
-                                    key={moduleId}
-                                    className="px-2 py-1 bg-slate-700 text-gray-300 rounded text-xs"
-                                  >
-                                    {module?.moduleName || moduleId}
-                                  </span>
-                                );
-                              })}
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </motion.div>
-        ) : viewMode === "by-module" ? (
-          <motion.div
-            className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <div className="overflow-x-auto">
+              <h2 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Users by Module Count</h2>
               <table className="w-full">
                 <thead>
-                  <tr className="bg-slate-900 text-left border-b border-slate-700">
-                    <th className="px-6 py-4 text-gray-300 font-semibold">#</th>
-                    <th className="px-6 py-4 text-gray-300 font-semibold">Wallet Address</th>
+                  <tr className="border-b border-slate-700/50 bg-slate-900/80 text-left">
+                    <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">#</th>
+                    <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Wallet Address</th>
+                    <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Modules Completed</th>
+                    <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Module List</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-700/50">
+                  {submissionsData.userModuleCounts
+                    .filter((user) => {
+                      if (!searchQuery) return true;
+                      return user.walletAddress.toLowerCase().includes(searchQuery.toLowerCase());
+                    })
+                    .map((user, index) => (
+                      <motion.tr
+                        key={user.walletAddress}
+                        className="transition-colors hover:bg-slate-700/30"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.02 }}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-slate-400">{index + 1}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <div className="font-mono font-semibold text-white">
+                              {shortenAddress(user.walletAddress)}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(user.walletAddress)}
+                              aria-label="Copy address"
+                              className="rounded p-1 text-slate-400 transition-colors hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus:outline-none"
+                            >
+                              <Copy className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <div className="mt-1 font-mono text-xs text-slate-500">{user.walletAddress}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-2xl font-bold text-emerald-400">{user.moduleCount}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-wrap gap-2">
+                            {user.modules.map((moduleId) => {
+                              const mod = submissionsData.moduleUserCounts.find((m) => m.moduleId === moduleId);
+                              return (
+                                <span
+                                  key={moduleId}
+                                  className="rounded-full bg-slate-700/80 px-3 py-1 text-xs font-medium text-slate-300"
+                                >
+                                  {mod?.moduleName || moduleId}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </DataTable>
+        ) : viewMode === "by-module" ? (
+          <DataTable
+            pagination={
+              submissionsData.pagination ? (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={submissionsData.pagination.totalPages}
+                  totalCount={submissionsData.pagination.totalCount}
+                  pageSize={30}
+                  onPageChange={setCurrentPage}
+                  isLoading={isFetching}
+                />
+              ) : undefined
+            }
+          >
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-700/50 bg-slate-900/80 text-left">
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">#</th>
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Wallet Address</th>
                     {selectedModule === "stylus-foundation" ? (
                       <>
-                        <th className="px-6 py-4 text-gray-300 font-semibold">GitHub Repo</th>
-                        <th className="px-6 py-4 text-gray-300 font-semibold">Contract Address</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">GitHub Repo</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Contract Address</th>
                       </>
                     ) : selectedModule === "xcan-advocate" ? (
-                      <th className="px-6 py-4 text-gray-300 font-semibold">Status</th>
+                      <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Status</th>
                     ) : selectedModule === "arbitrum-stylus" ? (
                       <>
-                        <th className="px-6 py-4 text-gray-300 font-semibold">Submissions</th>
-                        <th className="px-6 py-4 text-gray-300 font-semibold">Challenges</th>
-                        <th className="px-6 py-4 text-gray-300 font-semibold">Certification</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Submissions</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Challenges</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Certification</th>
                       </>
                     ) : (
                       <>
-                        <th className="px-6 py-4 text-gray-300 font-semibold">Chapters</th>
-                        {/* <th className="px-6 py-4 text-gray-300 font-semibold">Points</th> */}
-                        <th className="px-6 py-4 text-gray-300 font-semibold">Certification</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Chapters</th>
+                        <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Certification</th>
                       </>
                     )}
-                    <th className="px-6 py-4 text-gray-300 font-semibold">NFT</th>
+                    <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">NFT</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700">
+                <tbody className="divide-y divide-slate-700/50">
                   {submissionsData.submissions.map((submission, index) => (
                     <motion.tr
                       key={`${submission.walletAddress}-${submission.moduleId}-${index}`}
-                      className="hover:bg-slate-700/50 transition-colors"
+                      className="transition-colors hover:bg-slate-700/30"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.01 }}
+                      transition={{ duration: 0.3, delay: index * 0.01 }}
                     >
                       <td className="px-6 py-4">
-                        <div className="text-gray-400 font-semibold">{(currentPage - 1) * 30 + index + 1}</div>
+                        <div className="font-semibold text-slate-400">{(currentPage - 1) * 30 + index + 1}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="font-mono text-white font-semibold">
+                          <div className="font-mono font-semibold text-white">
                             {shortenAddress(submission.walletAddress)}
                           </div>
                           <button
+                            type="button"
                             onClick={() => copyToClipboard(submission.walletAddress)}
-                            className="text-gray-400 hover:text-emerald-400 transition-colors"
-                            title="Copy address"
+                            aria-label="Copy address"
+                            className="rounded p-1 text-slate-400 transition-colors hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus:outline-none"
                           >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                              />
-                            </svg>
+                            <Copy className="h-4 w-4" />
                           </button>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1 font-mono">
-                          {submission.walletAddress}
-                        </div>
+                        <div className="mt-1 font-mono text-xs text-slate-500">{submission.walletAddress}</div>
                       </td>
                       {submission.type === "foundation" && selectedModule === "stylus-foundation" ? (
                         <>
@@ -591,9 +502,9 @@ export default function SubmissionsPage() {
                         <td className="px-6 py-4">
                           <div className="space-y-1">
                             <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${submission.isEligible
+                              className={`rounded-full px-3 py-1 text-xs font-medium ${submission.isEligible
                                 ? "bg-emerald-500/20 text-emerald-400"
-                                : "bg-gray-500/20 text-gray-400"
+                                : "bg-slate-600/50 text-slate-400"
                                 }`}
                             >
                               {submission.isEligible ? "Eligible" : "Not Eligible"}
@@ -623,7 +534,7 @@ export default function SubmissionsPage() {
                                 {submission.completedChallenges.map((challengeId, idx) => (
                                   <span
                                     key={challengeId}
-                                    className="px-2 py-1 bg-slate-700 text-gray-300 rounded text-xs"
+                                    className="rounded-full bg-slate-700/80 px-3 py-1 text-xs font-medium text-slate-300"
                                     title={challengeId}
                                   >
                                     {challengeId}
@@ -639,7 +550,7 @@ export default function SubmissionsPage() {
                           </td>
                           <td className="px-6 py-4">
                             <div className="space-y-1">
-                              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold">
+                              <span className="rounded-full bg-amber-500/20 px-3 py-1 text-xs font-medium text-amber-400">
                                 Arbitrum Stylus
                               </span>
                             </div>
@@ -709,107 +620,59 @@ export default function SubmissionsPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
-            {/* Pagination */}
-            {submissionsData.pagination && (
-              <div className="bg-slate-900 px-6 py-4 flex items-center justify-between border-t border-slate-700">
-                <div className="flex items-center gap-3">
-                  <div className="text-gray-300 text-sm">
-                    Showing {(currentPage - 1) * 30 + 1} to {Math.min(currentPage * 30, submissionsData.pagination.totalCount)} of {submissionsData.pagination.totalCount} results
-                  </div>
-                  {isFetching && (
-                    <div className="flex items-center gap-2 text-emerald-400 text-sm">
-                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span>Loading...</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={!submissionsData.pagination.hasPrevPage || isFetching}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasPrevPage && !isFetching
-                      ? "bg-slate-700 text-white hover:bg-slate-600"
-                      : "bg-slate-800 text-gray-500 cursor-not-allowed"
-                      }`}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.min(submissionsData.pagination.totalPages, p + 1))}
-                    disabled={!submissionsData.pagination.hasNextPage || isFetching}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasNextPage && !isFetching
-                      ? "bg-slate-700 text-white hover:bg-slate-600"
-                      : "bg-slate-800 text-gray-500 cursor-not-allowed"
-                      }`}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
-          </motion.div>
+          </DataTable>
         ) : (
-          <motion.div
-            className="bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+          <DataTable
+            pagination={
+              submissionsData.pagination ? (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={submissionsData.pagination.totalPages}
+                  totalCount={submissionsData.pagination.totalCount}
+                  pageSize={30}
+                  onPageChange={setCurrentPage}
+                  isLoading={isFetching}
+                />
+              ) : undefined
+            }
           >
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-slate-900 text-left border-b border-slate-700">
-                    <th className="px-6 py-4 text-gray-300 font-semibold">#</th>
-                    <th className="px-6 py-4 text-gray-300 font-semibold">Wallet Address</th>
-                    <th className="px-6 py-4 text-gray-300 font-semibold">Module</th>
-                    <th className="px-6 py-4 text-gray-300 font-semibold">Details</th>
-                    <th className="px-6 py-4 text-gray-300 font-semibold">NFT</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-700">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-700/50 bg-slate-900/80 text-left">
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">#</th>
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Wallet Address</th>
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Module</th>
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">Details</th>
+                  <th scope="col" className="px-6 py-4 text-sm font-medium text-slate-300">NFT</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-700/50">
                   {filteredSubmissions.map((submission, index) => (
                     <motion.tr
                       key={`${submission.walletAddress}-${submission.moduleId}-${index}`}
-                      className="hover:bg-slate-700/50 transition-colors"
+                      className="transition-colors hover:bg-slate-700/30"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.01 }}
+                      transition={{ duration: 0.3, delay: index * 0.01 }}
                     >
                       <td className="px-6 py-4">
-                        <div className="text-gray-400 font-semibold">{(currentPage - 1) * 30 + index + 1}</div>
+                        <div className="font-semibold text-slate-400">{(currentPage - 1) * 30 + index + 1}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
-                          <div className="font-mono text-white font-semibold">
+                          <div className="font-mono font-semibold text-white">
                             {shortenAddress(submission.walletAddress)}
                           </div>
                           <button
+                            type="button"
                             onClick={() => copyToClipboard(submission.walletAddress)}
-                            className="text-gray-400 hover:text-emerald-400 transition-colors"
-                            title="Copy address"
+                            aria-label="Copy address"
+                            className="rounded p-1 text-slate-400 transition-colors hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus:outline-none"
                           >
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                              />
-                            </svg>
+                            <Copy className="h-4 w-4" />
                           </button>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1 font-mono">
-                          {submission.walletAddress}
-                        </div>
+                        <div className="mt-1 font-mono text-xs text-slate-500">{submission.walletAddress}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-white font-semibold">
@@ -826,9 +689,9 @@ export default function SubmissionsPage() {
                         {submission.type === "advocate" ? (
                           <div className="space-y-1">
                             <span
-                              className={`px-2 py-1 rounded text-xs font-semibold ${submission.isEligible
+                              className={`rounded-full px-3 py-1 text-xs font-medium ${submission.isEligible
                                 ? "bg-emerald-500/20 text-emerald-400"
-                                : "bg-gray-500/20 text-gray-400"
+                                : "bg-slate-600/50 text-slate-400"
                                 }`}
                             >
                               {submission.isEligible ? "Eligible" : "Not Eligible"}
@@ -944,49 +807,7 @@ export default function SubmissionsPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
-            {/* Pagination */}
-            {submissionsData.pagination && (
-              <div className="bg-slate-900 px-6 py-4 flex items-center justify-between border-t border-slate-700">
-                <div className="flex items-center gap-3">
-                  <div className="text-gray-300 text-sm">
-                    Showing {(currentPage - 1) * 30 + 1} to {Math.min(currentPage * 30, submissionsData.pagination.totalCount)} of {submissionsData.pagination.totalCount} results
-                  </div>
-                  {isFetching && (
-                    <div className="flex items-center gap-2 text-emerald-400 text-sm">
-                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      <span>Loading...</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={!submissionsData.pagination.hasPrevPage || isFetching}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasPrevPage && !isFetching
-                      ? "bg-slate-700 text-white hover:bg-slate-600"
-                      : "bg-slate-800 text-gray-500 cursor-not-allowed"
-                      }`}
-                  >
-                    Previous
-                  </button>
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.min(submissionsData.pagination.totalPages, p + 1))}
-                    disabled={!submissionsData.pagination.hasNextPage || isFetching}
-                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${submissionsData.pagination.hasNextPage && !isFetching
-                      ? "bg-slate-700 text-white hover:bg-slate-600"
-                      : "bg-slate-800 text-gray-500 cursor-not-allowed"
-                      }`}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
-          </motion.div>
+          </DataTable>
         )}
       </div>
     </div>

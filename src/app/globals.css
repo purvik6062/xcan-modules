@@ -3,6 +3,20 @@
 :root {
   --background: #0a0a0a;
   --foreground: #ededed;
+
+  /* Submissions / Navigation design tokens */
+  --accent-emerald: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-amber: #f59e0b;
+  --accent-indigo: #6366f1;
+
+  --section-gap: 2rem;
+  --card-radius: 1rem;
+  --card-padding: 1.25rem;
+
+  --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-elevated: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 40px -10px rgba(16, 185, 129, 0.3);
 }
 
 @theme inline {
@@ -41,14 +55,14 @@ body {
 /* Line clamp utilities */
 .line-clamp-2 {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .line-clamp-3 {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  /* -webkit-line-clamp: 3; */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

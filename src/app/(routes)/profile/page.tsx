@@ -3,16 +3,31 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  User,
+  Target,
+  Layers,
+  BookOpen,
+  Sparkles,
+  ExternalLink,
+  Check,
+} from "lucide-react";
 import { useAccount } from "wagmi";
 import ConnectWallet from "@/components/ConnectWallet";
+import {
+  StatCard,
+  ViewToggle,
+  PageHeader,
+} from "@/components/submissions";
 
 // Fallback avatar component for when DiceBear image fails to load
 function AvatarImage({ src, alt }: { src: string; alt: string }) {
   const [imgError, setImgError] = useState(false);
   if (imgError) {
     return (
-      <div className="w-32 h-32 rounded-full mb-4 bg-[#1a2332] flex items-center justify-center text-4xl">
-        👤
+      <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full border-2 border-slate-600/50 bg-slate-800/80 text-4xl">
+        <User className="h-16 w-16 text-slate-400" />
       </div>
     );
   }
@@ -22,14 +37,13 @@ function AvatarImage({ src, alt }: { src: string; alt: string }) {
       height={128}
       src={src}
       alt={alt}
-      className="w-32 h-32 rounded-full mb-4"
+      className="mb-4 rounded-full border-2 border-slate-600/50 shadow-lg"
       unoptimized
       onError={() => setImgError(true)}
     />
   );
 }
 
-// Types for the profile data
 interface ProfileData {
   username: string;
   fullName: string;
@@ -70,14 +84,47 @@ interface ProfileData {
   }>;
 }
 
+const tabOptions = [
+  { value: "overview", label: "Overview" },
+  { value: "challenges", label: "Challenges" },
+  { value: "modules", label: "Modules" },
+  { value: "nfts", label: "NFTs" },
+];
+
+function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  action,
+}: {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-slate-700/50 bg-slate-800/30 p-12 text-center"
+    >
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-700/50">
+        <Icon className="h-8 w-8 text-slate-400" />
+      </div>
+      <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
+      <p className="mb-6 text-sm text-slate-400">{description}</p>
+      {action}
+    </motion.div>
+  );
+}
+
 export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState("overview"); // overview, challenges, modules, nfts
+  const [activeTab, setActiveTab] = useState("overview");
   const [userData, setUserData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { address } = useAccount();
 
-  // Fetch user profile data
   useEffect(() => {
     const fetchProfileData = async () => {
       if (!address) {
@@ -90,15 +137,13 @@ export default function ProfilePage() {
         const response = await fetch(`/api/profile?address=${address}`);
 
         if (!response.ok) {
-          throw new Error('Failed to fetch profile data');
+          throw new Error("Failed to fetch profile data");
         }
 
         const data = await response.json();
-        console.log("user data: ", data);
         setUserData(data);
       } catch (err) {
-        console.error('Error fetching profile data:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -107,621 +152,473 @@ export default function ProfilePage() {
     fetchProfileData();
   }, [address]);
 
-  // Show loading state
+  const copyAddress = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
+  // Loading state - centered in viewport minus navbar and footer
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p className="text-gray-400">Loading profile...</p>
-          </div>
+      <div className="flex min-h-[calc(100vh-10rem)] w-full flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <div
+            className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-2 border-slate-600 border-t-emerald-500"
+            aria-hidden
+          />
+          <p className="text-slate-400">Loading profile...</p>
         </div>
       </div>
     );
   }
 
-  // Show error state
+  // Error state
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h2 className="text-xl font-bold mb-2">Error Loading Profile</h2>
-            <p className="text-gray-400 mb-4">{error}</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-24 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-red-500/20 bg-slate-800/50 p-8 text-center"
+          >
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10">
+              <span className="text-3xl text-red-400">!</span>
+            </div>
+            <h2 className="mb-2 text-xl font-semibold text-white">Error Loading Profile</h2>
+            <p className="mb-6 text-slate-400">{error}</p>
             <button
+              type="button"
               onClick={() => window.location.reload()}
-              className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+              className="rounded-xl bg-emerald-500/20 px-6 py-2.5 font-medium text-emerald-400 transition-colors hover:bg-emerald-500/30 focus-visible:ring-2 focus-visible:ring-emerald-500 focus:outline-none"
             >
               Try Again
             </button>
-          </div>
+          </motion.div>
         </div>
       </div>
     );
   }
 
-  // Show connect wallet state
+  // Connect wallet state
   if (!address) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-blue-500 text-6xl mb-4">🔗</div>
-            <h2 className="text-xl font-bold mb-2">Connect Your Wallet</h2>
-            <p className="text-gray-400 mb-4">Please connect your wallet to view your profile</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-24 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-slate-700/50 bg-slate-800/30 p-12 text-center"
+          >
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-700/50">
+              <User className="h-8 w-8 text-slate-400" />
+            </div>
+            <h2 className="mb-2 text-xl font-semibold text-white">Connect Your Wallet</h2>
+            <p className="mb-6 text-slate-400">Please connect your wallet to view your profile</p>
             <ConnectWallet />
-          </div>
+          </motion.div>
         </div>
       </div>
     );
   }
 
-  // Show no data state
+  // No data state
   if (!userData) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="text-gray-500 text-6xl mb-4">👤</div>
-            <h2 className="text-xl font-bold mb-2">No Profile Data</h2>
-            <p className="text-gray-400 mb-4">No profile data found for this address</p>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-24 sm:px-6 lg:px-8">
+          <EmptyState
+            icon={User}
+            title="No Profile Data"
+            description="No profile data found for this address"
+          />
         </div>
       </div>
     );
   }
 
-  // Calculate stats
   const totalPoints = userData.points;
   const completedCount = userData.totalChallengesCompleted;
   const beginnerCount = userData.levelDistribution.Beginner || 0;
   const intermediateCount = userData.levelDistribution.Intermediate || 0;
   const advancedCount = userData.levelDistribution.Advanced || 0;
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Profile sidebar */}
-        <div className="lg:col-span-1">
-          <div className=" bg-[#0A142A] rounded-lg shadow-md p-6">
-            <div className="flex flex-col items-center text-center">
-              <AvatarImage src={userData.avatar} alt={userData.username} />
-              <h1 className="text-2xl font-bold">{userData.username}</h1>
-              {/* <p className=" text-gray-300">
-                {userData.fullName}
-              </p> */}
-              <p className="text-sm  text-gray-400 mt-1">
-                Member since {userData.joinDate}
-              </p>
+  const levelColor =
+    userData.level === "Beginner"
+      ? "text-emerald-400 bg-emerald-500/20"
+      : userData.level === "Intermediate"
+        ? "text-amber-400 bg-amber-500/20"
+        : "text-rose-400 bg-rose-500/20";
 
-              <div className="mt-6 w-full">
-                <div className="flex justify-between mb-2">
-                  <span className=" text-gray-300">
-                    Level:
-                  </span>
-                  <span
-                    className={`font-medium ${userData.level === "Beginner"
-                      ? "text-green-600"
-                      : userData.level === "Intermediate"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                      }`}
-                  >
-                    {userData.level}
-                  </span>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Profile sidebar */}
+          <motion.aside
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-1"
+          >
+            <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-xl">
+              <div className="flex flex-col items-center text-center">
+                <AvatarImage src={userData.avatar} alt={userData.username} />
+                <h1 className="text-xl font-bold tracking-tight text-white">{userData.username}</h1>
+                <p className="mt-1 text-sm text-slate-400">Member since {userData.joinDate}</p>
+
+                <div className="mt-6 w-full space-y-3">
+                  <div className="flex items-center justify-between rounded-lg bg-slate-700/30 px-4 py-3">
+                    <span className="text-sm text-slate-400">Level</span>
+                    <span className={`rounded-full px-3 py-1 text-xs font-medium ${levelColor}`}>
+                      {userData.level}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg bg-slate-700/30 px-4 py-3">
+                    <span className="text-sm text-slate-400">Points</span>
+                    <span className="font-semibold text-white">{userData.points}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between mb-2">
-                  <span className=" text-gray-300">
-                    Points:
-                  </span>
-                  <span className="font-medium">{userData.points}</span>
-                </div>
-                {/* <div className="flex justify-between mb-2">
-                  <span className=" text-gray-300">
-                    Rank:
-                  </span>
-                  <span className="font-medium">#{userData.rank}</span>
-                </div> */}
-                {/* <div className="flex justify-between">
-                  <span className=" text-gray-300">
-                    Current Streak:
-                  </span>
-                  <span className="font-medium">{userData.streak} days 🔥</span>
-                </div> */}
+              </div>
+            </div>
+          </motion.aside>
+
+          {/* Main content */}
+          <div className="lg:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className="mb-6">
+                <ViewToggle
+                  value={activeTab}
+                  onChange={setActiveTab}
+                  options={tabOptions}
+                  layoutId="profileTabActive"
+                />
               </div>
 
-              {/* <button className="mt-6 w-full cursor-pointer bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded">
-                Edit Profile
-              </button> */}
-            </div>
-          </div>
-        </div>
+              <AnimatePresence mode="wait">
+                {/* Overview Tab */}
+                {activeTab === "overview" && (
+                  <motion.div
+                    key="overview"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-6"
+                  >
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+                      <StatCard value={totalPoints} label="Total Points" variant="blue" delay={0} />
+                      <StatCard value={completedCount} label="Challenges" variant="emerald" delay={0.05} />
+                      <StatCard value={userData.totalSectionsCompleted} label="Sections" variant="purple" delay={0.1} />
+                      <StatCard value={userData.totalModulesCompleted} label="Modules" variant="pink" delay={0.15} />
+                      <StatCard value={userData.totalMinted} label="NFTs" variant="amber" delay={0.2} />
+                      <StatCard value={userData.completedModules.length} label="Completed" variant="cyan" delay={0.25} />
+                    </div>
 
-        {/* Main content */}
-        <div className="lg:col-span-2">
-          {/* Tabs */}
-          <div className="mb-6 border-b  border-gray-700">
-            <ul className="flex flex-wrap -mb-px">
-              <li className="mr-2">
-                <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "overview"
-                    ? "  text-blue-300 border-blue-300"
-                    : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                    }`}
-                  onClick={() => setActiveTab("overview")}
-                >
-                  Overview
-                </button>
-              </li>
-              <li className="mr-2">
-                <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "challenges"
-                    ? "  text-blue-300 border-blue-300"
-                    : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                    }`}
-                  onClick={() => setActiveTab("challenges")}
-                >
-                  Challenges
-                </button>
-              </li>
-              <li className="mr-2">
-                <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "modules"
-                    ? " text-blue-300 border-blue-300"
-                    : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                    }`}
-                  onClick={() => setActiveTab("modules")}
-                >
-                  Modules
-                </button>
-              </li>
-              <li>
-                <button
-                  className={`inline-block cursor-pointer py-4 px-4 border-b-2 font-medium text-sm ${activeTab === "nfts"
-                    ? " text-blue-300 border-blue-300"
-                    : "text-gray-400 hover:text-gray-400 hover:border-gray-300 border-transparent"
-                    }`}
-                  onClick={() => setActiveTab("nfts")}
-                >
-                  NFTs
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Tab content */}
-          <div>
-            {/* Overview Tab */}
-            {activeTab === "overview" && (
-              <div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-blue-300">
-                      {totalPoints}
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      Total Points
-                    </div>
-                  </div>
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-green-300">
-                      {completedCount}
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      Challenges
-                    </div>
-                  </div>
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-purple-300">
-                      {userData.totalSectionsCompleted}
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      Sections
-                    </div>
-                  </div>
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-pink-300">
-                      {userData.totalModulesCompleted}
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      Modules
-                    </div>
-                  </div>
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-yellow-300">
-                      {userData.totalMinted}
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      NFTs
-                    </div>
-                  </div>
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <div className="text-3xl font-bold text-cyan-300">
-                      {userData.completedModules.length}
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      Completed
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-6">
-                  <div className=" bg-[#0A142A] rounded-lg shadow-md p-4">
-                    <h3 className="text-lg font-semibold mb-3">Completed Modules</h3>
-                    {userData.completedModules.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {userData.completedModules.map((module) => (
-                          <div key={module.id} className="bg-[#1a2332] rounded-lg p-3 flex items-center justify-between">
-                            <div>
-                              <div className="font-medium text-white">{module.name}</div>
-                              <div className="text-xs text-gray-400">{module.completedAt}</div>
+                    <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-xl">
+                      <h3 className="mb-4 text-lg font-semibold text-white">Completed Modules</h3>
+                      {userData.completedModules.length > 0 ? (
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {userData.completedModules.map((mod) => (
+                            <div
+                              key={mod.id}
+                              className="flex items-center justify-between rounded-xl border border-slate-700/50 bg-slate-700/30 p-4 transition-colors hover:border-slate-600/50"
+                            >
+                              <div>
+                                <div className="font-medium text-white">{mod.name}</div>
+                                <div className="text-xs text-slate-400">{mod.completedAt}</div>
+                              </div>
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
+                                <Check className="h-4 w-4 text-emerald-400" />
+                              </div>
                             </div>
-                            <div className="text-green-400">✓</div>
+                          ))}
+                        </div>
+                      ) : (
+                        <EmptyState
+                          icon={BookOpen}
+                          title="No modules completed"
+                          description="Start learning to complete your first module"
+                        />
+                      )}
+                    </div>
+
+                    <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-xl">
+                      <h3 className="mb-4 text-lg font-semibold text-white">Challenge Progress</h3>
+                      <div className="mb-4 flex h-3 overflow-hidden rounded-full bg-slate-700/50">
+                        {completedCount > 0 && (
+                          <>
+                            {beginnerCount > 0 && (
+                              <div
+                                className="h-full bg-emerald-500 transition-all"
+                                style={{ width: `${(beginnerCount / completedCount) * 100}%` }}
+                                title={`${beginnerCount} Beginner`}
+                              />
+                            )}
+                            {intermediateCount > 0 && (
+                              <div
+                                className="h-full bg-amber-500 transition-all"
+                                style={{ width: `${(intermediateCount / completedCount) * 100}%` }}
+                                title={`${intermediateCount} Intermediate`}
+                              />
+                            )}
+                            {advancedCount > 0 && (
+                              <div
+                                className="h-full bg-rose-500 transition-all"
+                                style={{ width: `${(advancedCount / completedCount) * 100}%` }}
+                                title={`${advancedCount} Advanced`}
+                              />
+                            )}
+                          </>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-4 text-sm text-slate-400">
+                        <span className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                          Beginner ({beginnerCount})
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-amber-500" />
+                          Intermediate ({intermediateCount})
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-rose-500" />
+                          Advanced ({advancedCount})
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-xl">
+                      <h3 className="mb-4 text-lg font-semibold text-white">Recent Activity</h3>
+                      {userData.completedChallenges.length > 0 ? (
+                        <div className="space-y-4">
+                          {userData.completedChallenges.slice(0, 5).map((challenge) => (
+                            <div key={challenge.id} className="flex items-start gap-4">
+                              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-500/20">
+                                <Check className="h-5 w-5 text-emerald-400" />
+                              </div>
+                              <div>
+                                <div className="text-sm">
+                                  <span className="text-slate-400">{challenge.moduleName}: </span>
+                                  <span className="font-medium text-white">{challenge.title}</span>
+                                </div>
+                                <div className="text-xs text-slate-500">
+                                  {challenge.completedOn} · {challenge.points} pts
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <EmptyState
+                          icon={Target}
+                          title="No challenges completed"
+                          description="Complete challenges to see your activity"
+                        />
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Challenges Tab */}
+                {activeTab === "challenges" && (
+                  <motion.div
+                    key="challenges"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <h2 className="mb-4 text-xl font-semibold text-white">
+                      Completed Challenges ({userData.completedChallenges.length})
+                    </h2>
+                    {userData.completedChallenges.length > 0 ? (
+                      <div className="space-y-4">
+                        {userData.completedChallenges.map((challenge) => (
+                          <div
+                            key={challenge.id}
+                            className="flex flex-col gap-4 rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5 shadow-lg sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <div>
+                              <div className="font-medium text-white">{challenge.title}</div>
+                              <div className="mt-1 text-sm text-slate-400">{challenge.moduleName}</div>
+                              <div className="mt-2 flex flex-wrap items-center gap-2">
+                                <span
+                                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+                                    challenge.level === "Beginner"
+                                      ? "bg-emerald-500/20 text-emerald-400"
+                                      : challenge.level === "Intermediate"
+                                        ? "bg-amber-500/20 text-amber-400"
+                                        : "bg-rose-500/20 text-rose-400"
+                                  }`}
+                                >
+                                  {challenge.level}
+                                </span>
+                                <span className="text-xs text-slate-500">{challenge.completedOn}</span>
+                              </div>
+                            </div>
+                            <div className="flex shrink-0 items-center gap-4 sm:flex-col sm:items-end">
+                              <div className="font-bold text-blue-400">{challenge.points} pts</div>
+                              <span className="flex items-center gap-1 text-sm text-emerald-400">
+                                <Check className="h-4 w-4" /> Completed
+                              </span>
+                            </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-4 text-gray-400">
-                        No modules completed yet
-                      </div>
+                      <EmptyState
+                        icon={Target}
+                        title="No Challenges Completed"
+                        description="Start learning to complete your first challenge!"
+                        action={
+                          <Link
+                            href="/challenges"
+                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/20 px-6 py-2.5 font-medium text-emerald-400 transition-colors hover:bg-emerald-500/30"
+                          >
+                            Browse Challenges
+                          </Link>
+                        }
+                      />
                     )}
-                  </div>
-                </div>
+                  </motion.div>
+                )}
 
-                <div className=" bg-[#0A142A] rounded-lg shadow-md p-6 mb-6">
-                  <h2 className="text-lg font-bold mb-4">Challenge Progress</h2>
-                  <div className="flex h-10 mb-4">
-                    {beginnerCount > 0 && (
-                      <div
-                        className="h-full bg-green-500"
-                        style={{
-                          width: `${(beginnerCount / completedCount) * 100}%`,
-                        }}
-                        title={`${beginnerCount} Beginner Challenges`}
-                      ></div>
-                    )}
-                    {intermediateCount > 0 && (
-                      <div
-                        className="h-full bg-yellow-500"
-                        style={{
-                          width: `${(intermediateCount / completedCount) * 100
-                            }%`,
-                        }}
-                        title={`${intermediateCount} Intermediate Challenges`}
-                      ></div>
-                    )}
-                    {advancedCount > 0 && (
-                      <div
-                        className="h-full bg-red-500"
-                        style={{
-                          width: `${(advancedCount / completedCount) * 100}%`,
-                        }}
-                        title={`${advancedCount} Advanced Challenges`}
-                      ></div>
-                    )}
-                  </div>
-                  <div className="flex text-sm justify-between">
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-                      <span>Beginner ({beginnerCount})</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
-                      <span>Intermediate ({intermediateCount})</span>
-                    </div>
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
-                      <span>Advanced ({advancedCount})</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* <div className=" bg-[#0A142A] rounded-lg shadow-md p-6 mb-6">
-                  <h2 className="text-lg font-bold mb-4">Minted NFTs</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {userData.mintedNFTs.map((nft) => (
-                      <div key={nft.level} className="bg-[#1a2332] rounded-lg p-4 text-center">
-                        <div className="mb-2">
-                          <Image
-                            src={nft.imageUrl}
-                            alt={nft.levelName}
-                            width={80}
-                            height={80}
-                            className="w-20 h-20 rounded-lg mx-auto"
-                          />
-                        </div>
-                        <h3 className="font-semibold text-sm mb-1">{nft.levelName}</h3>
-                        <p className="text-xs text-gray-400 mb-2">Level {nft.level}</p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(nft.mintedAt).toLocaleDateString()}
-                        </p>
-                        <a
-                          href={`https://sepolia.arbiscan.io/tx/${nft.transactionHash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-400 hover:underline text-xs mt-1 block"
-                        >
-                          View Transaction
-                        </a>
+                {/* Modules Tab */}
+                {activeTab === "modules" && (
+                  <motion.div
+                    key="modules"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="mb-6 grid gap-4 sm:grid-cols-2">
+                      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6">
+                        <h3 className="mb-2 text-lg font-semibold text-emerald-400">Completed</h3>
+                        <div className="text-3xl font-bold text-white">{userData.totalModulesCompleted}</div>
+                        <div className="text-sm text-slate-400">modules completed</div>
                       </div>
-                    ))}
-                    {userData.mintedNFTs.length === 0 && (
-                      <div className="col-span-full text-center py-8">
-                        <div className="text-gray-500 text-4xl mb-2">🎨</div>
-                        <p className="text-gray-400">No NFTs minted yet</p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Complete challenges to mint your first NFT!
-                        </p>
+                      <div className="rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6">
+                        <h3 className="mb-2 text-lg font-semibold text-blue-400">In Progress</h3>
+                        <div className="text-3xl font-bold text-white">{6 - userData.totalModulesCompleted}</div>
+                        <div className="text-sm text-slate-400">modules available</div>
                       </div>
-                    )}
-                  </div>
-                </div> */}
+                    </div>
 
-                <div className=" bg-[#0A142A] rounded-lg shadow-md p-6">
-                  <h2 className="text-lg font-bold mb-4">Recent Activity</h2>
-                  <div className="space-y-4">
-                    {userData.completedChallenges
-                      .slice(0, 5)
-                      .map((challenge) => (
-                        <div key={challenge.id} className="flex items-start">
-                          <div className="flex-shrink-0 bg-green-900 p-2 rounded-full">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-green-300"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
+                    <h3 className="mb-4 text-lg font-semibold text-white">Completed Modules</h3>
+                    {userData.completedModules.length > 0 ? (
+                      <div className="space-y-4">
+                        {userData.completedModules.map((module) => (
+                          <div
+                            key={module.id}
+                            className="flex items-center justify-between rounded-2xl border border-slate-700/50 bg-slate-800/50 p-5"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20">
+                                <Check className="h-6 w-6 text-emerald-400" />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-white">{module.name}</h4>
+                                <p className="text-sm text-slate-400">Completed on {module.completedAt}</p>
+                              </div>
+                            </div>
+                            <span className="rounded-full bg-emerald-500/20 px-4 py-2 text-sm font-medium text-emerald-400">
+                              Complete
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <EmptyState
+                        icon={Layers}
+                        title="No Modules Completed"
+                        description="Complete all challenges in a module to mark it as complete!"
+                        action={
+                          <Link
+                            href="/"
+                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/20 px-6 py-2.5 font-medium text-emerald-400 transition-colors hover:bg-emerald-500/30"
+                          >
+                            Browse Modules
+                          </Link>
+                        }
+                      />
+                    )}
+                  </motion.div>
+                )}
+
+                {/* NFTs Tab */}
+                {activeTab === "nfts" && (
+                  <motion.div
+                    key="nfts"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <h2 className="mb-6 text-xl font-semibold text-white">Your Minted NFTs</h2>
+                    {userData.mintedNFTs.length > 0 ? (
+                      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {userData.mintedNFTs.map((nft, idx) => (
+                          <div
+                            key={nft.transactionHash || `${nft.level}-${nft.levelName}-${idx}`}
+                            className="overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 shadow-xl transition-all hover:border-slate-600/50"
+                          >
+                            <div className="relative aspect-square overflow-hidden bg-slate-700/30">
+                              <Image
+                                src={nft.imageUrl}
+                                alt={nft.levelName}
+                                fill
+                                className="object-cover"
+                                unoptimized
                               />
-                            </svg>
-                          </div>
-                          <div className="ml-3">
-                            <div className="text-sm font-medium">
-                              <span className="text-gray-400">{challenge.moduleName}:</span>{" "}
-                              <span className="text-white">{challenge.title}</span>
                             </div>
-                            <div className="text-xs text-gray-400">
-                              {challenge.completedOn} • {challenge.points} points
+                            <div className="p-5">
+                              <h3 className="mb-1 font-bold text-white">{nft.levelName}</h3>
+                              <p className="mb-4 text-sm text-slate-400">Level {nft.level}</p>
+                              <p className="mb-4 text-xs text-slate-500">
+                                Minted on{" "}
+                                {new Date(nft.mintedAt).toLocaleDateString("en-US", {
+                                  month: "long",
+                                  day: "numeric",
+                                  year: "numeric",
+                                })}
+                              </p>
+                              <a
+                                href={`https://sepolia.arbiscan.io/tx/${nft.transactionHash}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500/20 py-2.5 text-sm font-medium text-blue-400 transition-colors hover:bg-blue-500/30"
+                              >
+                                View Transaction
+                                <ExternalLink className="h-4 w-4" />
+                              </a>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    {userData.completedChallenges.length === 0 && (
-                      <div className="text-center py-4 text-gray-400">
-                        No challenges completed yet
+                        ))}
                       </div>
+                    ) : (
+                      <EmptyState
+                        icon={Sparkles}
+                        title="No NFTs Minted Yet"
+                        description="Complete challenges to mint your first NFT and showcase your achievements!"
+                        action={
+                          <Link
+                            href="/challenges"
+                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/20 px-6 py-2.5 font-medium text-emerald-400 transition-colors hover:bg-emerald-500/30"
+                          >
+                            Start Challenges
+                          </Link>
+                        }
+                      />
                     )}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Challenges Tab */}
-            {activeTab === "challenges" && (
-              <div>
-                <h2 className="text-xl font-bold mb-4">Completed Challenges ({userData.completedChallenges.length})</h2>
-                <div className="space-y-4 mb-8">
-                  {userData.completedChallenges.map((challenge) => (
-                    <div
-                      key={challenge.id}
-                      className=" bg-[#0A142A] rounded-lg shadow-md p-4 flex justify-between items-center"
-                    >
-                      <div className="flex-1">
-                        <div className="font-medium text-white">
-                          {challenge.title}
-                        </div>
-                        <div className="text-sm text-gray-400 mt-1">
-                          {challenge.moduleName}
-                        </div>
-                        <div className="flex items-center mt-2">
-                          <span
-                            className={`text-xs px-2 py-0.5 rounded mr-2 ${challenge.level === "Beginner"
-                              ? "  bg-green-900 text-green-200"
-                              : challenge.level === "Intermediate"
-                                ? "  bg-yellow-900 text-yellow-200"
-                                : "  bg-red-900 text-red-200"
-                              }`}
-                          >
-                            {challenge.level}
-                          </span>
-                          <span className="text-sm text-gray-400">
-                            {challenge.completedOn}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-blue-300">
-                          {challenge.points} pts
-                        </div>
-                        <div className="text-xs text-green-400">✓ Completed</div>
-                      </div>
-                    </div>
-                  ))}
-                  {userData.completedChallenges.length === 0 && (
-                    <div className="text-center py-12">
-                      <div className="text-gray-500 text-6xl mb-4">📚</div>
-                      <h3 className="text-xl font-bold mb-2">No Challenges Completed</h3>
-                      <p className="text-gray-400">
-                        Start learning to complete your first challenge!
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* <h2 className="text-xl font-bold mb-4">In Progress</h2>
-                <div className="space-y-4">
-                  {userData.inProgressChallenges.map((challenge) => (
-                    <div
-                      key={challenge.id}
-                      className=" bg-[#0A142A] rounded-lg shadow-md p-4"
-                    >
-                      <div className="flex justify-between mb-2">
-                        <Link
-                          href={`/challenges/${challenge.slug}`}
-                          className="font-medium hover:text-blue-300 hover:underline"
-                        >
-                          {challenge.title}
-                        </Link>
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded ${challenge.level === "Beginner"
-                            ? "  bg-green-900 text-green-200"
-                            : challenge.level === "Intermediate"
-                              ? "  bg-yellow-900 text-yellow-200"
-                              : "  bg-red-900 text-red-200"
-                            }`}
-                        >
-                          {challenge.level}
-                        </span>
-                      </div>
-                      <div className="w-full bg-[#0A142A] rounded-full h-2.5">
-                        <div
-                          className="bg-blue-300 h-2.5 rounded-full"
-                          style={{ width: `${challenge.progress}%` }}
-                        ></div>
-                      </div>
-                      <div className="text-right mt-1 text-sm text-gray-400">
-                        {challenge.progress}% complete
-                      </div>
-                    </div>
-                  ))}
-                </div> */}
-              </div>
-            )}
-
-            {/* Modules Tab */}
-            {activeTab === "modules" && (
-              <div>
-                <h2 className="text-xl font-bold mb-4">Learning Modules</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div className="bg-[#0A142A] rounded-lg shadow-md p-6">
-                    <h3 className="text-lg font-semibold mb-2 text-green-400">Completed</h3>
-                    <div className="text-3xl font-bold">{userData.totalModulesCompleted}</div>
-                    <div className="text-sm text-gray-400">modules completed</div>
-                  </div>
-                  <div className="bg-[#0A142A] rounded-lg shadow-md p-6">
-                    <h3 className="text-lg font-semibold mb-2 text-blue-400">In Progress</h3>
-                    <div className="text-3xl font-bold">{6 - userData.totalModulesCompleted}</div>
-                    <div className="text-sm text-gray-400">modules available</div>
-                  </div>
-                </div>
-
-                <h3 className="text-lg font-bold mb-3">Completed Modules</h3>
-                <div className="space-y-3 mb-6">
-                  {userData.completedModules.map((module) => (
-                    <div
-                      key={module.id}
-                      className="bg-[#0A142A] rounded-lg shadow-md p-4 flex items-center justify-between"
-                    >
-                      <div className="flex items-center">
-                        <div className="bg-green-900 p-2 rounded-full mr-4">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-green-300"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-white">{module.name}</h4>
-                          <p className="text-sm text-gray-400">Completed on {module.completedAt}</p>
-                        </div>
-                      </div>
-                      <div className="bg-green-900 text-green-300 px-3 py-1 rounded-full text-sm font-medium">
-                        ✓ Complete
-                      </div>
-                    </div>
-                  ))}
-                  {userData.completedModules.length === 0 && (
-                    <div className="text-center py-12 bg-[#0A142A] rounded-lg">
-                      <div className="text-gray-500 text-6xl mb-4">🎯</div>
-                      <h3 className="text-xl font-bold mb-2">No Modules Completed</h3>
-                      <p className="text-gray-400 mb-4">
-                        Complete all challenges in a module to mark it as complete!
-                      </p>
-                      <Link
-                        href="/"
-                        className="inline-block bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
-                      >
-                        Browse Modules
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* NFTs Tab */}
-            {activeTab === "nfts" && (
-              <div>
-                <h2 className="text-xl font-bold mb-4">Your Minted NFTs</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {userData.mintedNFTs.map((nft, idx) => (
-                    <div key={nft.transactionHash || `${nft.level}-${nft.levelName}-${idx}`} className="bg-[#0A142A] rounded-lg shadow-md p-6">
-                      <div className="text-center mb-4">
-                        <Image
-                          src={nft.imageUrl}
-                          alt={nft.levelName}
-                          width={120}
-                          height={120}
-                          className="w-30 h-30 rounded-lg mx-auto"
-                        />
-                      </div>
-                      <div className="text-center">
-                        <h3 className="font-bold text-lg mb-2">{nft.levelName}</h3>
-                        <p className="text-sm text-gray-400 mb-2">Level {nft.level}</p>
-                        <p className="text-xs text-gray-500 mb-4">
-                          Minted on {new Date(nft.mintedAt).toLocaleDateString('en-US', {
-                            month: 'long',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                        </p>
-                        <div className="space-y-2">
-                          <a
-                            href={`https://sepolia.arbiscan.io/tx/${nft.transactionHash}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded transition-colors"
-                          >
-                            View Transaction
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {userData.mintedNFTs.length === 0 && (
-                    <div className="col-span-full text-center py-12">
-                      <div className="text-gray-500 text-6xl mb-4">🎨</div>
-                      <h3 className="text-xl font-bold mb-2">No NFTs Minted Yet</h3>
-                      <p className="text-gray-400 mb-4">
-                        Complete challenges to mint your first NFT and showcase your achievements!
-                      </p>
-                      <Link
-                        href="/challenges"
-                        className="inline-block bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
-                      >
-                        Start Challenges
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           </div>
         </div>
       </div>

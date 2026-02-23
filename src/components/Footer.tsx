@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="bg-gradient-to-r from-[#010229] to-[#01056b] border-t border-gray-700/50 py-8 w-full mt-auto">
       <div className="container mx-auto px-4">
         {/* Main footer content */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           {/* Brand section */}
           <div className="mb-6 md:mb-0">
             <div className="flex items-center justify-center md:justify-start mb-3">
