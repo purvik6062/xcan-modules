@@ -81,7 +81,7 @@ export default function ChallengeFilters({
         <h3 className="font-semibold mb-2">Difficulty</h3>
         <div className="space-y-2">
           {Object.keys(filters.levels).map((level) => (
-            <label key={level} className="flex items-center">
+            <label key={level} className="flex items-center hover:cursor-pointer">
               <input
                 type="checkbox"
                 className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
@@ -100,7 +100,7 @@ export default function ChallengeFilters({
         <h3 className="font-semibold mb-2">Categories</h3>
         <div className="space-y-2">
           {categories.map((category) => (
-            <label key={category} className="flex items-center">
+            <label key={category} className="flex items-center hover:cursor-pointer">
               <input
                 type="checkbox"
                 className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
@@ -117,7 +117,7 @@ export default function ChallengeFilters({
         <h3 className="font-semibold mb-2">Precompiles</h3>
         <div className="space-y-2">
           {precompiles.map((precompile) => (
-            <label key={precompile} className="flex items-center">
+            <label key={precompile} className="flex items-center hover:cursor-pointer">
               <input
                 type="checkbox"
                 className="mr-2 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"

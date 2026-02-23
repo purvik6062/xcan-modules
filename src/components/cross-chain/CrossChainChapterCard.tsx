@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CrossChainChapter } from "../../data/crossChainChapters";
 
@@ -19,7 +18,6 @@ export default function CrossChainChapterCard({
   progressData = [],
   isLoading = false
 }: CrossChainChapterCardProps) {
-  const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
   const availableSections = chapter.sections.filter(
     (section) => section.status === "available"
@@ -101,10 +99,10 @@ export default function CrossChainChapterCard({
     );
   }
 
-  return (
+  const cardContent = (
     <motion.div
-      whileHover={{ y: -5 }}
-      className={`relative bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : ""}`}
+      whileHover={chapter.status !== "coming-soon" ? { y: -5 } : {}}
+      className={`relative bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${chapter.status !== "coming-soon" ? "cursor-pointer" : ""} ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : ""}`}
     >
       {isNavigating && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60">
@@ -204,17 +202,26 @@ export default function CrossChainChapterCard({
 
       {/* Footer */}
       <div className="p-6 border-t border-gray-700">
-        <button
-          onClick={() => {
-            if (chapter.status === "coming-soon") return;
-            setIsNavigating(true);
-            router.push(`${basePath}/${chapter.id}`);
-          }}
-          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "cursor-pointer bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
+        <div
+          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
         >
           {chapter.status === "coming-soon" ? "Coming Soon" : "Start Learning"}
-        </button>
+        </div>
       </div>
     </motion.div>
+  );
+
+  if (chapter.status === "coming-soon") {
+    return cardContent;
+  }
+
+  return (
+    <Link
+      href={`${basePath}/${chapter.id}`}
+      className="block h-full cursor-pointer"
+      onClick={() => setIsNavigating(true)}
+    >
+      {cardContent}
+    </Link>
   );
 }

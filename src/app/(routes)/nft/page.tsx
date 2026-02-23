@@ -37,6 +37,7 @@ import {
 } from "lucide-react";
 import { nftModules } from "@/data/nftModules";
 import { XcanAdvocateHighlight } from "@/components/nft/XcanAdvocateHighlight";
+import ConnectWallet from "@/components/ConnectWallet";
 
 // Arbitrum Sepolia Chain ID
 const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;
@@ -220,90 +221,30 @@ export default function HomePage() {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto">
-          {/* Xcan Advocate Highlight */}
+          {/* Connect prompt when not connected - compact, doesn't block content */}
+          {!isWalletConnected && (
+            <motion.div
+              key="connect"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-8"
+            >
+              <GlassCard className="p-8 text-center max-w-2xl mx-auto">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <Wallet className="w-12 h-12 text-blue-400" />
+                  <div>
+                    <h2 className="text-xl font-bold text-white">Connect to Check Status & Claim</h2>
+                    <p className="text-gray-400 text-sm">Connect your wallet to view your achievements and mint NFT badges</p>
+                  </div>
+                </div>
+                <ConnectWallet />
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* User info + modules - show user section when connected, always show modules */}
           <AnimatePresence mode="wait">
-            {!isWalletConnected ? (
-              <motion.div
-                key="connect"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5 }}
-              >
-                <GlassCard className="p-16 text-center max-w-3xl mx-auto">
-                  <motion.div
-                    className="mb-12"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="relative inline-block">
-                      <motion.div
-                        className="w-32 h-32 bg-gradient-to-br from-blue-500/80 via-indigo-500/80 to-slate-500/80 rounded-3xl flex items-center justify-center mx-auto mb-8 relative"
-                        animate={{
-                          boxShadow: [
-                            "0 0 0 0 rgba(59, 130, 246, 0.2)",
-                            "0 0 0 20px rgba(59, 130, 246, 0)",
-                            "0 0 0 0 rgba(59, 130, 246, 0)",
-                          ],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Number.POSITIVE_INFINITY,
-                        }}
-                      >
-                        <Wallet className="w-16 h-16 text-white" />
-                      </motion.div>
-
-                      <motion.div
-                        className="absolute -top-4 -right-4"
-                        animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-                        transition={{
-                          duration: 3,
-                          repeat: Number.POSITIVE_INFINITY,
-                        }}
-                      >
-                        <Sparkles className="w-12 h-12 text-amber-300" />
-                      </motion.div>
-
-                      <motion.div
-                        className="absolute -bottom-4 -left-4"
-                        animate={{ rotate: -360, scale: [1, 1.1, 1] }}
-                        transition={{
-                          duration: 4,
-                          repeat: Number.POSITIVE_INFINITY,
-                        }}
-                      >
-                        <Shield className="w-10 h-10 text-emerald-400" />
-                      </motion.div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <h2 className="text-5xl font-bold text-white mb-6">
-                      Connect Your Wallet
-                    </h2>
-                    <p className="text-gray-300 text-xl mb-12 leading-relaxed max-w-2xl mx-auto">
-                      Connect your wallet to check your module completion status and claim your NFT badges
-                    </p>
-
-                    <motion.p
-                      className="text-sm text-gray-400 mt-8 flex items-center justify-center gap-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.5 }}
-                    >
-                      <Shield className="w-4 h-4" />
-                      Secured by Privy • Arbitrum Sepolia Network
-                    </motion.p>
-                  </motion.div>
-                </GlassCard>
-              </motion.div>
-            ) : (
-              /* Authenticated User Section */
+            {isWalletConnected ? (
               <>
 
                 <motion.div
@@ -422,102 +363,99 @@ export default function HomePage() {
                     </GlassCard>
                   </motion.div>
 
-                  {/* Modules Showcase - Non-grid interactive layout (horizontal carousel) */}
-                  {isCorrectNetwork && (
-                    <>
-                      <XcanAdvocateHighlight />
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        <GlassCard className="p-10">
-                          <div className="flex items-center gap-6 mb-10">
-                            <motion.div
-                              className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
-                              whileHover={{ scale: 1.1 }}
-                              transition={{ type: "spring", stiffness: 300 }}
-                            >
-                              <Trophy className="w-8 h-8 text-white" />
-                              <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
-                            </motion.div>
-                            <div>
-                              <h3 className="text-4xl font-bold text-white mb-2">
-                                Learning Modules
-                              </h3>
-                              <p className="text-gray-300 text-lg">
-                                Complete modules to unlock and claim your NFT badges
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Spotlight vertical list (no claim buttons) */}
-                          <div className="space-y-5">
-                            {nftModules.map((module, index) => {
-
-                              const handleOpen = () => {
-                                if (module.id === "arbitrum-stylus") {
-                                  router.push(`/nft/arbitrum-stylus`);
-                                } else if (module.id === "stylus-foundation") {
-                                  router.push(`/nft/stylus-foundation`);
-                                } else if (module.database === "postgres") {
-                                  router.push(`/nft/arbitrum-stylus`);
-                                } else {
-                                  router.push(`/nft/modules/${module.id}`);
-                                }
-                              };
-
-                              return (
-                                <motion.div
-                                  key={module.id}
-                                  className="group w-full text-left"
-                                  initial={{ opacity: 0, y: 24 }}
-                                  animate={{ opacity: 1, y: 0 }}
-                                  transition={{ delay: 0.05 * index }}
-                                >
-                                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
-
-                                    <div className="relative p-6 sm:p-7">
-                                      <div className="flex items-start justify-between">
-                                        <div className="flex items-start gap-4">
-                                          <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
-                                            <module.icon className="w-8 h-8 text-white" />
-                                          </div>
-                                          <div>
-                                            <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
-                                            <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
-                                          </div>
-                                        </div>
-
-                                        <div className="hidden sm:flex items-center">
-                                          <motion.button
-                                            className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea]  to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={handleOpen}
-                                          >
-                                            <span className="flex items-center gap-2">
-                                              <EyeIcon className="w-4 h-4" /> {/* Assuming you have an Eye icon from Heroicons or similar */}
-                                              View Module
-                                            </span>
-                                          </motion.button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              );
-                            })}
-                          </div>
-                        </GlassCard>
-                      </motion.div>
-                    </>
-                  )}
+                  {/* Xcan Advocate Highlight - only when connected and correct network */}
+                  {isCorrectNetwork && <XcanAdvocateHighlight />}
                 </motion.div>
               </>
+            ) : (
+              /* Not connected: show modules list without user-specific content */
+              null
             )}
           </AnimatePresence>
+
+          {/* Learning Modules - always visible */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <GlassCard className="p-10">
+              <div className="flex items-center gap-6 mb-10">
+                <motion.div
+                  className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Trophy className="w-8 h-8 text-white" />
+                  <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                </motion.div>
+                <div>
+                  <h3 className="text-4xl font-bold text-white mb-2">
+                    Learning Modules
+                  </h3>
+                  <p className="text-gray-300 text-lg">
+                    Complete modules to unlock and claim your NFT badges
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-5">
+                {nftModules.map((module, index) => {
+                  const handleOpen = () => {
+                    if (module.id === "arbitrum-stylus") {
+                      router.push(`/nft/arbitrum-stylus`);
+                    } else if (module.id === "stylus-foundation") {
+                      router.push(`/nft/stylus-foundation`);
+                    } else if (module.database === "postgres") {
+                      router.push(`/nft/arbitrum-stylus`);
+                    } else {
+                      router.push(`/nft/modules/${module.id}`);
+                    }
+                  };
+
+                  return (
+                    <motion.div
+                      key={module.id}
+                      className="group w-full text-left"
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.05 * index }}
+                    >
+                      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
+                        <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+                        <div className="relative p-6 sm:p-7">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-4">
+                              <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
+                                <module.icon className="w-8 h-8 text-white" />
+                              </div>
+                              <div>
+                                <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
+                                <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
+                              </div>
+                            </div>
+                            <div className="hidden sm:flex items-center">
+                              <motion.button
+                                className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleOpen}
+                              >
+                                <span className="flex items-center gap-2">
+                                  <EyeIcon className="w-4 h-4" />
+                                  View Module
+                                </span>
+                              </motion.button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </GlassCard>
+          </motion.div>
         </div>
       </div>
     </div>

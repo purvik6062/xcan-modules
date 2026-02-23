@@ -6,6 +6,7 @@ import { StoryContent } from "../../data/crossChainChapters";
 import ReactMarkdown from "react-markdown";
 import CodeBlock from "../CodeBlock";
 import GitHubAuthHandler from "../GitHubAuthHandler";
+import toast from "react-hot-toast";
 
 interface StoryQuizComponentProps {
   content: StoryContent;
@@ -52,7 +53,8 @@ export default function StoryQuizComponent({
         handleNextQuestion();
       }}
       onAuthError={(error) => {
-        console.error("GitHub authentication error:", error);
+        const msg = error?.toLowerCase().includes("wallet") ? "Connect your wallet first" : (error || "Authentication failed");
+        toast.error(msg);
       }}
     >
       {({ isAuthenticating, triggerAuth }) => (
@@ -158,7 +160,7 @@ export default function StoryQuizComponent({
                           key={index}
                           onClick={() => handleAnswerSelect(index)}
                           disabled={isAnswered}
-                          className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${isAnswered
+                          className={`w-full hover:cursor-pointer text-left p-4 rounded-xl border-2 transition-all duration-200 ${isAnswered
                             ? index === question.correctAnswer
                               ? "border-green-400 bg-green-900/20 text-green-200"
                               : index === selectedAnswer
@@ -230,7 +232,7 @@ export default function StoryQuizComponent({
                       >
                         <button
                           onClick={triggerAuth}
-                          className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium"
+                          className="w-full hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium"
                         >
                           {isAuthenticating ? (
                             <>

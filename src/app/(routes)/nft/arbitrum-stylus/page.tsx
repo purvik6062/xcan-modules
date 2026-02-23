@@ -38,6 +38,7 @@ import { CertificationLevels } from "@/components/nft/CertificationLevels";
 import { useEligibility } from "@/hooks/useEligibility";
 import { useMintedStatus } from "@/hooks/useMintedStatus";
 import { useMint } from "@/hooks/useMint";
+import ConnectWallet from "@/components/ConnectWallet";
 
 // Arbitrum Sepolia Chain ID
 const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;
@@ -264,88 +265,29 @@ export default function ArbitrumStylusPage() {
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto">
+          {/* Connect prompt when not connected - compact, doesn't block content */}
+          {!isWalletConnected && (
+            <motion.div
+              key="connect"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-8"
+            >
+              <GlassCard className="p-8 text-center max-w-2xl mx-auto">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <Wallet className="w-12 h-12 text-purple-400" />
+                  <div>
+                    <h2 className="text-xl font-bold text-white">Connect to View Achievements</h2>
+                    <p className="text-gray-400 text-sm">Connect your wallet to view your Stylus achievements and mint NFT badges</p>
+                  </div>
+                </div>
+                <ConnectWallet />
+              </GlassCard>
+            </motion.div>
+          )}
+
           <AnimatePresence mode="wait">
-            {!isWalletConnected ? (
-              <motion.div
-                key="connect"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.5 }}
-              >
-                <GlassCard className="p-16 text-center max-w-3xl mx-auto">
-                  <motion.div
-                    className="mb-12"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="relative inline-block">
-                      <motion.div
-                        className="w-32 h-32 bg-gradient-to-br from-purple-500/80 via-pink-500/80 to-slate-500/80 rounded-3xl flex items-center justify-center mx-auto mb-8 relative"
-                        animate={{
-                          boxShadow: [
-                            "0 0 0 0 rgba(168, 85, 247, 0.2)",
-                            "0 0 0 20px rgba(168, 85, 247, 0)",
-                            "0 0 0 0 rgba(168, 85, 247, 0)",
-                          ],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Number.POSITIVE_INFINITY,
-                        }}
-                      >
-                        <Wallet className="w-16 h-16 text-white" />
-                      </motion.div>
-
-                      <motion.div
-                        className="absolute -top-4 -right-4"
-                        animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-                        transition={{
-                          duration: 3,
-                          repeat: Number.POSITIVE_INFINITY,
-                        }}
-                      >
-                        <Sparkles className="w-12 h-12 text-purple-300" />
-                      </motion.div>
-
-                      <motion.div
-                        className="absolute -bottom-4 -left-4"
-                        animate={{ rotate: -360, scale: [1, 1.1, 1] }}
-                        transition={{
-                          duration: 4,
-                          repeat: Number.POSITIVE_INFINITY,
-                        }}
-                      >
-                        <Shield className="w-10 h-10 text-pink-400" />
-                      </motion.div>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <h2 className="text-5xl font-bold text-white mb-6">
-                      Connect Your Wallet
-                    </h2>
-                    <p className="text-gray-300 text-xl mb-12 leading-relaxed max-w-2xl mx-auto">
-                      Connect your wallet to access your Arbitrum Stylus achievements and view your NFT collection
-                    </p>
-
-                    <motion.p
-                      className="text-sm text-gray-400 mt-8 flex items-center justify-center gap-2"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.5 }}
-                    >
-                      <Shield className="w-4 h-4" />
-                      Secured by Privy • Arbitrum Sepolia Network
-                    </motion.p>
-                  </motion.div>
-                </GlassCard>
-              </motion.div>
-            ) : (
+            {isWalletConnected ? (
               /* Authenticated User Section */
               <motion.div
                 key="authenticated"
@@ -696,7 +638,7 @@ export default function ArbitrumStylusPage() {
                   </AnimatePresence>
                 )}
               </motion.div>
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </div>

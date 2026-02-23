@@ -9,6 +9,7 @@ import ProgressOverview from "../../../components/ProgressOverview";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
 import PromoCodeModal from "../../../components/PromoCodeModal";
+import ConnectWallet from "@/components/ConnectWallet";
 
 export default function LearnOrbitPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
@@ -198,7 +199,14 @@ export default function LearnOrbitPage() {
             {/* Claim Certification */}
             <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
               <div className="text-center w-full">
-                {isClaimStatusLoading ? (
+                {!address ? (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-400">
+                      Connect your wallet to see your NFT certification status.
+                    </h3>
+                    <ConnectWallet />
+                  </div>
+                ) : isClaimStatusLoading ? (
                   <div className="flex items-center justify-center space-x-2 text-gray-400 mb-2">
                     <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -233,6 +241,7 @@ export default function LearnOrbitPage() {
                   </div>
                 )}
               </div>
+              {address && (
               <button
                 onClick={() => setIsPromoOpen(true)}
                 disabled={isClaimStatusLoading || !isModuleCompleted || isCertificationMinting || alreadyClaimed}
@@ -277,6 +286,7 @@ export default function LearnOrbitPage() {
                   <span>Complete First Chapter</span>
                 )}
               </button>
+              )}
 
             </div>
           </motion.div>
@@ -293,7 +303,7 @@ export default function LearnOrbitPage() {
             <button
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-6 py-2 rounded-full transition-all duration-200 ${selectedLevel === level
+              className={`px-6 py-2 rounded-full transition-all duration-200 cursor-pointer ${selectedLevel === level
                 ? "bg-emerald-600 text-white shadow-lg"
                 : "bg-slate-800 text-gray-300 hover:bg-slate-700"
                 }`}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAccount } from "wagmi";
+import ConnectWallet from "@/components/ConnectWallet";
 
 // Fallback avatar component for when DiceBear image fails to load
 function AvatarImage({ src, alt }: { src: string; alt: string }) {
@@ -150,6 +151,7 @@ export default function ProfilePage() {
             <div className="text-blue-500 text-6xl mb-4">🔗</div>
             <h2 className="text-xl font-bold mb-2">Connect Your Wallet</h2>
             <p className="text-gray-400 mb-4">Please connect your wallet to view your profile</p>
+            <ConnectWallet />
           </div>
         </div>
       </div>

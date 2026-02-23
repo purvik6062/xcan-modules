@@ -8,6 +8,7 @@ import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
 import toast from "react-hot-toast";
 import PromoCodeModal from "../../../components/PromoCodeModal";
+import ConnectWallet from "@/components/ConnectWallet";
 
 export default function LearnStylusPage() {
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
@@ -245,7 +246,14 @@ export default function LearnStylusPage() {
           <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
             {/* Explanatory Text */}
             <div className="text-center w-full">
-              {isClaimStatusLoading ? (
+              {!address ? (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-400 dark:text-gray-200">
+                    Connect your wallet to see your NFT certification status.
+                  </h3>
+                  <ConnectWallet />
+                </div>
+              ) : isClaimStatusLoading ? (
                 <div className="flex items-center justify-center space-x-2 text-gray-400 mb-2">
                   <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -281,7 +289,8 @@ export default function LearnStylusPage() {
               )}
             </div>
 
-            {/* Claim Button */}
+            {/* Claim Button - only show when wallet connected */}
+            {address && (
             <button
               onClick={() => setIsPromoOpen(true)}
               disabled={isClaimStatusLoading || overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
@@ -324,6 +333,7 @@ export default function LearnStylusPage() {
                 </>
               }
             </button>
+            )}
           </div>
         </div>
 
@@ -338,7 +348,7 @@ export default function LearnStylusPage() {
             <button
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-6 py-2 rounded-full transition-all duration-200 ${selectedLevel === level
+              className={`px-6 py-2 rounded-full transition-all duration-200 cursor-pointer ${selectedLevel === level
                 ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600"
                 }`}

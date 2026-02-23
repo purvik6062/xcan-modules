@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Quiz } from "../data/defiChapters";
 import GitHubAuthHandler from "./GitHubAuthHandler";
+import toast from "react-hot-toast";
 
 interface QuizComponentProps {
   questions: Quiz[];
@@ -51,7 +52,8 @@ export default function QuizComponent({
         }
       }}
       onAuthError={(error) => {
-        console.error("GitHub authentication error:", error);
+        const msg = error?.toLowerCase().includes("wallet") ? "Connect your wallet first" : (error || "Authentication failed");
+        toast.error(msg);
         setPendingCompletion(false);
       }}
     >

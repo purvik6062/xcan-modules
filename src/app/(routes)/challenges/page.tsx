@@ -8,6 +8,7 @@ import "../../../styles/gamify.css";
 import { useWalletProtection } from "../../../hooks/useWalletProtection";
 import { useMint } from "../../../hooks/useMint";
 import PromoCodeModal from "../../../components/PromoCodeModal";
+import ConnectWallet from "@/components/ConnectWallet";
 import toast from "react-hot-toast";
 
 // export const metadata = {
@@ -163,7 +164,14 @@ export default function ChallengesPage() {
           </div>
           {/* Contextual Text */}
           <div className="text-center">
-            {isClaimStatusLoading ? (
+            {!address ? (
+              <div className="space-y-4 mb-4">
+                <p className="text-sm font-semibold text-gray-400 dark:text-gray-200">
+                  Connect your wallet to see your NFT certification status.
+                </p>
+                <ConnectWallet />
+              </div>
+            ) : isClaimStatusLoading ? (
               <div className="flex items-center justify-center space-x-2 text-gray-400 mb-2">
                 <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -202,7 +210,8 @@ export default function ChallengesPage() {
             )}
           </div>
 
-          {/* NFT Claim Button */}
+          {/* NFT Claim Button - only show when wallet connected */}
+          {address && (
           <button
             onClick={() => setIsPromoOpen(true)}
             disabled={isClaimStatusLoading || !allCompleted || isCertificationMinting || alreadyClaimed}
@@ -252,6 +261,7 @@ export default function ChallengesPage() {
               </>
             )}
           </button>
+          )}
 
           {/* Additional Info for Claimed State */}
           {alreadyClaimed && (

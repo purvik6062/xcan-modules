@@ -15,6 +15,7 @@ import { GoBeaker, GoFlame, GoPulse, GoTrophy, GoRocket, GoStar, GoLightBulb } f
 import { FiX } from "react-icons/fi";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 import GitHubAuthHandler from "../../../../components/GitHubAuthHandler";
+import toast from "react-hot-toast";
 
 export default function ClientChallenge({
   challenge,
@@ -201,7 +202,8 @@ export default function ClientChallenge({
         runTests();
       }}
       onAuthError={(error) => {
-        console.error("GitHub authentication error:", error);
+        const msg = error?.toLowerCase().includes("wallet") ? "Connect your wallet first" : (error || "Authentication failed");
+        toast.error(msg);
         setOutput(`GitHub authentication failed: ${error}`);
       }}
     >

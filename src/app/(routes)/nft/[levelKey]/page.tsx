@@ -11,6 +11,7 @@ import { GlassCard } from "@/components/nft/GlassCard";
 import { FloatingParticles } from "@/components/nft/FloatingParticles";
 import { Loader2, ArrowLeft, AlertCircle, Download } from "lucide-react";
 import Certificate from "@/components/Certificate";
+import ConnectWallet from "@/components/ConnectWallet";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Link from "next/link";
@@ -167,20 +168,23 @@ export default function NFTPage() {
       <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
         <FloatingParticles />
         <GlassCard className="p-12 text-center">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-6" />
+          <AlertCircle className="w-16 h-16 text-blue-400 mx-auto mb-6" />
           <h2 className="text-2xl font-bold text-white mb-4">
-            Wallet Not Connected
+            Connect to View Your NFT
           </h2>
           <p className="text-gray-300 mb-6">
-            Please connect your wallet to view your NFT.
+            Connect your wallet to view your minted NFT badge.
           </p>
-          <Link
-            href="/nft/arbitrum-stylus"
-            className="inline-flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 px-6 py-3 rounded-xl transition-all duration-200 border border-blue-500/30 font-medium"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Dashboard
-          </Link>
+          <div className="flex flex-col items-center gap-4">
+            <ConnectWallet />
+            <Link
+              href="/nft/arbitrum-stylus"
+              className="inline-flex items-center gap-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 px-6 py-3 rounded-xl transition-all duration-200 border border-blue-500/30 font-medium"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back to Dashboard
+            </Link>
+          </div>
         </GlassCard>
       </div>
     );

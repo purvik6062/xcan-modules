@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { StoryContent } from "../../data/stylusChapters";
 import ReactMarkdown from "react-markdown";
 import GitHubAuthHandler from "../GitHubAuthHandler";
+import toast from "react-hot-toast";
 import CodeBlock from "../CodeBlock";
 
 interface StylusStoryQuizComponentProps {
@@ -50,7 +51,8 @@ export default function StylusStoryQuizComponent({
         handleNextQuestion();
       }}
       onAuthError={(error) => {
-        console.error("GitHub authentication error:", error);
+        const msg = error?.toLowerCase().includes("wallet") ? "Connect your wallet first" : (error || "Authentication failed");
+        toast.error(msg);
       }}
     >
       {({ isAuthenticating, triggerAuth }) => (
@@ -156,7 +158,7 @@ export default function StylusStoryQuizComponent({
                               key={index}
                               onClick={() => handleAnswerSelect(index)}
                               disabled={isAnswered}
-                              className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${isAnswered
+                              className={`w-full hover:cursor-pointer text-left p-4 rounded-xl border-2 transition-all duration-200 ${isAnswered
                                 ? index === question.correctAnswer
                                   ? "border-green-400 bg-green-900/20 text-green-200"
                                   : index === selectedAnswer
@@ -229,7 +231,7 @@ export default function StylusStoryQuizComponent({
                             <button
                               onClick={triggerAuth}
                               disabled={isAuthenticating}
-                              className={`w-full flex items-center justify-center cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium ${isAuthenticating ? 'from-[#010335] to-blue-700 animate-pulse' : ''}`}
+                              className={`w-full hover:cursor-pointer flex items-center justify-center cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium ${isAuthenticating ? 'from-[#010335] to-blue-700 animate-pulse' : ''}`}
                             >
                               {isAuthenticating ? (
                                 <>

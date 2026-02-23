@@ -277,7 +277,7 @@ export default function Web3BasicsChapterPage() {
                       <button
                         onClick={goToPreviousSection}
                         disabled={!hasPreviousAvailableSection()}
-                        className={`ml-4 rounded-lg px-6 py-3 transition-all duration-200 ${!hasPreviousAvailableSection()
+                        className={`ml-4 rounded-lg px-6 py-3 transition-all hover:cursor-pointer duration-200 ${!hasPreviousAvailableSection()
                           ? "cursor-not-allowed bg-gray-700 text-gray-500"
                           : "bg-gray-700 text-white hover:bg-gray-600"
                           }`}
@@ -292,7 +292,7 @@ export default function Web3BasicsChapterPage() {
                       <button
                         onClick={goToNextSection}
                         disabled={!hasNextAvailableSection()}
-                        className={`mr-4 rounded-lg px-6 py-3 transition-all duration-200 ${!hasNextAvailableSection()
+                        className={`mr-4 rounded-lg px-6 py-3 transition-all hover:cursor-pointer duration-200 ${!hasNextAvailableSection()
                           ? "cursor-not-allowed bg-gray-700 text-gray-500"
                           : "bg-gray-700 text-white hover:bg-gray-600"
                           }`}

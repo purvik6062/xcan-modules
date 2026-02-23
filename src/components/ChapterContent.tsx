@@ -7,6 +7,7 @@ import { getTheoryContent, TheoryContent } from "../data/defiContent";
 import ReactMarkdown from "react-markdown";
 import CodeBlock from "./CodeBlock";
 import GitHubAuthHandler from "./GitHubAuthHandler";
+import toast from "react-hot-toast";
 
 interface ChapterContentProps {
   section: Section;
@@ -758,7 +759,8 @@ async function interactWithProtocol() {
         }
       }}
       onAuthError={(error) => {
-        console.error("GitHub authentication error:", error);
+        const msg = error?.toLowerCase().includes("wallet") ? "Connect your wallet first" : (error || "Authentication failed");
+        toast.error(msg);
       }}
     >
       {({ isAuthenticating, hasGithub, triggerAuth }) => {

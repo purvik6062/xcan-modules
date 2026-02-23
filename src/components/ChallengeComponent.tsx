@@ -6,6 +6,7 @@ import confetti from "canvas-confetti";
 import { Section } from "../data/defiChapters";
 import CodeEditor from "./CodeEditor";
 import GitHubAuthHandler from "./GitHubAuthHandler";
+import toast from "react-hot-toast";
 
 interface ChallengeComponentProps {
   section: Section;
@@ -44,7 +45,8 @@ export default function ChallengeComponent({
         }
       }}
       onAuthError={(error) => {
-        console.error("GitHub authentication error:", error);
+        const msg = error?.toLowerCase().includes("wallet") ? "Connect your wallet first" : (error || "Authentication failed");
+        toast.error(msg);
         setPendingCompletion(false);
       }}
     >
