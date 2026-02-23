@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { learningModules, LearningModule } from "../data/learningModules";
+import { useRouter } from "next/navigation";
 
 const MODULE_PRICE = 50;
 const TOTAL_VALUE = 400;
 
 export default function LearningModulesSection() {
+  const router = useRouter();
+
   return (
     <section id="modules" className="py-16 container mx-auto px-4">
       <div className="text-center mb-12">
