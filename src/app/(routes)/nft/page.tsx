@@ -399,7 +399,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="space-y-5">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {nftModules.map((module, index) => {
                   const handleOpen = () => {
                     if (module.id === "arbitrum-stylus") {
@@ -416,38 +416,42 @@ export default function HomePage() {
                   return (
                     <motion.div
                       key={module.id}
-                      className="group w-full text-left"
-                      initial={{ opacity: 0, y: 24 }}
+                      className="group"
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.05 * index }}
                     >
-                      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 group-hover:border-white/20">
-                        <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
-                        <div className="relative p-6 sm:p-7">
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-start gap-4">
-                              <div className={`p-3 rounded-xl bg-gradient-to-br ${module.gradient} bg-opacity-20`}>
-                                <module.icon className="w-8 h-8 text-white" />
-                              </div>
-                              <div>
-                                <h4 className="text-xl sm:text-2xl font-bold text-white mb-1 group-hover:text-blue-300 transition-colors">{module.title}</h4>
-                                <p className="text-gray-300 text-sm sm:text-base max-w-2xl">{module.description}</p>
-                              </div>
-                            </div>
-                            <div className="hidden sm:flex items-center">
-                              <motion.button
-                                className="px-4 py-2 cursor-pointer rounded-full text-sm font-medium border border-[#9aadfe] shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#667eea] focus:ring-offset-2 relative before:absolute before:inset-0 before:rounded-[inherit] before:bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.4)_50%,transparent_75%,transparent_100%)] before:bg-[length:250%_250%,100%_100%] before:bg-[position:200%_0,0_0] before:bg-no-repeat before:[transition:background-position_0s_ease] hover:before:bg-[position:-100%_0,0_0] hover:before:duration-[1500ms] bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={handleOpen}
-                              >
-                                <span className="flex items-center gap-2">
-                                  <EyeIcon className="w-4 h-4" />
-                                  View Module
-                                </span>
-                              </motion.button>
-                            </div>
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={handleOpen}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleOpen();
+                          }
+                        }}
+                        className="hover:cursor-pointer relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-lg transition-all duration-200 hover:border-slate-600/50 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:outline-none"
+                      >
+                        <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 transition-opacity duration-300 group-hover:opacity-10`} />
+                        <div className="relative flex flex-1 flex-col">
+                          <div className={`mb-4 inline-flex w-fit rounded-xl bg-gradient-to-br ${module.gradient} p-3`}>
+                            <module.icon className="h-8 w-8 text-white" />
                           </div>
+                          <h4 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-emerald-400">
+                            {module.title}
+                          </h4>
+                          <p className="mb-6 line-clamp-3 flex-1 text-sm text-slate-400">
+                            {module.description}
+                          </p>
+                          <motion.span
+                            className="mt-auto flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white shadow-lg transition-all hover:from-blue-600 hover:to-blue-700"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <EyeIcon className="h-4 w-4" />
+                            View Module
+                          </motion.span>
                         </div>
                       </div>
                     </motion.div>

@@ -134,7 +134,15 @@ export default function ProfilePage() {
 
       try {
         setLoading(true);
+        const t0 = performance.now();
         const response = await fetch(`/api/profile?address=${address}`);
+        const fetchMs = Math.round(performance.now() - t0);
+
+        // Log server-side timing breakdown
+        const serverTiming = response.headers.get("Server-Timing");
+        console.log(
+          `[Profile] Client fetch: ${fetchMs}ms | Server-Timing: ${serverTiming ?? "N/A"}`
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch profile data");
@@ -202,21 +210,19 @@ export default function ProfilePage() {
   // Connect wallet state
   if (!address) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-24 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-slate-700/50 bg-slate-800/30 p-12 text-center"
-          >
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-700/50">
-              <User className="h-8 w-8 text-slate-400" />
-            </div>
-            <h2 className="mb-2 text-xl font-semibold text-white">Connect Your Wallet</h2>
-            <p className="mb-6 text-slate-400">Please connect your wallet to view your profile</p>
-            <ConnectWallet />
-          </motion.div>
-        </div>
+      <div className="flex min-h-[calc(100vh-10rem)] w-full flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl border border-slate-700/50 bg-slate-800/30 p-12 text-center"
+        >
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-700/50">
+            <User className="h-8 w-8 text-slate-400" />
+          </div>
+          <h2 className="mb-2 text-xl font-semibold text-white">Connect Your Wallet</h2>
+          <p className="mb-6 text-slate-400">Please connect your wallet to view your profile</p>
+          <ConnectWallet />
+        </motion.div>
       </div>
     );
   }
@@ -447,13 +453,12 @@ export default function ProfilePage() {
                               <div className="mt-1 text-sm text-slate-400">{challenge.moduleName}</div>
                               <div className="mt-2 flex flex-wrap items-center gap-2">
                                 <span
-                                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                    challenge.level === "Beginner"
+                                  className={`rounded-full px-3 py-1 text-xs font-medium ${challenge.level === "Beginner"
                                       ? "bg-emerald-500/20 text-emerald-400"
                                       : challenge.level === "Intermediate"
                                         ? "bg-amber-500/20 text-amber-400"
                                         : "bg-rose-500/20 text-rose-400"
-                                  }`}
+                                    }`}
                                 >
                                   {challenge.level}
                                 </span>

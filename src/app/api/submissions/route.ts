@@ -3,22 +3,13 @@ import { connectToDatabase } from "../../../lib/database/mongodb";
 import { db as pgDb } from "../../../lib/database/client";
 import { userChallenges } from "../../../lib/database/schema";
 import { eq } from "drizzle-orm";
-import {
-  ModuleId,
-  normalizeModuleId,
-} from "../../../lib/database/module-collections";
+import type { ModuleId } from "../../../lib/database/module-collections";
 
-// Module configuration with display names
+// ─── Module configuration ────────────────────────────────────────────────────
 const MODULE_CONFIG: Record<string, { name: string; id: string }> = {
   "web3-basics": { name: "Web3 Basics", id: "web3-basics" },
-  "stylus-core-concepts": {
-    name: "Stylus Core Concepts",
-    id: "stylus-core-concepts",
-  },
-  "precompiles-overview": {
-    name: "Precompile Playground",
-    id: "precompiles-overview",
-  },
+  "stylus-core-concepts": { name: "Stylus Core Concepts", id: "stylus-core-concepts" },
+  "precompiles-overview": { name: "Precompile Playground", id: "precompiles-overview" },
   "cross-chain": { name: "Cross-Chain Development", id: "cross-chain" },
   "master-defi": { name: "Master DeFi on Arbitrum", id: "master-defi" },
   "master-orbit": { name: "Master Arbitrum Orbit", id: "master-orbit" },
@@ -36,6 +27,10 @@ const ALL_MODULE_IDS: ModuleId[] = [
   "master-orbit",
 ];
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const now = () => performance.now();
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 interface FoundationSubmission {
   walletAddress: string;
   githubRepo?: string;
@@ -66,7 +61,6 @@ interface ModuleSubmission {
   updatedAt?: string;
   githubRepo?: string;
   contractAddress?: string;
-  // New fields for Arbitrum Stylus
   completedChallenges?: string[];
   nftTransactionHashes?: Array<{
     transactionHash: string;
@@ -88,16 +82,37 @@ interface ModuleUserCount {
   userCount: number;
 }
 
+// ─── GET handler ─────────────────────────────────────────────────────────────
 export async function GET(request: NextRequest) {
+  const timings: Record<string, number> = {};
+  const t0 = now();
+
   try {
-    const { db } = await connectToDatabase();
     const { searchParams } = new URL(request.url);
     const moduleId = searchParams.get("module");
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = 30;
     const skip = (page - 1) * limit;
 
-    // Fetch all data in parallel for better performance
+    // ── 1. Connect to DB ──────────────────────────────────────────────────
+    const tDb0 = now();
+    const { db } = await connectToDatabase();
+    timings["db_connect_ms"] = Math.round(now() - tDb0);
+
+    // ── 2. Parallel DB fetches with targeted projections ──────────────────
+    const tFetch0 = now();
+
+    // Build a tight projection for user-modules: only fetch fields we need
+    // We need: isCompleted, certification, completedChapters (for count & points), updatedAt
+    // We do NOT need: chapters (huge arrays of section strings)
+    const umProjection: Record<string, 0 | 1> = { _id: 0, userAddress: 1, updatedAt: 1 };
+    for (const mid of ALL_MODULE_IDS) {
+      umProjection[`modules.${mid}.isCompleted`] = 1;
+      umProjection[`modules.${mid}.certification`] = 1;
+      umProjection[`modules.${mid}.completedChapters`] = 1;
+      umProjection[`modules.${mid}.updatedAt`] = 1;
+    }
+
     const [
       foundationSubmissions,
       advocatesSubmissions,
@@ -105,56 +120,30 @@ export async function GET(request: NextRequest) {
       arbitrumStylusSubmissions,
       mintedNFTs,
     ] = await Promise.all([
-      // Fetch foundation-users submissions with optimized projection including certification
-      db
-        .collection("foundation-users")
-        .find(
-          {},
-          {
-            projection: {
-              walletAddress: 1,
-              githubRepo: 1,
-              contractAddress: 1,
-              certification: 1,
-              _id: 0,
-            },
-          }
-        )
+      // Foundation users — only need walletAddress, githubRepo, contractAddress, certification
+      db.collection("foundation-users")
+        .find({}, {
+          projection: {
+            walletAddress: 1, githubRepo: 1, contractAddress: 1, certification: 1, _id: 0,
+          },
+        })
         .toArray(),
-      // Fetch advocates submissions with optimized projection including certification
-      db
-        .collection("advocates")
-        .find(
-          { isEligible: true },
-          {
-            projection: {
-              userAddress: 1,
-              isEligible: 1,
-              certification: 1,
-              _id: 0,
-            },
-          }
-        )
+
+      // Advocates — only eligible ones
+      db.collection("advocates")
+        .find({ isEligible: true }, {
+          projection: {
+            userAddress: 1, isEligible: 1, certification: 1, _id: 0,
+          },
+        })
         .toArray(),
-      // Fetch user-modules submissions with optimized projection
-      // Only fetch userAddress and modules data
-      db
-        .collection("user-modules")
-        .find(
-          {},
-          {
-            projection: {
-              userAddress: 1,
-              modules: 1,
-              updatedAt: 1,
-              _id: 0,
-            },
-          }
-        )
+
+      // User-modules — with tight projection (no chapters arrays)
+      db.collection("user-modules")
+        .find({}, { projection: umProjection })
         .toArray(),
-      // Fetch Arbitrum Stylus submissions from PostgreSQL
-      // Get all users who have at least one accepted challenge
-      // Wrap in try-catch to handle potential PostgreSQL connection errors gracefully
+
+      // Arbitrum Stylus from PostgreSQL (with error handling)
       (async () => {
         try {
           return await pgDb
@@ -168,502 +157,380 @@ export async function GET(request: NextRequest) {
             .from(userChallenges)
             .where(eq(userChallenges.reviewAction, "ACCEPTED"));
         } catch (error) {
-          console.error(
-            "Error fetching Arbitrum Stylus submissions from PostgreSQL:",
-            error
-          );
-          return []; // Return empty array on error to prevent API failure
+          console.error("[Submissions API] PostgreSQL error:", error);
+          return [];
         }
       })(),
-      // Fetch minted NFTs data for counting total NFTs minted
-      db
-        .collection("minted-nft")
-        .find(
-          {},
-          {
-            projection: {
-              userAddress: 1,
-              mintedLevels: 1,
-              _id: 0,
-            },
-          }
-        )
+
+      // Minted NFTs
+      db.collection("minted-nft")
+        .find({}, { projection: { userAddress: 1, mintedLevels: 1, _id: 0 } })
         .toArray(),
     ]);
 
-    // Transform foundation submissions - only include completed ones
-    const foundationData: FoundationSubmission[] = foundationSubmissions
-      .map((user: any) => {
-        // Foundation users are considered completed if they exist
-        const certification = Array.isArray(user.certification)
-          ? user.certification[0]
-          : user.certification;
-        const transactionHash = certification?.transactionHash;
+    timings["db_fetch_ms"] = Math.round(now() - tFetch0);
 
-        return {
-          walletAddress: user.walletAddress?.toLowerCase() || "",
-          githubRepo: user.githubRepo,
-          contractAddress: user.contractAddress,
-          moduleId: "stylus-foundation" as const,
-          transactionHash,
-        };
-      })
-      .filter((s) => s.walletAddress); // Only include valid submissions
+    // ── 3. Process all data (single-pass where possible) ──────────────────
+    const tProc0 = now();
 
-    // Transform advocates submissions - only include eligible ones with certification
-    const advocatesData: AdvocateSubmission[] = advocatesSubmissions
-      .map((advocate: any) => {
-        const userAddress = (advocate.userAddress || "").toLowerCase();
+    // ── 3a. Foundation submissions ──
+    const foundationData: FoundationSubmission[] = [];
+    let foundationNFTCount = 0;
 
-        // Check if advocate has certification array with transaction hash
-        const certification = Array.isArray(advocate.certification)
-          ? advocate.certification.find((c: any) => c.claimed === true) ||
-            advocate.certification[0]
-          : advocate.certification;
+    for (let i = 0; i < foundationSubmissions.length; i++) {
+      const user: any = foundationSubmissions[i];
+      const wallet = (user.walletAddress || "").toLowerCase();
+      if (!wallet) continue;
 
-        const transactionHash = certification?.transactionHash;
-        const certificationLevel = certification?.level;
-        const certificationLevelName = certification?.levelName;
+      const cert = Array.isArray(user.certification) ? user.certification[0] : user.certification;
+      foundationData.push({
+        walletAddress: wallet,
+        githubRepo: user.githubRepo,
+        contractAddress: user.contractAddress,
+        moduleId: "stylus-foundation",
+        transactionHash: cert?.transactionHash,
+      });
 
-        return {
-          walletAddress: userAddress,
-          moduleId: "xcan-advocate" as const,
-          isEligible: advocate.isEligible || false,
-          transactionHash,
-          certificationLevel,
-          certificationLevelName,
-        };
-      })
-      .filter((s) => s.walletAddress && s.isEligible); // Only include valid eligible advocates
-
-    // Transform Arbitrum Stylus submissions from PostgreSQL
-    // Group by userAddress to get unique users and their completed challenges
-    const arbitrumStylusUsersMap = new Map<
-      string,
-      {
-        challenges: any[];
-        githubRepo?: string;
-        contractAddress?: string;
-        latestSubmittedAt?: Date;
+      // Count NFTs in same pass
+      if (Array.isArray(user.certification)) {
+        for (let j = 0; j < user.certification.length; j++) {
+          if (user.certification[j]?.claimed === true) foundationNFTCount++;
+        }
+      } else if (user.certification?.claimed === true) {
+        foundationNFTCount++;
       }
-    >();
+    }
 
-    arbitrumStylusSubmissions.forEach((submission: any) => {
-      const userAddress = (submission.userAddress || "").toLowerCase();
-      if (!userAddress) return;
+    // ── 3b. Advocates submissions ──
+    const advocatesData: AdvocateSubmission[] = [];
+    let advocateNFTCount = 0;
 
-      const existing = arbitrumStylusUsersMap.get(userAddress) || {
-        challenges: [],
-      };
+    for (let i = 0; i < advocatesSubmissions.length; i++) {
+      const adv: any = advocatesSubmissions[i];
+      const wallet = (adv.userAddress || "").toLowerCase();
+      if (!wallet || !adv.isEligible) continue;
 
-      existing.challenges.push(submission);
-      if (submission.githubRepoUrl && !existing.githubRepo) {
-        existing.githubRepo = submission.githubRepoUrl;
+      const cert = Array.isArray(adv.certification)
+        ? (adv.certification.find((c: any) => c.claimed === true) || adv.certification[0])
+        : adv.certification;
+
+      advocatesData.push({
+        walletAddress: wallet,
+        moduleId: "xcan-advocate",
+        isEligible: true,
+        transactionHash: cert?.transactionHash,
+        certificationLevel: cert?.level,
+        certificationLevelName: cert?.levelName,
+      });
+
+      // Count NFTs in same pass
+      if (Array.isArray(adv.certification)) {
+        for (let j = 0; j < adv.certification.length; j++) {
+          if (adv.certification[j]?.claimed === true) advocateNFTCount++;
+        }
+      } else if (adv.certification?.claimed === true) {
+        advocateNFTCount++;
       }
-      if (submission.deployedContractAddress && !existing.contractAddress) {
-        existing.contractAddress = submission.deployedContractAddress;
+    }
+
+    // ── 3c. Arbitrum Stylus — group by user (single pass) ──
+    // Build a Map: address → { challenges, githubRepo, contractAddress, latestSubmittedAt }
+    const arbUsersMap = new Map<string, {
+      challenges: any[];
+      githubRepo?: string;
+      contractAddress?: string;
+      latestSubmittedAt?: Date;
+    }>();
+
+    for (let i = 0; i < arbitrumStylusSubmissions.length; i++) {
+      const sub: any = arbitrumStylusSubmissions[i];
+      const addr = (sub.userAddress || "").toLowerCase();
+      if (!addr) continue;
+
+      let entry = arbUsersMap.get(addr);
+      if (!entry) {
+        entry = { challenges: [] };
+        arbUsersMap.set(addr, entry);
       }
-      if (
-        submission.submittedAt &&
-        (!existing.latestSubmittedAt ||
-          new Date(submission.submittedAt) > existing.latestSubmittedAt)
-      ) {
-        existing.latestSubmittedAt = new Date(submission.submittedAt);
+      entry.challenges.push(sub);
+      if (sub.githubRepoUrl && !entry.githubRepo) entry.githubRepo = sub.githubRepoUrl;
+      if (sub.deployedContractAddress && !entry.contractAddress) entry.contractAddress = sub.deployedContractAddress;
+      if (sub.submittedAt) {
+        const d = new Date(sub.submittedAt);
+        if (!entry.latestSubmittedAt || d > entry.latestSubmittedAt) entry.latestSubmittedAt = d;
+      }
+    }
+
+    // Build an index of minted NFTs by address for O(1) lookup (replaces O(n) .find())
+    const mintedNFTByAddress = new Map<string, any>();
+    let mintedNFTCount = 0;
+    for (let i = 0; i < mintedNFTs.length; i++) {
+      const nft: any = mintedNFTs[i];
+      const addr = (nft.userAddress || "").toLowerCase();
+      if (addr) mintedNFTByAddress.set(addr, nft);
+      if (Array.isArray(nft.mintedLevels)) mintedNFTCount += nft.mintedLevels.length;
+    }
+
+    // Build Arbitrum Stylus submissions
+    const arbitrumStylusData: ModuleSubmission[] = [];
+    let arbitrumStylusChallengeCompletions = 0;
+
+    arbUsersMap.forEach((data, userAddress) => {
+      // O(1) lookup instead of O(n) scan
+      const mintedNFT = mintedNFTByAddress.get(userAddress);
+
+      const nftTransactionHashes = mintedNFT?.mintedLevels
+        ?.filter((level: any) => level.transactionHash)
+        ?.map((level: any) => ({
+          transactionHash: level.transactionHash,
+          levelName: level.levelName,
+          level: level.level,
+          mintedAt: level.mintedAt,
+        })) || [];
+
+      // Unique challenge IDs — use Set for O(1) dedup
+      const uniqueChallenges = new Set<string>();
+      for (let i = 0; i < data.challenges.length; i++) {
+        uniqueChallenges.add(String(data.challenges[i].challengeId));
       }
 
-      arbitrumStylusUsersMap.set(userAddress, existing);
-    });
+      arbitrumStylusChallengeCompletions += data.challenges.length;
 
-    // Transform Arbitrum Stylus data into ModuleSubmission format
-    const arbitrumStylusData: ModuleSubmission[] = Array.from(
-      arbitrumStylusUsersMap.entries()
-    ).map(([userAddress, data]: [string, any]): ModuleSubmission => {
-      // Get all NFTs for this user from minted-nft collection
-      const mintedNFT = mintedNFTs.find(
-        (nft: any) => (nft.userAddress || "").toLowerCase() === userAddress
-      );
-
-      // Get all transaction hashes for this user (multiple NFTs possible)
-      const nftTransactionHashes =
-        mintedNFT?.mintedLevels
-          ?.filter((level: any) => level.transactionHash)
-          ?.map((level: any) => ({
-            transactionHash: level.transactionHash,
-            levelName: level.levelName,
-            level: level.level,
-            mintedAt: level.mintedAt,
-          })) || [];
-
-      // Get unique challenge IDs completed by this user
-      const completedChallengeIds = data.challenges
-        .map((c: any) => String(c.challengeId))
-        .filter(
-          (id: string, index: number, arr: string[]) =>
-            arr.indexOf(id) === index
-        );
-
-      return {
+      arbitrumStylusData.push({
         walletAddress: userAddress,
-        moduleId: "arbitrum-stylus" as const,
+        moduleId: "arbitrum-stylus",
         moduleName: MODULE_CONFIG["arbitrum-stylus"]?.name || "Arbitrum Stylus",
         isCompleted: true,
-        transactionHash: nftTransactionHashes[0]?.transactionHash, // Keep for backward compatibility
-        completedChaptersCount: data.challenges.length, // Total submissions count
+        transactionHash: nftTransactionHashes[0]?.transactionHash,
+        completedChaptersCount: data.challenges.length,
         updatedAt: data.latestSubmittedAt?.toISOString(),
         githubRepo: data.githubRepo,
         contractAddress: data.contractAddress,
-        // New fields for Arbitrum Stylus
-        completedChallenges: completedChallengeIds,
-        nftTransactionHashes: nftTransactionHashes,
+        completedChallenges: Array.from(uniqueChallenges),
+        nftTransactionHashes,
         certificationLevel: "arbitrum-stylus",
         certificationLevelName: "Arbitrum Stylus",
-      };
+      });
     });
 
-    // Transform user-modules submissions - only include completed modules
+    // ── 3d. User-modules — single pass ──
     const moduleSubmissions: ModuleSubmission[] = [];
-    const userModuleCountsMap = new Map<
-      string,
-      { count: number; modules: string[] }
-    >();
+    // Per-user module tracking (Map for O(1) merge)
+    const userModuleCountsMap = new Map<string, { count: number; modules: string[] }>();
+    // Per-module user counts (computed in-memory instead of 6 separate countDocuments queries)
+    const moduleUserCountMap = new Map<string, number>();
+    let userModuleNFTCount = 0;
 
-    userModulesDocs.forEach((doc: any) => {
+    for (let i = 0; i < userModulesDocs.length; i++) {
+      const doc: any = userModulesDocs[i];
       const userAddress = (doc.userAddress || "").toLowerCase();
       const modules = doc.modules || {};
       const userModules: string[] = [];
 
-      // Process each module for this user
-      ALL_MODULE_IDS.forEach((moduleId) => {
-        const moduleData = modules[moduleId];
-        // Only include completed modules
-        if (moduleData && moduleData.isCompleted === true) {
-          const moduleConfig = MODULE_CONFIG[moduleId];
-          const moduleName = moduleConfig?.name || moduleId;
+      for (let j = 0; j < ALL_MODULE_IDS.length; j++) {
+        const modId = ALL_MODULE_IDS[j];
+        const moduleData = modules[modId];
+        if (!moduleData || moduleData.isCompleted !== true) continue;
 
-          // Get transaction hash and certification details
-          const certification = Array.isArray(moduleData.certification)
-            ? moduleData.certification.find((c: any) => c.claimed === true) ||
-              moduleData.certification[0]
-            : moduleData.certification;
-          const transactionHash = certification?.transactionHash;
-          const certificationLevel = certification?.level;
-          const certificationLevelName = certification?.levelName;
+        const moduleConfig = MODULE_CONFIG[modId];
+        const moduleName = moduleConfig?.name || modId;
 
-          // Calculate completed chapters count
-          const completedChaptersCount = Array.isArray(
-            moduleData.completedChapters
-          )
-            ? moduleData.completedChapters.length
-            : 0;
+        // Get certification (find claimed first, fallback to first)
+        const cert = Array.isArray(moduleData.certification)
+          ? (moduleData.certification.find((c: any) => c.claimed === true) || moduleData.certification[0])
+          : moduleData.certification;
 
-          // Calculate total points from completed chapters
-          const totalPoints = Array.isArray(moduleData.completedChapters)
-            ? moduleData.completedChapters.reduce(
-                (sum: number, chapter: any) => {
-                  return sum + (Number(chapter.points) || 0);
-                },
-                0
-              )
-            : 0;
-
-          moduleSubmissions.push({
-            walletAddress: userAddress,
-            moduleId,
-            moduleName,
-            isCompleted: true,
-            transactionHash,
-            completedChaptersCount,
-            totalPoints,
-            certificationLevel,
-            certificationLevelName,
-            updatedAt: moduleData.updatedAt || doc.updatedAt,
-          });
-
-          userModules.push(moduleId);
+        // Count chapters and points in a single loop
+        let completedChaptersCount = 0;
+        let totalPoints = 0;
+        if (Array.isArray(moduleData.completedChapters)) {
+          completedChaptersCount = moduleData.completedChapters.length;
+          for (let k = 0; k < moduleData.completedChapters.length; k++) {
+            totalPoints += Number(moduleData.completedChapters[k]?.points) || 0;
+          }
         }
-      });
 
-      // Track module count per user (only completed)
+        moduleSubmissions.push({
+          walletAddress: userAddress,
+          moduleId: modId,
+          moduleName,
+          isCompleted: true,
+          transactionHash: cert?.transactionHash,
+          completedChaptersCount,
+          totalPoints,
+          certificationLevel: cert?.level,
+          certificationLevelName: cert?.levelName,
+          updatedAt: moduleData.updatedAt || doc.updatedAt,
+        });
+
+        userModules.push(modId);
+
+        // Increment per-module user count (replaces 6 countDocuments queries)
+        moduleUserCountMap.set(modId, (moduleUserCountMap.get(modId) || 0) + 1);
+
+        // Count NFTs in same pass
+        if (Array.isArray(moduleData.certification)) {
+          for (let k = 0; k < moduleData.certification.length; k++) {
+            if (moduleData.certification[k]?.claimed === true) userModuleNFTCount++;
+          }
+        } else if (moduleData.certification?.claimed === true) {
+          userModuleNFTCount++;
+        }
+      }
+
       if (userModules.length > 0) {
-        userModuleCountsMap.set(userAddress, {
-          count: userModules.length,
-          modules: userModules,
-        });
+        userModuleCountsMap.set(userAddress, { count: userModules.length, modules: userModules });
+      }
+    }
+
+    // ── 3e. Build per-user module counts (merge all sources with Map) ──
+    // Use a single Map for O(1) lookups instead of repeated .find() scans
+    const mergedUserMap = new Map<string, { count: number; modules: string[] }>();
+
+    // Seed from user-modules data
+    userModuleCountsMap.forEach((data, addr) => {
+      mergedUserMap.set(addr, { count: data.count, modules: [...data.modules] });
+    });
+
+    // Merge foundation users
+    for (let i = 0; i < foundationData.length; i++) {
+      const addr = foundationData[i].walletAddress;
+      const entry = mergedUserMap.get(addr);
+      if (entry) {
+        if (!entry.modules.includes("stylus-foundation")) {
+          entry.count++;
+          entry.modules.push("stylus-foundation");
+        }
+      } else {
+        mergedUserMap.set(addr, { count: 1, modules: ["stylus-foundation"] });
+      }
+    }
+
+    // Merge advocates
+    for (let i = 0; i < advocatesData.length; i++) {
+      const addr = advocatesData[i].walletAddress;
+      const entry = mergedUserMap.get(addr);
+      if (entry) {
+        if (!entry.modules.includes("xcan-advocate")) {
+          entry.count++;
+          entry.modules.push("xcan-advocate");
+        }
+      } else {
+        mergedUserMap.set(addr, { count: 1, modules: ["xcan-advocate"] });
+      }
+    }
+
+    // Merge Arbitrum Stylus users
+    arbitrumStylusData.forEach((sub) => {
+      const addr = sub.walletAddress;
+      const entry = mergedUserMap.get(addr);
+      if (entry) {
+        if (!entry.modules.includes("arbitrum-stylus")) {
+          entry.count++;
+          entry.modules.push("arbitrum-stylus");
+        }
+      } else {
+        mergedUserMap.set(addr, { count: 1, modules: ["arbitrum-stylus"] });
       }
     });
 
-    // Calculate module counts per user (including foundation)
+    // Convert merged map to sorted array
     const allUserModuleCounts: UserModuleCount[] = [];
-    const processedUsers = new Set<string>();
-
-    // Add foundation users
-    foundationData.forEach((submission) => {
-      const address = submission.walletAddress.toLowerCase();
-      if (!processedUsers.has(address)) {
-        const existing = userModuleCountsMap.get(address) || {
-          count: 0,
-          modules: [],
-        };
-        allUserModuleCounts.push({
-          walletAddress: address,
-          moduleCount: existing.count + 1,
-          modules: [...existing.modules, "stylus-foundation"],
-        });
-        processedUsers.add(address);
-      }
+    mergedUserMap.forEach((data, addr) => {
+      allUserModuleCounts.push({ walletAddress: addr, moduleCount: data.count, modules: data.modules });
     });
+    allUserModuleCounts.sort((a, b) => b.moduleCount - a.moduleCount);
 
-    // Add advocates users
-    advocatesData.forEach((submission) => {
-      const address = submission.walletAddress.toLowerCase();
-      if (!processedUsers.has(address)) {
-        const existing = userModuleCountsMap.get(address) || {
-          count: 0,
-          modules: [],
-        };
-        allUserModuleCounts.push({
-          walletAddress: address,
-          moduleCount: existing.count + 1,
-          modules: [...existing.modules, "xcan-advocate"],
-        });
-        processedUsers.add(address);
-      } else {
-        // Update existing user to include advocate module
-        const existing = allUserModuleCounts.find(
-          (u) => u.walletAddress === address
-        );
-        if (existing && !existing.modules.includes("xcan-advocate")) {
-          existing.moduleCount += 1;
-          existing.modules.push("xcan-advocate");
-        }
-      }
-    });
-
-    // Add user-modules users
-    userModuleCountsMap.forEach((data, address) => {
-      if (!processedUsers.has(address)) {
-        allUserModuleCounts.push({
-          walletAddress: address,
-          moduleCount: data.count,
-          modules: data.modules,
-        });
-        processedUsers.add(address);
-      } else {
-        // Update existing user to include their modules
-        const existing = allUserModuleCounts.find(
-          (u) => u.walletAddress === address
-        );
-        if (existing) {
-          data.modules.forEach((mod) => {
-            if (!existing.modules.includes(mod)) {
-              existing.moduleCount += 1;
-              existing.modules.push(mod);
-            }
-          });
-        }
-      }
-    });
-
-    // Add Arbitrum Stylus users
-    arbitrumStylusData.forEach((submission) => {
-      const address = submission.walletAddress.toLowerCase();
-      if (!processedUsers.has(address)) {
-        allUserModuleCounts.push({
-          walletAddress: address,
-          moduleCount: 1,
-          modules: ["arbitrum-stylus"],
-        });
-        processedUsers.add(address);
-      } else {
-        // Update existing user to include arbitrum-stylus module
-        const existing = allUserModuleCounts.find(
-          (u) => u.walletAddress === address
-        );
-        if (existing && !existing.modules.includes("arbitrum-stylus")) {
-          existing.moduleCount += 1;
-          existing.modules.push("arbitrum-stylus");
-        }
-      }
-    });
-
-    // Calculate user count per module using aggregation for efficiency (only completed)
+    // ── 3f. Build per-module user counts (from in-memory data, no extra DB queries) ──
     const moduleUserCounts: ModuleUserCount[] = [];
 
-    // Count foundation users (all are considered completed)
-    const foundationCount = foundationData.length;
+    // Foundation
     moduleUserCounts.push({
       moduleId: "stylus-foundation",
-      moduleName:
-        MODULE_CONFIG["stylus-foundation"]?.name || "Stylus Foundation",
-      userCount: foundationCount,
+      moduleName: MODULE_CONFIG["stylus-foundation"]?.name || "Stylus Foundation",
+      userCount: foundationData.length,
     });
 
-    // Count users per module from user-modules collection (only completed)
-    // Use parallel queries for better performance
-    const moduleCountPromises = ALL_MODULE_IDS.map(async (modId) => {
-      const count = await db.collection("user-modules").countDocuments({
-        [`modules.${modId}.isCompleted`]: true,
-      });
-      return {
+    // Learning modules — from the counter map (replaces 6 countDocuments queries)
+    for (let i = 0; i < ALL_MODULE_IDS.length; i++) {
+      const modId = ALL_MODULE_IDS[i];
+      moduleUserCounts.push({
         moduleId: modId,
         moduleName: MODULE_CONFIG[modId]?.name || modId,
-        userCount: count,
-      };
-    });
+        userCount: moduleUserCountMap.get(modId) || 0,
+      });
+    }
 
-    const moduleCounts = await Promise.all(moduleCountPromises);
-    moduleUserCounts.push(...moduleCounts);
-
-    // Count advocates (eligible with certification)
-    const advocatesCount = advocatesData.length;
+    // Advocates
     moduleUserCounts.push({
       moduleId: "xcan-advocate",
       moduleName: MODULE_CONFIG["xcan-advocate"]?.name || "XCAN Advocate",
-      userCount: advocatesCount,
+      userCount: advocatesData.length,
     });
 
-    // Count Arbitrum Stylus users
-    const arbitrumStylusCount = arbitrumStylusData.length;
+    // Arbitrum Stylus
     moduleUserCounts.push({
       moduleId: "arbitrum-stylus",
       moduleName: MODULE_CONFIG["arbitrum-stylus"]?.name || "Arbitrum Stylus",
-      userCount: arbitrumStylusCount,
+      userCount: arbitrumStylusData.length,
     });
 
-    // Calculate total NFTs minted based on claimed: true status
-    // Count NFTs where certification.claimed === true from each collection
+    moduleUserCounts.sort((a, b) => b.userCount - a.userCount);
 
-    // 1. Count NFTs from minted-nft collection (Arbitrum Stylus NFTs)
-    // All entries in minted-nft collection represent claimed NFTs
-    let mintedNFTCount = 0;
-    mintedNFTs.forEach((nft: any) => {
-      if (Array.isArray(nft.mintedLevels)) {
-        mintedNFTCount += nft.mintedLevels.length; // Each minted level is a claimed NFT
-      }
-    });
+    // ── 3g. Total NFTs minted ──
+    const totalNFTsMinted = mintedNFTCount + foundationNFTCount + advocateNFTCount + userModuleNFTCount;
 
-    // 2. Count NFTs from foundation-users certifications (claimed: true)
-    let foundationNFTCount = 0;
-    foundationSubmissions.forEach((user: any) => {
-      if (Array.isArray(user.certification)) {
-        foundationNFTCount += user.certification.filter(
-          (cert: any) => cert.claimed === true
-        ).length;
-      } else if (user.certification && user.certification.claimed === true) {
-        foundationNFTCount += 1;
-      }
-    });
+    // ── 3h. Combine all submissions ──
+    const allSubmissions: Array<
+      (FoundationSubmission & { type: "foundation" }) |
+      (AdvocateSubmission & { type: "advocate" }) |
+      (ModuleSubmission & { type: "module" })
+    > = [];
 
-    // 3. Count NFTs from advocates certifications (claimed: true)
-    let advocateNFTCount = 0;
-    advocatesSubmissions.forEach((advocate: any) => {
-      if (advocate.isEligible && Array.isArray(advocate.certification)) {
-        advocateNFTCount += advocate.certification.filter(
-          (cert: any) => cert.claimed === true
-        ).length;
-      } else if (
-        advocate.isEligible &&
-        advocate.certification &&
-        advocate.certification.claimed === true
-      ) {
-        advocateNFTCount += 1;
-      }
-    });
-
-    // 4. Count NFTs from user-modules certifications (claimed: true)
-    let userModuleNFTCount = 0;
-    userModulesDocs.forEach((doc: any) => {
-      const modules = doc.modules || {};
-      ALL_MODULE_IDS.forEach((moduleId) => {
-        const moduleData = modules[moduleId];
-        if (moduleData && moduleData.isCompleted === true) {
-          if (Array.isArray(moduleData.certification)) {
-            userModuleNFTCount += moduleData.certification.filter(
-              (cert: any) => cert.claimed === true
-            ).length;
-          } else if (
-            moduleData.certification &&
-            moduleData.certification.claimed === true
-          ) {
-            userModuleNFTCount += 1;
-          }
-        }
-      });
-    });
-
-    const totalNFTsMinted =
-      mintedNFTCount +
-      foundationNFTCount +
-      advocateNFTCount +
-      userModuleNFTCount;
-
-    // Combine all submissions
-    const allSubmissions = [
-      ...foundationData.map((s) => ({
-        ...s,
-        type: "foundation" as const,
-      })),
-      ...advocatesData.map((s) => ({
-        ...s,
-        type: "advocate" as const,
-      })),
-      ...moduleSubmissions.map((s) => ({
-        ...s,
-        type: "module" as const,
-      })),
-      ...arbitrumStylusData.map((s) => ({
-        ...s,
-        type: "module" as const,
-      })),
-    ];
-
-    // Filter by module if specified
-    let filteredSubmissions = allSubmissions;
-    if (moduleId && moduleId !== "all") {
-      filteredSubmissions = allSubmissions.filter(
-        (s) => s.moduleId === moduleId
-      );
+    for (let i = 0; i < foundationData.length; i++) {
+      allSubmissions.push({ ...foundationData[i], type: "foundation" });
+    }
+    for (let i = 0; i < advocatesData.length; i++) {
+      allSubmissions.push({ ...advocatesData[i], type: "advocate" });
+    }
+    for (let i = 0; i < moduleSubmissions.length; i++) {
+      allSubmissions.push({ ...moduleSubmissions[i], type: "module" });
+    }
+    for (let i = 0; i < arbitrumStylusData.length; i++) {
+      allSubmissions.push({ ...arbitrumStylusData[i], type: "module" });
     }
 
-    // Calculate total modules completed across all users
-    // For Arbitrum Stylus, count individual challenge completions instead of just users
-    const arbitrumStylusChallengeCompletions = arbitrumStylusData.reduce(
-      (total, submission) => total + (submission.completedChaptersCount || 0),
-      0
-    );
+    // ── 3i. Filter & paginate ──
+    let filteredSubmissions = allSubmissions;
+    if (moduleId && moduleId !== "all") {
+      filteredSubmissions = allSubmissions.filter((s) => s.moduleId === moduleId);
+    }
 
-    const totalModulesCompleted =
-      foundationData.length +
-      moduleSubmissions.length +
-      arbitrumStylusChallengeCompletions;
-
-    // Apply pagination
     const totalCount = filteredSubmissions.length;
     const paginatedSubmissions = filteredSubmissions.slice(skip, skip + limit);
     const totalPages = Math.ceil(totalCount / limit);
 
-    // Group submissions by module
-    const submissionsByModule: Record<string, any[]> = {};
-    allSubmissions.forEach((submission) => {
-      const modId = submission.moduleId;
-      if (!submissionsByModule[modId]) {
-        submissionsByModule[modId] = [];
-      }
-      submissionsByModule[modId].push(submission);
-    });
+    // ── Total modules completed ──
+    const totalModulesCompleted =
+      foundationData.length + moduleSubmissions.length + arbitrumStylusChallengeCompletions;
+
+    timings["processing_ms"] = Math.round(now() - tProc0);
+
+    // ── 4. Build response ──
+    const totalMs = Math.round(now() - t0);
+    timings["total_ms"] = totalMs;
+
+    console.log(
+      `[Submissions API] total=${totalMs}ms | connect=${timings.db_connect_ms}ms | fetch=${timings.db_fetch_ms}ms | processing=${timings.processing_ms}ms | submissions=${allSubmissions.length} | users=${mergedUserMap.size}`
+    );
 
     const response = NextResponse.json({
       success: true,
       submissions: paginatedSubmissions,
-      submissionsByModule,
-      totalSubmissions: totalModulesCompleted, // Total modules completed across all users
-      uniqueUsers: processedUsers.size,
-      userModuleCounts: allUserModuleCounts.sort(
-        (a, b) => b.moduleCount - a.moduleCount
-      ),
-      moduleUserCounts: moduleUserCounts.sort(
-        (a, b) => b.userCount - a.userCount
-      ),
+      totalSubmissions: totalModulesCompleted,
+      uniqueUsers: mergedUserMap.size,
+      userModuleCounts: allUserModuleCounts,
+      moduleUserCounts,
       pagination: {
         page,
         limit,
@@ -677,7 +544,7 @@ export async function GET(request: NextRequest) {
         totalAdvocatesSubmissions: advocatesData.length,
         totalModuleSubmissions: moduleSubmissions.length,
         totalArbitrumStylusSubmissions: arbitrumStylusData.length,
-        totalNFTsMinted: totalNFTsMinted,
+        totalNFTsMinted,
         nftBreakdown: {
           mintedNFTCollection: mintedNFTCount,
           foundationUsers: foundationNFTCount,
@@ -686,21 +553,18 @@ export async function GET(request: NextRequest) {
         },
         averageModulesPerUser:
           allUserModuleCounts.length > 0
-            ? allUserModuleCounts.reduce((sum, u) => sum + u.moduleCount, 0) /
-              allUserModuleCounts.length
+            ? allUserModuleCounts.reduce((sum, u) => sum + u.moduleCount, 0) / allUserModuleCounts.length
             : 0,
       },
     });
-
-    // Add caching headers
-    response.headers.set(
-      "Cache-Control",
-      "public, s-maxage=60, stale-while-revalidate=300"
+    response.headers.set("Server-Timing",
+      `db_connect;dur=${timings.db_connect_ms}, db_fetch;dur=${timings.db_fetch_ms}, processing;dur=${timings.processing_ms}, total;dur=${totalMs}`
     );
 
     return response;
   } catch (error) {
-    console.error("Error fetching submissions data:", error);
+    const totalMs = Math.round(now() - t0);
+    console.error(`[Submissions API] ERROR after ${totalMs}ms:`, error);
     return NextResponse.json(
       { error: "Failed to fetch submissions data" },
       { status: 500 }

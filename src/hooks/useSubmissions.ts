@@ -59,7 +59,6 @@ interface ModuleUserCount {
 
 export interface SubmissionsData {
   submissions: Submission[];
-  submissionsByModule: Record<string, Submission[]>;
   totalSubmissions: number;
   uniqueUsers: number;
   userModuleCounts: UserModuleCount[];
@@ -84,9 +83,7 @@ export interface SubmissionsData {
       advocates: number;
       userModules: number;
     };
-    nftClaimRate: number;
-    completionRate: number;
-    mostActiveModule: string;
+    averageModulesPerUser: number;
   };
 }
 
