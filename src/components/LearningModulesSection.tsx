@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { learningModules, LearningModule } from "../data/learningModules";
-import { useRouter } from "next/navigation";
 
 const MODULE_PRICE = 50;
 const TOTAL_VALUE = 400;
 
 export default function LearningModulesSection() {
-  const router = useRouter();
-
   return (
     <section id="modules" className="py-16 container mx-auto px-4">
       <div className="text-center mb-12">
@@ -30,106 +28,93 @@ export default function LearningModulesSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {learningModules.map((module: LearningModule) => {
-          const IconComponent = module.icon;
           const cardContent = (
-            <>
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-10 group-hover:opacity-20 transition-opacity`}
-              ></div>
+            <div className="relative bg-[#12182b] border border-gray-700 rounded-xl overflow-hidden h-full flex flex-col">
 
-              <div className="relative bg-[#12182b] border  border-gray-700 rounded-xl p-6 pt-10 h-full flex flex-col justify-between">
-                <div>
-                  {/* Price Ribbon - Popping out from top-right corner like camera */}
+              {/* ── Hero image ── */}
+              <div className="relative w-full overflow-hidden">
+                <Image
+                  src={module.image}
+                  alt={module.title}
+                  width={800}
+                  height={450}
+                  className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                  priority={false}
+                />
 
-                  {module.id !== "project-submission" && (
-                    <div className="absolute -top-6 -right-3 z-30">
-                      <div className="relative">
-                        {/* Ribbon body */}
-                        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 hover:-translate-y-1">
-                          <div className="text-center">
-                            <div className="text-xs font-semibold uppercase tracking-wide">Worth</div>
-                            <div className="text-xl font-bold">${MODULE_PRICE}</div>
-                          </div>
+                {/* Price ribbon — top-right */}
+                {module.id !== "project-submission" && (
+                  <div className="absolute top-3 right-3 z-10">
+                    <div className="relative">
+                      <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-3 py-1.5 rounded-lg shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 hover:-translate-y-0.5">
+                        <div className="text-center">
+                          <div className="text-[10px] font-semibold uppercase tracking-wide leading-tight">Worth</div>
+                          <div className="text-lg font-bold leading-tight">${MODULE_PRICE}</div>
                         </div>
-                        {/* Shadow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-lg blur-md opacity-60 -z-10"></div>
-                        <div className="absolute -bottom-2 right-3 w-10 h-3 bg-gradient-to-b from-emerald-600/80 to-transparent rounded-t-sm transform -skew-x-6"></div>
                       </div>
-                    </div>
-                  )}
-
-                  {/* Status Badge */}
-                  {module.status === "coming-soon" && (
-                    <div className="absolute top-4 left-4 flex items-center  bg-yellow-900  text-yellow-200 px-2 py-1 rounded-full text-xs font-medium z-10">
-                      <svg
-                        className="w-3 h-3 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      Coming Soon
-                    </div>
-                  )}
-
-                  <div className="flex items-center mb-4">
-                    <div
-                      className={`p-3 rounded-lg bg-gradient-to-br ${module.gradient} text-white mr-4`}
-                    >
-                      <IconComponent className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold">{module.title}</h3>
-                      <div className="text-sm  text-gray-400">
-                        {module.level}
-                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-lg blur-md opacity-60 -z-10" />
                     </div>
                   </div>
+                )}
 
-                  <p className=" text-gray-300 mb-4">{module.description}</p>
+                {/* Coming soon badge */}
+                {module.status === "coming-soon" && (
+                  <div className="absolute top-3 left-3 z-10 flex items-center bg-yellow-900 text-yellow-200 px-2 py-1 rounded-full text-xs font-medium">
+                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Coming Soon
+                  </div>
+                )}
+              </div>
 
-                  {module.duration && module.challenges !== undefined && (
-                    <div className="flex items-center gap-2 text-sm mb-4">
-                      {/* <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-sky-500 bg-sky-900/40 text-white">
-                        {module.duration}
-                      </span> */}
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-emerald-500 bg-emerald-900/40 text-white">
-                        {module.challenges} challenges
-                      </span>
-                      {(module.sections !== undefined && module.sections > 0) && (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-indigo-500 bg-indigo-900/40 text-white">
-                          {module.sections} sections
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {module.features && module.features.length > 0 && (
-                    <div className="mb-6">
-                      <div className="text-sm font-medium mb-2">
-                        {module.title === "Project Submission" ? "What You'll Get:" : "Key Features:"}
-                      </div>
-                      <div className="grid grid-cols-2 gap-1">
-                        {module.features.map((feature, index) => (
-                          <div
-                            key={index}
-                            className="text-xs  text-gray-400 flex items-center"
-                          >
-                            <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></div>
-                            {feature}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+              {/* ── Card body ── */}
+              <div className="flex flex-col flex-1 p-6 pt-4">
+                {/* Title + level */}
+                <div className="mb-3">
+                  <h3 className="text-xl font-bold">{module.title}</h3>
+                  {module.level && (
+                    <div className="text-sm text-gray-400 mt-0.5">{module.level}</div>
                   )}
                 </div>
 
+                <p className="text-gray-300 text-sm mb-4">{module.description}</p>
+
+                {/* Badges: challenges / sections */}
+                {module.duration && module.challenges !== undefined && (
+                  <div className="flex items-center gap-2 text-sm mb-4 flex-wrap">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-emerald-500 bg-emerald-900/40 text-white">
+                      {module.challenges} challenges
+                    </span>
+                    {module.sections !== undefined && module.sections > 0 && (
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md border border-indigo-500 bg-indigo-900/40 text-white">
+                        {module.sections} sections
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* Features */}
+                {module.features && module.features.length > 0 && (
+                  <div className="mb-6">
+                    <div className="text-sm font-medium mb-2">
+                      {module.title === "Project Submission" ? "What You'll Get:" : "Key Features:"}
+                    </div>
+                    <div className="grid grid-cols-2 gap-1">
+                      {module.features.map((feature, index) => (
+                        <div key={index} className="text-xs text-gray-400 flex items-center">
+                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2 flex-shrink-0" />
+                          {feature}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Spacer to push CTA to bottom */}
+                <div className="flex-1" />
+
+                {/* CTA button */}
                 {module.status === "available" ? (
                   <div
                     className={`block w-full text-center bg-gradient-to-r ${module.gradient} text-white font-semibold py-3 px-4 rounded-lg hover:shadow-lg transition-all duration-300`}
@@ -139,13 +124,13 @@ export default function LearningModulesSection() {
                 ) : (
                   <button
                     disabled
-                    className="w-full text-center  bg-[#1f3064]  text-gray-400 font-semibold py-3 px-4 rounded-lg cursor-not-allowed"
+                    className="w-full text-center bg-[#1f3064] text-gray-400 font-semibold py-3 px-4 rounded-lg cursor-not-allowed"
                   >
                     Coming Soon
                   </button>
                 )}
               </div>
-            </>
+            </div>
           );
 
           return (

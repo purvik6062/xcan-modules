@@ -108,6 +108,7 @@ export interface NFTModule {
   title: string;
   description: string;
   icon: (props: { className?: string }) => React.ReactElement;
+  image: string;
   level: string;
   duration: string;
   challenges: number;
@@ -125,6 +126,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Learn Web3 fundamentals through engaging stories and interactive lessons. Perfect for beginners - no prior experience needed!",
     icon: GlobeIcon,
+    image: "/Web3 Basics.png",
     level: "Absolute Beginner",
     duration: "1-2 weeks",
     challenges: 6,
@@ -145,6 +147,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Master Arbitrum Stylus and build high-performance smart contracts with Rust. Learn WASM, constructors, storage, and advanced patterns through interactive lessons.",
     icon: CpuChipIcon,
+    image: "/Stylus Core Concepts.png",
     level: "Beginner to Intermediate",
     duration: "1-2 weeks",
     challenges: 6,
@@ -167,6 +170,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Build a complete ERC20 token system and mint your achievement certificate! Learn ERC20 and ERC721 standards with Rust contract development.",
     icon: CpuChipIcon,
+    image: "/Stylus foundation.png",
     level: "Beginner",
     duration: "Less than 1 week",
     challenges: 1,
@@ -187,6 +191,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Configure, deploy, test, and operate your own Orbit L3 chain through structured theory and quizzes — no coding required.",
     icon: RocketLaunchIcon,
+    image: "/Master Arbitrum Orbit.png",
     level: "Intermediate to Advanced",
     duration: "2-3 weeks",
     challenges: 6,
@@ -209,6 +214,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Build high-performance smart contracts with Rust, C, and C++ on Arbitrum",
     icon: CpuChipIcon,
+    image: "/Arbitrum Stylus.png",
     level: "Intermediate to Advanced",
     duration: "3-5 weeks",
     challenges: 11,
@@ -229,6 +235,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Learn DeFi fundamentals, DEXs, vaults, and security on Arbitrum through structured theory and quizzes with practical concepts.",
     icon: AcademicCapIcon,
+    image: "/Master DeFi on Arbitrum.png",
     level: "Beginner to Intermediate",
     duration: "1-2 weeks",
     challenges: 6,
@@ -250,6 +257,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Foundations → token bridging → advanced protocols → tooling → Arbitrum bridge and troubleshooting — delivered via stories and quizzes.",
     icon: BookOpenIcon,
+    image: "/Master Cross-Chain Development.png",
     level: "Intermediate to Advanced",
     duration: "2-3 weeks",
     challenges: 6,
@@ -272,6 +280,7 @@ export const nftModules: NFTModule[] = [
     description:
       "Master Arbitrum's powerful precompiles through interactive coding challenges",
     icon: CodeBracketIcon,
+    image: "/Precompile Playground.png",
     level: "Beginner to Advanced",
     duration: "1-2 weeks",
     challenges: 6,

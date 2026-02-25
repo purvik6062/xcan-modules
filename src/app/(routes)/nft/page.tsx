@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/nft/GlassCard";
 import { FloatingParticles } from "@/components/nft/FloatingParticles";
@@ -147,7 +148,7 @@ export default function HomePage() {
       <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-gradient-to-tl from-indigo-500/5 via-blue-500/3 to-transparent rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-r from-gray-500/3 to-blue-500/3 rounded-full blur-3xl"></div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto py-8">
         {/* Enhanced Header with softer colors */}
         <motion.div
           className="text-center mb-20"
@@ -431,13 +432,23 @@ export default function HomePage() {
                             handleOpen();
                           }
                         }}
-                        className="hover:cursor-pointer relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 p-6 shadow-lg transition-all duration-200 hover:border-slate-600/50 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:outline-none"
+                        className="hover:cursor-pointer relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-700/50 bg-slate-800/50 shadow-lg transition-all duration-200 hover:border-slate-600/50 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 focus:outline-none"
                       >
                         <div className={`absolute inset-0 bg-gradient-to-br ${module.gradient} opacity-5 transition-opacity duration-300 group-hover:opacity-10`} />
-                        <div className="relative flex flex-1 flex-col">
-                          <div className={`mb-4 inline-flex w-fit rounded-xl bg-gradient-to-br ${module.gradient} p-3`}>
-                            <module.icon className="h-8 w-8 text-white" />
-                          </div>
+
+                        {/* ── Hero image ── */}
+                        <div className="relative w-full overflow-hidden">
+                          <Image
+                            src={module.image}
+                            alt={module.title}
+                            width={800}
+                            height={450}
+                            className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                            priority={false}
+                          />
+                        </div>
+
+                        <div className="relative flex flex-1 flex-col p-6">
                           <h4 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-emerald-400">
                             {module.title}
                           </h4>
