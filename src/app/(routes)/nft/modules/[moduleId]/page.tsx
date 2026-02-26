@@ -26,6 +26,7 @@ import PromoCodeModal from "../../../../../components/PromoCodeModal";
 import Certificate from "@/components/Certificate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { handleDownloadPDF } from "@/utils/certificate-pdf";
 
 export default function ModuleDetailPage() {
   const router = useRouter();
@@ -102,7 +103,7 @@ export default function ModuleDetailPage() {
           setCertificateLocked(Boolean(data.generated));
           if (data.name) setCertificateName(data.name);
         }
-      } catch {}
+      } catch { }
     };
     check();
   }, [currentModule?.id, userAddress]);
@@ -176,77 +177,6 @@ export default function ModuleDetailPage() {
     isCertificationMinting ||
     isCheckingClaim ||
     alreadyClaimed;
-
-  const handleDownloadPDF = async () => {
-    const node = document.getElementById("certificate");
-    if (!node) return;
-    // Persist one-time generation before download
-    if (
-      !certificateLocked &&
-      certificateName.trim() &&
-      currentModule?.id &&
-      userAddress
-    ) {
-      try {
-        await fetch(`/api/certification/generate/${currentModule.id}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userAddress, name: certificateName.trim() }),
-        });
-        setCertificateLocked(true);
-      } catch {}
-    }
-    const canvas = await html2canvas(node, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#0D1221",
-      removeContainer: true,
-      onclone: (doc) => {
-        const cert = doc.getElementById("certificate") as HTMLElement | null;
-        if (cert) {
-          cert.style.background =
-            "linear-gradient(135deg, #020816 0%, #0D1221 100%)";
-          cert.style.borderRadius = "0";
-        }
-        doc
-          .querySelectorAll("[data-pdf-hide]")
-          .forEach((el) => ((el as HTMLElement).style.display = "none"));
-        const title = doc.querySelector(
-          "#certificate h1"
-        ) as HTMLElement | null;
-        if (title) {
-          title.style.background = "";
-          // @ts-ignore
-          title.style.webkitBackgroundClip = "";
-          title.style.backgroundClip = "";
-          title.style.color = "#E5E7EB";
-          title.style.textShadow = "none";
-        }
-      },
-    });
-    const imgData = canvas.toDataURL("image/png");
-    // Export as standard A4 landscape
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
-    const pageWidth = 297;
-    const pageHeight = 210;
-    const scale = Math.min(
-      pageWidth / canvas.width,
-      pageHeight / canvas.height
-    );
-    const imgWidth = canvas.width * scale;
-    const imgHeight = canvas.height * scale;
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
-    pdf.setFillColor(13, 18, 33);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-    pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight, undefined, "FAST");
-    const safeName = (certificateName || "certificate").replace(/\s+/g, "_");
-    pdf.save(`${currentModule?.id || "module"}-certificate-${safeName}.pdf`);
-  };
 
   return (
     <div style={{ minHeight: 'calc(100vh - 72px)' }} className="bg-gradient-to-br from-[#020816] to-[#0D1221] relative overflow-hidden flex flex-col">
@@ -322,15 +252,15 @@ export default function ModuleDetailPage() {
                         {alreadyClaimed
                           ? "Already Claimed"
                           : isCompleted
-                          ? "Module Completed"
-                          : "In Progress"}
+                            ? "Module Completed"
+                            : "In Progress"}
                       </p>
                       <p className="text-gray-400 text-sm">
                         {alreadyClaimed
                           ? "Your certification NFT has been minted."
                           : isCompleted
-                          ? "You can claim your certification NFT."
-                          : "Complete all required challenges to enable claim."}
+                            ? "You can claim your certification NFT."
+                            : "Complete all required challenges to enable claim."}
                       </p>
                     </div>
                   </div>
@@ -358,11 +288,10 @@ export default function ModuleDetailPage() {
                     <button
                       disabled={isClaimDisabled || !isCompleted}
                       onClick={() => setIsPromoOpen(true)}
-                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                        isClaimDisabled || !isCompleted
-                          ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                          : "cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
-                      }`}
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled || !isCompleted
+                        ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                        : "cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
+                        }`}
                     >
                       {alreadyClaimed ? (
                         <>Claimed</>
@@ -406,13 +335,12 @@ export default function ModuleDetailPage() {
                       </div>
                       <div className="flex md:justify-end">
                         <button
-                          onClick={handleDownloadPDF}
+                          onClick={() => handleDownloadPDF(certificateName)}
                           disabled={!certificateName.trim()}
-                          className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                            !certificateName.trim()
-                              ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                              : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-                          }`}
+                          className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${!certificateName.trim()
+                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                            : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                            }`}
                         >
                           <Download className="w-4 h-4" /> Download PDF
                         </button>

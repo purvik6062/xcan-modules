@@ -3,6 +3,7 @@ import {
   useAccount,
   useWriteContract,
   useWaitForTransactionReceipt,
+  useSwitchChain,
 } from "wagmi";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../utils/contracts";
 import toast from "react-hot-toast";
@@ -92,7 +93,8 @@ const modulesHashes = {
 };
 
 export const useMint = () => {
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
+  const { switchChainAsync } = useSwitchChain();
   const [isMinting, setIsMinting] = useState(false);
   const [isCertificationMinting, setIsCertificationMinting] = useState(false);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
@@ -297,6 +299,16 @@ export const useMint = () => {
       return;
     }
 
+    if (chainId !== 421614) {
+      try {
+        await switchChainAsync?.({ chainId: 421614 });
+      } catch (switchError: any) {
+        console.error("Failed to switch network:", switchError);
+        toast.error("Please switch your network to Arbitrum Sepolia to mint.");
+        return;
+      }
+    }
+
     setIsMinting(true);
     try {
       // Get the appropriate metadata hash for the level
@@ -373,6 +385,16 @@ export const useMint = () => {
     if (!moduleName) {
       toast.error("Module information is required for minting.");
       return;
+    }
+
+    if (chainId !== 421614) {
+      try {
+        await switchChainAsync?.({ chainId: 421614 });
+      } catch (switchError: any) {
+        console.error("Failed to switch network:", switchError);
+        toast.error("Please switch your network to Arbitrum Sepolia to mint.");
+        return;
+      }
     }
 
     setIsCertificationMinting(true);

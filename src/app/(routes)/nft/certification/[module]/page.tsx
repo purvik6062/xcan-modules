@@ -22,6 +22,7 @@ import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import Certificate from "@/components/Certificate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { handleDownloadPDF } from "@/utils/certificate-pdf";
 
 export default function CertificationViewPage() {
   const router = useRouter();
@@ -104,52 +105,10 @@ export default function CertificationViewPage() {
           setCertificateLocked(Boolean(data.generated));
           if (data.name) setCertificateName(data.name);
         }
-      } catch {}
+      } catch { }
     };
     check();
   }, [mod?.id, address]);
-
-  const handleDownloadPDF = async () => {
-    const node = document.getElementById("certificate");
-    if (!node || !mod?.id) return;
-    if (!certificateLocked && certificateName.trim() && address) {
-      try {
-        await fetch(`/api/certification/generate/${mod.id}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userAddress: address,
-            name: certificateName.trim(),
-          }),
-        });
-        setCertificateLocked(true);
-      } catch {}
-    }
-    const canvas = await html2canvas(node, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff",
-    });
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
-    const pageWidth = 297;
-    const pageHeight = 210;
-    const ratio = Math.min(
-      pageWidth / canvas.width,
-      pageHeight / canvas.height
-    );
-    const imgWidth = canvas.width * ratio;
-    const imgHeight = canvas.height * ratio;
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
-    pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight, undefined, "FAST");
-    const safeName = (certificateName || "certificate").replace(/\s+/g, "_");
-    pdf.save(`${mod.id}-certificate-${safeName}.pdf`);
-  };
 
   if (!isReady || walletLoading) {
     return (
@@ -252,8 +211,8 @@ export default function CertificationViewPage() {
                     {showCertificate
                       ? "Hide"
                       : certificateLocked
-                      ? "View Certificate"
-                      : "Get Certificate"}
+                        ? "View Certificate"
+                        : "Get Certificate"}
                   </button>
                 </div>
 
@@ -275,13 +234,12 @@ export default function CertificationViewPage() {
                       </div>
                       <div className="flex md:justify-end">
                         <button
-                          onClick={handleDownloadPDF}
+                          onClick={() => handleDownloadPDF(certificateName)}
                           disabled={!certificateName.trim()}
-                          className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                            !certificateName.trim()
-                              ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                              : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-                          }`}
+                          className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${!certificateName.trim()
+                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                            : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                            }`}
                         >
                           <Download className="w-4 h-4" /> Download PDF
                         </button>

@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Certificate from "@/components/Certificate";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+
 import { ArrowLeft, Download } from "lucide-react";
 import Link from "next/link";
+import { handleDownloadPDF } from "@/utils/certificate-pdf";
 
 export default function CertificatePage() {
   const [name, setName] = useState("");
@@ -29,43 +29,6 @@ export default function CertificatePage() {
     e.preventDefault();
     if (!name.trim()) return;
     setSubmitted(true);
-  };
-
-  // Convert certificate DOM to A4 landscape PDF
-  const handleDownloadPDF = async () => {
-    const node = document.getElementById("certificate");
-    if (!node) return;
-
-    // Increase scale for sharper output
-    const canvas = await html2canvas(node, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff",
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    // jsPDF A4 landscape in mm: 297 x 210
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
-
-    const pageWidth = 297;
-    const pageHeight = 210;
-
-    // Fit inside page while preserving aspect ratio (no cropping)
-    const ratio = Math.min(
-      pageWidth / canvas.width,
-      pageHeight / canvas.height
-    );
-    const imgWidth = canvas.width * ratio;
-    const imgHeight = canvas.height * ratio;
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
-
-    pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight, undefined, "FAST");
-    pdf.save(`certificate-${name.replace(/\s+/g, "_")}.pdf`);
   };
 
   const handleBack = () => setSubmitted(false);
@@ -117,7 +80,7 @@ export default function CertificatePage() {
             </div>
             <div className="flex items-center gap-3">
               <button
-                onClick={handleDownloadPDF}
+                onClick={() => handleDownloadPDF(name)}
                 className="cursor-pointer inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
               >
                 <Download className="w-4 h-4" /> Download PDF

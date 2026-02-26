@@ -15,6 +15,7 @@ import ConnectWallet from "@/components/ConnectWallet";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Link from "next/link";
+import { handleDownloadPDF } from "@/utils/certificate-pdf";
 
 export default function NFTPage() {
   const { levelKey } = useParams();
@@ -56,87 +57,10 @@ export default function NFTPage() {
           setCertificateLocked(Boolean(data.generated));
           if (data.name) setCertificateName(data.name);
         }
-      } catch {}
+      } catch { }
     };
     check();
   }, [userAddress, levelKey]);
-
-  const handleDownloadPDF = async () => {
-    const node = document.getElementById("certificate");
-    if (!node) return;
-    if (
-      !certificateLocked &&
-      certificateName.trim() &&
-      userAddress &&
-      levelKey
-    ) {
-      try {
-        await fetch(`/api/certification/generate/arbitrum-stylus`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userAddress,
-            name: certificateName.trim(),
-            levelKey,
-          }),
-        });
-        setCertificateLocked(true);
-      } catch {}
-    }
-    const canvas = await html2canvas(node, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#0D1221",
-      removeContainer: true,
-      onclone: (doc) => {
-        // Ensure background matches the on-screen dark theme and add safe bleed
-        const cert = doc.getElementById("certificate") as HTMLElement | null;
-        if (cert) {
-          cert.style.background =
-            "linear-gradient(135deg, #020816 0%, #0D1221 100%)";
-          cert.style.borderRadius = "0"; // avoid anti-aliased corners seams
-        }
-        // Hide elements marked to be skipped for PDF (to avoid thin lines/underlines artifacts)
-        doc
-          .querySelectorAll("[data-pdf-hide]")
-          .forEach((el) => ((el as HTMLElement).style.display = "none"));
-        // html2canvas doesn't support background-clip: text well; force solid color
-        const title = doc.querySelector(
-          "#certificate h1"
-        ) as HTMLElement | null;
-        if (title) {
-          title.style.background = "";
-          // @ts-ignore
-          title.style.webkitBackgroundClip = "";
-          title.style.backgroundClip = "";
-          title.style.color = "#E5E7EB";
-          title.style.textShadow = "none";
-        }
-      },
-    });
-    const imgData = canvas.toDataURL("image/png");
-    // Export as standard A4 landscape; center image while preserving design
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: "a4",
-    });
-    const pageWidth = 297;
-    const pageHeight = 210;
-    const scale = Math.min(
-      pageWidth / canvas.width,
-      pageHeight / canvas.height
-    );
-    const imgWidth = canvas.width * scale;
-    const imgHeight = canvas.height * scale;
-    const x = (pageWidth - imgWidth) / 2;
-    const y = (pageHeight - imgHeight) / 2;
-    pdf.setFillColor(13, 18, 33);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-    pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight, undefined, "FAST");
-    const safeName = (certificateName || "certificate").replace(/\s+/g, "_");
-    pdf.save(`${levelKey}-certificate-${safeName}.pdf`);
-  };
 
   if (!isReady || walletLoading) {
     return (
@@ -299,8 +223,8 @@ export default function NFTPage() {
               {showCertificate
                 ? "Hide"
                 : certificateLocked
-                ? "View Certificate"
-                : "Get Certificate"}
+                  ? "View Certificate"
+                  : "Get Certificate"}
             </button>
           </div>
 
@@ -322,13 +246,12 @@ export default function NFTPage() {
                 </div>
                 <div className="flex md:justify-end">
                   <button
-                    onClick={handleDownloadPDF}
+                    onClick={() => handleDownloadPDF(certificateName)}
                     disabled={!certificateName.trim()}
-                    className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                      !certificateName.trim()
-                        ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                        : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-                    }`}
+                    className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${!certificateName.trim()
+                      ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                      : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                      }`}
                   >
                     <Download className="w-4 h-4" /> Download PDF
                   </button>

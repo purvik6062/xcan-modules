@@ -41,7 +41,7 @@ export default function Certificate({
 
       {/* Recipient name */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 w-full px-10 text-center"
+        className="absolute left-0 w-full px-10 text-center"
         style={{ top: "46%" }}
       >
         <p
@@ -57,7 +57,7 @@ export default function Certificate({
 
       {/* Module / course name */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 w-full px-10 text-center"
+        className="absolute left-0 w-full px-10 text-center"
         style={{ top: "62%" }}
       >
         <p
