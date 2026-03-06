@@ -90,6 +90,12 @@ const modulesHashes = {
       "https://gateway.pinata.cloud/ipfs/QmU9Uib2y8fYDFNAukW1CY9SsVmJDXa4jKPMMEumtvk7x8",
     name: "Xcan Advocate",
   },
+  "eigen-ai": {
+    metadataHash: "PLACEHOLDER_EIGEN_AI_METADATA_HASH",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/PLACEHOLDER_EIGEN_AI_IMAGE_HASH",
+    name: "Secure AI with Eigen",
+  },
 };
 
 export const useMint = () => {
