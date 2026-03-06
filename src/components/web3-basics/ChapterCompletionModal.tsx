@@ -11,6 +11,8 @@ interface ChapterCompletionModalProps {
   chapterTitle: string;
   nextChapterId?: string;
   nextChapterTitle?: string;
+  basePath?: string;
+  moduleTitle?: string;
 }
 
 export default function ChapterCompletionModal({
@@ -19,6 +21,8 @@ export default function ChapterCompletionModal({
   chapterTitle,
   nextChapterId,
   nextChapterTitle,
+  basePath = "/learn-web3-basics",
+  moduleTitle = "Web3 Basics",
 }: ChapterCompletionModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -81,7 +85,7 @@ export default function ChapterCompletionModal({
 
               {/* Navigation Button */}
               <Link
-                href={`/learn-web3-basics/${nextChapterId}`}
+                href={`${basePath}/${nextChapterId}`}
                 onClick={onClose}
                 className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium text-lg"
               >
@@ -92,10 +96,10 @@ export default function ChapterCompletionModal({
             <div className="bg-green-900/20 border border-green-500 rounded-xl p-6 mb-8">
               <div className="text-4xl mb-3">🎓</div>
               <h3 className="text-lg font-semibold text-green-400 mb-2">
-                Web3 Basics Completed!
+                {moduleTitle} Completed!
               </h3>
               <p className="text-green-300 text-sm">
-                Congratulations! You have successfully completed the Web3 Basics module. Explore more modules on our platform.
+                Congratulations! You have successfully completed the {moduleTitle} module. Explore more modules on our platform.
               </p>
             </div>
           )}
@@ -111,7 +115,7 @@ export default function ChapterCompletionModal({
                   Stay Here
                 </button>
                 <Link
-                  href={`/learn-web3-basics/${nextChapterId}`}
+                  href={`${basePath}/${nextChapterId}`}
                   onClick={onClose}
                   className="hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors"
                 >
@@ -120,7 +124,7 @@ export default function ChapterCompletionModal({
               </>
             ) : (
               <Link
-                href="/learn-web3-basics"
+                href={basePath}
                 onClick={onClose}
                 className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors"
               >

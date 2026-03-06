@@ -7,7 +7,8 @@ export type ModuleId =
   | "precompiles-overview"
   | "cross-chain"
   | "master-defi"
-  | "master-orbit";
+  | "master-orbit"
+  | "eigen-ai";
 
 export type ModuleAlias =
   | "defi-arbitrum" // Maps to "master-defi"
@@ -24,6 +25,7 @@ export const MODULE_ID_MAP: Record<string, ModuleId> = {
   "defi-arbitrum": "master-defi", // Alias
   "master-orbit": "master-orbit",
   "arbitrum-orbit": "master-orbit", // Alias
+  "eigen-ai": "eigen-ai",
 };
 
 export const COLLECTION_TO_MODULE_ID: Record<string, ModuleId> = {
@@ -33,6 +35,7 @@ export const COLLECTION_TO_MODULE_ID: Record<string, ModuleId> = {
   "challenges-cross-chain": "cross-chain",
   "challenges-master-defi": "master-defi",
   "challenges-orbit-chain": "master-orbit",
+  "challenges-eigen-ai": "eigen-ai",
 };
 
 export function normalizeModuleId(module: ModuleIdentifier): ModuleId {
