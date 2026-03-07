@@ -1,0 +1,18 @@
+{
+    "image": "../public/YOUR_IMAGE.png",
+    "name": "Your Module Name",
+    "description": "Certification NFT awarded for completing the Your Module Name module on Xcan.",
+    "module": "your-module-key",
+    "platform": "Xcan",
+    "network": "Arbitrum Sepolia",
+    "topics": [
+        "Topic1",
+        "Topic2"
+    ],
+    "extraAttributes": [
+        {
+            "trait_type": "Custom Trait",
+            "value": "Custom Value"
+        }
+    ]
+}
