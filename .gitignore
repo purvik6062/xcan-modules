@@ -43,3 +43,5 @@ next-env.d.ts
 .vercel
 
 ref/
+upload-output.txt
+upload-nft.mjs

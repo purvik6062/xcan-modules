@@ -91,9 +91,9 @@ const modulesHashes = {
     name: "Xcan Advocate",
   },
   "eigen-ai": {
-    metadataHash: "PLACEHOLDER_EIGEN_AI_METADATA_HASH",
+    metadataHash: "QmXywadCWQcob4xKpeFxurvdizY5BCGmwJkN8pcNDPSQxo",
     imageUrl:
-      "https://gateway.pinata.cloud/ipfs/PLACEHOLDER_EIGEN_AI_IMAGE_HASH",
+      "https://gateway.pinata.cloud/ipfs/QmXN82HEkUdgJsK1YkS1MF4p52Ap2bQaTJmut8EcmPCGEs",
     name: "Secure AI with Eigen",
   },
 };
