@@ -90,6 +90,12 @@ const modulesHashes = {
       "https://gateway.pinata.cloud/ipfs/QmU9Uib2y8fYDFNAukW1CY9SsVmJDXa4jKPMMEumtvk7x8",
     name: "Xcan Advocate",
   },
+  "eigen-ai": {
+    metadataHash: "QmXywadCWQcob4xKpeFxurvdizY5BCGmwJkN8pcNDPSQxo",
+    imageUrl:
+      "https://gateway.pinata.cloud/ipfs/QmXN82HEkUdgJsK1YkS1MF4p52Ap2bQaTJmut8EcmPCGEs",
+    name: "Secure AI with Eigen",
+  },
 };
 
 export const useMint = () => {

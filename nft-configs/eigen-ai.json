@@ -1,0 +1,15 @@
+{
+    "image": "../public/EigenModule.png",
+    "name": "Secure AI with Eigen",
+    "description": "Certification NFT awarded for completing the Secure AI with Eigen module on Xcan. Earned by mastering TEE, EigenAI Verifiable Inference, EigenCompute, and production AI pipelines.",
+    "module": "eigen-ai",
+    "platform": "Xcan",
+    "network": "Arbitrum Sepolia",
+    "topics": [
+        "TEE",
+        "EigenAI",
+        "EigenCompute",
+        "Intel TDX"
+    ],
+    "extraAttributes": []
+}

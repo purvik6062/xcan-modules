@@ -98,20 +98,8 @@ export async function GET(
       );
     }
 
-    // Validate module
-    const validModules = [
-      "web3-basics",
-      "precompiles-overview",
-      "stylus-core-concepts",
-      "arbitrum-orbit",
-      "master-orbit",
-      "master-defi",
-      "defi-arbitrum",
-      "cross-chain",
-      "xcan-advocate",
-    ];
-
-    if (!validModules.includes(module)) {
+    // Validate module using the authoritative MODULE_ID_MAP
+    if (!MODULE_ID_MAP[module] && module !== "xcan-advocate") {
       return NextResponse.json(
         { error: "Unsupported module" },
         { status: 400 }

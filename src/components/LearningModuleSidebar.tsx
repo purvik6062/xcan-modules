@@ -14,6 +14,7 @@ const MODULE_ORDER: string[] = [
   "defi-arbitrum",
   "cross-chain",
   "arbitrum-precompiles",
+  "eigen-ai",
 ];
 
 const orderedModules: LearningModule[] = MODULE_ORDER.map((id) =>

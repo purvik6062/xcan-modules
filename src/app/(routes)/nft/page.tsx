@@ -452,7 +452,7 @@ export default function HomePage() {
                           <h4 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-emerald-400">
                             {module.title}
                           </h4>
-                          <p className="mb-6 line-clamp-3 flex-1 text-sm text-slate-400">
+                          <p className="mb-6 line-clamp-5 flex-1 text-sm text-slate-400">
                             {module.description}
                           </p>
                           <motion.span

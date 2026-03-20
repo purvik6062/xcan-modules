@@ -103,6 +103,22 @@ const BookOpenIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const ShieldCheckIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+    />
+  </svg>
+);
+
 export interface NFTModule {
   id: string;
   title: string;
@@ -293,6 +309,29 @@ export const nftModules: NFTModule[] = [
       "Real-world Examples",
       "Gas Optimization",
       "L1-L2 Messaging",
+    ],
+  },
+  {
+    id: "eigen-ai",
+    title: "Secure AI with Eigen",
+    description:
+      "Learn how EigenLayer enables production-grade AI systems using Trusted Execution Environments. Master TEE, verifiable inference, and confidential compute.",
+    icon: ShieldCheckIcon,
+    image: "/EigenModule.png",
+    level: "Beginner to Advanced",
+    duration: "2-3 weeks",
+    challenges: 8,
+    status: "available",
+    gradient: "from-violet-500 to-indigo-600",
+    database: "mongodb",
+    href: "/learn-eigen",
+    features: [
+      "AI & TEE Fundamentals",
+      "EigenAI Verifiable Inference",
+      "EigenCompute & Intel TDX",
+      "Production AI Pipelines",
+      "Story-Based Learning",
+      "Interactive Quizzes",
     ],
   },
 ];

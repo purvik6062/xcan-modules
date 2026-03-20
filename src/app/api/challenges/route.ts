@@ -12,6 +12,7 @@ import { crossChainChapters } from "@/data/crossChainChapters";
 import { defiChapters } from "@/data/defiChapters";
 import { orbitChapters } from "@/data/orbitChapters";
 import { stylusChapters } from "@/data/stylusChapters";
+import { eigenChapters } from "@/data/eigenChapters";
 
 function computeProgress(
   chaptersCompletedSections: {
@@ -28,12 +29,14 @@ function computeProgress(
     currentModule === "cross-chain"
       ? crossChainChapters
       : currentModule === "master-defi"
-      ? defiChapters
-      : currentModule === "master-orbit"
-      ? orbitChapters
-      : currentModule === "stylus-core-concepts"
-      ? stylusChapters
-      : web3BasicsChapters;
+        ? defiChapters
+        : currentModule === "master-orbit"
+          ? orbitChapters
+          : currentModule === "stylus-core-concepts"
+            ? stylusChapters
+            : currentModule === "eigen-ai"
+              ? eigenChapters
+              : web3BasicsChapters;
 
   for (const chapter of chapters) {
     const availableSections = chapter.sections.filter(
@@ -153,12 +156,14 @@ export async function POST(request: NextRequest) {
       currentModule === "cross-chain"
         ? crossChainChapters
         : currentModule === "master-defi"
-        ? defiChapters
-        : currentModule === "master-orbit"
-        ? orbitChapters
-        : currentModule === "stylus-core-concepts"
-        ? stylusChapters
-        : web3BasicsChapters;
+          ? defiChapters
+          : currentModule === "master-orbit"
+            ? orbitChapters
+            : currentModule === "stylus-core-concepts"
+              ? stylusChapters
+              : currentModule === "eigen-ai"
+                ? eigenChapters
+                : web3BasicsChapters;
 
     for (const ch of chaptersDataForModule) {
       const availableSections = ch.sections.filter(
