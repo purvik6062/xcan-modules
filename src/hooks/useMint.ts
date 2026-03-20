@@ -46,7 +46,7 @@ const modulesHashes = {
     metadataHash: "QmcMmMDS4AdwMkLiLpZTmUW8gC5XZePNvqiRdjq1U2xMYH",
     imageUrl:
       "https://gateway.pinata.cloud/ipfs/QmcyiBHVJtZwzhiF83iWvDouHqbTN2r3RkP7vkXVRxWwdG",
-    name: "Web3 Basics",
+    name: "Web3 & Rust Foundations",
   },
   "stylus-core-concepts": {
     metadataHash: "QmUR4E9jWWBNGHrrqq6yWJxgnP2vnaF6RDGgqRDhWHBJjG",

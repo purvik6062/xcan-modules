@@ -679,7 +679,7 @@ export default function SubmissionsPage() {
                           {submission.type === "foundation"
                             ? "Stylus Foundation"
                             : submission.type === "advocate"
-                              ? "XCAN Advocate"
+                              ? "Xcan Advocate"
                               : submission.type === "module"
                                 ? submission.moduleName
                                 : "Unknown Module"}

@@ -122,7 +122,7 @@ export interface NFTModule {
 export const nftModules: NFTModule[] = [
   {
     id: "web3-basics",
-    title: "Web3 Basics",
+    title: "Web3 & Rust Foundations",
     description:
       "Learn Web3 fundamentals through engaging stories and interactive lessons. Perfect for beginners - no prior experience needed!",
     icon: GlobeIcon,

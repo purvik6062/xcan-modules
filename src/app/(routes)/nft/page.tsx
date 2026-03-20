@@ -124,7 +124,7 @@ export default function HomePage() {
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-300 via-indigo-300 to-slate-300 bg-clip-text text-transparent mb-4">
-              Speedrun Portal
+              NFT Portal
             </h1>
             <motion.p
               className="text-xl text-slate-300 font-medium"

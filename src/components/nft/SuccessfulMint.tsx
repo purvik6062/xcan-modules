@@ -24,7 +24,7 @@ interface SuccessfulMintProps {
 }
 
 const LEVEL_NAME_MAP = {
-  "web3-basics": "Web3 Basics",
+  "web3-basics": "Web3 & Rust Foundations",
   "precompiles-overview": "Core Stylus Engineering",
   "stylus-core-concepts": "Stylus Core Concepts",
   "zkp-basics": "ZKP Basics",

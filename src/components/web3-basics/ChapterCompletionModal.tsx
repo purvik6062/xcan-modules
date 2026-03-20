@@ -92,10 +92,10 @@ export default function ChapterCompletionModal({
             <div className="bg-green-900/20 border border-green-500 rounded-xl p-6 mb-8">
               <div className="text-4xl mb-3">🎓</div>
               <h3 className="text-lg font-semibold text-green-400 mb-2">
-                Web3 Basics Completed!
+                Web3 & Rust Foundations Completed!
               </h3>
               <p className="text-green-300 text-sm">
-                Congratulations! You have successfully completed the Web3 Basics module. Explore more modules on our platform.
+                Congratulations! You have successfully completed the Web3 & Rust Foundations module. Explore more modules on our platform.
               </p>
             </div>
           )}

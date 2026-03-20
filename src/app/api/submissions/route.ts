@@ -7,14 +7,14 @@ import type { ModuleId } from "../../../lib/database/module-collections";
 
 // ─── Module configuration ────────────────────────────────────────────────────
 const MODULE_CONFIG: Record<string, { name: string; id: string }> = {
-  "web3-basics": { name: "Web3 Basics", id: "web3-basics" },
+  "web3-basics": { name: "Web3 & Rust Foundations", id: "web3-basics" },
   "stylus-core-concepts": { name: "Stylus Core Concepts", id: "stylus-core-concepts" },
   "precompiles-overview": { name: "Precompile Playground", id: "precompiles-overview" },
   "cross-chain": { name: "Cross-Chain Development", id: "cross-chain" },
   "master-defi": { name: "Master DeFi on Arbitrum", id: "master-defi" },
   "master-orbit": { name: "Master Arbitrum Orbit", id: "master-orbit" },
   "stylus-foundation": { name: "Stylus Foundation", id: "stylus-foundation" },
-  "xcan-advocate": { name: "XCAN Advocate", id: "xcan-advocate" },
+  "xcan-advocate": { name: "Xcan Advocate", id: "xcan-advocate" },
   "arbitrum-stylus": { name: "Arbitrum Stylus", id: "arbitrum-stylus" },
 };
 
@@ -464,7 +464,7 @@ export async function GET(request: NextRequest) {
     // Advocates
     moduleUserCounts.push({
       moduleId: "xcan-advocate",
-      moduleName: MODULE_CONFIG["xcan-advocate"]?.name || "XCAN Advocate",
+      moduleName: MODULE_CONFIG["xcan-advocate"]?.name || "Xcan Advocate",
       userCount: advocatesData.length,
     });
 

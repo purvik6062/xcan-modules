@@ -4,7 +4,7 @@ import { addressMatchQuery } from "@/lib/utils/address";
 
 // ─── Module configuration ────────────────────────────────────────────────────
 const MODULE_CONFIG: Record<string, { name: string; id: string }> = {
-  "web3-basics": { name: "Web3 Basics", id: "web3-basics" },
+  "web3-basics": { name: "Web3 & Rust Foundations", id: "web3-basics" },
   "stylus-core-concepts": { name: "Stylus Core Concepts", id: "stylus-core-concepts" },
   "precompiles-overview": { name: "Precompile Playground", id: "precompiles-overview" },
   "cross-chain": { name: "Cross-Chain Development", id: "cross-chain" },

@@ -102,7 +102,7 @@ const YOUTUBE_VIDEOS = [
     },
     {
         id: "HYj1oicGqNw",
-        title: "Fundamentals of DeFi on Arbitrum | Complete Guide Powered by XCAN",
+        title: "Fundamentals of DeFi on Arbitrum | Complete Guide Powered by Xcan",
         shortTitle: "Fundamentals of DeFi on Arbitrum",
         duration: "12:03",
         views: "24",

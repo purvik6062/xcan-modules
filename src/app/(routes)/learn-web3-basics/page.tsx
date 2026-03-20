@@ -125,7 +125,7 @@ export default function LearnWeb3BasicsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Master Web3 Basics
+            Master Web3 & Rust Foundations
           </motion.h1>
           <motion.p
             className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
