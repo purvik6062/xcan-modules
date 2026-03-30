@@ -12,8 +12,6 @@ import { FloatingParticles } from "@/components/nft/FloatingParticles";
 import { Loader2, ArrowLeft, AlertCircle, Download } from "lucide-react";
 import Certificate from "@/components/Certificate";
 import ConnectWallet from "@/components/ConnectWallet";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import Link from "next/link";
 import { handleDownloadPDF } from "@/utils/certificate-pdf";
 

@@ -20,8 +20,6 @@ import Link from "next/link";
 import { SuccessfulMint } from "@/components/nft/SuccessfulMint";
 import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import Certificate from "@/components/Certificate";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { handleDownloadPDF } from "@/utils/certificate-pdf";
 
 export default function CertificationViewPage() {

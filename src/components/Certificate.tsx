@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 interface CertificateProps {
   name: string;
   title?: string;
@@ -30,16 +28,19 @@ export default function Certificate({
         maxWidth: 1100,
       }}
     >
-      <Image
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src={backgroundImageUrl}
         alt="Certificate background"
-        fill
-        priority
-        className="object-cover"
-        sizes="(max-width: 1024px) 100vw, 1100px"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
       />
 
-      {/* Recipient name */}
       <div
         className="absolute left-0 w-full px-10 text-center"
         style={{ top: "46%" }}
@@ -55,7 +56,6 @@ export default function Certificate({
         </p>
       </div>
 
-      {/* Module / course name */}
       <div
         className="absolute left-0 w-full px-10 text-center"
         style={{ top: "62%" }}
