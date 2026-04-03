@@ -8,6 +8,58 @@ import {
   type ModuleIdentifier,
 } from "@/lib/database/module-collections";
 
+async function getModuleCertificateCount(db: any, moduleId: string) {
+  const counters = db.collection("certificate-counters");
+  const doc = await counters.findOne(
+    { moduleId },
+    { projection: { _id: 0, sequence: 1 } }
+  );
+  return Number(doc?.sequence || 0);
+}
+
+async function allocateModuleCertificateNumber(db: any, moduleId: string) {
+  const counters = db.collection("certificate-counters");
+  const now = new Date();
+  const result = await counters.findOneAndUpdate(
+    { moduleId },
+    {
+      $inc: { sequence: 1 },
+      $set: { updatedAt: now },
+      $setOnInsert: { moduleId, createdAt: now },
+    },
+    { upsert: true, returnDocument: "after" }
+  );
+  return Number((result as any)?.sequence || 0);
+}
+
+function getCertificatePrefix(moduleId: string) {
+  const map: Record<string, string> = {
+    "web3-basics": "W3B",
+    "stylus-core-concepts": "SCC",
+    "precompiles-overview": "PO",
+    "cross-chain": "CC",
+    "master-defi": "MD",
+    "master-orbit": "MO",
+    "eigen-ai": "EA",
+  };
+  if (map[moduleId]) return map[moduleId];
+
+  const parts = String(moduleId)
+    .split(/[^a-zA-Z0-9]+/g)
+    .filter(Boolean);
+  const initials = parts.map((p) => p[0]?.toUpperCase()).join("");
+  return (initials || "CERT").slice(0, 6);
+}
+
+function formatCertificateId(moduleId: string, certificateNumber: number) {
+  const prefix = getCertificatePrefix(moduleId);
+  const padded = String(Math.max(0, Number(certificateNumber) || 0)).padStart(
+    3,
+    "0"
+  );
+  return `${prefix}-${padded}`;
+}
+
 // One-time certificate generation per module per address
 // POST: mark as generated with optional display name
 // GET: check if generated
@@ -60,10 +112,23 @@ export async function GET(
 
     const { db } = await connectToDatabase();
     const moduleData = await getModuleData(db, userAddress, moduleId);
+    const moduleCertificateCount = await getModuleCertificateCount(db, moduleId);
+    const certificateId =
+      moduleData?.certificateId ||
+      (typeof moduleData?.certificateNumber === "number"
+        ? formatCertificateId(moduleId, moduleData.certificateNumber)
+        : null);
 
     return NextResponse.json({
       generated: Boolean(moduleData?.certificateGenerated),
       name: moduleData?.certificateName || null,
+      certificateOnChainGenerated: Boolean(
+        moduleData?.certificateOnChainGenerated
+      ),
+      pataramCertificateLink: moduleData?.pataramCertificateLink || null,
+      certificateNumber: moduleData?.certificateNumber || null,
+      certificateId,
+      moduleCertificateCount,
     });
   } catch (error: any) {
     console.error("Certificate generate GET error", error);
@@ -150,9 +215,24 @@ export async function POST(
     // Only set if not already generated
     const existing = await getModuleData(db, userAddress, moduleId);
     if (existing?.certificateGenerated) {
-      return NextResponse.json({ success: true, already: true });
+      const moduleCertificateCount = await getModuleCertificateCount(db, moduleId);
+      return NextResponse.json({
+        success: true,
+        already: true,
+        certificateNumber: existing?.certificateNumber || null,
+        certificateId:
+          existing?.certificateId ||
+          (typeof existing?.certificateNumber === "number"
+            ? formatCertificateId(moduleId, existing.certificateNumber)
+            : null),
+        moduleCertificateCount,
+      });
     }
 
+    const certificateNumber = await allocateModuleCertificateNumber(db, moduleId);
+    const certificateId = formatCertificateId(moduleId, certificateNumber);
+
+    // Save the entered name and initialize on-chain fields.
     await updateModuleField(
       db,
       userAddress,
@@ -177,8 +257,49 @@ export async function POST(
       new Date(),
       { upsert: true }
     );
+    // Pataram / on-chain flow:
+    // - our app only initializes these;
+    // - Pataram platform will later flip certificateOnChainGenerated to true
+    //   and set pataramCertificateLink.
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "certificateOnChainGenerated",
+      false,
+      { upsert: true }
+    );
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "pataramCertificateLink",
+      null,
+      { upsert: true }
+    );
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "certificateNumber",
+      certificateNumber,
+      { upsert: true }
+    );
+    await updateModuleField(
+      db,
+      userAddress,
+      moduleId,
+      "certificateId",
+      certificateId,
+      { upsert: true }
+    );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      certificateNumber,
+      certificateId,
+      moduleCertificateCount: certificateNumber,
+    });
   } catch (error: any) {
     console.error("Certificate generate POST error", error);
     return NextResponse.json(
