@@ -7,6 +7,23 @@ import {
   MODULE_ID_MAP,
   type ModuleIdentifier,
 } from "@/lib/database/module-collections";
+import { getCertificatePrefixFromCanonicalModuleId } from "@/lib/certificate-prefix";
+
+function toCertificateIssuedAtIso(value: unknown): string | null {
+  if (value == null) return null;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString();
+  }
+  if (typeof value === "string") {
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  }
+  if (typeof value === "object" && value !== null && "$date" in (value as any)) {
+    const d = new Date((value as { $date: string }).$date);
+    return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  }
+  return null;
+}
 
 async function getModuleCertificateCount(db: any, moduleId: string) {
   const counters = db.collection("certificate-counters");
@@ -32,27 +49,8 @@ async function allocateModuleCertificateNumber(db: any, moduleId: string) {
   return Number((result as any)?.sequence || 0);
 }
 
-function getCertificatePrefix(moduleId: string) {
-  const map: Record<string, string> = {
-    "web3-basics": "W3B",
-    "stylus-core-concepts": "SCC",
-    "precompiles-overview": "PO",
-    "cross-chain": "CC",
-    "master-defi": "MD",
-    "master-orbit": "MO",
-    "eigen-ai": "EA",
-  };
-  if (map[moduleId]) return map[moduleId];
-
-  const parts = String(moduleId)
-    .split(/[^a-zA-Z0-9]+/g)
-    .filter(Boolean);
-  const initials = parts.map((p) => p[0]?.toUpperCase()).join("");
-  return (initials || "CERT").slice(0, 6);
-}
-
 function formatCertificateId(moduleId: string, certificateNumber: number) {
-  const prefix = getCertificatePrefix(moduleId);
+  const prefix = getCertificatePrefixFromCanonicalModuleId(moduleId);
   const padded = String(Math.max(0, Number(certificateNumber) || 0)).padStart(
     3,
     "0"
@@ -122,6 +120,9 @@ export async function GET(
     return NextResponse.json({
       generated: Boolean(moduleData?.certificateGenerated),
       name: moduleData?.certificateName || null,
+      certificateGeneratedAt: toCertificateIssuedAtIso(
+        moduleData?.certificateGeneratedAt
+      ),
       certificateOnChainGenerated: Boolean(
         moduleData?.certificateOnChainGenerated
       ),
@@ -225,12 +226,16 @@ export async function POST(
           (typeof existing?.certificateNumber === "number"
             ? formatCertificateId(moduleId, existing.certificateNumber)
             : null),
+        certificateGeneratedAt: toCertificateIssuedAtIso(
+          existing?.certificateGeneratedAt
+        ),
         moduleCertificateCount,
       });
     }
 
     const certificateNumber = await allocateModuleCertificateNumber(db, moduleId);
     const certificateId = formatCertificateId(moduleId, certificateNumber);
+    const certificateGeneratedAt = new Date();
 
     // Save the entered name and initialize on-chain fields.
     await updateModuleField(
@@ -254,7 +259,7 @@ export async function POST(
       userAddress,
       moduleId,
       "certificateGeneratedAt",
-      new Date(),
+      certificateGeneratedAt,
       { upsert: true }
     );
     // Pataram / on-chain flow:
@@ -298,6 +303,7 @@ export async function POST(
       success: true,
       certificateNumber,
       certificateId,
+      certificateGeneratedAt: certificateGeneratedAt.toISOString(),
       moduleCertificateCount: certificateNumber,
     });
   } catch (error: any) {

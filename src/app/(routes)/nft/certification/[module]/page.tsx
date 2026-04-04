@@ -61,12 +61,9 @@ export default function CertificationViewPage() {
   const [pataramCertificateLink, setPataramCertificateLink] = useState<
     string | null
   >(null);
-  const [certificateNumber, setCertificateNumber] = useState<number | null>(
-    null
-  );
-  const [certificateId, setCertificateId] = useState<string | null>(null);
-  const [moduleCertificateCount, setModuleCertificateCount] = useState(0);
-
+  const [certificateGeneratedAt, setCertificateGeneratedAt] = useState<
+    string | null
+  >(null);
   useEffect(() => {
     const fetchCertification = async () => {
       if (!mod || !address) return;
@@ -121,15 +118,11 @@ export default function CertificationViewPage() {
             Boolean(data.certificateOnChainGenerated)
           );
           setPataramCertificateLink(data.pataramCertificateLink || null);
-          setCertificateNumber(
-            typeof data.certificateNumber === "number"
-              ? data.certificateNumber
+          setCertificateGeneratedAt(
+            typeof data.certificateGeneratedAt === "string"
+              ? data.certificateGeneratedAt
               : null
           );
-          setCertificateId(
-            typeof data.certificateId === "string" ? data.certificateId : null
-          );
-          setModuleCertificateCount(Number(data.moduleCertificateCount || 0));
         }
       } catch {
         // ignore polling errors
@@ -301,19 +294,14 @@ export default function CertificationViewPage() {
                                   );
                                 }
                                 setCertificateLocked(true);
-                                setCertificateNumber(
-                                  typeof data?.certificateNumber === "number"
-                                    ? data.certificateNumber
-                                    : null
-                                );
-                                setCertificateId(
-                                  typeof data?.certificateId === "string"
-                                    ? data.certificateId
-                                    : null
-                                );
-                                setModuleCertificateCount(
-                                  Number(data?.moduleCertificateCount || 0)
-                                );
+                                if (
+                                  typeof data?.certificateGeneratedAt ===
+                                  "string"
+                                ) {
+                                  setCertificateGeneratedAt(
+                                    data.certificateGeneratedAt
+                                  );
+                                }
                               } catch (e: any) {
                                 setCertificateError(
                                   e?.message || "Something went wrong"
@@ -386,6 +374,8 @@ export default function CertificationViewPage() {
                         name={certificateName}
                         title="Certificate of Completion"
                         subtitle={mod.title}
+                        moduleRouteKey={mod.id}
+                        certificateGeneratedAt={certificateGeneratedAt}
                       />
                     </div>
                   </div>
