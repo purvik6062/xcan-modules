@@ -10,13 +10,15 @@ interface Web3BasicsChapterCardProps {
   basePath?: string;
   progressData?: string[];
   isLoading?: boolean;
+  ctaTheme?: "blue" | "violet" | "amber";
 }
 
 export default function Web3BasicsChapterCard({
   chapter,
   basePath = "/learn-web3-basics",
   progressData = [],
-  isLoading = false
+  isLoading = false,
+  ctaTheme = "blue",
 }: Web3BasicsChapterCardProps) {
   const [isNavigating, setIsNavigating] = useState(false);
   const availableSections = chapter.sections.filter(
@@ -218,7 +220,7 @@ export default function Web3BasicsChapterCard({
       {/* Footer */}
       <div className="p-6 border-t border-gray-700">
         <div
-          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
+          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : ctaTheme === "violet" ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white" : ctaTheme === "amber" ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white" : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
         >
           {chapter.status === "coming-soon" ? "Coming Soon" : "Start Learning"}
         </div>

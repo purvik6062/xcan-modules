@@ -48,8 +48,6 @@ export const MintedNFTDisplay = ({
   const imageCardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // console.log("nft", nft);
-
   // Motion values for smooth 3D transforms
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -260,7 +258,7 @@ export const MintedNFTDisplay = ({
                     width={1000}
                     height={1000}
                     src={nft.imageUrl || "/placeholder.svg"}
-                    alt="Speedrun Stylus NFT"
+                    alt="Xcan Module NFT"
                     className="w-full h-full object-cover rounded-xl transition-transform duration-300"
                     style={{
                       transform: isHovered ? "scale(1.05)" : "scale(1.02)", // Changed from scale(1) to scale(1.02)

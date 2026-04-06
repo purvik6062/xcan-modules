@@ -106,9 +106,9 @@ export default function LearnCrossChainPage() {
     <div className="min-h-screen bg-gray-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mb-10 text-center sm:mb-12">
           <motion.h1
-            className="text-5xl font-bold text-white mb-4"
+            className="mb-3 text-3xl font-bold text-white sm:mb-4 sm:text-4xl lg:text-5xl"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -116,7 +116,7 @@ export default function LearnCrossChainPage() {
             Master Cross-Chain Development
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
+            className="mx-auto mb-6 max-w-3xl px-1 text-base text-gray-300 sm:mb-8 sm:text-lg lg:text-xl"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -180,7 +180,7 @@ export default function LearnCrossChainPage() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
                   <span className="text-sm font-medium text-gray-300">Progress</span>
                 </div>
                 <div className="text-sm text-gray-400">
@@ -189,7 +189,7 @@ export default function LearnCrossChainPage() {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <motion.div
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+                  className="bg-gradient-to-r from-teal-500 to-sky-500 h-2 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${overallProgress.percentage}%` }}
                   transition={{ duration: 0.5 }}
@@ -282,7 +282,7 @@ export default function LearnCrossChainPage() {
               className={`${alreadyClaimed
                 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
                 : overallProgress.percentage === 100 && !isCertificationMinting && !isClaimStatusLoading
-                  ? "cursor-pointer bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 hover:from-blue-600 hover:via-cyan-500 hover:to-blue-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                  ? "cursor-pointer bg-gradient-to-r from-teal-600 via-sky-600 to-cyan-500 hover:from-teal-500 hover:via-sky-500 hover:to-cyan-400 text-white shadow-lg hover:shadow-sky-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
                 } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
             >
@@ -326,7 +326,7 @@ export default function LearnCrossChainPage() {
 
         {/* Filter Controls */}
         <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-8"
+          className="mb-8 flex flex-wrap justify-center gap-2 sm:gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -335,8 +335,8 @@ export default function LearnCrossChainPage() {
             <button
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-6 py-2 rounded-full transition-all duration-200 cursor-pointer ${selectedLevel === level
-                ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg"
+              className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-all duration-200 sm:px-6 sm:text-base ${selectedLevel === level
+                ? "bg-gradient-to-r from-teal-600 to-sky-500 text-white shadow-lg"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600"
                 }`}
             >
@@ -354,6 +354,7 @@ export default function LearnCrossChainPage() {
                 basePath="/learn-cross-chain"
                 progressData={progressData[chapter.id] || []}
                 isLoading={isLoading}
+                ctaTheme="teal"
               />
             </div>
           ))}
@@ -366,7 +367,7 @@ export default function LearnCrossChainPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
         >
-          <div className="bg-gradient-to-br from-blue-900/40 via-gray-800 to-cyan-900/40 rounded-2xl border border-blue-500/30 p-8 relative overflow-hidden">
+          <div className="relative overflow-hidden rounded-2xl border border-teal-500/30 bg-gradient-to-br from-teal-900/40 via-gray-800 to-sky-900/40 p-4 sm:p-6 lg:p-8">
             {/* Background decoration */}
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-4 right-4 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
@@ -377,7 +378,7 @@ export default function LearnCrossChainPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-4xl">🌉</span>
-                  <h3 className="text-2xl font-bold text-white">Interactive Bridge Simulator</h3>
+                  <h3 className="text-xl font-bold text-white sm:text-2xl">Interactive Bridge Simulator</h3>
                 </div>
                 <p className="text-gray-300 mb-4 max-w-xl">
                   Visualize how cross-chain bridges work! Explore token transfer mechanisms,
@@ -397,7 +398,7 @@ export default function LearnCrossChainPage() {
               </div>
               <Link
                 href="/cross-chain-ux"
-                className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/20"
+                className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-600 to-sky-500 hover:from-teal-500 hover:to-sky-400 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-sky-500/20"
               >
                 <span>Try the Simulator</span>
                 <svg
@@ -415,13 +416,13 @@ export default function LearnCrossChainPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
+          className="mt-12 rounded-2xl bg-gradient-to-r from-teal-600 to-sky-500 p-4 text-center text-white sm:mt-16 sm:p-6 lg:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-4">Cross‑Chain Learning Path</h2>
-          <p className="text-lg mb-6 max-w-3xl mx-auto">
+          <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl">Cross‑Chain Learning Path</h2>
+          <p className="mx-auto mb-6 max-w-3xl text-base sm:text-lg">
             Follow the chapter sequence from the data: Cross‑Chain Foundations, Cross‑Chain Token Bridging,
             Advanced Cross‑Chain Protocols, Cross‑Chain Development, Arbitrum Bridge Basics, and
             Troubleshooting & Best Practices. Each chapter’s description and sections on this page reflect
@@ -443,12 +444,12 @@ export default function LearnCrossChainPage() {
 
         {/* Key Concepts */}
         <motion.div
-          className="mt-16 bg-gray-800 rounded-2xl border border-gray-700 p-8"
+          className="mt-12 rounded-2xl border border-gray-700 bg-gray-800 p-4 sm:mt-16 sm:p-6 lg:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">
+          <h2 className="mb-4 text-center text-2xl font-bold text-white sm:mb-6 sm:text-3xl">
             Cross-Chain Concepts You'll Master
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

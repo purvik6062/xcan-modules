@@ -4,12 +4,6 @@ import ClientChallenge from "./client-page";
 import { useParams } from "next/navigation";
 import "../../../../styles/gamify.css";
 import { challengesData } from "../../../../data/challenges";
-import {
-  FiSmartphone,
-  FiMonitor,
-  FiArrowRight,
-  FiXCircle,
-} from "react-icons/fi";
 
 // Define proper types for our challenge data
 interface TestCase {
@@ -18,55 +12,15 @@ interface TestCase {
   description: string;
 }
 
-// Add a simple footer for mobile
-const MobileFooter = () => (
-  <footer className="w-full py-4 text-center text-xs text-blue-300 bg-gradient-to-br from-[#010229] to-[#01056b] border-t border-blue-900 opacity-90">
-    © {new Date().getFullYear()} Modules (by Xcan). All rights reserved.
-  </footer>
-);
-
 export default function ChallengePage() {
   const { slug } = useParams();
 
   // Get challenge data from the slug
   const challenge = challengesData[slug as string];
 
-  // Mobile under construction message
-  const MobileBlock = () => (
-    <div className="md:hidden w-full min-h-screen flex flex-col justify-between bg-gradient-to-br from-[#010229] to-[#01056b]">
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="flex items-center justify-center mb-6 space-x-6">
-          <div className="relative flex flex-col items-center">
-            <FiSmartphone className="text-5xl text-blue-400" />
-            <FiXCircle className="absolute -top-2 -right-2 text-red-500 text-xl bg-[#010229] rounded-full" />
-          </div>
-          <FiArrowRight className="text-3xl text-blue-400" />
-          <FiMonitor className="text-5xl text-blue-400" />
-        </div>
-        <h2 className="text-2xl font-bold text-blue-100 mb-2 text-center">
-          Mobile Experience Coming Soon
-        </h2>
-        <div className="w-24 h-1 bg-blue-500 rounded-full mb-4" />
-        <p className="text-blue-200 text-center mb-2 text-base font-medium">
-          This page is being upgraded for a great mobile experience.
-          <br />
-          Please use a desktop or laptop for now.
-        </p>
-        <p className="text-blue-400 text-center text-sm">
-          Switch to a larger device to access all features.
-        </p>
-      </div>
-      <MobileFooter />
-    </div>
-  );
-
   if (!challenge) {
     return (
-      <>
-        <div className="w-full flex flex-col min-h-screen">
-          <MobileBlock />
-        </div>
-        <div className="hidden md:flex min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 items-center justify-center p-2 sm:p-4">
+      <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 p-4 sm:p-6">
           <div className="w-full max-w-xl bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden flex flex-col items-center">
             <div className="w-full bg-red-900/30 p-4 border-b border-red-900/50 flex flex-col items-center">
               <svg
@@ -115,18 +69,8 @@ export default function ChallengePage() {
             </div>
           </div>
         </div>
-      </>
     );
   }
 
-  return (
-    <>
-      <div className="w-full flex flex-col">
-        <MobileBlock />
-      </div>
-      <div className="hidden md:block">
-        <ClientChallenge challenge={challenge} slug={slug} />
-      </div>
-    </>
-  );
+  return <ClientChallenge challenge={challenge} slug={slug} />;
 }

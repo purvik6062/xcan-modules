@@ -118,9 +118,9 @@ export default function LearnWeb3BasicsPage() {
     <div className="min-h-screen bg-gray-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mb-10 text-center sm:mb-12">
           <motion.h1
-            className="text-5xl font-bold text-white mb-4"
+            className="mb-3 text-3xl font-bold text-white sm:mb-4 sm:text-4xl lg:text-5xl"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -128,7 +128,7 @@ export default function LearnWeb3BasicsPage() {
             Master Web3 & Rust Foundations
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
+            className="mx-auto mb-6 max-w-3xl px-1 text-base text-gray-300 sm:mb-8 sm:text-lg lg:text-xl"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -191,7 +191,7 @@ export default function LearnWeb3BasicsPage() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
                   <span className="text-sm font-medium text-gray-300">Progress</span>
                 </div>
                 <div className="text-sm text-gray-400">
@@ -200,7 +200,7 @@ export default function LearnWeb3BasicsPage() {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
                 <motion.div
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${overallProgress.percentage}%` }}
                   transition={{ duration: 0.5 }}
@@ -210,15 +210,15 @@ export default function LearnWeb3BasicsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-blue-400">
+                <div className="text-2xl font-bold text-amber-400">
                   {overallProgress.completed}/{overallProgress.total}
                 </div>
-                <div className="text-sm text-blue-300">
+                <div className="text-sm text-amber-300">
                   Sections Completed
                 </div>
               </div>
               <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                <div className="text-2xl font-bold text-cyan-400">
+                <div className="text-2xl font-bold text-orange-400">
                   {Object.keys(progressData).filter(chapterId => {
                     const chapter = web3BasicsChapters.find(ch => ch.id === chapterId);
                     if (!chapter) return false;
@@ -227,7 +227,7 @@ export default function LearnWeb3BasicsPage() {
                     return availableSections.every(s => completed.includes(s.id));
                   }).length}
                 </div>
-                <div className="text-sm text-cyan-300">
+                <div className="text-sm text-orange-300">
                   Chapters Completed
                 </div>
               </div>
@@ -287,49 +287,51 @@ export default function LearnWeb3BasicsPage() {
 
             {/* Claim Button - only show when wallet connected */}
             {address && (
-            <button
-              // onClick={claimNFT}
-              onClick={() => setIsPromoOpen(true)}
-              disabled={isClaimStatusLoading || overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
-              className={`${alreadyClaimed
-                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
-                : overallProgress.percentage === 100 && !isCertificationMinting && !isClaimStatusLoading
-                  ? "cursor-pointer bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
-                  : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
-                } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
-            >
-              {isClaimStatusLoading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Checking...</span>
-                </div>
-              ) : alreadyClaimed ? (
-                <>
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Certification Claimed</span>
-                </>
-              ) : isCertificationMinting ? (
-                <>
-                  <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Claiming...</span>
-                </>
-              ) :
-                <>
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
-                  </svg>
-                  <span>Claim NFT Certification</span>
-                </>
-              }
-            </button>
+              <button
+                // onClick={claimNFT}
+                onClick={() => setIsPromoOpen(true)}
+                disabled={isClaimStatusLoading || overallProgress.percentage !== 100 || isCertificationMinting || alreadyClaimed}
+                className={`${alreadyClaimed
+                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
+                  : overallProgress.percentage === 100 && !isCertificationMinting && !isClaimStatusLoading
+                    ? "cursor-pointer bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-400 hover:via-orange-400 hover:to-rose-400 text-white shadow-lg hover:shadow-orange-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                    : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed border border-gray-400/30 dark:border-gray-600/40"
+                  } px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2`}
+              >
+                {isClaimStatusLoading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Checking...</span>
+                  </div>
+                ) : alreadyClaimed ? (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Certification Claimed</span>
+                  </>
+                ) : isCertificationMinting ? (
+                  <>
+                    <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Claiming...</span>
+                  </>
+                ) : overallProgress.percentage === 100 ? (
+                  <>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
+                    </svg>
+                    <span>Claim NFT Certification</span>
+                  </>
+                ) : (
+                  <span>Complete All Challenges</span>
+                )}
+              </button>
             )}
 
             {/* Additional Info for Claimed State */}
@@ -357,7 +359,7 @@ export default function LearnWeb3BasicsPage() {
 
         {/* Filter Controls */}
         <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-8"
+          className="mb-8 flex flex-wrap justify-center gap-2 sm:gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -366,8 +368,8 @@ export default function LearnWeb3BasicsPage() {
             <button
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-6 py-2 rounded-full transition-all duration-200 cursor-pointer ${selectedLevel === level
-                ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg"
+              className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-all duration-200 sm:px-6 sm:text-base ${selectedLevel === level
+                ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg"
                 : "bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-600"
                 }`}
             >
@@ -385,6 +387,7 @@ export default function LearnWeb3BasicsPage() {
                 basePath="/learn-web3-basics"
                 progressData={progressData[chapter.id] || []}
                 isLoading={isLoading}
+                ctaTheme="amber"
               />
             </div>
           ))}
@@ -392,13 +395,13 @@ export default function LearnWeb3BasicsPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-8 text-white text-center"
+          className="mt-12 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 p-4 text-center text-white sm:mt-16 sm:p-6 lg:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-4">Learning Path</h2>
-          <p className="text-lg mb-6 max-w-3xl mx-auto">
+          <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl">Learning Path</h2>
+          <p className="mx-auto mb-6 max-w-3xl text-base sm:text-lg">
             Learn Web3 fundamentals through engaging stories and interactive quizzes.
             Each chapter uses storytelling to make complex concepts simple and memorable.
           </p>
@@ -418,12 +421,12 @@ export default function LearnWeb3BasicsPage() {
 
         {/* Key Concepts */}
         <motion.div
-          className="mt-16 bg-gray-800 rounded-2xl border border-gray-700 p-8"
+          className="mt-12 rounded-2xl border border-gray-700 bg-gray-800 p-4 sm:mt-16 sm:p-6 lg:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">
+          <h2 className="mb-4 text-center text-2xl font-bold text-white sm:mb-6 sm:text-3xl">
             Concepts You'll Master
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

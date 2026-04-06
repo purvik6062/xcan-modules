@@ -7,6 +7,8 @@ interface CodeEditorProps {
   defaultValue?: string;
   value?: string;
   onChange?: (value: string | undefined) => void;
+  /** Called after Monaco is mounted and theme is applied */
+  onEditorReady?: () => void;
   height?: string;
   language?: string;
   readOnly?: boolean;
@@ -18,6 +20,7 @@ export default function CodeEditor({
   defaultValue,
   value,
   onChange,
+  onEditorReady,
   height = "100%",
   language = "typescript",
   readOnly = false,
@@ -47,6 +50,7 @@ export default function CodeEditor({
 
     // Set the custom theme
     monaco.editor.setTheme("myCustomTheme");
+    onEditorReady?.();
   };
 
   return (
@@ -82,8 +86,9 @@ export default function CodeEditor({
           parameterHints: { enabled: true },
         }}
         loading={
-          <div className="flex justify-center items-center h-full text-gray-400">
-            Loading Editor...
+          <div className="flex h-full min-h-[120px] flex-col items-center justify-center gap-3 bg-[#0A142A] px-4 text-center text-gray-400">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+            <span className="text-sm text-blue-200/90">Loading editor…</span>
           </div>
         }
       />
