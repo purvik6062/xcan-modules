@@ -13,8 +13,9 @@ import {
   AlertTriangle,
   Rocket,
   Trophy,
-  Sparkles, Award,
-  Download,
+  Sparkles,
+  Award,
+  ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import { SuccessfulMint } from "@/components/nft/SuccessfulMint";
@@ -55,7 +56,16 @@ export default function CertificationViewPage() {
   const [showCertificate, setShowCertificate] = useState(false);
   const [certificateName, setCertificateName] = useState("");
   const [certificateLocked, setCertificateLocked] = useState(false);
-
+  const [certificateBusy, setCertificateBusy] = useState(false);
+  const [certificateError, setCertificateError] = useState<string | null>(null);
+  const [certificateOnChainGenerated, setCertificateOnChainGenerated] =
+    useState(false);
+  const [pataramCertificateLink, setPataramCertificateLink] = useState<
+    string | null
+  >(null);
+  const [certificateGeneratedAt, setCertificateGeneratedAt] = useState<
+    string | null
+  >(null);
   useEffect(() => {
     const fetchCertification = async () => {
       if (!mod || !address) return;
@@ -91,10 +101,13 @@ export default function CertificationViewPage() {
     fetchCertification();
   }, [mod, address]);
 
-  // Check one-time generation lock for this module
+  // Check generation status for this module (and poll for on-chain status)
   useEffect(() => {
+    if (!mod?.id || !address) return;
+
+    let interval: ReturnType<typeof setInterval> | null = null;
+
     const check = async () => {
-      if (!mod?.id || !address) return;
       try {
         const res = await fetch(
           `/api/certification/generate/${mod.id}?userAddress=${address}`
@@ -103,10 +116,27 @@ export default function CertificationViewPage() {
         if (res.ok) {
           setCertificateLocked(Boolean(data.generated));
           if (data.name) setCertificateName(data.name);
+          setCertificateOnChainGenerated(
+            Boolean(data.certificateOnChainGenerated)
+          );
+          setPataramCertificateLink(data.pataramCertificateLink || null);
+          setCertificateGeneratedAt(
+            typeof data.certificateGeneratedAt === "string"
+              ? data.certificateGeneratedAt
+              : null
+          );
         }
-      } catch { }
+      } catch {
+        // ignore polling errors
+      }
     };
+
     check();
+    interval = setInterval(check, 15000); // poll every 15s
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [mod?.id, address]);
 
   if (!isReady || walletLoading) {
@@ -200,7 +230,7 @@ export default function CertificationViewPage() {
                   <div>
                     <p className="text-white font-semibold">Certificate</p>
                     <p className="text-gray-400 text-sm">
-                      Generate and download your certificate for this module.
+                      Save your name and request an onchain certificate.
                     </p>
                   </div>
                   <button
@@ -233,22 +263,121 @@ export default function CertificationViewPage() {
                       </div>
                       <div className="flex md:justify-end">
                         <button
-                          onClick={() => handleDownloadPDF(certificateName)}
-                          disabled={!certificateName.trim()}
-                          className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${!certificateName.trim()
-                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                            : `cursor-pointer ${MODULE_THEME_BG_R} hover:brightness-110 text-white`
-                            }`}
+                          onClick={async () => {
+                            if (!mod?.id || !address) return;
+                            const trimmed = certificateName.trim();
+
+                            // State 1: first time, save name + request
+                            if (!certificateLocked) {
+                              if (!trimmed || certificateBusy) return;
+                              try {
+                                setCertificateError(null);
+                                setCertificateBusy(true);
+
+                                const res = await fetch(
+                                  `/api/certification/generate/${mod.id}`,
+                                  {
+                                    method: "POST",
+                                    headers: {
+                                      "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                      userAddress: address,
+                                      name: trimmed,
+                                    }),
+                                  }
+                                );
+
+                                const data = await res.json();
+                                if (!res.ok) {
+                                  throw new Error(
+                                    data?.error ||
+                                      "Failed to save certificate name"
+                                  );
+                                }
+                                setCertificateLocked(true);
+                                if (
+                                  typeof data?.certificateGeneratedAt ===
+                                  "string"
+                                ) {
+                                  setCertificateGeneratedAt(
+                                    data.certificateGeneratedAt
+                                  );
+                                }
+                              } catch (e: any) {
+                                setCertificateError(
+                                  e?.message || "Something went wrong"
+                                );
+                              } finally {
+                                setCertificateBusy(false);
+                              }
+                            }
+
+                            // State 3: onchain certificate ready -> open Pataram link
+                            if (
+                              certificateLocked &&
+                              certificateOnChainGenerated &&
+                              pataramCertificateLink
+                            ) {
+                              window.open(
+                                pataramCertificateLink as string,
+                                "_blank"
+                              );
+                            }
+                          }}
+                          disabled={
+                            certificateBusy ||
+                            (!certificateLocked && !certificateName.trim()) ||
+                            (certificateLocked && !certificateOnChainGenerated) ||
+                            (certificateLocked &&
+                              certificateOnChainGenerated &&
+                              !pataramCertificateLink)
+                          }
+                          className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                            !certificateLocked && !certificateName.trim()
+                              ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                              : certificateLocked && !certificateOnChainGenerated
+                              ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                              : "cursor-pointer bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
+                          }`}
                         >
-                          <Download className="w-4 h-4" /> Download PDF
+                          {certificateBusy ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin" />{" "}
+                              Saving...
+                            </>
+                          ) : !certificateLocked ? (
+                            <>Save name &amp; request onchain certificate</>
+                          ) : certificateLocked && !certificateOnChainGenerated ? (
+                            <>Onchain certificate request pending...</>
+                          ) : (
+                            <>
+                              <ExternalLink className="w-4 h-4" />
+                              View onchain certificate 
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
+                    {certificateError && (
+                      <p className="text-red-400 text-sm">{certificateError}</p>
+                    )}
+                    {!certificateError &&
+                      certificateLocked &&
+                      !certificateOnChainGenerated && (
+                        <p className="text-amber-300 text-sm">
+                          Your request has been submitted. Onchain certificate
+                          generation is pending from Pataram...
+                        </p>
+                      )}
+                   
                     <div className="flex justify-center">
                       <Certificate
                         name={certificateName}
                         title="Certificate of Completion"
                         subtitle={mod.title}
+                        moduleRouteKey={mod.id}
+                        certificateGeneratedAt={certificateGeneratedAt}
                       />
                     </div>
                   </div>
