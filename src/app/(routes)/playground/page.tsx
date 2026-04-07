@@ -261,7 +261,7 @@ export default function Playground() {
                   Reset
                 </button>
                 <button
-                  className="bg-green-600 cursor-pointer hover:bg-green-700 text-white px-4 py-1 rounded text-xs sm:text-sm w-1/2 sm:w-auto"
+                  className="bg-[linear-gradient(90deg,#1E3A8A_0%,#4A7CFF_100%)] cursor-pointer hover:brightness-110 text-white px-4 py-1 rounded text-xs sm:text-sm w-1/2 sm:w-auto shadow-lg hover:shadow-[#4A7CFF]/30"
                   onClick={handleRunCode}
                   disabled={isRunning}
                 >

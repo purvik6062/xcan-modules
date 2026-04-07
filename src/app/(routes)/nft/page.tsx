@@ -39,6 +39,7 @@ import {
 import { nftModules } from "@/data/nftModules";
 import { XcanAdvocateHighlight } from "@/components/nft/XcanAdvocateHighlight";
 import ConnectWallet from "@/components/ConnectWallet";
+import { MODULE_THEME_BG_BR, MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 // Arbitrum Sepolia Chain ID
 const ARBITRUM_SEPOLIA_CHAIN_ID = 421614;
@@ -383,12 +384,12 @@ export default function HomePage() {
             <GlassCard className="p-10">
               <div className="flex items-center gap-6 mb-10">
                 <motion.div
-                  className="w-16 h-16 bg-gradient-to-br from-indigo-500/80 to-blue-500/80 rounded-2xl flex items-center justify-center relative"
+                  className={`w-16 h-16 ${MODULE_THEME_BG_BR} rounded-2xl flex items-center justify-center relative`}
                   whileHover={{ scale: 1.1 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <Trophy className="w-8 h-8 text-white" />
-                  <div className="absolute inset-0 bg-indigo-400/20 rounded-2xl blur-lg animate-pulse"></div>
+                  <div className="absolute inset-0 bg-[#12B3A8]/20 rounded-2xl blur-lg animate-pulse"></div>
                 </motion.div>
                 <div>
                   <h3 className="text-4xl font-bold text-white mb-2">
@@ -449,14 +450,14 @@ export default function HomePage() {
                         </div>
 
                         <div className="relative flex flex-1 flex-col p-6">
-                          <h4 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-emerald-400">
+                          <h4 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-[#79A5FF]">
                             {module.title}
                           </h4>
                           <p className="mb-6 line-clamp-5 flex-1 text-sm text-slate-400">
                             {module.description}
                           </p>
                           <motion.span
-                            className="mt-auto flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-3 text-sm font-medium text-white shadow-lg transition-all hover:from-blue-600 hover:to-blue-700"
+                            className={`mt-auto flex w-full items-center justify-center gap-2 rounded-xl ${MODULE_THEME_BG_R} px-4 py-3 text-sm font-medium text-white shadow-lg transition-all hover:brightness-110 hover:shadow-[#4A7CFF]/20`}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                           >

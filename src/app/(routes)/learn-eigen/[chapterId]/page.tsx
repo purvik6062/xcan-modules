@@ -8,6 +8,7 @@ import Web3BasicsContent from "../../../../components/web3-basics/Web3BasicsCont
 import ChapterCompletionModal from "../../../../components/web3-basics/ChapterCompletionModal";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 import LearningModuleSidebar from "../../../../components/LearningModuleSidebar";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function EigenChapterPage() {
     const params = useParams();
@@ -76,7 +77,7 @@ export default function EigenChapterPage() {
 
     if (!chapter) {
         return (
-            <div className="min-h-screen bg-gray-900">
+            <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
                 <div className="flex min-h-screen flex-col lg:flex-row">
                     <LearningModuleSidebar currentModuleId="eigen-ai" backHref="/learn-eigen" />
                     <div className="flex flex-1 items-center justify-center px-6">
@@ -183,7 +184,7 @@ export default function EigenChapterPage() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-gray-900">
+            <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
                 <div className="flex min-h-screen flex-col lg:flex-row">
                     <LearningModuleSidebar currentModuleId="eigen-ai" backHref="/learn-eigen" />
                     <div className="flex flex-1 items-center justify-center">
@@ -192,8 +193,8 @@ export default function EigenChapterPage() {
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1.2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                         >
-                            <div className="absolute inset-0 rounded-full border-4 border-violet-500/20" />
-                            <div className="absolute inset-2 rounded-full border-t-4 border-violet-400" />
+                            <div className="absolute inset-0 rounded-full border-4 border-[#4A7CFF]/20" />
+                            <div className="absolute inset-2 rounded-full border-t-4 border-[#79A5FF]" />
                         </motion.div>
                     </div>
                 </div>
@@ -202,7 +203,7 @@ export default function EigenChapterPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900">
+        <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
             <div className="flex min-h-screen flex-col lg:flex-row">
                 <LearningModuleSidebar currentModuleId="eigen-ai" backHref="/learn-eigen" />
                 <div className="flex-1">
@@ -211,12 +212,12 @@ export default function EigenChapterPage() {
                         <div className="container mx-auto">
                             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                                 <div className="min-w-0">
-                                    <h1 className="mb-2 text-2xl font-bold text-white sm:text-3xl">{chapter.title}</h1>
+                                    <h1 className="mb-2 text-2xl font-bold bg-gradient-to-r from-[#79A5FF] via-[#4A7CFF] to-[#1E3A8A] bg-clip-text text-transparent sm:text-3xl">{chapter.title}</h1>
                                     <p className="text-sm text-gray-300 sm:text-base">{chapter.description}</p>
                                 </div>
                                 <div className="flex-shrink-0 text-left sm:text-right">
                                     <div className="mb-1 text-xs text-gray-400 sm:text-sm">Chapter Progress</div>
-                                    <div className="text-xl font-bold text-violet-400 sm:text-2xl">
+                                    <div className="text-xl font-bold text-[#79A5FF] sm:text-2xl">
                                         {Math.round(progress)}%
                                     </div>
                                 </div>
@@ -225,7 +226,7 @@ export default function EigenChapterPage() {
                             {/* Progress Bar */}
                             <div className="h-3 w-full rounded-full bg-gray-700">
                                 <motion.div
-                                    className="h-3 rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
+                                    className={`h-3 rounded-full ${MODULE_THEME_BG_R}`}
                                     initial={{ width: 0 }}
                                     animate={{ width: `${progress}%` }}
                                     transition={{ duration: 0.5 }}
@@ -235,7 +236,7 @@ export default function EigenChapterPage() {
                             <div className="mt-2 flex flex-col gap-1 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
                                 <span>{completedSections.length}/{availableSections.length} sections completed</span>
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <span className="text-violet-400">{chapter.points} points</span>
+                                    <span className="text-[#79A5FF]">{chapter.points} points</span>
                                     <span>{chapter.duration}</span>
                                 </div>
                             </div>

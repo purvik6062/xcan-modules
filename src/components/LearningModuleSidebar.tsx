@@ -81,16 +81,16 @@ export default function LearningModuleSidebar({
                   target={module.target}
                   rel={module.target === "_blank" ? "noreferrer" : undefined}
                   className={`flex min-w-[12rem] flex-1 items-center gap-3 rounded-xl border px-3 py-3 transition ${isActive
-                    ? "border-cyan-500/80 bg-cyan-500/10 text-cyan-100"
+                    ? "border-emerald-500/80 bg-emerald-500/10 text-emerald-100"
                     : "border-slate-700/70 bg-slate-900/70 text-slate-200 hover:border-slate-500 hover:bg-slate-900"
                     }`}
                 >
                   <span
-                    className={`flex h-9 w-9 items-center justify-center rounded-full ${isActive ? "bg-cyan-500/20" : "bg-slate-800/80"
+                    className={`flex h-9 w-9 items-center justify-center rounded-full ${isActive ? "bg-emerald-500/20" : "bg-slate-800/80"
                       }`}
                   >
                     <Icon
-                      className={`h-5 w-5 ${isActive ? "text-cyan-300" : "text-slate-400"
+                      className={`h-5 w-5 ${isActive ? "text-emerald-300" : "text-slate-400"
                         }`}
                     />
                   </span>
@@ -152,13 +152,13 @@ export default function LearningModuleSidebar({
                       module.target === "_blank" ? "noreferrer" : undefined
                     }
                     className={`group flex items-center ${isCollapsed ? "justify-center px-1 py-1" : "gap-4 px-2 py-2"} rounded-xl border transition ${isActive
-                      ? "border-cyan-500/70 bg-cyan-500/10 shadow-[0_0_30px_rgba(34,211,238,0.15)]"
+                      ? "border-emerald-500/70 bg-emerald-500/10 shadow-[0_0_30px_rgba(16,185,129,0.15)]"
                       : "border-slate-800 bg-slate-900/60 hover:border-slate-600 hover:bg-slate-900"
                       }`}
                   >
                     <span
                       className={`flex h-8 w-8 items-center justify-center rounded-xl ${isActive
-                        ? "bg-cyan-500/20 text-cyan-300"
+                        ? "bg-emerald-500/20 text-emerald-300"
                         : "bg-slate-800/80 text-slate-400 group-hover:text-slate-200"
                         }`}
                     >
@@ -167,7 +167,7 @@ export default function LearningModuleSidebar({
                     {!isCollapsed && (
                       <div className="flex min-w-0 flex-1 flex-col">
                         <span
-                          className={`truncate text-sm font-semibold ${isActive ? "text-cyan-100" : "text-slate-100"
+                          className={`truncate text-sm font-semibold ${isActive ? "text-emerald-100" : "text-slate-100"
                             }`}
                         >
                           {module.title}
@@ -184,7 +184,7 @@ export default function LearningModuleSidebar({
                       <FiExternalLink className="ml-2 h-3.5 w-3.5 flex-shrink-0 text-slate-500" />
                     )} */}
                     {!isCollapsed && isActive && (
-                      <span className="ml-3 flex h-2.5 w-2.5 flex-shrink-0 rounded-full bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.6)]" />
+                      <span className="ml-3 flex h-2.5 w-2.5 flex-shrink-0 rounded-full bg-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
                     )}
                   </Link>
                 );

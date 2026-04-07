@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, CheckCircle, Clock, Loader2, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { NFTModule } from "@/data/nftModules";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 interface ModuleCardProps {
   module: NFTModule;
@@ -99,7 +100,7 @@ export function ModuleCard({
 
   return (
     <motion.div
-      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-blue-500/10 ${className}`}
+      className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:shadow-xl hover:shadow-[#4A7CFF]/10 ${className}`}
       whileHover={{ scale: 1.02, y: -4 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -119,9 +120,9 @@ export function ModuleCard({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="p-1 rounded-full bg-emerald-500/20"
+                className="p-1 rounded-full bg-[#12B3A8]/20"
               >
-                <CheckCircle className="w-4 h-4 text-emerald-400" />
+                <CheckCircle className="w-4 h-4 text-[#79A5FF]" />
               </motion.div>
             )}
 
@@ -135,7 +136,7 @@ export function ModuleCard({
 
         {/* Title and Description */}
         <div className="mb-4">
-          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">
+          <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#79A5FF] transition-colors">
             {module.title}
           </h3>
           <p className="text-gray-300 text-sm leading-relaxed">
@@ -170,12 +171,10 @@ export function ModuleCard({
           className={`w-full py-3 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${buttonState === "disabled"
             ? "bg-gray-600/50 text-gray-400 cursor-not-allowed"
             : buttonState === "loading"
-              ? "bg-blue-500/50 text-blue-200 cursor-not-allowed"
+              ? "bg-[#12B3A8]/35 text-[#bce9e4] cursor-not-allowed"
               : isClaimed
-                ? "bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-emerald-500/25"
-                : module.database === "postgres"
-                  ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-purple-500/25"
-                  : "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-blue-500/25"
+                ? `${MODULE_THEME_BG_R} hover:brightness-110 text-white shadow-lg hover:shadow-[#4A7CFF]/25`
+                : `${MODULE_THEME_BG_R} hover:brightness-110 text-white shadow-lg hover:shadow-[#4A7CFF]/25`
             }`}
           whileHover={buttonState === "enabled" ? { scale: 1.02 } : {}}
           whileTap={buttonState === "enabled" ? { scale: 0.98 } : {}}
@@ -185,7 +184,7 @@ export function ModuleCard({
       </div>
 
       {/* Hover effect overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#12B3A8]/0 to-[#4A7CFF]/0 group-hover:from-[#12B3A8]/5 group-hover:to-[#4A7CFF]/5 transition-all duration-300 pointer-events-none" />
     </motion.div >
   );
 }

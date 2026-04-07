@@ -1,5 +1,6 @@
 import { Database } from "lucide-react";
 import React from "react";
+import { MODULE_THEME_GRADIENT_BR } from "@/theme/moduleTheme";
 
 // Type definition for module icons
 const CodeBracketIcon = ({ className }: { className?: string }) => (
@@ -202,7 +203,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-web3-basics",
     target: "_self",
-    gradient: "from-amber-500 to-orange-500",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Story-Based Learning",
       "Interactive Quizzes",
@@ -226,7 +227,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-stylus",
     target: "_self",
-    gradient: "from-pink-500 to-rose-400",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Rust & WASM Fundamentals",
       "Constructors & Storage",
@@ -249,7 +250,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "https://www.speedrunstylus.com/foundation",
     target: "_blank",
-    gradient: "from-green-500 to-emerald-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "ERC20 Standard Implementation",
       "ERC721 NFT Standard",
@@ -271,7 +272,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-orbit",
     target: "_self",
-    gradient: "from-emerald-500 to-teal-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Orbit Fundamentals",
       "Chain Configuration & Gas Tokens",
@@ -294,7 +295,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "https://www.speedrunstylus.com/",
     target: "_blank",
-    gradient: "from-purple-500 to-pink-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Rust Development",
       "WebAssembly",
@@ -316,7 +317,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-defi",
     target: "_self",
-    gradient: "from-rose-600 to-orange-500",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Fundamentals, DEXs, Vaults, Security",
       "Story-Based Lessons",
@@ -339,7 +340,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-cross-chain",
     target: "_self",
-    gradient: "from-teal-600 to-sky-500",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Foundations & Real‑World Analogies",
       "Token Bridging Mechanics",
@@ -362,7 +363,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/challenges",
     target: "_self",
-    gradient: "from-blue-500 to-indigo-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Interactive Challenges",
       "Real-world Examples",
@@ -384,7 +385,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/learn-eigen",
     target: "_self",
-    gradient: "from-violet-500 to-indigo-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "AI & TEE Fundamentals",
       "EigenAI Verifiable Inference",
@@ -405,7 +406,7 @@ export const learningModules: LearningModule[] = [
     status: "available",
     href: "/project-submission",
     target: "_self",
-    gradient: "from-orange-500 to-red-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     features: [
       "Project Showcase",
       "Community Reviews",

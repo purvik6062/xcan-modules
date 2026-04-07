@@ -37,7 +37,7 @@ const ProjectDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-600 border-t-blue-500"></div>
           <p className="text-slate-400 text-lg">Loading project...</p>
@@ -48,7 +48,7 @@ const ProjectDetailsPage = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-slate-700/50 rounded-2xl mb-6">
             <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@ const ProjectDetailsPage = () => {
           <h1 className="text-3xl font-bold text-white mb-6">Project Not Found</h1>
           <button
             onClick={() => router.back()}
-            className="bg-gradient-to-r from-[#4eb991] to-[#31b085] hover:from-teal-600 hover:to-teal-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] hover:brightness-110 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Go Back
           </button>
@@ -68,12 +68,12 @@ const ProjectDetailsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
         <button
           onClick={() => router.back()}
-          className="flex items-center space-x-3 text-slate-300 hover:text-white mb-8 transition-colors group"
+          className="flex cursor-pointer items-center space-x-3 text-slate-300 hover:text-white mb-8 transition-colors group"
         >
           <div className="p-2 rounded-lg group-hover:bg-slate-700/50 transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +111,7 @@ const ProjectDetailsPage = () => {
 
               {/* Project Info */}
               <div className="flex-1">
-                <h1 className="text-4xl font-bold mb-6 bg-gradient-to-r from-[#4eb991] to-[#31b085] bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold mb-6 text-[#4A7CFF]">
                   {project.projectName}
                 </h1>
                 <div className="prose prose-lg prose-invert max-w-none mb-8 text-slate-300 leading-relaxed">
@@ -152,7 +152,7 @@ const ProjectDetailsPage = () => {
 
                 {/* Submitted By */}
                 <div className="flex items-center space-x-4 mb-8">
-                  <div className="w-14 h-14 bg-gradient-to-r from-[#4eb991] to-[#31b085] rounded-full flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] rounded-full flex items-center justify-center shadow-lg">
                     <span className="text-white text-xl font-bold">
                       {project.submittedBy.name.charAt(0).toUpperCase()}
                     </span>
@@ -184,7 +184,7 @@ const ProjectDetailsPage = () => {
                       href={project.hostedProjectUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gradient-to-r from-[#4eb991] to-[#31b085] hover:from-teal-600 hover:to-teal-700 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl"
+                      className="bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] hover:brightness-110 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -198,7 +198,7 @@ const ProjectDetailsPage = () => {
                       href={project.demoVideoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl"
+                      className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl"
                     >
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
@@ -215,7 +215,7 @@ const ProjectDetailsPage = () => {
           {project.projectImages && project.projectImages.length > 0 && (
             <div className="bg-slate-800/60 backdrop-blur-xl rounded-2xl p-10 border border-slate-700/50 mb-8 shadow-2xl">
               <div className="flex items-center space-x-3 mb-8">
-                <div className="w-10 h-10 bg-gradient-to-r from-[#4eb991] to-[#31b085] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] rounded-xl flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -243,7 +243,7 @@ const ProjectDetailsPage = () => {
           {project.teamMembers && project.teamMembers.length > 0 && (
             <div className="bg-slate-800/60 backdrop-blur-xl rounded-2xl p-10 border border-slate-700/50 mb-8 shadow-2xl">
               <div className="flex items-center space-x-3 mb-8">
-                <div className="w-10 h-10 bg-gradient-to-r from-[#4eb991] to-[#31b085] rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] rounded-xl flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
@@ -254,7 +254,7 @@ const ProjectDetailsPage = () => {
                 {project.teamMembers.map((member, index) => (
                   <div key={index} className="bg-slate-700/40 rounded-2xl p-6 border border-slate-600/30 hover:border-blue-500/30 transition-all duration-300">
                     <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-[#4eb991] to-[#31b085] rounded-full flex items-center justify-center shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] rounded-full flex items-center justify-center shadow-lg">
                         <span className="text-white font-bold text-lg">
                           {member.name.charAt(0).toUpperCase()}
                         </span>

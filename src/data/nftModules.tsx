@@ -1,4 +1,5 @@
 import React from "react";
+import { MODULE_THEME_GRADIENT_BR } from "@/theme/moduleTheme";
 
 // Icons for NFT modules
 const GlobeIcon = ({ className }: { className?: string }) => (
@@ -147,7 +148,7 @@ export const nftModules: NFTModule[] = [
     duration: "1-2 weeks",
     challenges: 6,
     status: "available",
-    gradient: "from-purple-500 to-blue-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/learn-web3-basics",
     features: [
@@ -168,7 +169,7 @@ export const nftModules: NFTModule[] = [
     duration: "1-2 weeks",
     challenges: 6,
     status: "available",
-    gradient: "from-blue-500 to-cyan-500",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/learn-stylus",
     features: [
@@ -191,7 +192,7 @@ export const nftModules: NFTModule[] = [
     duration: "Less than 1 week",
     challenges: 1,
     status: "available",
-    gradient: "from-green-500 to-emerald-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "postgres",
     href: "/nft/stylus-foundation",
     features: [
@@ -212,7 +213,7 @@ export const nftModules: NFTModule[] = [
     duration: "2-3 weeks",
     challenges: 6,
     status: "available",
-    gradient: "from-emerald-500 to-teal-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/learn-orbit",
     features: [
@@ -235,7 +236,7 @@ export const nftModules: NFTModule[] = [
     duration: "3-5 weeks",
     challenges: 11,
     status: "available",
-    gradient: "from-purple-500 to-pink-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "postgres",
     href: "/nft/arbitrum-stylus", // Special route for Postgres module
     features: [
@@ -256,7 +257,7 @@ export const nftModules: NFTModule[] = [
     duration: "1-2 weeks",
     challenges: 6,
     status: "available",
-    gradient: "from-blue-500 to-cyan-500",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/learn-defi",
     features: [
@@ -278,7 +279,7 @@ export const nftModules: NFTModule[] = [
     duration: "2-3 weeks",
     challenges: 6,
     status: "available",
-    gradient: "from-blue-500 to-cyan-500",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/learn-cross-chain",
     features: [
@@ -301,7 +302,7 @@ export const nftModules: NFTModule[] = [
     duration: "1-2 weeks",
     challenges: 6,
     status: "available",
-    gradient: "from-blue-500 to-indigo-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/challenges",
     features: [
@@ -322,7 +323,7 @@ export const nftModules: NFTModule[] = [
     duration: "2-3 weeks",
     challenges: 8,
     status: "available",
-    gradient: "from-violet-500 to-indigo-600",
+    gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",
     href: "/learn-eigen",
     features: [

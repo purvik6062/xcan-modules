@@ -10,6 +10,7 @@ import { useMint } from "../../../hooks/useMint";
 import PromoCodeModal from "../../../components/PromoCodeModal";
 import ConnectWallet from "@/components/ConnectWallet";
 import toast from "react-hot-toast";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 // export const metadata = {
 //   title: "Precompile Playground Challenges - CodeQuest",
@@ -123,9 +124,8 @@ export default function ChallengesPage() {
         {/* Header Section with improved styling */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 bg-[#0D1221] p-6 rounded-lg shadow-md border border-gray-700">
           <div>
-            <h1 className="text-3xl font-bold mb-2 text-white">
-              <span className="text-blue-400">Arbitrum</span>{" "}
-              Precompiles
+            <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-[#79A5FF] via-[#4A7CFF] to-[#1E3A8A] bg-clip-text text-transparent">
+              Arbitrum Precompiles
             </h1>
             <p className="text-gray-300">
               Learn how to interact with Arbitrum&apos;s precompiles through
@@ -135,7 +135,7 @@ export default function ChallengesPage() {
           <div className="mt-4 md:mt-0 flex flex-col xs:flex-row xs:items-center xs:space-x-3 space-y-2 xs:space-y-0 w-full max-w-xs md:flex-row md:items-center md:space-x-3 md:space-y-0">
             <button
               onClick={toggleSidebar}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md text-sm transition-all duration-200 flex items-center space-x-2 md:hidden cursor-pointer w-full xs:w-auto"
+              className={`text-white px-3 py-2 rounded-md text-sm transition-all duration-200 flex items-center space-x-2 md:hidden cursor-pointer w-full xs:w-auto ${MODULE_THEME_BG_R} hover:brightness-110`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +160,7 @@ export default function ChallengesPage() {
 
         <div className="w-full flex flex-col items-center bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
           <div className="absolute -z-10 inset-0 rounded-2xl pointer-events-none" aria-hidden>
-            <div className="h-full w-full rounded-2xl opacity-[0.08] bg-gradient-to-r from-blue-500 via-sky-400 to-cyan-400" />
+            <div className={`h-full w-full rounded-2xl opacity-[0.10] ${MODULE_THEME_BG_R}`} />
           </div>
           {/* Contextual Text */}
           <div className="text-center">
@@ -218,7 +218,7 @@ export default function ChallengesPage() {
             className={`${alreadyClaimed
               ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-300 dark:border-green-700 cursor-default"
               : allCompleted && !isMinting && !isCertificationMinting && !isClaimStatusLoading
-                ? "cursor-pointer bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-600 hover:via-sky-500 hover:to-cyan-500 text-white shadow-lg hover:shadow-cyan-500/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60 transform hover:scale-[1.03] active:scale-[0.98]"
+                ? `cursor-pointer ${MODULE_THEME_BG_R} hover:brightness-110 text-white shadow-lg hover:shadow-[#4A7CFF]/20 ring-1 ring-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#79A5FF]/60 transform hover:scale-[1.03] active:scale-[0.98]`
                 : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed opacity-60 border border-gray-400/30 dark:border-gray-600/40"
               } px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 w-full xs:w-auto flex items-center justify-center space-x-2 min-h-[40px]`}
           >

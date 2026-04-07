@@ -17,6 +17,7 @@ import { FiX } from "react-icons/fi";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 import GitHubAuthHandler from "../../../../components/GitHubAuthHandler";
 import toast from "react-hot-toast";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function ClientChallenge({
   challenge,
@@ -290,7 +291,7 @@ export default function ClientChallenge({
                       <li key={key}>
                         <Link
                           href={`/challenges/${key}`}
-                          className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${slug === key ? 'bg-gradient-to-r from-blue-900 to-blue-900 text-white shadow-lg shadow-blue-900/20' : 'hover:bg-blue-800 text-gray-300'}`}
+                          className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${slug === key ? 'bg-[#0a1633] text-white shadow-lg shadow-black/30 border border-white/10' : 'hover:bg-[#152241] text-gray-300'}`}
                         >
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${slug === key ? 'bg-blue-[#010335]' : 'bg-[#1d315e]'}`}>
                             {index + 1}
@@ -299,7 +300,7 @@ export default function ClientChallenge({
                             <div className="font-medium">{challengeItem.title}</div>
                             <div className="text-xs opacity-70 mt-1">{challengeItem.category} • {challengeItem.points} pts</div>
                           </div>
-                          {slug === key && <FiCheck className="ml-auto text-teal-400" />}
+                          {slug === key && <FiCheck className="ml-auto text-[#79A5FF]" />}
                         </Link>
                       </li>
                     ))}
@@ -495,13 +496,13 @@ export default function ClientChallenge({
                           </Link>
                         ) : null}
                         {nextChallenge ? (
-                          <Link href={`/challenges/${nextChallenge}`} className="group inline-flex min-h-[2.25rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-blue-500/40 bg-gradient-to-r from-blue-700 to-blue-600 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:from-blue-600 hover:to-blue-500 sm:flex-none sm:px-3 sm:text-sm">
+                          <Link href={`/challenges/${nextChallenge}`} className={`group inline-flex min-h-[2.25rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-white/10 ${MODULE_THEME_BG_R} px-2.5 py-1.5 text-xs font-medium text-white transition-all hover:brightness-110 sm:flex-none sm:px-3 sm:text-sm`}>
                             <span className="hidden sm:inline">Next Quest</span>
                             <span className="sm:hidden">Next</span>
                             <FiChevronRight className="ml-1 h-3.5 w-3.5 group-hover:animate-pulse" />
                           </Link>
                         ) : null}
-                        <button type="button" className={`inline-flex min-h-[2.25rem] min-w-[8.5rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-emerald-500/30 bg-gradient-to-r px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-200 sm:flex-none sm:min-w-[10rem] sm:px-4 sm:text-sm ${isLoading || isAuthenticating ? "from-slate-600 to-slate-700 animate-pulse" : "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500"}`} onClick={triggerAuth} disabled={isLoading || isAuthenticating}>
+                        <button type="button" className={`inline-flex min-h-[2.25rem] min-w-[8.5rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-white/10 px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-200 sm:flex-none sm:min-w-[10rem] sm:px-4 sm:text-sm ${isLoading || isAuthenticating ? "bg-slate-700/70 animate-pulse" : `${MODULE_THEME_BG_R} hover:brightness-110`}`} onClick={triggerAuth} disabled={isLoading || isAuthenticating}>
                           {isLoading ? (
                             <>
                               <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

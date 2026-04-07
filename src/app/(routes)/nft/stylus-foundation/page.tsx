@@ -12,6 +12,7 @@ import { useMintedStatus } from "@/hooks/useMintedStatus";
 import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import { CheckCircle, ArrowLeft, Loader2, Trophy, Target, Clock, Rocket, AlertTriangle, Sparkles, Code, ExternalLink } from "lucide-react";
 import PromoCodeModal from "@/components/PromoCodeModal";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function StylusFoundationPage() {
   const router = useRouter();
@@ -158,15 +159,15 @@ export default function StylusFoundationPage() {
               </div>
 
               {/* Foundation Challenge Features */}
-              <div className="bg-gradient-to-r from-green-500/5 to-emerald-500/5 border border-green-400/20 rounded-2xl p-6">
+              <div className="bg-gradient-to-r from-[#12B3A8]/10 to-[#4A7CFF]/10 border border-[#12B3A8]/30 rounded-2xl p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <Code className="w-6 h-6 text-green-400" />
+                  <Code className="w-6 h-6 text-[#79A5FF]" />
                   <h3 className="text-lg font-bold text-white">Foundation Challenge Features</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-300">
                   {currentModule.features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
+                      <CheckCircle className="w-4 h-4 text-[#79A5FF] flex-shrink-0" />
                       <span className="text-sm">{feature}</span>
                     </div>
                   ))}
@@ -174,9 +175,9 @@ export default function StylusFoundationPage() {
               </div>
 
               {/* External Link to Speedrun Stylus */}
-              <div className="bg-gradient-to-r from-blue-500/5 to-indigo-500/5 border border-blue-400/20 rounded-2xl p-6">
+              <div className="bg-gradient-to-r from-[#12B3A8]/10 to-[#4A7CFF]/10 border border-[#4A7CFF]/30 rounded-2xl p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <ExternalLink className="w-6 h-6 text-blue-400" />
+                  <ExternalLink className="w-6 h-6 text-[#79A5FF]" />
                   <h3 className="text-lg font-bold text-white">Start the Challenge</h3>
                 </div>
                 <p className="text-gray-300 text-sm mb-4">
@@ -186,7 +187,7 @@ export default function StylusFoundationPage() {
                   href="https://www.speedrunstylus.com/foundation"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200"
+                  className={`inline-flex items-center gap-2 ${MODULE_THEME_BG_R} hover:brightness-110 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200`}
                 >
                   <ExternalLink className="w-4 h-4" />
                   Go to Speedrun Stylus
@@ -217,7 +218,7 @@ export default function StylusFoundationPage() {
                     {alreadyClaimed && (
                       <button
                         onClick={() => router.push(`/nft/certification/${currentModule.id}`)}
-                        className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white"
+                        className={`cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${MODULE_THEME_BG_R} hover:brightness-110 text-white`}
                       >
                         View Minted NFT
                       </button>
@@ -225,7 +226,7 @@ export default function StylusFoundationPage() {
                     <button
                       disabled={isClaimDisabled || !isCompleted}
                       onClick={() => setIsPromoOpen(true)}
-                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled || !isCompleted ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "cursor-pointer bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"}`}
+                      className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled || !isCompleted ? "bg-gray-700 text-gray-400 cursor-not-allowed" : `cursor-pointer ${MODULE_THEME_BG_R} hover:brightness-110 text-white`}`}
                     >
                       {alreadyClaimed ? (
                         <>Claimed</>
@@ -257,12 +258,12 @@ export default function StylusFoundationPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full blur-3xl" />
-                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-emerald-500/20 to-green-500/20 rounded-full blur-3xl" />
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-[#12B3A8]/20 to-[#4A7CFF]/20 rounded-full blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-[#4A7CFF]/20 to-[#12B3A8]/20 rounded-full blur-3xl" />
 
                 <div className="relative z-10 space-y-4">
                   <div className="flex items-center gap-3">
-                    <Sparkles className="w-5 h-5 text-green-300" />
+                    <Sparkles className="w-5 h-5 text-[#79A5FF]" />
                     <p className="text-gray-300">Complete the foundation challenge and claim your achievement badge.</p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -270,7 +271,7 @@ export default function StylusFoundationPage() {
                     <p className="text-gray-300">Claiming stores proof to prevent duplicate claims.</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Rocket className="w-5 h-5 text-purple-300" />
+                    <Rocket className="w-5 h-5 text-[#79A5FF]" />
                     <p className="text-gray-300">View the minted NFT on the certification page after success.</p>
                   </div>
 

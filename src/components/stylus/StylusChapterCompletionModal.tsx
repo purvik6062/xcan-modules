@@ -52,7 +52,7 @@ export default function StylusChapterCompletionModal({
           </h2>
 
           {/* Chapter Completion Message */}
-            <p className="text-xl text-gray-300 mb-6">
+          <p className="text-xl text-gray-300 mb-6">
             You've successfully completed <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 font-semibold">{chapterTitle}</span>!
           </p>
 

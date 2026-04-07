@@ -9,6 +9,7 @@ import StylusChapterCompletionModal from "@/components/stylus/StylusChapterCompl
 import QuizComponent from "@/components/QuizComponent";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
 import LearningModuleSidebar from "@/components/LearningModuleSidebar";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function StylusChapterPage() {
   const params = useParams();
@@ -59,7 +60,7 @@ export default function StylusChapterPage() {
       }
       try {
         setIsLoading(true);
-        const params = new URLSearchParams({ 
+        const params = new URLSearchParams({
           userAddress: address,
           module: "stylus-core-concepts"
         });
@@ -80,7 +81,7 @@ export default function StylusChapterPage() {
 
   if (!chapter) {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="flex min-h-screen flex-col lg:flex-row">
           <LearningModuleSidebar currentModuleId="stylus-core-concepts" backHref="/learn-stylus" />
           <div className="flex flex-1 items-center justify-center px-6">
@@ -116,11 +117,11 @@ export default function StylusChapterPage() {
         await fetch("/api/challenges", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            userAddress: address, 
-            chapterId, 
-            sectionId, 
-            level: chapter.level, 
+          body: JSON.stringify({
+            userAddress: address,
+            chapterId,
+            sectionId,
+            level: chapter.level,
             points: chapter.points,
             module: "stylus-core-concepts"
           }),
@@ -197,7 +198,7 @@ export default function StylusChapterPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="flex min-h-screen flex-col lg:flex-row">
           <LearningModuleSidebar currentModuleId="stylus-core-concepts" backHref="/learn-stylus" />
           <div className="flex flex-1 items-center justify-center">
@@ -216,7 +217,7 @@ export default function StylusChapterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="flex min-h-screen flex-col lg:flex-row">
         <LearningModuleSidebar currentModuleId="stylus-core-concepts" backHref="/learn-stylus" />
         <div className="flex-1">
@@ -225,14 +226,14 @@ export default function StylusChapterPage() {
             <div className="container mx-auto">
               <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                  <h1 className="mb-2 bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
+                  <h1 className="mb-2 bg-gradient-to-r from-[#79A5FF] via-[#4A7CFF] to-[#1E3A8A] bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
                     {chapter.title}
                   </h1>
                   <p className="text-sm text-gray-300 sm:text-base">{chapter.description}</p>
                 </div>
                 <div className="flex-shrink-0 text-left sm:text-right">
                   <div className="mb-1 text-xs text-gray-400 sm:text-sm">Chapter Progress</div>
-                  <div className="text-xl font-bold text-blue-400 sm:text-2xl">
+                  <div className="text-xl font-bold text-[#79A5FF] sm:text-2xl">
                     {Math.round(progress)}%
                   </div>
                 </div>
@@ -241,7 +242,7 @@ export default function StylusChapterPage() {
               {/* Progress Bar */}
               <div className="h-3 w-full rounded-full bg-gray-700">
                 <motion.div
-                  className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  className={`h-3 rounded-full ${MODULE_THEME_BG_R}`}
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.5 }}
@@ -251,7 +252,7 @@ export default function StylusChapterPage() {
               <div className="mt-2 flex flex-col gap-1 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
                 <span>{completedSections.length}/{availableSections.length} sections completed</span>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-blue-400">{chapter.points} points</span>
+                  <span className="text-[#79A5FF]">{chapter.points} points</span>
                   <span>{chapter.duration}</span>
                 </div>
               </div>

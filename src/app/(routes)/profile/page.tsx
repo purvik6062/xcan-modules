@@ -167,7 +167,7 @@ export default function ProfilePage() {
   // Loading state - centered in viewport minus navbar and footer
   if (loading) {
     return (
-      <div className="flex min-h-[calc(100vh-10rem)] w-full flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-6 lg:px-8">
+      <div className="flex min-h-[calc(100vh-10rem)] w-full flex-col items-center justify-center bg-gradient-to-br from-[#020816] to-[#0D1221] px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div
             className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-2 border-slate-600 border-t-emerald-500"
@@ -182,7 +182,7 @@ export default function ProfilePage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-24 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -210,7 +210,7 @@ export default function ProfilePage() {
   // Connect wallet state
   if (!address) {
     return (
-      <div className="flex min-h-[calc(100vh-10rem)] w-full flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4 sm:px-6 lg:px-8">
+      <div className="flex min-h-[calc(100vh-10rem)] w-full flex-col items-center justify-center bg-gradient-to-br from-[#020816] to-[#0D1221] px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -230,7 +230,7 @@ export default function ProfilePage() {
   // No data state
   if (!userData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-24 sm:px-6 lg:px-8">
           <EmptyState
             icon={User}
@@ -256,7 +256,7 @@ export default function ProfilePage() {
         : "text-rose-400 bg-rose-500/20";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="mx-auto max-w-[1600px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Profile sidebar */}

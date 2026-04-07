@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { defiChapters } from "../data/defiChapters";
 import { useWalletProtection } from "../hooks/useWalletProtection";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 type ChapterProgress = { completed: number; total: number };
 
@@ -81,7 +82,7 @@ export default function ProgressOverview() {
 
   return (
     <motion.div
-      className="bg-slate-800 rounded-2xl shadow-xl p-8 mb-12"
+      className="bg-slate-800/95 rounded-2xl border border-slate-700/60 shadow-xl p-8 mb-12"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -101,13 +102,13 @@ export default function ProgressOverview() {
           <span className="text-lg font-semibold text-white">
             Overall Progress
           </span>
-          <span className="text-lg font-bold text-blue-600">
+          <span className="text-lg font-bold text-[#79A5FF]">
             {Math.round(overallProgress)}%
           </span>
         </div>
         <div className="w-full bg-slate-600 rounded-full h-3">
           <motion.div
-            className="h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-sm"
+            className={`h-3 ${MODULE_THEME_BG_R} rounded-full shadow-sm`}
             initial={{ width: 0 }}
             animate={{ width: `${overallProgress}%` }}
             transition={{ duration: 1 }}
@@ -121,49 +122,49 @@ export default function ProgressOverview() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <motion.div
-          className="text-center p-4 bg-blue-900/20 rounded-xl"
+          className="text-center p-4 bg-[#1E3A8A]/20 rounded-xl ring-1 ring-[#4A7CFF]/25"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="text-3xl font-bold text-blue-600 mb-1">
+          <div className="text-3xl font-bold text-[#79A5FF] mb-1">
             {completedChapters}
           </div>
-          <div className="text-sm text-blue-300">
+          <div className="text-sm text-[#b7cbff]">
             Chapters Completed
           </div>
         </motion.div>
 
         <motion.div
-          className="text-center p-4 bg-green-900/20 rounded-xl"
+          className="text-center p-4 bg-[#1E3A8A]/20 rounded-xl ring-1 ring-[#4A7CFF]/25"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="text-3xl font-bold text-green-600 mb-1">
+          <div className="text-3xl font-bold text-[#79A5FF] mb-1">
             {earnedBadges}
           </div>
-          <div className="text-sm text-green-300">
+          <div className="text-sm text-[#b7cbff]">
             NFT Badges Earned
           </div>
         </motion.div>
 
         <motion.div
-          className="text-center p-4 bg-purple-900/20 rounded-xl"
+          className="text-center p-4 bg-[#1E3A8A]/20 rounded-xl ring-1 ring-[#4A7CFF]/25"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="text-3xl font-bold text-purple-600 mb-1">
+          <div className="text-3xl font-bold text-[#79A5FF] mb-1">
             {totalCompleted}
           </div>
-          <div className="text-sm text-purple-300">
+          <div className="text-sm text-[#b7cbff]">
             Lessons Completed
           </div>
         </motion.div>
 
         <motion.div
-          className="text-center p-4 bg-orange-900/20 rounded-xl"
+          className="text-center p-4 bg-[#1E3A8A]/20 rounded-xl ring-1 ring-[#4A7CFF]/25"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="text-3xl font-bold text-orange-600 mb-1">
+          <div className="text-3xl font-bold text-[#79A5FF] mb-1">
             {Math.round(overallProgress) > 0 ? Math.round(overallProgress) : 0}%
           </div>
-          <div className="text-sm text-orange-300">
+          <div className="text-sm text-[#b7cbff]">
             Progress Score
           </div>
         </motion.div>
@@ -198,15 +199,15 @@ export default function ProgressOverview() {
                   </h4>
                   <div className="flex items-center gap-2">
                     {chapter.status === "coming-soon" ? (
-                      <span className="px-2 py-1 text-xs bg-orange-900 text-orange-200 rounded-full">
+                      <span className="px-2 py-1 text-xs bg-slate-700 text-slate-300 rounded-full border border-slate-600">
                         Coming Soon
                       </span>
                     ) : progressPercentage === 100 ? (
-                      <span className="px-2 py-1 text-xs bg-green-900 text-green-200 rounded-full">
+                      <span className="px-2 py-1 text-xs bg-[#1E3A8A]/35 text-[#b7cbff] rounded-full border border-[#4A7CFF]/30">
                         ✓ Completed
                       </span>
                     ) : progressPercentage > 0 ? (
-                      <span className="px-2 py-1 text-xs bg-blue-900 text-blue-200 rounded-full">
+                      <span className="px-2 py-1 text-xs bg-[#1E3A8A]/35 text-[#b7cbff] rounded-full border border-[#4A7CFF]/30">
                         In Progress
                       </span>
                     ) : (
@@ -225,9 +226,9 @@ export default function ProgressOverview() {
                 <div className="w-full bg-slate-600 rounded-full h-2">
                   <motion.div
                     className={`h-2 rounded-full ${progressPercentage === 100
-                      ? "bg-green-500"
+                      ? "bg-[#4A7CFF]"
                       : progressPercentage > 0
-                        ? "bg-blue-500"
+                        ? "bg-[#79A5FF]"
                         : "bg-gray-600"
                       }`}
                     initial={{ width: 0 }}
@@ -242,13 +243,13 @@ export default function ProgressOverview() {
       </div>
 
       {/* Achievement Preview */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl border border-purple-800">
+      <div className="mt-8 p-6 bg-gradient-to-r from-[#1E3A8A]/30 to-[#4A7CFF]/20 rounded-xl border border-[#4A7CFF]/30">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-purple-100 mb-1">
+            <h3 className="text-lg font-semibold text-[#b7cbff] mb-1">
               Next Achievement
             </h3>
-            <p className="text-purple-300 text-sm">
+            <p className="text-[#79A5FF] text-sm">
               Complete the Introduction to DeFi chapter to earn your first NFT
               badge!
             </p>
