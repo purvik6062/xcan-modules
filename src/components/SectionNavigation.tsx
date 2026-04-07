@@ -46,7 +46,7 @@ export default function SectionNavigation({
 
   return (
     <motion.div
-      className="bg-slate-800 rounded-2xl shadow-xl sticky top-4 overflow-hidden"
+      className="sticky top-2 z-10 w-full overflow-hidden rounded-2xl bg-slate-800 shadow-xl sm:top-4"
       initial={{ opacity: 0, x: -20 }}
       animate={{
         opacity: 1,

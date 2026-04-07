@@ -158,7 +158,7 @@ export default function InteractiveLearningDashboard({
   );
 
   return (
-    <div className="bg-gray-800 rounded-xl shadow-lg border sticky top-4 border-gray-700 overflow-hidden">
+    <div className="overflow-hidden rounded-xl border border-gray-700 bg-gray-800 shadow-lg lg:sticky lg:top-4">
       {/* Tab Navigation */}
       <div className="flex bg-gray-700 border-b border-gray-600">
         {tabs.map((tab) => (

@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { StoryContent } from "../../data/crossChainChapters";
-import ReactMarkdown from "react-markdown";
-import CodeBlock from "../CodeBlock";
 import GitHubAuthHandler from "../GitHubAuthHandler";
 import toast from "react-hot-toast";
+import { StoryQuizMarkdownPanel } from "../StoryQuizMarkdownPanel";
 
 interface StoryQuizComponentProps {
   content: StoryContent;
@@ -20,6 +19,7 @@ export default function StoryQuizComponent({
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [answered, setAnswered] = useState(false);
+  const [, startTransition] = useTransition();
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (answered) return;
@@ -30,14 +30,16 @@ export default function StoryQuizComponent({
     setAnswered(true);
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestion < content.questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setAnswered(false);
-    } else {
-      onComplete();
-    }
-  };
+  const handleNextQuestion = useCallback(() => {
+    startTransition(() => {
+      if (currentQuestion < content.questions.length - 1) {
+        setCurrentQuestion((q) => q + 1);
+        setAnswered(false);
+      } else {
+        onComplete();
+      }
+    });
+  }, [currentQuestion, content.questions.length, onComplete, startTransition]);
 
   // Results popup removed to enable seamless progression
 
@@ -59,20 +61,20 @@ export default function StoryQuizComponent({
     >
       {({ isAuthenticating, triggerAuth }) => (
         <div className="min-h-screen bg-gray-900">
-      <div className="w-full p-6">
+      <div className="w-full p-4 sm:p-6 lg:p-4">
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-300">
+        <div className="mb-5 sm:mb-8 lg:mb-4">
+          <div className="mb-2 flex items-center justify-between sm:mb-3">
+            <span className="text-sm font-medium text-gray-300 lg:text-xs">
               Question {currentQuestion + 1} of {content.questions.length}
             </span>
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-gray-400 lg:text-xs">
               {Math.round(((currentQuestion + (isAnswered ? 1 : 0)) / content.questions.length) * 100)}% complete
             </span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-3">
+          <div className="h-2.5 w-full rounded-full bg-gray-700 sm:h-3 lg:h-2">
             <motion.div
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full"
+              className="h-2.5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 sm:h-3 lg:h-2"
               initial={{ width: 0 }}
               animate={{
                 width: `${((currentQuestion + (isAnswered ? 1 : 0)) / content.questions.length) * 100}%`,
@@ -82,98 +84,72 @@ export default function StoryQuizComponent({
           </div>
         </div>
 
-        {/* Side by Side Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[600px]">
+        {/* Side by Side Layout — wider quiz column on laptop (2/5) */}
+        <div className="grid grid-cols-1 gap-6 min-h-[480px] lg:grid-cols-5 lg:gap-4 lg:min-h-[min(560px,72vh)]">
           {/* Story Content - Left Side */}
-          <div className="lg:col-span-2 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-            <div className="h-full flex flex-col">
-              <div className="p-8 flex-1 overflow-y-auto">
-                <div className="prose prose-lg max-w-none prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-base prose-p:leading-7 prose-p:mb-4 prose-strong:text-blue-300 prose-em:text-cyan-300">
-                  <div className="text-gray-200 leading-relaxed font-sans space-y-6">
-                    <ReactMarkdown
-                      components={{
-                        h1: ({ children }) => <h1 className="text-3xl font-bold text-white mb-6 border-b border-gray-600 pb-2">{children}</h1>,
-                        h2: ({ children }) => <h2 className="text-2xl font-semibold text-blue-300 mb-4 mt-8">{children}</h2>,
-                        h3: ({ children }) => <h3 className="text-xl font-semibold text-cyan-300 mb-3 mt-6">{children}</h3>,
-                        p: ({ children }) => <p className="text-gray-200 text-base leading-7 mb-4">{children}</p>,
-                        strong: ({ children }) => <strong className="text-blue-300 font-semibold">{children}</strong>,
-                        em: ({ children }) => <em className="text-cyan-300 italic">{children}</em>,
-                        hr: () => <hr className="border-gray-600 my-8" />,
-                        ul: ({ children }) => <ul className="list-disc list-inside space-y-2 mb-4 text-gray-300 ml-4">{children}</ul>,
-                        li: ({ children }) => <li className="text-gray-200 leading-6 mb-1">{children}</li>,
-                        blockquote: ({ children }) => <blockquote className="border-l-4 border-blue-500 pl-4 italic text-gray-300 bg-gray-800/50 py-2 rounded-r my-4">{children}</blockquote>,
-                        code: ({ node, className, children, ...props }: any) => {
-                          const codeString = String(children).replace(/\n$/, '');
-                          const isInline = !className;
-                          return <CodeBlock className={className} inline={isInline}>{codeString}</CodeBlock>;
-                        },
-                        pre: ({ children }) => <>{children}</>
-                      }}
-                    >
-                      {content.story}
-                    </ReactMarkdown>
-                  </div>
-                </div>
+          <div className="overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 lg:col-span-3">
+            <div className="flex h-full flex-col">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:max-h-[min(72vh,640px)] lg:p-4">
+                <StoryQuizMarkdownPanel story={content.story} />
               </div>
             </div>
           </div>
 
           {/* Quiz Content - Right Side */}
-          <div className="h-fit sticky top-6 bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
-            <div className="h-full flex flex-col">
+          <div className="h-fit max-h-none overflow-hidden rounded-2xl border border-gray-700 bg-gray-800 lg:sticky lg:top-4 lg:col-span-2 lg:max-h-[min(72vh,640px)] lg:overflow-y-auto">
+            <div className="flex h-full flex-col">
               {/* Quiz Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🎯</span>
-                  <div>
-                    <h3 className="text-xl font-bold">Test Your Knowledge</h3>
-                    <p className="text-blue-100 text-sm">Answer all questions correctly to proceed</p>
+              <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-4 text-white sm:p-5 lg:p-3">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <span className="text-xl sm:text-2xl lg:text-lg">🎯</span>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-bold sm:text-xl lg:text-base">Test Your Knowledge</h3>
+                    <p className="text-xs text-blue-100 sm:text-sm lg:text-[11px] lg:leading-snug">Answer all questions correctly to proceed</p>
                   </div>
                 </div>
               </div>
 
               {/* Quiz Content */}
-              <div className="p-6 flex-1 flex flex-col">
-                <AnimatePresence mode="wait">
+              <div className="flex flex-1 flex-col p-4 sm:p-6 lg:p-3">
+                <AnimatePresence mode="wait" initial={false}>
                   <motion.div
                     key={currentQuestion}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex-1 flex flex-col"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="flex flex-1 flex-col min-h-[240px] lg:min-h-0"
                   >
                     {/* Question */}
-                    <div className="bg-gray-700 rounded-xl p-6 mb-6 border border-gray-600">
-                      <h4 className="text-lg font-semibold text-white mb-2">
+                    <div className="mb-4 rounded-xl border border-gray-600 bg-gray-700 p-4 sm:p-5 sm:mb-6 lg:mb-3 lg:p-3">
+                      <h4 className="mb-1.5 text-base font-semibold text-white sm:mb-2 sm:text-lg lg:text-xs lg:uppercase lg:tracking-wide">
                         Question {currentQuestion + 1}
                       </h4>
-                      <p className="text-gray-200">
+                      <p className="text-sm leading-snug text-gray-200 sm:text-base lg:text-sm lg:leading-normal">
                         {question.question}
                       </p>
                     </div>
 
                     {/* Answer Options */}
-                    <div className="space-y-3 mb-6">
+                    <div className="mb-4 space-y-2 sm:mb-6 sm:space-y-3 lg:mb-3 lg:space-y-2">
                       {question.options.map((option, index) => (
-                        <motion.button
+                        <button
+                          type="button"
                           key={index}
                           onClick={() => handleAnswerSelect(index)}
                           disabled={isAnswered}
-                          className={`w-full hover:cursor-pointer text-left p-4 rounded-xl border-2 transition-all duration-200 ${isAnswered
+                          className={`w-full rounded-xl border-2 p-3 text-left transition-colors duration-150 hover:cursor-pointer sm:p-4 lg:p-2.5 ${isAnswered
                             ? index === question.correctAnswer
                               ? "border-green-400 bg-green-900/20 text-green-200"
                               : index === selectedAnswer
                                 ? "border-red-400 bg-red-900/20 text-red-200"
                                 : "border-gray-600 bg-gray-700 text-gray-400"
-                            : "border-gray-600 hover:border-blue-400 hover:bg-gray-700 bg-gray-800 text-gray-200"
+                            : "border-gray-600 hover:border-blue-400 hover:bg-gray-700 bg-gray-800 text-gray-200 active:scale-[0.99]"
                             }`}
-                          whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                          whileTap={!isAnswered ? { scale: 0.98 } : {}}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-start gap-2.5 sm:items-center sm:gap-3 lg:gap-2">
                             <div
-                              className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-bold ${isAnswered
+                              className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 text-xs font-bold sm:h-8 sm:w-8 sm:text-sm lg:h-6 lg:w-6 lg:text-[11px] ${isAnswered
                                 ? index === question.correctAnswer
                                   ? "border-green-400 bg-green-400 text-gray-400"
                                   : index === selectedAnswer
@@ -189,9 +165,9 @@ export default function StoryQuizComponent({
                                 "✗"}
                               {!isAnswered && String.fromCharCode(65 + index)}
                             </div>
-                            <span className="flex-1 font-medium">{option}</span>
+                            <span className="flex-1 text-sm font-medium leading-snug sm:text-base lg:text-xs">{option}</span>
                           </div>
-                        </motion.button>
+                        </button>
                       ))}
                     </div>
 
@@ -200,22 +176,22 @@ export default function StoryQuizComponent({
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`p-4 rounded-xl border ${isCorrect
+                        className={`rounded-xl border p-3 sm:p-4 lg:p-2.5 ${isCorrect
                           ? "bg-green-900/20 border-green-500"
                           : "bg-orange-900/20 border-orange-500"
                           }`}
                       >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xl">{isCorrect ? "🎉" : "💡"}</span>
+                        <div className="mb-1.5 flex items-center gap-2">
+                          <span className="text-lg sm:text-xl lg:text-base">{isCorrect ? "🎉" : "💡"}</span>
                           <span
-                            className={`font-bold ${isCorrect ? "text-green-400" : "text-orange-400"
+                            className={`text-sm font-bold lg:text-xs ${isCorrect ? "text-green-400" : "text-orange-400"
                               }`}
                           >
                             {isCorrect ? "Correct!" : "Not quite right"}
                           </span>
                         </div>
                         <p
-                          className={`text-sm ${isCorrect ? "text-green-300" : "text-orange-300"
+                          className={`text-sm leading-relaxed lg:text-xs ${isCorrect ? "text-green-300" : "text-orange-300"
                             }`}
                         >
                           {question.explanation}
@@ -228,11 +204,13 @@ export default function StoryQuizComponent({
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="mt-6"
+                        className="mt-4 sm:mt-6 lg:mt-3"
                       >
                         <button
+                          type="button"
                           onClick={triggerAuth}
-                          className="w-full hover:cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 font-medium"
+                          disabled={isAuthenticating}
+                          className={`flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 px-4 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:cursor-pointer hover:from-blue-700 hover:to-cyan-700 disabled:cursor-not-allowed disabled:opacity-70 sm:px-6 sm:py-3 sm:text-base lg:py-2 lg:text-xs ${isAuthenticating ? "animate-pulse" : ""}`}
                         >
                           {isAuthenticating ? (
                             <>

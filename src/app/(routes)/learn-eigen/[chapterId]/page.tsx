@@ -207,16 +207,16 @@ export default function EigenChapterPage() {
                 <LearningModuleSidebar currentModuleId="eigen-ai" backHref="/learn-eigen" />
                 <div className="flex-1">
                     {/* Chapter Header with Progress */}
-                    <div className="border-b border-gray-700 bg-gray-800 p-6">
+                    <div className="border-b border-gray-700 bg-gray-800 p-4 sm:p-6">
                         <div className="container mx-auto">
-                            <div className="mb-4 flex items-center justify-between">
-                                <div>
-                                    <h1 className="mb-2 text-3xl font-bold text-white">{chapter.title}</h1>
-                                    <p className="text-gray-300">{chapter.description}</p>
+                            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                <div className="min-w-0">
+                                    <h1 className="mb-2 text-2xl font-bold text-white sm:text-3xl">{chapter.title}</h1>
+                                    <p className="text-sm text-gray-300 sm:text-base">{chapter.description}</p>
                                 </div>
-                                <div className="text-right">
-                                    <div className="mb-1 text-sm text-gray-400">Chapter Progress</div>
-                                    <div className="text-2xl font-bold text-violet-400">
+                                <div className="flex-shrink-0 text-left sm:text-right">
+                                    <div className="mb-1 text-xs text-gray-400 sm:text-sm">Chapter Progress</div>
+                                    <div className="text-xl font-bold text-violet-400 sm:text-2xl">
                                         {Math.round(progress)}%
                                     </div>
                                 </div>
@@ -232,9 +232,9 @@ export default function EigenChapterPage() {
                                 />
                             </div>
 
-                            <div className="mt-2 flex items-center justify-between text-sm text-gray-400">
+                            <div className="mt-2 flex flex-col gap-1 text-xs text-gray-400 sm:flex-row sm:items-center sm:justify-between sm:text-sm">
                                 <span>{completedSections.length}/{availableSections.length} sections completed</span>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
                                     <span className="text-violet-400">{chapter.points} points</span>
                                     <span>{chapter.duration}</span>
                                 </div>
@@ -243,7 +243,7 @@ export default function EigenChapterPage() {
                     </div>
 
                     {/* Chapter Content */}
-                    <div className="py-8">
+                    <div className="px-4 py-6 sm:px-6 sm:py-8">
                         {currentSection.status === "available" ? (
                             <>
                                 <div className="">
@@ -256,11 +256,11 @@ export default function EigenChapterPage() {
                                     />
 
                                     {/* Section Navigation */}
-                                    <div className="mt-8 flex items-center justify-between border-t border-gray-700 pt-6">
+                                    <div className="mt-8 flex flex-col gap-3 border-t border-gray-700 pt-6 sm:flex-row sm:items-center sm:justify-between">
                                         <button
                                             onClick={goToPreviousSection}
                                             disabled={!hasPreviousAvailableSection()}
-                                            className={`ml-4 rounded-lg px-6 py-3 transition-all hover:cursor-pointer duration-200 ${!hasPreviousAvailableSection()
+                                            className={`order-2 w-full rounded-lg px-4 py-3 text-sm transition-all duration-200 hover:cursor-pointer sm:order-1 sm:w-auto sm:px-6 ${!hasPreviousAvailableSection()
                                                 ? "cursor-not-allowed bg-gray-700 text-gray-500"
                                                 : "bg-gray-700 text-white hover:bg-gray-600"
                                                 }`}
@@ -268,14 +268,14 @@ export default function EigenChapterPage() {
                                             ← Previous Section
                                         </button>
 
-                                        <div className="text-sm text-gray-400">
+                                        <div className="order-1 text-center text-xs text-gray-400 sm:order-2 sm:text-sm">
                                             Section {availableSections.findIndex(s => s.id === currentSection.id) + 1} of {availableSections.length}
                                         </div>
 
                                         <button
                                             onClick={goToNextSection}
                                             disabled={!hasNextAvailableSection()}
-                                            className={`mr-4 rounded-lg px-6 py-3 transition-all hover:cursor-pointer duration-200 ${!hasNextAvailableSection()
+                                            className={`order-3 w-full rounded-lg px-4 py-3 text-sm transition-all duration-200 hover:cursor-pointer sm:w-auto sm:px-6 ${!hasNextAvailableSection()
                                                 ? "cursor-not-allowed bg-gray-700 text-gray-500"
                                                 : "bg-gray-700 text-white hover:bg-gray-600"
                                                 }`}

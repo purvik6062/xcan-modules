@@ -221,6 +221,8 @@ export default function ChapterCard({ chapter, basePath = "/learn-defi", progres
               whileTap={{ scale: 0.98 }}
               className={`w-full hover:cursor-pointer ${basePath === "/learn-orbit"
                 ? "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700"
+                : basePath === "/learn-defi"
+                ? "bg-gradient-to-r from-rose-600 to-orange-500 hover:from-rose-500 hover:to-orange-400"
                 : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
                 } text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}
             >

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Quiz } from "../data/defiChapters";
@@ -19,12 +18,20 @@ export default function QuizComponent({
   onComplete,
   chapterId,
 }: QuizComponentProps) {
-  const router = useRouter();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [answered, setAnswered] = useState(false);
   const [pendingCompletion, setPendingCompletion] = useState(false);
+  const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (advanceTimeoutRef.current) {
+        clearTimeout(advanceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const calculateScore = () => {
     let correct = 0;
@@ -67,31 +74,47 @@ export default function QuizComponent({
           }
         };
 
+        const ADVANCE_MS = 720;
+
         const handleAnswerSelect = (answerIndex: number) => {
           if (answered) return;
 
+          const qIndex = currentQuestion;
           const newAnswers = [...selectedAnswers];
-          newAnswers[currentQuestion] = answerIndex;
+          newAnswers[qIndex] = answerIndex;
           setSelectedAnswers(newAnswers);
           setAnswered(true);
 
-          setTimeout(() => {
-            if (currentQuestion < questions.length - 1) {
-              setCurrentQuestion(currentQuestion + 1);
+          if (advanceTimeoutRef.current) {
+            clearTimeout(advanceTimeoutRef.current);
+          }
+
+          advanceTimeoutRef.current = setTimeout(() => {
+            advanceTimeoutRef.current = null;
+            if (qIndex < questions.length - 1) {
+              setCurrentQuestion(qIndex + 1);
               setAnswered(false);
-            } else {
-              setShowResults(true);
-              const score = calculateScore();
+              return;
+            }
+
+            const correct = newAnswers.reduce((acc, ans, i) => {
+              if (ans === questions[i]?.correctAnswer) return acc + 1;
+              return acc;
+            }, 0);
+            const score = Math.round((correct / questions.length) * 100);
+
+            setShowResults(true);
+            requestAnimationFrame(() => {
               if (score >= 70) {
                 confetti({
-                  particleCount: 100,
-                  spread: 70,
+                  particleCount: 80,
+                  spread: 65,
                   origin: { y: 0.6 },
                 });
               }
-              requestCompletion();
-            }
-          }, 2000);
+            });
+            requestCompletion();
+          }, ADVANCE_MS);
         };
 
         if (questions.length === 0) {
@@ -122,31 +145,30 @@ export default function QuizComponent({
         if (showResults) {
           const score = calculateScore();
           const passed = score >= 70;
-          console.log("passed", score);
 
           return (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-8"
+              className="py-6 text-center lg:py-5"
             >
-              <div className={`text-6xl mb-4 ${passed ? "🎉" : "📚"}`}>
+              <div className={`mb-3 text-5xl lg:mb-2 lg:text-4xl ${passed ? "🎉" : "📚"}`}>
                 {passed ? "🎉" : "📚"}
               </div>
 
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="mb-1 text-2xl font-bold text-white lg:text-xl">
                 Quiz Complete!
               </h3>
 
               <div
-                className={`text-4xl font-bold mb-4 ${passed ? "text-green-600" : "text-orange-600"
+                className={`mb-3 text-4xl font-bold lg:mb-2 lg:text-3xl ${passed ? "text-green-600" : "text-orange-600"
                   }`}
               >
                 {score}%
               </div>
 
               <p
-                className={`text-lg mb-6 ${passed
+                className={`mb-5 text-lg lg:mb-4 lg:text-base ${passed
                   ? "text-green-400"
                   : "text-orange-400"
                   }`}
@@ -156,34 +178,34 @@ export default function QuizComponent({
                   : "Good effort! You can review the material or continue learning."}
               </p>
 
-              <div className="space-y-4 mb-8">
+              <div className="mx-auto mb-6 max-w-3xl space-y-3 text-left lg:mb-5 lg:max-w-4xl lg:space-y-2">
                 {questions.map((question, index) => {
                   const isCorrect = selectedAnswers[index] === question.correctAnswer;
                   return (
                     <div
                       key={question.id}
-                      className={`p-4 rounded-lg border-2 ${isCorrect
+                      className={`rounded-lg border-2 p-3 lg:p-2.5 ${isCorrect
                         ? "border-green-700 bg-green-900/20"
                         : "border-red-700 bg-red-900/20"
                         }`}
                     >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className={`text-xl ${isCorrect ? "✅" : "❌"}`}>
+                      <div className="mb-1.5 flex items-center gap-2">
+                        <span className={`text-lg lg:text-base ${isCorrect ? "✅" : "❌"}`}>
                           {isCorrect ? "✅" : "❌"}
                         </span>
-                        <span className="font-medium text-white">
+                        <span className="text-sm font-medium text-white lg:text-xs">
                           Question {index + 1}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-300 mb-2">
+                      <p className="mb-1.5 text-sm text-gray-300 lg:text-xs">
                         {question.question}
                       </p>
-                      <p className="text-sm text-gray-200">
+                      <p className="text-sm text-gray-200 lg:text-xs">
                         <strong>Correct answer:</strong>{" "}
                         {question.options[question.correctAnswer]}
                       </p>
                       {!isCorrect && (
-                        <p className="text-sm text-gray-300 mt-1">
+                        <p className="mt-1 text-sm text-gray-300 lg:text-xs">
                           <strong>Your answer:</strong>{" "}
                           {question.options[selectedAnswers[index]]}
                         </p>
@@ -193,7 +215,7 @@ export default function QuizComponent({
                 })}
               </div>
 
-              <div className="flex gap-4 justify-center">
+              <div className="flex justify-center gap-3 lg:gap-2">
                 {/* <button
                   onClick={restartQuiz}
                   className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
@@ -202,7 +224,7 @@ export default function QuizComponent({
                 </button> */}
                 <button
                   onClick={() => window.history.back()}
-                  className="hover:cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="hover:cursor-pointer rounded-lg bg-blue-600 px-5 py-2.5 text-sm text-white transition-colors hover:bg-blue-700 lg:px-4 lg:py-2 lg:text-xs"
                 >
                   Continue Learning
                 </button>
@@ -217,65 +239,70 @@ export default function QuizComponent({
         const isCorrect = selectedAnswer === question.correctAnswer;
 
         return (
-          <div className="max-w-2xl mx-auto">
+          <div className="mx-auto max-w-2xl lg:max-w-4xl xl:max-w-5xl">
             {/* Progress */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-300">
+            <div className="mb-4 lg:mb-3">
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-300 lg:text-xs">
                   Question {currentQuestion + 1} of {questions.length}
                 </span>
-                <span className="text-sm text-gray-400">
-                  {Math.round((currentQuestion / questions.length) * 100)}% complete
+                <span className="text-sm text-gray-400 lg:text-xs">
+                  {Math.round(
+                    ((currentQuestion + (isAnswered ? 1 : 0)) / questions.length) * 100
+                  )}
+                  % complete
                 </span>
               </div>
-              <div className="w-full bg-slate-600 rounded-full h-2">
+              <div className="h-2 w-full rounded-full bg-slate-600 lg:h-1.5">
                 <motion.div
-                  className="bg-blue-500 h-2 rounded-full"
+                  className="h-2 rounded-full bg-blue-500 lg:h-1.5"
                   initial={{ width: 0 }}
                   animate={{
-                    width: `${(currentQuestion / questions.length) * 100}%`,
+                    width: `${
+                      ((currentQuestion + (isAnswered ? 1 : 0)) / questions.length) * 100
+                    }%`,
                   }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.28, ease: [0.25, 0.1, 0.25, 1] }}
                 />
               </div>
             </div>
 
             {/* Question */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={currentQuestion}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+                className="min-h-[180px] lg:min-h-0"
               >
-                <div className="bg-blue-900/20 rounded-xl p-6 mb-6">
-                  <h3 className="text-xl font-bold text-white mb-4">
+                <div className="mb-4 rounded-xl bg-blue-900/20 p-4 sm:p-5 lg:mb-3 lg:p-3">
+                  <h3 className="text-lg font-bold leading-snug text-white sm:text-xl lg:text-base lg:font-semibold lg:leading-normal">
                     {question.question}
                   </h3>
                 </div>
 
                 {/* Answer Options */}
-                <div className="space-y-3 mb-6">
+                <div className="mb-4 space-y-2 sm:space-y-3 lg:mb-3 lg:space-y-2">
                   {question.options.map((option, index) => (
-                    <motion.button
+                    <button
+                      type="button"
                       key={index}
                       onClick={() => handleAnswerSelect(index)}
                       disabled={isAnswered}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${isAnswered
+                      className={`w-full rounded-lg border-2 p-3 text-left transition-colors duration-150 sm:p-4 lg:p-2.5 ${isAnswered
                         ? index === question.correctAnswer
                           ? "border-green-500 bg-green-900/20 text-green-300"
                           : index === selectedAnswer
                             ? "border-red-500 bg-red-900/20 text-red-300"
                             : "border-slate-600 bg-slate-700 text-gray-400"
-                        : "border-slate-600 hover:border-blue-500 hover:bg-blue-900/20"
+                        : "border-slate-600 hover:border-blue-500 hover:bg-blue-900/20 active:scale-[0.99]"
                         }`}
-                      whileHover={!isAnswered ? { scale: 1.02 } : {}}
-                      whileTap={!isAnswered ? { scale: 0.98 } : {}}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-start gap-2.5 sm:items-center sm:gap-3 lg:gap-2">
                         <div
-                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm font-bold ${isAnswered
+                          className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold lg:h-5 lg:w-5 lg:text-xs ${isAnswered
                             ? index === question.correctAnswer
                               ? "border-green-500 bg-green-500 text-white"
                               : index === selectedAnswer
@@ -291,9 +318,9 @@ export default function QuizComponent({
                             "✗"}
                           {!isAnswered && String.fromCharCode(65 + index)}
                         </div>
-                        <span className="flex-1">{option}</span>
+                        <span className="flex-1 text-sm leading-snug sm:text-base lg:text-sm">{option}</span>
                       </div>
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
 
@@ -302,15 +329,15 @@ export default function QuizComponent({
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-lg ${isCorrect
+                    className={`rounded-lg p-3 sm:p-4 lg:p-2.5 ${isCorrect
                       ? "bg-green-900/20 border border-green-700"
                       : "bg-orange-900/20 border border-orange-700"
                       }`}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl">{isCorrect ? "🎉" : "💡"}</span>
+                    >
+                    <div className="mb-1.5 flex items-center gap-2">
+                      <span className="text-lg lg:text-base">{isCorrect ? "🎉" : "💡"}</span>
                       <span
-                        className={`font-bold ${isCorrect
+                        className={`text-sm font-bold lg:text-xs ${isCorrect
                           ? "text-green-300"
                           : "text-orange-300"
                           }`}
@@ -319,7 +346,7 @@ export default function QuizComponent({
                       </span>
                     </div>
                     <p
-                      className={`text-sm ${isCorrect
+                      className={`text-sm leading-relaxed lg:text-xs ${isCorrect
                         ? "text-green-400"
                         : "text-orange-400"
                         }`}

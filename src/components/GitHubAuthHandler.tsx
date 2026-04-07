@@ -136,9 +136,51 @@ export default function GitHubAuthHandler({
     }
   }, [address, onAuthComplete, onAuthError]);
 
-  // Don't render children while loading initial state
   if (isLoading) {
-    return null;
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-[#050b1f] via-[#0a1430] to-[#102247] px-4 py-10"
+      >
+        <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden>
+          <div className="absolute -top-8 right-8 h-44 w-44 rounded-full bg-cyan-500/25 blur-3xl" />
+          <div className="absolute bottom-6 left-8 h-36 w-36 rounded-full bg-indigo-500/30 blur-3xl" />
+        </div>
+
+        <div className="relative z-[1] w-full max-w-md rounded-2xl border border-[#22335c] bg-[#0d1730]/85 p-6 shadow-2xl shadow-black/30 backdrop-blur-sm sm:p-8">
+          <div className="mb-6 flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-500/30 bg-cyan-500/10">
+              <div className="h-7 w-7 animate-spin rounded-full border-2 border-cyan-400/30 border-t-cyan-300" aria-hidden />
+            </div>
+            <div className="">
+              <p className="truncate text-sm font-semibold tracking-wide text-slate-100 sm:text-base">
+                Preparing your learning workspace
+              </p>
+              <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+                Checking wallet and GitHub session...
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="h-2 overflow-hidden rounded-full bg-slate-800/90">
+              <div className="h-full w-2/5 animate-pulse rounded-full bg-gradient-to-r from-cyan-400 to-blue-500" />
+            </div>
+            <div className="rounded-xl border border-slate-800/80 bg-slate-900/60 p-4">
+              <div className="mb-2 h-2.5 w-2/5 animate-pulse rounded-full bg-slate-700/80" />
+              <div className="mb-2 h-2.5 w-full animate-pulse rounded-full bg-slate-800/80" />
+              <div className="h-2.5 w-4/5 animate-pulse rounded-full bg-slate-800/70" />
+            </div>
+          </div>
+
+          <p className="mt-5 text-center text-[11px] text-slate-500 sm:text-xs">
+            This takes a moment and works consistently across all challenge pages.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

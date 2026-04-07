@@ -190,8 +190,7 @@ export const SuccessfulMint = ({
                   background: useTransform(
                     [lightX, lightY],
                     ([lx, ly]: any) =>
-                      `radial-gradient(circle at ${50 + lx}% ${
-                        50 + ly
+                      `radial-gradient(circle at ${50 + lx}% ${50 + ly
                       }%, rgba(255,255,255,0.15) 0%, transparent 50%)`
                   ),
                 }}
@@ -290,8 +289,7 @@ export const SuccessfulMint = ({
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${
-                        ry * 0.1
+                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${ry * 0.1
                       }deg)`
                   ),
                 }}
@@ -320,8 +318,7 @@ export const SuccessfulMint = ({
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${
-                        ry * 0.02
+                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${ry * 0.02
                       }deg)`
                   ),
                 }}

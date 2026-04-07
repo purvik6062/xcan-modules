@@ -43,7 +43,7 @@ export default function LearningModulesSection() {
                 />
 
                 {/* Price ribbon — top-right */}
-                {module.id !== "project-submission" && (
+                {module.id !== "project-submission" && module.id !== "arbitrum-stylus" && (
                   <div className="absolute top-3 right-3 z-10">
                     <div className="relative">
                       <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-3 py-1.5 rounded-lg shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 hover:-translate-y-0.5">

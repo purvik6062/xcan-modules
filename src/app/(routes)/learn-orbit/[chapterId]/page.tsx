@@ -125,28 +125,28 @@ export default function OrbitChapterPage() {
           <div className="container mx-auto px-4 py-8">
             {/* Chapter Header */}
             <motion.div
-              className="bg-slate-800 rounded-2xl shadow-xl p-8 mb-8"
+              className="mb-8 rounded-2xl bg-slate-800 p-4 shadow-xl sm:p-6 lg:p-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="text-5xl">{chapter.icon}</div>
-                  <div>
-                    <h1 className="text-3xl font-bold text-white">
+              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex min-w-0 flex-1 items-start gap-3 sm:gap-4">
+                  <div className="flex-shrink-0 text-4xl sm:text-5xl">{chapter.icon}</div>
+                  <div className="min-w-0">
+                    <h1 className="text-2xl font-bold text-white sm:text-3xl">
                       {chapter.title}
                     </h1>
-                    <p className="text-gray-300 mt-2">
+                    <p className="mt-2 text-sm text-gray-300 sm:text-base">
                       {chapter.description}
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm text-gray-400">
+                <div className="flex-shrink-0 text-left sm:text-right">
+                  <div className="text-xs text-gray-400 sm:text-sm">
                     {chapter.level} • {chapter.duration}
                   </div>
-                  <div className="text-sm text-gray-400">
+                  <div className="text-xs text-gray-400 sm:text-sm">
                     {chapter.sections.length} sections
                   </div>
                 </div>
@@ -172,10 +172,10 @@ export default function OrbitChapterPage() {
             )}
 
             {/* Chapter Content Layout */}
-            <div className="flex gap-8">
+            <div className="flex flex-col gap-6 xl:flex-row xl:gap-8">
               {/* Section Navigation */}
               <div
-                className={`flex-shrink-0 transition-all duration-400 ease-in-out ${isSidebarCollapsed ? "w-16" : "w-80"
+                className={`w-full max-w-full flex-shrink-0 transition-all duration-400 ease-in-out xl:max-w-none ${isSidebarCollapsed ? "xl:w-16" : "xl:w-80"
                   }`}
               >
                 <SectionNavigation
@@ -217,14 +217,14 @@ export default function OrbitChapterPage() {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   {isChapterComplete && !isProductionDeployment && (
-                    <div className="bg-emerald-900/30 border-b border-emerald-700 p-4 flex items-center justify-between">
-                      <div className="text-emerald-200">
+                    <div className="flex flex-col gap-3 border-b border-emerald-700 bg-emerald-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0 text-sm text-emerald-200 sm:text-base">
                         ✅ Chapter complete! {nextChapter ? "You can continue to the next chapter." : "You've reached the end of this module's chapters."}
                       </div>
                       {nextChapter && (
                         <Link
                           href={`/learn-orbit/${nextChapter.id}`}
-                          className="hover:cursor-pointer px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+                          className="hover:cursor-pointer whitespace-normal rounded-lg bg-emerald-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-emerald-700 sm:whitespace-nowrap"
                         >
                           Continue to {nextChapter.title} →
                         </Link>
@@ -232,13 +232,13 @@ export default function OrbitChapterPage() {
                     </div>
                   )}
                   {/* Section Header */}
-                  <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-2xl font-bold">
+                  <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4 text-white sm:p-6">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0">
+                        <h2 className="text-xl font-bold sm:text-2xl">
                           {currentSection.title}
                         </h2>
-                        <div className="flex items-center gap-4 mt-2 text-sm opacity-90">
+                        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs opacity-90 sm:gap-4 sm:text-sm">
                           <span>
                             Section {currentSectionIndex + 1} of{" "}
                             {chapter.sections.length}
@@ -249,7 +249,7 @@ export default function OrbitChapterPage() {
                           <span className="capitalize">{currentSection.type}</span>
                         </div>
                       </div>
-                      <div className="text-right">
+                      <div className="flex-shrink-0 sm:text-right">
                         {completedSections.includes(currentSection.id) && (
                           <div className="flex items-center gap-2">
                             <span className="text-2xl">✅</span>
@@ -261,7 +261,7 @@ export default function OrbitChapterPage() {
                   </div>
 
                   {/* Section Content */}
-                  <div className="p-8">
+                  <div className="p-4 sm:p-6 lg:p-8">
                     {currentSection.status === "available" ? (
                       <>
                         {currentSection.type === "quiz" ? (
@@ -311,7 +311,7 @@ export default function OrbitChapterPage() {
                   </div>
 
                   {/* Navigation Controls */}
-                  <div className="border-t border-slate-700 p-6">
+                  <div className="border-t border-slate-700 p-4 sm:p-6">
                     {/* Special Continue Learning button for production-deployment chapter */}
                     {isProductionDeployment && isLastSectionComplete && nextChapter ? (
                       <div className="flex flex-col gap-4">
@@ -326,16 +326,16 @@ export default function OrbitChapterPage() {
                             Continue Learning: {nextChapter.title} →
                           </Link>
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                           <button
                             onClick={goToPreviousSection}
                             disabled={currentSectionIndex === 0}
-                            className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="hover:cursor-pointer order-2 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-4 py-2.5 text-gray-300 transition-colors hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50 sm:order-1 sm:w-auto"
                           >
                             ← Previous
                           </button>
 
-                          <div className="text-sm text-gray-400">
+                          <div className="order-1 text-center text-sm text-gray-400 sm:order-2">
                             {currentSectionIndex + 1} / {chapter.sections.length}
                           </div>
 
@@ -344,7 +344,7 @@ export default function OrbitChapterPage() {
                             disabled={
                               currentSectionIndex === chapter.sections.length - 1
                             }
-                            className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                           >
                             Next →
                           </button>
@@ -363,16 +363,16 @@ export default function OrbitChapterPage() {
                             Continue Learning: Back to Modules →
                           </Link>
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                           <button
                             onClick={goToPreviousSection}
                             disabled={currentSectionIndex === 0}
-                            className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="hover:cursor-pointer order-2 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-4 py-2.5 text-gray-300 transition-colors hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50 sm:order-1 sm:w-auto"
                           >
                             ← Previous
                           </button>
 
-                          <div className="text-sm text-gray-400">
+                          <div className="order-1 text-center text-sm text-gray-400 sm:order-2">
                             {currentSectionIndex + 1} / {chapter.sections.length}
                           </div>
 
@@ -381,23 +381,23 @@ export default function OrbitChapterPage() {
                             disabled={
                               currentSectionIndex === chapter.sections.length - 1
                             }
-                            className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                           >
                             Next →
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <button
                           onClick={goToPreviousSection}
                           disabled={currentSectionIndex === 0}
-                          className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-slate-700 text-gray-300 rounded-lg hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          className="hover:cursor-pointer order-2 flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-4 py-2.5 text-gray-300 transition-colors hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50 sm:order-1 sm:w-auto"
                         >
                           ← Previous
                         </button>
 
-                        <div className="text-sm text-gray-400">
+                        <div className="order-1 text-center text-sm text-gray-400 sm:order-2">
                           {currentSectionIndex + 1} / {chapter.sections.length}
                         </div>
 
@@ -406,7 +406,7 @@ export default function OrbitChapterPage() {
                           disabled={
                             currentSectionIndex === chapter.sections.length - 1
                           }
-                          className="hover:cursor-pointer flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
                         >
                           Next →
                         </button>

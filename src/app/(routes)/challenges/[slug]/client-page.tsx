@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import CodeEditor from "../../../../components/CodeEditor";
 import InstructionsPanel from "../../../../components/InstructionsPanel";
@@ -43,6 +44,7 @@ export default function ClientChallenge({
   const [bottomPanelTab, setBottomPanelTab] = useState("tests");
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [editorReady, setEditorReady] = useState(false);
+  const [clientMounted, setClientMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [verificationStage, setVerificationStage] = useState(0);
@@ -50,7 +52,44 @@ export default function ClientChallenge({
   const [allTestsPassed, setAllTestsPassed] = useState(false);
   const [codeSubmitted, setCodeSubmitted] = useState(false);
   const [showHintPopup, setShowHintPopup] = useState(false);
+  const [leftPaneWidth, setLeftPaneWidth] = useState(50);
+  const [isResizingPanels, setIsResizingPanels] = useState(false);
+  const workspaceRef = useRef<HTMLDivElement>(null);
   const { address } = useWalletProtection();
+
+  useEffect(() => {
+    setClientMounted(true);
+  }, []);
+
+  useEffect(() => {
+    setEditorReady(false);
+  }, [slug]);
+
+  useEffect(() => {
+    if (!isResizingPanels) return;
+
+    const handleResize = (event: MouseEvent) => {
+      if (!workspaceRef.current) return;
+      const rect = workspaceRef.current.getBoundingClientRect();
+      const newWidth = ((event.clientX - rect.left) / rect.width) * 100;
+      const clampedWidth = Math.min(70, Math.max(30, newWidth));
+      setLeftPaneWidth(clampedWidth);
+    };
+
+    const stopResize = () => setIsResizingPanels(false);
+
+    document.addEventListener("mousemove", handleResize);
+    document.addEventListener("mouseup", stopResize);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+
+    return () => {
+      document.removeEventListener("mousemove", handleResize);
+      document.removeEventListener("mouseup", stopResize);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizingPanels]);
 
   useEffect(() => {
     if (challenge) {
@@ -76,10 +115,6 @@ export default function ClientChallenge({
       clearTimeout(hintTimer);
     };
   }, [challenge, slug, codeSubmitted]);
-
-  function handleEditorDidMount() {
-    setEditorReady(true);
-  }
 
   function handleEditorChange(value: string | undefined) {
     if (value !== undefined) {
@@ -180,6 +215,11 @@ export default function ClientChallenge({
 
   const toggleFullScreen = () => setIsFullScreen(!isFullScreen);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const handleStartResize = (event: ReactMouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (isFullScreen) return;
+    setIsResizingPanels(true);
+  };
 
   const defaultHints = [
     "Check the instructions carefully. What specific precompile address are you supposed to use?",
@@ -208,7 +248,18 @@ export default function ClientChallenge({
       }}
     >
       {({ isAuthenticating, githubUsername, hasGithub, triggerAuth }) => (
-        <div className="flex flex-col h-screen overflow-hidden bg-gradient-to-br from-[#070d1b] to-[#102247] text-white">
+        <div className="relative flex min-h-[100dvh] h-[100dvh] flex-col overflow-hidden bg-gradient-to-br from-[#070d1b] to-[#102247] text-white lg:h-screen lg:min-h-0">
+          {clientMounted && !editorReady && (
+            <div
+              className="absolute inset-0 z-[60] flex flex-col items-center justify-center gap-4 bg-[#070d1b]/95 backdrop-blur-sm"
+              aria-busy="true"
+              aria-label="Loading challenge"
+            >
+              <div className="h-12 w-12 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
+              <p className="text-sm font-medium text-blue-100">Loading challenge workspace…</p>
+              <p className="max-w-xs px-4 text-center text-xs text-gray-400">Preparing editor and tools</p>
+            </div>
+          )}
           <AnimatePresence>
             {sidebarOpen && (
               <motion.div
@@ -258,9 +309,9 @@ export default function ClientChallenge({
             )}
           </AnimatePresence>
 
-          <div className="flex flex-1 overflow-hidden">
-            {/* New Vertical Navigation Sidebar */}
-            <div className="w-16 bg-[#040e24] border-r border-[#1D315E] flex flex-col items-center py-4 space-y-4">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+            {/* Vertical rail */}
+            <div className="flex w-full flex-shrink-0 flex-row items-center justify-center gap-3 border-b border-[#1D315E] bg-[#040e24] px-2 py-2 lg:w-16 lg:flex-col lg:justify-start lg:space-y-4 lg:border-b-0 lg:border-r lg:py-4">
               {/* Menu Toggle Button */}
               <button
                 onClick={toggleSidebar}
@@ -294,232 +345,291 @@ export default function ClientChallenge({
               </Link>
 
               {/* Decorative separator */}
-              <div className="w-6 h-px bg-gradient-to-r from-transparent via-[#2c3e69] to-transparent"></div>
+              <div className="hidden h-px w-6 bg-gradient-to-b from-transparent via-[#2c3e69] to-transparent lg:block"></div>
             </div>
 
-            {/* Left Sidebar - Instructions Panel */}
-            <div className={`${isFullScreen ? "hidden" : "w-2/5 lg:w-2/5"} bg-[#101828] text-white border-r border-[#152241] flex flex-col overflow-hidden h-full`}>
-              <div className="p-6 border-b border-[#152241] bg-[#0c111e]">
-                <div className="flex items-center mb-4">
-                  <h1 className="text-2xl font-semibold text-gray-100">{challenge.title}</h1>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  <span className={`text-xs text-blue-200 px-3 py-1.5 rounded-full flex items-center ${getLevelBadgeStyle(challenge.level)}`}>
-                    {challenge.level === "Beginner" && <GoFlame className="mr-1.5" />}
-                    {challenge.level === "Intermediate" && <GoPulse className="mr-1.5" />}
-                    {challenge.level === "Advanced" && <GoBeaker className="mr-1.5" />}
+            {/* Main workspace: shared title row + two balanced panes with aligned chrome */}
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+              {/* Full-width challenge header — aligns both columns below */}
+              <div
+                className={`${isFullScreen ? "hidden" : "flex"} flex-shrink-0 flex-col gap-2 border-b border-[#1c2c52] bg-[#0c111e] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-2.5`}
+              >
+                <h1 className="min-w-0 text-base font-semibold leading-tight text-gray-100 sm:text-lg lg:truncate lg:text-xl">
+                  {challenge.title}
+                </h1>
+                <div className="flex flex-wrap items-center gap-1.5 sm:justify-end sm:gap-2">
+                  <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] text-blue-200 sm:text-xs ${getLevelBadgeStyle(challenge.level)}`}>
+                    {challenge.level === "Beginner" && <GoFlame className="mr-1 h-3 w-3 sm:mr-1.5" />}
+                    {challenge.level === "Intermediate" && <GoPulse className="mr-1 h-3 w-3 sm:mr-1.5" />}
+                    {challenge.level === "Advanced" && <GoBeaker className="mr-1 h-3 w-3 sm:mr-1.5" />}
                     {challenge.level}
                   </span>
-                  <span className="bg-blue-900/50 border border-blue-700 rounded-full px-3 py-1.5 text-xs flex items-center text-blue-200">
-                    <FiCpu className="mr-1.5" />
+                  <span className="inline-flex items-center rounded-full border border-blue-700 bg-blue-900/50 px-2.5 py-1 text-[11px] text-blue-200 sm:text-xs">
+                    <FiCpu className="mr-1 h-3 w-3 sm:mr-1.5" />
                     {challenge.category}
                   </span>
-                  <span className="bg-blue-900/50 border border-blue-[#010335] rounded-full px-3 py-1.5 text-xs flex items-center text-blue-200">
-                    <FiCode className="mr-1.5" />
+                  <span className="inline-flex items-center rounded-full border border-blue-800 bg-blue-900/50 px-2.5 py-1 text-[11px] text-blue-200 sm:text-xs">
+                    <FiCode className="mr-1 h-3 w-3 sm:mr-1.5" />
                     {challenge.precompileUsed}
                   </span>
-                  <span className="bg-purple-900/50 border border-purple-700 rounded-full px-3 py-1.5 text-xs flex items-center text-purple-200">
-                    <FiAward className="mr-1.5" />
+                  <span className="inline-flex items-center rounded-full border border-purple-700 bg-purple-900/50 px-2.5 py-1 text-[11px] text-purple-200 sm:text-xs">
+                    <FiAward className="mr-1 h-3 w-3 sm:mr-1.5" />
                     {challenge.points} XP
                   </span>
                 </div>
               </div>
-              <div className="bg-gradient-to-r from-[#0a142a] to-[#0f1d3a] px-6 py-4 border-b border-[#152241]">
-                <div className="flex space-x-3">
-                  <button className={`px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "instructions" ? "bg-blue-[#010335]/30 border border-blue-[#010335]/50 text-blue-300 shadow-md shadow-blue-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("instructions")}>
-                    <FiBookOpen className="mr-2 cursor-pointer" />
-                    Instructions
-                  </button>
-                  <button className={`px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "tests" ? "bg-teal-700/30 border border-teal-700/50 text-teal-300 shadow-md shadow-teal-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("tests")}>
-                    <FiTerminal className="mr-2" />
-                    Test Cases
-                  </button>
-                  <button className={`ml-auto px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${activeTab === "hints" ? "bg-yellow-700/30 border border-yellow-700/50 text-yellow-300 shadow-md shadow-yellow-900/20" : "text-gray-300 border border-transparent hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("hints")}>
-                    <FiHelpCircle className="mr-2 cursor-pointer" />
-                    Hints
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto h-[100vh] p-[1.5rem] bg-[#0a142a]">
-                <div className="mb-6">
-                  <p className="text-gray-300 mb-4 leading-relaxed">{challenge.description}</p>
-                </div>
-                {activeTab === "instructions" ? (
-                  <InstructionsPanel instructions={challenge.instructions} />
-                ) : activeTab === "hints" ? (
-                  <HintsPanel hints={hints} />
-                ) : (
-                  <TestResults
-                    testCases={challenge.testCases}
-                    testResults={testResults}
-                    isLoading={isLoading}
-                    output={output}
-                    runTests={runTests}
-                    verificationStage={verificationStage}
-                  />
-                )}
-              </div>
-            </div>
 
-            {/* Right Side - Code Editor */}
-            <div className={`${isFullScreen ? "w-full" : "w-3/5 lg:w-3/5"} flex flex-col bg-[#0c1425] overflow-hidden h-full`}>
-              <div className="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-                <div className="absolute top-20 right-10 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl"></div>
-                <div className="absolute bottom-40 right-20 w-60 h-60 bg-blue-600 rounded-full filter blur-3xl"></div>
-                <div className="absolute bottom-10 left-10 w-40 h-40 bg-purple-700 rounded-full filter blur-3xl"></div>
-              </div>
-              <div className="bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] px-4 flex items-center h-12 border-b border-[#1c2c52]">
-                <div className="flex items-center px-4 py-1.5 bg-[#152241] text-blue-300 text-sm border-t border-l border-r border-[#2c3e69] rounded-t-md shadow-inner shadow-blue-500/10">
-                  <FiCode className="mr-2 text-blue-400" />
-                  {slug}.ts
-                </div>
-                <div className="flex items-center ml-auto space-x-2">
-                  <button onClick={() => setCode(challenge.startingCode)} className="flex items-center px-3 py-1.5 bg-[#152241] hover:bg-[#1c2c52] text-gray-300 hover:text-white text-sm rounded-md transition-colors border border-[#2c3e69] cursor-pointer" title="Reset Code">
-                    <FiRefreshCw className="mr-1.5 text-gray-400 cursor-pointer" />
-                    Reset
-                  </button>
-                  <button onClick={toggleFullScreen} className="flex items-center px-3 py-1.5 bg-[#152241] hover:bg-[#1c2c52] text-gray-300 hover:text-white text-sm rounded-md transition-colors border border-[#2c3e69] cursor-pointer" title={isFullScreen ? "Exit Full Screen" : "Full Screen"}>
-                    {isFullScreen ? <FiMinimize className="mr-1.5 text-gray-400 cursor-pointer" /> : <FiMaximize className="mr-1.5 text-gray-400 cursor-pointer" />}
-                    {isFullScreen ? "Exit" : "Expand"}
-                  </button>
-                </div>
-              </div>
-              {/* Editor Area with fixed height for 25 lines */}
-              <div className="overflow-hidden h-[49vh] 2xl:h-[58vh]">
-                <CodeEditor defaultValue={challenge.startingCode} value={code} onChange={handleEditorChange} />
-              </div>
-              {/* Bottom Panel with fixed height */}
-              <div className="bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] border-t border-[#1c2c52] p-4" style={{ height: "200px" }}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex space-x-1">
-                    <button className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${bottomPanelTab === "tests" ? "bg-blue-800/30 text-blue-300 border border-blue-[#010335]/50" : "text-gray-400 hover:text-gray-300 border border-transparent hover:bg-[#152241]"}`} onClick={() => setBottomPanelTab("tests")}>
-                      <FiPlayCircle className="mr-2 cursor-pointer" />
-                      Test Results
-                    </button>
-                    <button className={`text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer ${bottomPanelTab === "console" ? "bg-purple-800/30 text-purple-300 border border-purple-700/50" : "text-gray-400 hover:text-gray-300 border border-transparent hover:bg-[#152241]"}`} onClick={() => setBottomPanelTab("console")}>
-                      <FiTerminal className="mr-2 cursor-pointer" />
-                      Console
-                      {allLogs.length > 0 && bottomPanelTab !== "console" && (
-                        <span className="ml-2 flex h-5 w-5 items-center justify-center bg-purple-700 text-white text-xs rounded-full">{allLogs.length}</span>
-                      )}
-                    </button>
+              <div
+                ref={workspaceRef}
+                className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row"
+                style={{ "--left-pane-width": `${leftPaneWidth}%` } as CSSProperties}
+              >
+                {/* Left — instructions / tests / hints */}
+                <div className={`${isFullScreen ? "hidden" : "flex"} w-full max-h-[min(48vh,440px)] min-h-[min(42vh,380px)] flex-col overflow-hidden border-b border-[#1c2c52] bg-[#101828] text-white lg:max-h-none lg:min-h-0 lg:flex-none lg:basis-[var(--left-pane-width)] lg:border-b-0 lg:border-r`}>
+                  {/* Same height + style as editor toolbar for visual alignment */}
+                  <div className="flex h-12 flex-shrink-0 items-center border-b border-[#1c2c52] bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] px-2 sm:px-3">
+                    <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1 sm:gap-2">
+                      <button type="button" className={`flex h-8 shrink-0 cursor-pointer items-center rounded-md px-2.5 text-xs transition-all duration-200 sm:px-3 sm:text-sm ${activeTab === "instructions" ? "border border-blue-500/40 bg-blue-950/40 text-blue-200" : "border border-transparent text-gray-400 hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("instructions")}>
+                        <FiBookOpen className="mr-1.5 h-3.5 w-3.5 sm:mr-2" />
+                        Instructions
+                      </button>
+                      <button type="button" className={`flex h-8 shrink-0 cursor-pointer items-center rounded-md px-2.5 text-xs transition-all duration-200 sm:px-3 sm:text-sm ${activeTab === "tests" ? "border border-teal-600/50 bg-teal-950/30 text-teal-200" : "border border-transparent text-gray-400 hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("tests")}>
+                        <FiTerminal className="mr-1.5 h-3.5 w-3.5 sm:mr-2" />
+                        Test Cases
+                      </button>
+                      <button type="button" className={`ml-auto flex h-8 shrink-0 cursor-pointer items-center rounded-md px-2.5 text-xs transition-all duration-200 sm:px-3 sm:text-sm ${activeTab === "hints" ? "border border-amber-600/50 bg-amber-950/20 text-amber-200" : "border border-transparent text-gray-400 hover:bg-[#152241] hover:text-white"}`} onClick={() => setActiveTab("hints")}>
+                        <FiHelpCircle className="mr-1.5 h-3.5 w-3.5 sm:mr-2" />
+                        Hints
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center gap-3">
-                    {prevChallenge ? (
-                      <Link href={`/challenges/${prevChallenge}`} className="bg-[#152241] hover:bg-[#1c2c52] text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer text-white border border-[#2c3e69] shadow-md shadow-blue-900/10 group">
-                        <FiChevronLeft className="mr-2 group-hover:animate-pulse" />
-                        Previous Quest
-                      </Link>
-                    ) : (<div></div>)}
-                    {nextChallenge ? (
-                      <Link href={`/challenges/${nextChallenge}`} className="text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center cursor-pointer bg-gradient-to-r from-blue-700 to-blue-700 hover:from-blue-600 hover:to-blue-600 text-white border border-blue-500/30 shadow-md shadow-blue-900/20 group">
-                        Next Quest
-                        <FiChevronRight className="ml-2 group-hover:animate-pulse" />
-                      </Link>
-                    ) : (<div></div>)}
-                    <button className={`bg-gradient-to-r cursor-pointer text-sm font-medium px-4 py-2 rounded-md transition-all duration-200 flex items-center ${isLoading || isAuthenticating ? 'from-blue-[#010335] to-blue-700 animate-pulse' : 'from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500'} text-white flex items-center py-2 rounded-md transition-all duration-300 font-medium shadow-lg shadow-blue-900/30 border border-blue-500/30`} onClick={triggerAuth} disabled={isLoading || isAuthenticating}>
-                      {isLoading ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Running Challenge...
-                        </>
-                      ) : isAuthenticating ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Connecting GitHub...
-                        </>
-                      ) : (
-                        <>
-                          <FiZap className="mr-2 text-xl" />
-                          Submit Solution
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-                {bottomPanelTab === "tests" ? (
-                  <div className="bg-[#0a142a] p-4 rounded-lg overflow-y-auto h-full max-h-[calc(100%)] text-sm font-mono border border-[#1c2c52] shadow-inner shadow-blue-900/10">
-                    {output ? (
-                      <div className={output.includes("Error") ? "text-red-400 p-3 border border-red-900/50 bg-red-900/20 rounded-md" : output.includes("❌") ? "text-red-400 p-3 border border-red-900/50 bg-red-900/20 rounded-md" : "text-green-400 p-3 border border-green-900/50 bg-green-900/20 rounded-md"}>
-                        {output.includes("Error") && "🚫 "}
-                        {output.includes("❌") && !output.includes("Error") && "❌ "}
-                        {!output.includes("Error") && !output.includes("❌") && "✅ "}
-                        {output}
-                      </div>
+                  <div className="min-h-0 flex-1 overflow-y-auto bg-[#0a142a] p-4 sm:p-5">
+                    <div className="mb-6">
+                      <p className="text-gray-300 mb-4 leading-relaxed">{challenge.description}</p>
+                    </div>
+                    {activeTab === "instructions" ? (
+                      <InstructionsPanel instructions={challenge.instructions} />
+                    ) : activeTab === "hints" ? (
+                      <HintsPanel hints={hints} />
                     ) : (
-                      <div className="flex flex-col items-center justify-center p-8 text-center">
-                        {isLoading ? (
-                          <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                            <p className="text-blue-400 text-lg">Running tests...</p>
-                            <p className="text-gray-400 text-sm mt-2">Evaluating your blockchain magic ✨</p>
-                          </div>
-                        ) : (
-                          <>
-                            <FiPlayCircle className="text-4xl text-blue-500 mb-3" />
-                            <p className="text-gray-300 mb-2">Ready to test your solution?</p>
-                            <p className="text-gray-400 text-sm">Complete the exercise and submit to check your results.</p>
-                          </>
-                        )}
-                      </div>
+                      <TestResults
+                        testCases={challenge.testCases}
+                        testResults={testResults}
+                        isLoading={isLoading}
+                        output={output}
+                        runTests={runTests}
+                        verificationStage={verificationStage}
+                      />
                     )}
                   </div>
-                ) : (
-                  <div className="bg-[#0a142a] p-4 rounded-lg overflow-y-auto h-full max-h-[calc(100%)] border border-[#1c2c52] shadow-inner shadow-purple-900/10">
-                    {allLogs.length > 0 ? (
-                      <pre className="text-sm text-gray-300 font-mono whitespace-pre-wrap">
-                        {allLogs.map((log, index) => (
-                          <div key={index} className={log.startsWith("ERROR:") ? "text-red-400 py-1 px-2 my-1 border-l-2 border-red-500 bg-red-900/20 rounded-r-md" : log.startsWith("WARN:") ? "text-yellow-400 py-1 px-2 my-1 border-l-2 border-yellow-500 bg-yellow-900/20 rounded-r-md" : "text-green-400 py-1 px-2 my-1 border-l-2 border-green-500 bg-green-900/20 rounded-r-md"}>
-                            {log.startsWith("ERROR:") && "🛑 "}
-                            {log.startsWith("WARN:") && "⚠️ "}
-                            {!log.startsWith("ERROR:") && !log.startsWith("WARN:") && "🔹 "}
-                            {log}
-                          </div>
-                        ))}
-                      </pre>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center p-8 text-center">
-                        <FiTerminal className="text-4xl text-purple-500 mb-3" />
-                        <p className="text-gray-300 mb-2">Console Output</p>
-                        <p className="text-gray-400 text-sm">No logs yet. Submit your solution to see output here.</p>
-                      </div>
-                    )}
+                </div>
+
+                {!isFullScreen && (
+                  <div
+                    onMouseDown={handleStartResize}
+                    onDoubleClick={() => setLeftPaneWidth(50)}
+                    className="group hidden w-2 cursor-col-resize items-stretch justify-center bg-[#0b1630] transition-colors hover:bg-blue-500/25 lg:flex"
+                    title="Drag to resize panels (double click to reset)"
+                    role="separator"
+                    aria-label="Resize challenge panels"
+                    aria-orientation="vertical"
+                  >
+                    <div className="my-2 w-px bg-[#2a3e68] transition-colors group-hover:bg-blue-400/70" />
                   </div>
                 )}
+
+                {/* Right — editor + output (balanced with left) */}
+                <div className={`relative flex w-full min-h-[40vh] flex-1 flex-col overflow-hidden bg-[#0c1425] lg:min-h-0 ${isFullScreen ? "lg:w-full" : ""}`}>
+                  <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
+                    <div className="absolute top-20 right-10 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl"></div>
+                    <div className="absolute bottom-40 right-20 w-60 h-60 bg-blue-600 rounded-full filter blur-3xl"></div>
+                    <div className="absolute bottom-10 left-10 w-40 h-40 bg-purple-700 rounded-full filter blur-3xl"></div>
+                  </div>
+                  <div className="relative z-[1] flex h-12 flex-shrink-0 items-center border-b border-[#1c2c52] bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] px-2 sm:px-3">
+                    <div className="flex min-h-[2rem] min-w-0 flex-1 items-center truncate rounded-md border border-[#2c3e69] bg-[#152241] px-2.5 py-1.5 text-xs text-blue-300 shadow-inner shadow-blue-500/10 sm:px-3 sm:text-sm">
+                      <FiCode className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 text-blue-400 sm:mr-2" />
+                      <span className="truncate font-mono">{slug}.ts</span>
+                    </div>
+                    <div className="ml-2 flex flex-shrink-0 items-center gap-1 sm:ml-3 sm:gap-2">
+                      <button onClick={() => setCode(challenge.startingCode)} className="flex cursor-pointer items-center rounded-md border border-[#2c3e69] bg-[#152241] px-2 py-1.5 text-xs text-gray-300 transition-colors hover:bg-[#1c2c52] hover:text-white sm:px-3 sm:text-sm" title="Reset Code">
+                        <FiRefreshCw className="mr-1.5 text-gray-400 cursor-pointer" />
+                        Reset
+                      </button>
+                      <button onClick={toggleFullScreen} className="flex cursor-pointer items-center rounded-md border border-[#2c3e69] bg-[#152241] px-2 py-1.5 text-xs text-gray-300 transition-colors hover:bg-[#1c2c52] hover:text-white sm:px-3 sm:text-sm" title={isFullScreen ? "Exit Full Screen" : "Full Screen"}>
+                        {isFullScreen ? <FiMinimize className="mr-1 text-gray-400 sm:mr-1.5" /> : <FiMaximize className="mr-1 text-gray-400 sm:mr-1.5" />}
+                        <span className="hidden sm:inline">{isFullScreen ? "Exit" : "Expand"}</span>
+                      </button>
+                    </div>
+                  </div>
+                  {/* Editor grows to fill space above results; fixed vh removed on lg to avoid gap at column bottom */}
+                  <div className="min-h-[min(36vh,280px)] flex-1 overflow-hidden sm:min-h-[38vh] lg:min-h-0 lg:flex-1">
+                    <CodeEditor
+                      defaultValue={challenge.startingCode}
+                      value={code}
+                      onChange={handleEditorChange}
+                      onEditorReady={() => setEditorReady(true)}
+                    />
+                  </div>
+                  {/* Bottom panel — anchored to bottom of column; min height for toolbar + output */}
+                  <div className="relative z-[1] flex min-h-[168px] shrink-0 flex-col overflow-hidden border-t border-[#1c2c52] bg-gradient-to-r from-[#0c111e] to-[#0f1d3a] lg:min-h-0 lg:flex-[0_0_240px]">
+                    <div className="flex flex-shrink-0 flex-col gap-2 border-b border-[#1c2c52]/80 px-3 py-2 sm:px-4 lg:flex-row lg:items-center lg:justify-between lg:gap-3 lg:py-2">
+                      <div className="flex flex-wrap items-center gap-1 lg:gap-2">
+                        <button type="button" className={`inline-flex cursor-pointer items-center rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 sm:px-3 sm:text-sm ${bottomPanelTab === "tests" ? "border border-blue-600/40 bg-blue-950/40 text-blue-200" : "text-gray-400 hover:bg-[#152241] hover:text-gray-200"}`} onClick={() => setBottomPanelTab("tests")}>
+                          <FiPlayCircle className="mr-1.5 h-3.5 w-3.5" />
+                          Results
+                        </button>
+                        <button type="button" className={`inline-flex cursor-pointer items-center rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-200 sm:px-3 sm:text-sm ${bottomPanelTab === "console" ? "border border-purple-600/40 bg-purple-950/30 text-purple-200" : "text-gray-400 hover:bg-[#152241] hover:text-gray-200"}`} onClick={() => setBottomPanelTab("console")}>
+                          <FiTerminal className="mr-1.5 h-3.5 w-3.5" />
+                          Console
+                          {allLogs.length > 0 && bottomPanelTab !== "console" && (
+                            <span className="ml-1.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-purple-700 px-1 text-[10px] text-white">{allLogs.length}</span>
+                          )}
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-end gap-2 lg:min-w-0 lg:flex-nowrap">
+                        {prevChallenge ? (
+                          <Link href={`/challenges/${prevChallenge}`} className="group inline-flex min-h-[2.25rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-[#2c3e69] bg-[#152241] px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#1c2c52] sm:flex-none sm:px-3 sm:text-sm">
+                            <FiChevronLeft className="mr-1 h-3.5 w-3.5 group-hover:animate-pulse" />
+                            <span className="hidden sm:inline">Previous</span>
+                            <span className="sm:hidden">Prev</span>
+                          </Link>
+                        ) : null}
+                        {nextChallenge ? (
+                          <Link href={`/challenges/${nextChallenge}`} className="group inline-flex min-h-[2.25rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-blue-500/40 bg-gradient-to-r from-blue-700 to-blue-600 px-2.5 py-1.5 text-xs font-medium text-white transition-colors hover:from-blue-600 hover:to-blue-500 sm:flex-none sm:px-3 sm:text-sm">
+                            <span className="hidden sm:inline">Next Quest</span>
+                            <span className="sm:hidden">Next</span>
+                            <FiChevronRight className="ml-1 h-3.5 w-3.5 group-hover:animate-pulse" />
+                          </Link>
+                        ) : null}
+                        <button type="button" className={`inline-flex min-h-[2.25rem] min-w-[8.5rem] flex-1 cursor-pointer items-center justify-center rounded-md border border-emerald-500/30 bg-gradient-to-r px-3 py-1.5 text-xs font-semibold text-white shadow-md transition-all duration-200 sm:flex-none sm:min-w-[10rem] sm:px-4 sm:text-sm ${isLoading || isAuthenticating ? "from-slate-600 to-slate-700 animate-pulse" : "from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500"}`} onClick={triggerAuth} disabled={isLoading || isAuthenticating}>
+                          {isLoading ? (
+                            <>
+                              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Running Challenge...
+                            </>
+                          ) : isAuthenticating ? (
+                            <>
+                              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Connecting GitHub...
+                            </>
+                          ) : (
+                            <>
+                              <FiZap className="mr-2 text-xl" />
+                              Submit Solution
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex min-h-0 flex-1 flex-col px-2 pb-2 pt-0 sm:px-3">
+                      {bottomPanelTab === "tests" ? (
+                        <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-[#1c2c52] bg-[#0a142a] p-3 font-mono text-sm shadow-inner shadow-blue-900/10 sm:p-4">
+                          {output ? (
+                            <div className={output.includes("Error") ? "text-red-400 p-3 border border-red-900/50 bg-red-900/20 rounded-md" : output.includes("❌") ? "text-red-400 p-3 border border-red-900/50 bg-red-900/20 rounded-md" : "text-green-400 p-3 border border-green-900/50 bg-green-900/20 rounded-md"}>
+                              {output.includes("Error") && "🚫 "}
+                              {output.includes("❌") && !output.includes("Error") && "❌ "}
+                              {!output.includes("Error") && !output.includes("❌") && "✅ "}
+                              {output}
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center justify-center p-8 text-center">
+                              {isLoading ? (
+                                <div className="flex flex-col items-center">
+                                  <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                                  <p className="text-blue-400 text-lg">Running tests...</p>
+                                  <p className="text-gray-400 text-sm mt-2">Evaluating your blockchain magic ✨</p>
+                                </div>
+                              ) : (
+                                <>
+                                  <FiPlayCircle className="text-4xl text-blue-500 mb-3" />
+                                  <p className="text-gray-300 mb-2">Ready to test your solution?</p>
+                                  <p className="text-gray-400 text-sm">Complete the exercise and submit to check your results.</p>
+                                </>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="min-h-0 flex-1 overflow-y-auto rounded-lg border border-[#1c2c52] bg-[#0a142a] p-3 shadow-inner shadow-purple-900/10 sm:p-4">
+                          {allLogs.length > 0 ? (
+                            <pre className="text-sm text-gray-300 font-mono whitespace-pre-wrap">
+                              {allLogs.map((log, index) => (
+                                <div key={index} className={log.startsWith("ERROR:") ? "text-red-400 py-1 px-2 my-1 border-l-2 border-red-500 bg-red-900/20 rounded-r-md" : log.startsWith("WARN:") ? "text-yellow-400 py-1 px-2 my-1 border-l-2 border-yellow-500 bg-yellow-900/20 rounded-r-md" : "text-green-400 py-1 px-2 my-1 border-l-2 border-green-500 bg-green-900/20 rounded-r-md"}>
+                                  {log.startsWith("ERROR:") && "🛑 "}
+                                  {log.startsWith("WARN:") && "⚠️ "}
+                                  {!log.startsWith("ERROR:") && !log.startsWith("WARN:") && "🔹 "}
+                                  {log}
+                                </div>
+                              ))}
+                            </pre>
+                          ) : (
+                            <div className="flex flex-col items-center justify-center p-8 text-center">
+                              <FiTerminal className="text-4xl text-purple-500 mb-3" />
+                              <p className="text-gray-300 mb-2">Console Output</p>
+                              <p className="text-gray-400 text-sm">No logs yet. Submit your solution to see output here.</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           <SuccessModal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} challenge={challenge} />
-          <AnimatePresence>
-            {showHintPopup && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="fixed bottom-4 right-4 bg-gradient-to-r from-yellow-600 to-amber-600 p-1 rounded-lg shadow-lg z-50">
-                <div className="bg-[#0e1a35] p-4 rounded-lg border border-yellow-500/30 max-w-xs">
-                  <div className="flex items-start mb-3">
-                    <div className="bg-yellow-600/30 p-2 rounded-full mr-3">
-                      <GoLightBulb className="text-yellow-400 text-xl" />
+          {clientMounted &&
+            createPortal(
+              <AnimatePresence>
+                {showHintPopup && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 12 }}
+                    transition={{ duration: 0.2 }}
+                    className="pointer-events-auto fixed bottom-4 right-4 z-[100] rounded-lg bg-gradient-to-r from-yellow-600 to-amber-600 p-1 shadow-lg sm:bottom-6 sm:right-6"
+                    role="dialog"
+                    aria-modal="false"
+                    aria-labelledby="hint-toast-title"
+                  >
+                    <div className="max-w-full rounded-lg border border-yellow-500/30 bg-[#0e1a35] p-4 sm:max-w-xs">
+                      <div className="mb-3 flex items-start">
+                        <div className="mr-3 rounded-full bg-yellow-600/30 p-2">
+                          <GoLightBulb className="text-xl text-yellow-400" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 id="hint-toast-title" className="font-medium text-yellow-400">
+                            Need a hint?
+                          </h4>
+                          <p className="mt-1 text-sm text-gray-300">Stuck on this challenge? Check out the hints tab for guidance!</p>
+                        </div>
+                        <button type="button" onClick={() => setShowHintPopup(false)} className="cursor-pointer text-gray-400 hover:text-gray-300">
+                          <FiX />
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveTab("hints");
+                          setShowHintPopup(false);
+                        }}
+                        className="w-full cursor-pointer rounded-md bg-yellow-700/50 py-2 text-sm font-medium text-yellow-300 transition-colors hover:bg-yellow-700"
+                      >
+                        View Hints
+                      </button>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-yellow-400 font-medium">Need a hint?</h4>
-                      <p className="text-gray-300 text-sm mt-1">Stuck on this challenge? Check out the hints tab for guidance!</p>
-                    </div>
-                    <button onClick={() => setShowHintPopup(false)} className="text-gray-400 hover:text-gray-300 cursor-pointer">
-                      <FiX />
-                    </button>
-                  </div>
-                  <button onClick={() => { setActiveTab("hints"); setShowHintPopup(false); }} className="w-full cursor-pointer bg-yellow-700/50 hover:bg-yellow-700 text-yellow-300 py-2 rounded-md text-sm font-medium transition-colors">
-                    View Hints
-                  </button>
-                </div>
-              </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>,
+              document.body
             )}
-          </AnimatePresence>
         </div>
       )}
     </GitHubAuthHandler>

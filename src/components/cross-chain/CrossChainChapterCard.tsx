@@ -10,13 +10,15 @@ interface CrossChainChapterCardProps {
   basePath?: string;
   progressData?: string[];
   isLoading?: boolean;
+  ctaTheme?: "blue" | "teal";
 }
 
 export default function CrossChainChapterCard({
   chapter,
   basePath = "/learn-cross-chain",
   progressData = [],
-  isLoading = false
+  isLoading = false,
+  ctaTheme = "blue",
 }: CrossChainChapterCardProps) {
   const [isNavigating, setIsNavigating] = useState(false);
   const availableSections = chapter.sections.filter(
@@ -203,7 +205,7 @@ export default function CrossChainChapterCard({
       {/* Footer */}
       <div className="p-6 border-t border-gray-700">
         <div
-          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
+          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : ctaTheme === "teal" ? "bg-gradient-to-r from-teal-600 to-sky-500 hover:from-teal-500 hover:to-sky-400 text-white" : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
         >
           {chapter.status === "coming-soon" ? "Coming Soon" : "Start Learning"}
         </div>

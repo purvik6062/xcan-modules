@@ -108,9 +108,9 @@ export default function LearnOrbitPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mb-10 text-center sm:mb-12">
           <motion.h1
-            className="text-5xl font-bold text-white mb-4"
+            className="mb-3 text-3xl font-bold text-white sm:mb-4 sm:text-4xl lg:text-5xl"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -118,7 +118,7 @@ export default function LearnOrbitPage() {
             Master Arbitrum Orbit
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto"
+            className="mx-auto mb-6 max-w-3xl px-1 text-base text-gray-300 sm:mb-8 sm:text-lg lg:text-xl"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -294,7 +294,7 @@ export default function LearnOrbitPage() {
 
         {/* Filter Controls */}
         <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-8"
+          className="mb-8 flex flex-wrap justify-center gap-2 sm:gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -303,7 +303,7 @@ export default function LearnOrbitPage() {
             <button
               key={level}
               onClick={() => setSelectedLevel(level)}
-              className={`px-6 py-2 rounded-full transition-all duration-200 cursor-pointer ${selectedLevel === level
+              className={`cursor-pointer rounded-full px-4 py-2 text-sm transition-all duration-200 sm:px-6 sm:text-base ${selectedLevel === level
                 ? "bg-emerald-600 text-white shadow-lg"
                 : "bg-slate-800 text-gray-300 hover:bg-slate-700"
                 }`}
@@ -322,13 +322,13 @@ export default function LearnOrbitPage() {
 
         {/* Learning Path Info */}
         <motion.div
-          className="mt-16 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-8 text-white text-center"
+          className="mt-12 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 p-4 text-center text-white sm:mt-16 sm:p-6 lg:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <h2 className="text-3xl font-bold mb-4">Recommended Learning Path</h2>
-          <p className="text-lg mb-6 max-w-3xl mx-auto">
+          <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl">Recommended Learning Path</h2>
+          <p className="mx-auto mb-6 max-w-3xl text-base sm:text-lg">
             Follow the sequence: Introduction → Configuration → Deployment → Testing → Advanced Features → Production.
             Each chapter offers theory, checklists, and targeted quizzes that mirror the data in this module.
           </p>
@@ -348,12 +348,12 @@ export default function LearnOrbitPage() {
 
         {/* Featured Technologies */}
         <motion.div
-          className="mt-16 bg-slate-800 rounded-2xl shadow-xl p-8"
+          className="mt-12 rounded-2xl bg-slate-800 p-4 shadow-xl sm:mt-16 sm:p-6 lg:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <h2 className="text-3xl font-bold text-white mb-6 text-center">
+          <h2 className="mb-4 text-center text-2xl font-bold text-white sm:mb-6 sm:text-3xl">
             Technologies You'll Master
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
