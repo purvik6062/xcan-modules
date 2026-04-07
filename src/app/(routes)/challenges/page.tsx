@@ -396,6 +396,7 @@ export default function ChallengesPage() {
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
         onMint={claimNFT}
+        address={address}
       />
     </div>
   );

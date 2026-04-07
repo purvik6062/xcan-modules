@@ -144,7 +144,7 @@ export default function LearnDeFiPage() {
               </div>
             </div>
             <div className="rounded-lg border border-slate-700/80 bg-slate-800/90 p-4 shadow-lg">
-              <div className="text-2xl font-bold text-[#79A5FF]">50+</div>
+              <div className="text-2xl font-bold text-[#79A5FF]">45+</div>
               <div className="text-sm text-gray-300">
                 Interactive Lessons
               </div>
@@ -379,6 +379,7 @@ export default function LearnDeFiPage() {
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
         onMint={claimNFT}
+        address={address}
       />
     </div>
   );

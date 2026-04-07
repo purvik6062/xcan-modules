@@ -851,7 +851,7 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "30 min",
         content: {
-          story: `# Getting Started with Rust 🦀\n\nRust is a systems programming language focused on performance, reliability, and productivity. It gives you low-level control like C/C++ but prevents entire classes of bugs at compile time.\n\n## Why Rust?\n- Memory Safety without GC: Rust eliminates data races and use-after-free with its ownership rules instead of a garbage collector.\n- Zero-Cost Abstractions: High-level code compiles down to efficient machine code.\n- Great Tooling: Cargo (package manager), rustc (compiler), rustfmt, and Clippy make development smooth.\n- Fearless Concurrency: Compile-time checks prevent data races across threads.\n\n## Install and Create a Project\n- Install with rustup (manages toolchains).\n- New binary crate: cargo new hello-rust\n- Build & run: cargo run\n\nExample main function:\n\n\`\`\`rust\nfn main() {\n  println!("Hello, Rust!");\n}\n\`\`\`\n\n## Variables, Mutability, and Shadowing\n- Variables are immutable by default; use \`mut\` for mutability.\n- Shadowing lets you reuse names for transformed values while keeping prior bindings immutable.\n\n\`\`\`rust\nlet x = 5;\nlet x = x + 1; // shadowing creates a new 'x'\nlet mut y = 10;\ny += 2;\nprintln!("x = {x}, y = {y}");\n\`\`\`\n\n## Functions and Expressions\nFunctions are declared with \`fn\`. The last expression in a block (without a semicolon) is the return value.\n\n\`\`\`rust\nfn add(a: i32, b: i32) -> i32 {\n  a + b // expression, no semicolon\n}\n\nfn main() {\n  println!("{}", add(2, 3));\n}\n\`\`\`\n\n## Crates and Modules\n- Crate: Compilation unit (binary or library).\n- Module: Namespacing within a crate using \`mod\`.\n- Use \`pub\` to make items visible across modules.\n\nThese fundamentals prepare you to explore Rust's type system and ownership model next.`,
+          story: `# Getting Started with Rust 🦀\n\nRust is a systems programming language focused on performance, reliability, and productivity. It gives you low-level control like C/C++ but prevents entire classes of bugs at compile time.\n\n## Why Rust?\n- **Memory Safety without GC**: Rust eliminates data races and use-after-free with its ownership rules instead of a garbage collector.\n- **Zero-Cost Abstractions**: High-level code compiles down to efficient machine code.\n- **Great Tooling**: Cargo (package manager), rustc (compiler), rustfmt, and Clippy make development smooth.\n- **Fearless Concurrency**: Compile-time checks prevent data races across threads.\n\n## Install and Create a Project\n- Install with rustup (manages toolchains).\n- New binary crate: \`cargo new hello-rust\`\n- Build & run: \`cargo run\`\n\n\`\`\`rust\nfn main() {\n  println!(\"Hello, Rust!\");\n}\n\`\`\`\n\n## Variables and Mutability\n- Variables are **immutable by default**. Use \`mut\` to allow changes.\n\n\`\`\`rust\nlet x = 5;         // immutable\nlet mut y = 10;    // mutable\ny += 2;\nprintln!(\"x = {x}, y = {y}\");\n\`\`\`\n\n## Functions\nDeclare with \`fn\`. The last expression (no \`;\`) is the return value.\n\n\`\`\`rust\nfn add(a: i32, b: i32) -> i32 {\n  a + b\n}\nprintln!(\"{}\", add(2, 3)); // prints 5\n\`\`\`\n\n## pub — Making Things Public\nBy default everything in Rust is **private**. Use \`pub\` to expose items to other modules.\n\n\`\`\`rust\nmod greetings {\n  pub fn hello() {\n    println!(\"Hello!\");\n  }\n  fn secret() { /* only visible inside this mod */ }\n}\n\nfn main() {\n  greetings::hello();  // works — pub\n  // greetings::secret(); // error — private\n}\n\`\`\`\n\n## impl — Adding Methods to Structs\nUse \`impl\` to attach functions (methods) to a struct. Methods that take \`self\`, \`&self\`, or \`&mut self\` operate on an instance of the struct.\n\n\`\`\`rust\nstruct Dog {\n  name: String,\n}\n\nimpl Dog {\n  fn bark(&self) {\n    println!(\"{} says: Woof!\", self.name);\n  }\n}\n\nfn main() {\n  let d = Dog { name: String::from(\"Rex\") };\n  d.bark(); // Rex says: Woof!\n}\n\`\`\`\n\n## trait — Shared Behaviour\nA \`trait\` defines behaviour (like an interface). Any type can implement a trait.\n\n\`\`\`rust\ntrait Speak {\n  fn speak(&self);\n}\n\nstruct Cat;\nimpl Speak for Cat {\n  fn speak(&self) { println!(\"Meow!\"); }\n}\n\nlet c = Cat;\nc.speak(); // Meow!\n\`\`\`\n\nThese fundamentals prepare you to explore Rust's type system and ownership model next.`,
           questions: [
             {
               id: "q1",
@@ -869,16 +869,53 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q2",
-              question: "In Rust, variables are...",
+              question: "In Rust, variables are immutable by default. How do you make a variable mutable?",
               options: [
-                "Mutable by default",
-                "Immutable by default",
-                "Dynamically typed",
-                "Only global",
+                "Add the 'var' keyword",
+                "Add the 'mut' keyword",
+                "Declare it globally",
+                "Use a pointer",
               ],
               correctAnswer: 1,
               explanation:
-                "Variables are immutable by default; use 'mut' to opt into mutability.",
+                "Use 'let mut x = ...' to make a variable mutable. Without 'mut', the compiler prevents re-assignment.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q3",
+              question: "What keyword makes a function or struct visible outside its module in Rust?",
+              options: ["export", "public", "pub", "open"],
+              correctAnswer: 2,
+              explanation:
+                "'pub' is the Rust visibility modifier. Without it, items are private to their module by default.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What does the following code print?\n\n```rust\nstruct Dog { name: String }\nimpl Dog {\n  fn bark(&self) { println!(\"{} says Woof\", self.name); }\n}\nlet d = Dog { name: String::from(\"Rex\") };\nd.bark();\n```",
+              options: [
+                "Compile error",
+                "Rex says Woof",
+                "Dog says Woof",
+                "Woof Rex",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "impl Dog attaches the bark method. &self borrows the Dog, so self.name is 'Rex'. The output is 'Rex says Woof'.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q5",
+              question: "In Rust, what is a trait most similar to?",
+              options: [
+                "A class with data fields",
+                "An interface that defines shared behaviour",
+                "A variable type",
+                "A loop construct",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "A trait defines a set of method signatures (behaviour) that types can implement — similar to interfaces in other languages.",
               type: "multiple-choice",
             },
           ],
@@ -942,35 +979,52 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "35 min",
         content: {
-          story: `# Control Flow & Pattern Matching 🔀\n\nRust provides expressive control structures and powerful pattern matching to write concise and safe logic.\n\n## Control Flow as Expressions\n\n\`\`\`rust\nlet score = 87;\nlet grade = if score >= 90 { "A" } else if score >= 80 { "B" } else { "C" };\n\`\`\`\n\n- Loops: loop, while, for. Use break with a value to return from loop.\n\n\`\`\`rust\nlet mut n = 0;\nlet found = loop {\n  n += 1;\n  if n == 5 { break n * 2; }\n};\n\nfor x in 0..3 { println!("{}", x); }\n\`\`\`\n\n## Pattern Matching with match\n- Exhaustiveness checking ensures all cases are handled.\n- Works with enums, integers, tuples, ranges, and more.\n\n\`\`\`rust\nenum Coin { Penny, Nickel, Dime, Quarter(u8) }\nfn value_in_cents(c: Coin) -> u8 {\n  match c {\n    Coin::Penny => 1,\n    Coin::Nickel => 5,\n    Coin::Dime => 10,\n    Coin::Quarter(state) => {\n      println!("State quarter: {}", state);\n      25\n    }\n  }\n}\n\`\`\`\n\n## Options with match and if let\nThe \`Option<T>\` type encodes presence (\`Some(T)\`) or absence (\`None\`) without nulls. Use \`match\` for exhaustive handling, or \`if let\` for the success path.\n\n\`\`\`rust\nfn double(opt: Option<i32>) -> i32 {\n  match opt {\n    Some(v) => v * 2,\n    None => 0,\n  }\n}\n\nlet opt = Some(10);\nif let Some(v) = opt {\n  println!("{}", v * 2);\n}\n\`\`\`\n\n## if let / while let\n- Concise syntax when you only care about one pattern.\n\n\`\`\`rust\nlet opt = Some(10);\nif let Some(v) = opt { println!("{}", v); }\n\nlet mut it = (0..3).into_iter();\nwhile let Some(x) = it.next() { println!("{x}"); }\n\`\`\`\n\nThese tools make complex branching and data decomposition explicit and safe.`,
+          story: `# Control Flow & Pattern Matching 🔀\n\nRust provides expressive control structures and powerful pattern matching to write concise and safe logic.\n\n## if / else\n\`\`\`rust\nlet score = 87;\nlet grade = if score >= 90 { \"A\" } else if score >= 80 { \"B\" } else { \"C\" };\n\`\`\`\n\n## Loops\n\`\`\`rust\nfor x in 0..3 { println!(\"{}\", x); } // prints 0, 1, 2\n\`\`\`\n\n## Pattern Matching with match\n\`match\` checks all cases — the compiler will error if you miss one.\n\n\`\`\`rust\nlet number = 3;\nmatch number {\n  1 => println!(\"one\"),\n  2 => println!(\"two\"),\n  3 => println!(\"three\"),\n  _ => println!(\"something else\"),\n}\n// prints \"three\"\n\`\`\`\n\n## Option<T> — No More Null!\nIn many languages a variable can be \`null\`, which causes crashes. Rust uses \`Option<T>\` instead:\n- \`Some(value)\` — there IS a value\n- \`None\` — there is NO value\n\nThink of it like a box:\n- \`Some(5)\` → the box has a number 5 inside\n- \`None\` → the box is empty\n\n\`\`\`rust\nlet age: Option<i32> = Some(25);\nlet nothing: Option<i32> = None;\n\`\`\`\n\n## Reading from an Option\nUse \`match\` to safely handle both cases:\n\n\`\`\`rust\nlet age = Some(25);\nmatch age {\n  Some(v) => println!(\"Age is {}\", v),\n  None    => println!(\"No age provided\"),\n}\n// prints \"Age is 25\"\n\`\`\`\n\n## Shortcut: if let\nWhen you only care about the \`Some\` case:\n\n\`\`\`rust\nlet age = Some(25);\nif let Some(v) = age {\n  println!(\"Age: {}\", v);\n}\n// prints \"Age: 25\"\n\`\`\`\n\n## self in Methods\n\`self\` is how a method refers to its own struct. There are three flavours:\n- \`&self\` → read only (borrow)\n- \`&mut self\` → read and write (mutable borrow)\n- \`self\` → take ownership (struct is consumed!)\n\n\`\`\`rust\nstruct Counter { count: i32 }\nimpl Counter {\n  fn value(&self) -> i32 { self.count }        // read\n  fn inc(&mut self)   { self.count += 1; }      // write\n}\nlet mut c = Counter { count: 0 };\nc.inc();\nprintln!(\"{}\", c.value()); // prints 1\n\`\`\`\n\nThese tools make complex branching and data decomposition explicit and safe.`,
           questions: [
             {
               id: "q1",
-              question: "What is a key benefit of 'match' in Rust?",
+              question: "What does Option<T> represent in Rust?",
               options: [
-                "Allows missing cases without errors",
-                "Exhaustiveness checking at compile time",
-                "Only works with integers",
-                "Performs dynamic dispatch",
+                "A number that can be negative",
+                "A value that is either present (Some) or absent (None)",
+                "An error type",
+                "A list of values",
               ],
               correctAnswer: 1,
               explanation:
-                "The compiler enforces that all possible patterns are handled.",
+                "Option<T> replaces null — Some(T) means a value exists, None means it doesn't. This forces you to handle both cases.",
               type: "multiple-choice",
             },
             {
               id: "q2",
-              question:
-                "Which is the idiomatic way to extract a value from Option<i32> if present?",
-              options: [
-                "if let Some(v) = opt { /* use v */ }",
-                "if (opt) { let v = opt.unwrap(); }",
-                "while opt { do_something(opt) }",
-                "match opt { Some => v, None => 0 }",
-              ],
-              correctAnswer: 0,
+              question: "What does this code print?\n\n```rust\nlet x = Some(10);\nmatch x {\n  Some(v) => println!(\"{}\", v * 2),\n  None    => println!(\"nothing\"),\n}\n```",
+              options: ["nothing", "10", "20", "Compile error"],
+              correctAnswer: 2,
               explanation:
-                "Use 'if let Some(v) = opt { ... }' for concise handling of the success case; use 'match' for exhaustive handling of Some/None.",
+                "x is Some(10), so the Some(v) arm matches with v = 10. v * 2 = 20 is printed.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q3",
+              question: "What does &self mean in a Rust method?",
+              options: [
+                "The method takes ownership of the struct",
+                "The method can modify the struct",
+                "The method borrows the struct read-only",
+                "The method is static",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "&self is an immutable borrow — the method can read the struct's data but not modify it, and the caller keeps ownership.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "What does this code print?\n\n```rust\nstruct Counter { count: i32 }\nimpl Counter {\n  fn value(&self) -> i32 { self.count }\n  fn inc(&mut self)  { self.count += 1; }\n}\nlet mut c = Counter { count: 0 };\nc.inc();\nc.inc();\nprintln!(\"{}\", c.value());\n```",
+              options: ["0", "1", "2", "Compile error"],
+              correctAnswer: 2,
+              explanation:
+                "inc() is called twice, each time adding 1 to count. After two calls count = 2, so value() returns 2.",
               type: "multiple-choice",
             },
           ],
@@ -1097,50 +1151,81 @@ Welcome to the future of finance! 🔄✨`,
     sections: [
       {
         id: "rust-advanced-references-structs",
-        title: "References, Memory Safety (No GC), self vs this, and Structs",
+        title: "impl, self, trait, pub — Putting It All Together",
         type: "theory",
         status: "available",
         estimatedTime: "45 min",
         content: {
-          story: `# References, Memory Safety (No GC), self vs this, and Structs 🧠\n\n## Immutable vs Mutable References\n- Immutable (\`&T\`): Any number of readers, no writers in the same scope.\n- Mutable (\`&mut T\`): Exactly one writer, no other borrows at the same time.\n\nThese rules prevent data races at compile time.\n\n\`\`\`rust\nlet mut name = String::from("Maya");\nlet r1 = &name;\nlet r2 = &name;\nprintln!("{} {}", r1, r2); // many immutable borrows OK\n// let r3 = &mut name;     // error: cannot borrow as mutable while immutably borrowed\n\nlet r3 = &mut name;        // OK after r1/r2 no longer used\nr3.push_str(" Patel");\n\`\`\`\n\n## Memory Safety Without a Garbage Collector\nRust achieves memory safety *without* a GC via ownership, moves, and borrowing. Values are dropped deterministically when the owner goes out of scope.\n- No stop-the-world pauses.\n- Compiler enforces aliasing and mutability rules (via the borrow checker).\n- Use \`.clone()\` for explicit deep copies when needed.\n\n\`\`\`rust\nlet s1 = String::from("rust");\nlet s2 = s1;          // move; s1 invalidated\n// println!("{}", s1); // compile error\nlet s3 = s2.clone();  // explicit deep copy\n\`\`\`\n\n## self (Rust) vs this (Java)\n- Rust methods take an explicit receiver: \`self\`, \`&self\`, or \`&mut self\`.\n- Java's \`this\` is implicit; in Rust, the receiver is just the first parameter.\n- Choosing \`&self\` vs \`&mut self\` communicates borrowing/mutation at the type level.\n\n\`\`\`rust\nstruct Counter { value: i32 }\nimpl Counter {\n  fn get(&self) -> i32 { self.value }          // shared borrow\n  fn inc(&mut self) { self.value += 1; }       // unique mutable borrow\n  fn take(self) -> i32 { self.value }          // moves ownership\n}\n\`\`\`\n\n## Structs in Rust\nStructs compose named fields; they are not classes and hold no inherent methods without an \`impl\` block.\n\n\`\`\`rust\nstruct User { id: u64, name: String }\nimpl User {\n  fn rename(&mut self, to: String) { self.name = to; }\n}\n\nlet mut u = User { id: 1, name: "Maya".into() };\nu.rename("Luna".into());\n\`\`\`\n\nTogether, references, ownership without GC, explicit receivers, and structs form the backbone of Rust's safety and ergonomics.## Option\nRepresents presence (Some) or absence (None) of a value without using null.\n\n\`\`\`rust\nfn index<T>(v: &[T], i: usize) -> Option<&T> {\n  v.get(i) // returns Option<&T>\n}\n\`\`\`\n\n`,
+          story: `# impl, self, trait, pub — Putting It All Together 🧠\n\n## impl — Attach Methods to a Struct\n\`impl\` is how you give a struct its own functions (methods). Without \`impl\`, a struct is just a bag of data.\n\n\`\`\`rust\nstruct Rect {\n  width:  i32,\n  height: i32,\n}\n\nimpl Rect {\n  fn area(&self) -> i32 {\n    self.width * self.height\n  }\n}\n\nfn main() {\n  let r = Rect { width: 10, height: 20 };\n  println!(\"{}\", r.area()); // 200\n}\n\`\`\`\n\n## self — The Three Receiver Types\n| Receiver | What it means |\n|---|---|\n| \`&self\` | Read-only borrow — struct stays alive |\n| \`&mut self\` | Mutable borrow — can change fields |\n| \`self\` | Takes ownership — struct is consumed |\n\n\`\`\`rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(&self) -> i32        { self.width * self.height }   // read\n  fn double_width(&mut self)   { self.width *= 2; }            // write\n}\n\nlet mut r = Rect { width: 5, height: 4 };\nprintln!(\"{}\", r.area()); // 20\nr.double_width();\nprintln!(\"{}\", r.area()); // 40\n\`\`\`\n\n## trait — Shared Behaviour\nA \`trait\` lists method names that many types can implement — like an interface.\n\n\`\`\`rust\ntrait Shape {\n  fn area(&self) -> f64;\n  fn name(&self) -> &str;\n}\n\nstruct Circle { radius: f64 }\nstruct Square { side: f64 }\n\nimpl Shape for Circle {\n  fn area(&self) -> f64  { 3.14 * self.radius * self.radius }\n  fn name(&self) -> &str { \"Circle\" }\n}\n\nimpl Shape for Square {\n  fn area(&self) -> f64  { self.side * self.side }\n  fn name(&self) -> &str { \"Square\" }\n}\n\nfn print_area(s: &dyn Shape) {\n  println!(\"{}: area = {}\", s.name(), s.area());\n}\n\nprint_area(&Circle { radius: 3.0 }); // Circle: area = 28.26\nprint_area(&Square { side: 4.0 });   // Square: area = 16\n\`\`\`\n\n## pub — Visibility Control\nBy default everything is **private** in Rust. Use \`pub\` to make it accessible from outside the module.\n\n\`\`\`rust\nmod bank {\n  pub struct Account {\n    pub owner: String,     // publicly readable\n        balance: f64,      // private — cannot be accessed outside mod\n  }\n\n  impl Account {\n    pub fn new(owner: &str) -> Self {\n      Account { owner: owner.to_string(), balance: 0.0 }\n    }\n    pub fn deposit(&mut self, amount: f64) {\n      self.balance += amount; // internal access is fine\n    }\n    pub fn balance(&self) -> f64 { self.balance }\n  }\n}\n\nuse bank::Account;\nlet mut acc = Account::new(\"Maya\");\nacc.deposit(100.0);\nprintln!(\"{} has \${}\", acc.owner, acc.balance()); // Maya has $100\n\`\`\`\n\n## Memory Safety Without a Garbage Collector\nRust does NOT use a GC. Values are dropped automatically when the owner goes out of scope. This gives you both safety and predictable performance.\n\n\`\`\`rust\nlet s1 = String::from(\"rust\");\nlet s2 = s1;          // ownership moves to s2, s1 is invalid\nlet s3 = s2.clone();  // explicit deep copy — both s2 and s3 are valid\n\`\`\``,
           questions: [
             {
               id: "q1",
-              question: "Which type represents an optional value?",
-              options: ["Try", "Result", "Option", "Any"],
-              correctAnswer: 2,
+              question: "What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(&self) -> i32 { self.width * self.height }\n}\nlet r = Rect { width: 10, height: 20 };\nprintln!(\"{}\", r.area());\nprintln!(\"{}\", r.width);\n```",
+              options: [
+                "200, then compile error",
+                "200\n10",
+                "Compile error — r is moved",
+                "20",
+              ],
+              correctAnswer: 1,
               explanation:
-                "Option<T> encodes presence (Some) or absence (None) of a value.",
+                "area() uses &self (borrow), so r is NOT moved. Both println calls work: area() = 200, r.width = 10.",
               type: "multiple-choice",
             },
             {
               id: "q2",
-              question:
-                "How does Rust provide memory safety compared to GC languages?",
+              question: "What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(self) -> i32 { self.width * self.height }\n}\nlet r = Rect { width: 10, height: 20 };\nprintln!(\"{}\", r.area());\nprintln!(\"{}\", r.width);\n```",
               options: [
-                "Background garbage collector",
-                "Reference counting everywhere by default",
-                "Ownership and borrowing checked at compile time",
-                "Manual malloc/free by the programmer",
+                "200\n10",
+                "200 then compile error — r was moved",
+                "Compile error before any output",
+                "10",
               ],
-              correctAnswer: 2,
+              correctAnswer: 1,
               explanation:
-                "Rust enforces ownership and borrowing rules at compile time instead of using a GC.",
+                "area(self) takes ownership of r. The first println works (200), but then r is invalid — Rust errors at r.width.",
               type: "multiple-choice",
             },
             {
               id: "q3",
-              question:
-                "In a Rust method, what does &mut self indicate?",
+              question: "Which code correctly defines and calls a mutating method?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn double_width(&mut self) { self.width *= 2; }\n}\n```",
               options: [
-                "Consumes the value",
-                "Shared, read-only access",
-                "Unique, mutable access to the receiver",
-                "Unsafe access to the receiver",
+                "let r = Rect { width: 10, height: 20 }; r.double_width();",
+                "let mut r = Rect { width: 10, height: 20 }; r.double_width();",
+                "Rect::double_width();",
+                "let r = &mut Rect { width: 10, height: 20 }; Rect::double_width(r);",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "&mut self requires the variable to be declared 'mut'. Only 'let mut r = ...' allows calling double_width().",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question: "How does Rust provide memory safety without a garbage collector?",
+              options: [
+                "Background garbage collector",
+                "Reference counting everywhere by default",
+                "Ownership and borrowing rules checked at compile time",
+                "Manual malloc/free by the programmer",
               ],
               correctAnswer: 2,
               explanation:
-                "&mut self grants exclusive, mutable access for the duration of the call.",
+                "Rust's borrow checker enforces ownership and borrowing rules at compile time — no runtime GC needed.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q5",
+              question: "A struct field is declared WITHOUT pub inside a mod. What happens if you try to access it from outside the mod?",
+              options: [
+                "It works fine",
+                "You get a runtime panic",
+                "You get a compile-time error — field is private",
+                "It returns None",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Rust's default visibility is private. Only fields/functions marked pub can be accessed from outside their module.",
               type: "multiple-choice",
             },
           ],
@@ -1149,6 +1234,7 @@ Welcome to the future of finance! 🔄✨`,
     ],
   },
 ];
+
 
 // Quiz questions for each chapter
 export const quizQuestions: { [chapterId: string]: Quiz[] } = {

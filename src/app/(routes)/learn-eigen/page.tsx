@@ -442,6 +442,7 @@ export default function LearnEigenPage() {
                 isOpen={isPromoOpen}
                 onClose={() => setIsPromoOpen(false)}
                 onMint={claimNFT}
+                address={address}
             />
         </div>
     );

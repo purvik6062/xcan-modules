@@ -7,41 +7,59 @@ type PromoCodeModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onMint: () => Promise<void> | void;
+  address?: string | null;
 };
 
-export default function PromoCodeModal({ isOpen, onClose, onMint }: PromoCodeModalProps) {
+export default function PromoCodeModal({ isOpen, onClose, onMint, address }: PromoCodeModalProps) {
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState(false);
-  const [isPaying, setIsPaying] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
+  const [isCheckingStatus, setIsCheckingStatus] = useState(false);
 
+  // Check if user has already verified promo code before
   useEffect(() => {
-    if (isOpen) {
-      setCode("");
-      setError(null);
-      setIsSubmitting(false);
-      setIsVerified(false);
-      setIsPaying(false);
-      setIsMinting(false);
-      try {
-        document.body.style.setProperty("overflow", "hidden");
-      } catch { }
-    } else {
+    if (!isOpen) {
       try {
         document.body.style.removeProperty("overflow");
       } catch { }
+      return;
     }
-  }, [isOpen]);
+
+    try {
+      document.body.style.setProperty("overflow", "hidden");
+    } catch { }
+
+    // Reset state on open
+    setCode("");
+    setError(null);
+    setIsSubmitting(false);
+    setIsMinting(false);
+    setIsVerified(false);
+
+    // If user has a wallet connected, check if they've already verified
+    if (address) {
+      setIsCheckingStatus(true);
+      fetch(`/api/promo/check-status?userAddress=${encodeURIComponent(address)}`, {
+        cache: "no-store",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.verified) {
+            setIsVerified(true);
+          }
+        })
+        .catch(() => { })
+        .finally(() => setIsCheckingStatus(false));
+    }
+  }, [isOpen, address]);
 
   const setTimedError = useCallback((message: string) => {
     setError(message);
     const timer = setTimeout(() => {
       setError(null);
-    }, 5000); // Adjust timeout as needed (ms)
-
-    // Cleanup: Clear timer if component unmounts or new error sets
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -52,7 +70,7 @@ export default function PromoCodeModal({ isOpen, onClose, onMint }: PromoCodeMod
       const res = await fetch("/api/promo/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, userAddress: address || "" }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -64,104 +82,6 @@ export default function PromoCodeModal({ isOpen, onClose, onMint }: PromoCodeMod
       setTimedError("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const payWithCrypto = async () => {
-    setError(null);
-    setIsPaying(true);
-    try {
-      const USDC_ADDRESS = (process.env.NEXT_PUBLIC_ARBITRUM_USDC_ADDRESS || "").trim();
-      const RECEIVER_ADDRESS = (process.env.NEXT_PUBLIC_CERT_PAYMENT_ADDRESS || "").trim();
-
-      if (!USDC_ADDRESS || !USDC_ADDRESS.startsWith("0x") || USDC_ADDRESS.length !== 42) {
-        setTimedError("Payment token not configured");
-        return;
-      }
-      if (!RECEIVER_ADDRESS || !RECEIVER_ADDRESS.startsWith("0x") || RECEIVER_ADDRESS.length !== 42) {
-        setTimedError("Receiver not configured");
-        return;
-      }
-
-      const eth = (globalThis as any).ethereum;
-      if (!eth) {
-        setTimedError("Wallet not found. Please install MetaMask.");
-        return;
-      }
-
-      const accounts: string[] = await eth.request({ method: "eth_requestAccounts" });
-      const from = accounts?.[0];
-      if (!from) {
-        setTimedError("No wallet account available");
-        return;
-      }
-
-      // Ensure Arbitrum One (chainId 42161 / 0xa4b1)
-      const ARBITRUM_ONE_CHAIN_ID_HEX = "0xa4b1";
-      try {
-        await eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: ARBITRUM_ONE_CHAIN_ID_HEX }] });
-      } catch (switchErr: any) {
-        // If chain not added, request add
-        if (switchErr?.code === 4902) {
-          try {
-            await eth.request({
-              method: "wallet_addEthereumChain",
-              params: [{
-                chainId: ARBITRUM_ONE_CHAIN_ID_HEX,
-                chainName: "Arbitrum One",
-                nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-                rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-                blockExplorerUrls: ["https://arbiscan.io"],
-              }],
-            });
-          } catch {
-            setTimedError("Please switch to Arbitrum One network");
-            return;
-          }
-        } else {
-          setTimedError("Please switch to Arbitrum One network");
-          return;
-        }
-      }
-
-      // Prepare constants
-      const usdcDecimals = BigInt(6);
-      const requiredBalance = BigInt(50) * (BigInt(10) ** usdcDecimals); // 500 USDC
-      const transferAmount = BigInt(50) * (BigInt(10) ** usdcDecimals); // 50 USDC
-
-      // Check USDC balance: balanceOf(address)
-      const balanceOfSelector = "0x70a08231";
-      const encodedOwner = from.toLowerCase().replace("0x", "").padStart(64, "0");
-      const balanceOfData = balanceOfSelector + encodedOwner;
-      const balanceHex: string = await eth.request({
-        method: "eth_call",
-        params: [
-          { to: USDC_ADDRESS, data: balanceOfData },
-          "latest",
-        ],
-      });
-      const balance = BigInt(balanceHex);
-      if (balance < requiredBalance) {
-        setTimedError("Insufficient USDC balance (need at least 50 USDC)");
-        return;
-      }
-
-      // Build transfer(to, amount)
-      const transferSelector = "0xa9059cbb";
-      const encodedTo = RECEIVER_ADDRESS.toLowerCase().replace("0x", "").padStart(64, "0");
-      const encodedAmount = transferAmount.toString(16).padStart(64, "0");
-      const data = transferSelector + encodedTo + encodedAmount;
-
-      const tx = { from, to: USDC_ADDRESS, data, value: "0x0" };
-      const txHash: string = await eth.request({ method: "eth_sendTransaction", params: [tx] });
-      if (txHash && txHash.startsWith("0x")) {
-        setIsVerified(true);
-      }
-    } catch (e) {
-      setTimedError("Payment failed or cancelled");
-    } finally {
-      setIsPaying(false);
-      setIsMinting(false);
     }
   };
 
@@ -199,96 +119,106 @@ export default function PromoCodeModal({ isOpen, onClose, onMint }: PromoCodeMod
                   </svg>
                 </button>
               </div>
-              {/* Subscription-style layout */}
-              <div className="space-y-5">
-                {/* Total price */}
-                <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-800/50 px-4 py-3">
-                  <div className="text-sm text-slate-300">Total</div>
-                  <div className={`text-lg font-semibold ${isVerified ? "text-emerald-400" : "text-slate-100"}`}>
-                    {isVerified ? "$0" : "$50"}
-                  </div>
-                </div>
 
-                {/* Pay via Crypto */}
-                <div className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4">
-                  <div className="flex flex-col ">
-                    <div>
-                      <div className="text-base font-semibold text-slate-100 pb-4">Pay $50 to get your certification</div>
-                      {/* <div className="text-xs text-slate-400">Pay via crypto (USDC) on Arbitrum Sepolia</div> */}
+              {isCheckingStatus ? (
+                /* Loading state while checking promo status */
+                <div className="flex flex-col items-center justify-center py-10 gap-4">
+                  <svg className="animate-spin w-8 h-8 text-cyan-400" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <p className="text-slate-400 text-sm">Checking your promo code status...</p>
+                </div>
+              ) : (
+                /* Subscription-style layout */
+                <div className="space-y-5">
+                  {/* Total price */}
+                  <div className="flex items-center justify-between rounded-xl border border-slate-700/60 bg-slate-800/50 px-4 py-3">
+                    <div className="text-sm text-slate-300">Total</div>
+                    <div className={`text-lg font-semibold ${isVerified ? "text-emerald-400" : "text-slate-100"}`}>
+                      {isVerified ? "$0" : "$50"}
                     </div>
-                    <button
-                      onClick={payWithCrypto}
-                      disabled={isPaying || isVerified}
-                      className={`w-full ${isPaying || isVerified ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:brightness-110"} rounded-lg px-4 py-2 text-sm font-semibold text-white bg-[linear-gradient(135deg,#22d3ee_0%,#3b82f6_50%,#8b5cf6_100%)] shadow-lg shadow-cyan-500/10`}
-                    >
-                      {isPaying ? "Processing..." : "Pay via Crypto"}
-                    </button>
                   </div>
-                </div>
 
-                {/* Divider */}
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-slate-700/60" />
-                  <span className="text-xs text-slate-400">or</span>
-                  <div className="h-px flex-1 bg-slate-700/60" />
-                </div>
-
-                {/* Promo code */}
-                <div className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4">
-                  <div className="mb-2 text-sm font-semibold text-slate-100">Have a promo code?</div>
-                  <p className="text-xs text-slate-400 mb-3">Enter your promo code below to waive the $50 fee and mint your certification for free.</p>
-                  {!isVerified ? (
-                    <div className="space-y-3">
-                      <input
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="Enter promo code"
-                        className="w-full rounded-lg bg-slate-900/60 border border-slate-700/80 px-3 py-2 text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/60"
-                      />
-                      {error && <div className="text-sm text-rose-400">{error}</div>}
-                      <button
-                        onClick={submit}
-                        disabled={isSubmitting || !code}
-                        className={`${isSubmitting || !code ? "cursor-not-allowed bg-slate-700 text-slate-400" : "cursor-pointer bg-[linear-gradient(135deg,#5b8cff_0%,#3ab7ff_50%,#22d3ee_100%)] hover:brightness-110 text-white shadow-lg shadow-cyan-600/20"} w-full rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2`}
-                      >
-                        {isSubmitting && (
-                          <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        )}
-                        <span>Verify Code</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-emerald-400 text-sm">
-                        <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                        <span>Promo code verified</span>
+                  {/* Pay via Crypto — disabled/blurred, not clickable */}
+                  <div className="rounded-xl border border-slate-700/40 bg-slate-800/20 p-4 opacity-40 cursor-not-allowed">
+                    <div className="flex flex-col">
+                      <div>
+                        <div className="text-base font-semibold text-slate-400 pb-4">Pay $50 to get your certification</div>
                       </div>
-                      <button
-                        onClick={async () => {
-                          if (isMinting) return;
-                          setIsMinting(true);
-                          try { await onMint(); onClose(); } catch { /* handled by caller */ } finally { setIsMinting(false); }
-                        }}
-                        disabled={isMinting}
-                        className={`w-full rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-[conic-gradient(at_0%_0%,#34d399_0%,#06b6d4_25%,#3b82f6_50%,#8b5cf6_75%,#34d399_100%)] text-white shadow-lg shadow-emerald-600/20 ${isMinting ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:scale-[1.01] active:scale-[0.99]"}`}
+                      <div
+                        className="w-full rounded-lg px-4 py-2 text-sm font-semibold text-white bg-[linear-gradient(135deg,#22d3ee_0%,#3b82f6_50%,#8b5cf6_100%)] shadow-lg shadow-cyan-500/10 text-center select-none"
+                        style={{ cursor: "not-allowed" }}
                       >
-                        {isMinting ? (
-                          <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        ) : (
-                          <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" /></svg>
-                        )}
-                        <span>{isMinting ? "Minting..." : "Mint Now"}</span>
-                      </button>
+                        Pay via Crypto
+                      </div>
                     </div>
-                  )}
+                  </div>
+
+                  {/* Divider */}
+                  <div className="flex items-center gap-3">
+                    <div className="h-px flex-1 bg-slate-700/60" />
+                    <span className="text-xs text-slate-400">or</span>
+                    <div className="h-px flex-1 bg-slate-700/60" />
+                  </div>
+
+                  {/* Promo code */}
+                  <div className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4">
+                    <div className="mb-2 text-sm font-semibold text-slate-100">Have a promo code?</div>
+                    <p className="text-xs text-slate-400 mb-3">Enter your promo code below to waive the $50 fee and mint your certification for free.</p>
+                    {!isVerified ? (
+                      <div className="space-y-3">
+                        <input
+                          value={code}
+                          onChange={(e) => setCode(e.target.value)}
+                          placeholder="Enter promo code"
+                          className="w-full rounded-lg bg-slate-900/60 border border-slate-700/80 px-3 py-2 text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/60"
+                        />
+                        {error && <div className="text-sm text-rose-400">{error}</div>}
+                        <button
+                          onClick={submit}
+                          disabled={isSubmitting || !code}
+                          className={`${isSubmitting || !code ? "cursor-not-allowed bg-slate-700 text-slate-400" : "cursor-pointer bg-[linear-gradient(135deg,#5b8cff_0%,#3ab7ff_50%,#22d3ee_100%)] hover:brightness-110 text-white shadow-lg shadow-cyan-600/20"} w-full rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2`}
+                        >
+                          {isSubmitting && (
+                            <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          )}
+                          <span>Verify Code</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-emerald-400 text-sm">
+                          <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                          <span>Promo code verified</span>
+                        </div>
+                        <button
+                          onClick={async () => {
+                            if (isMinting) return;
+                            setIsMinting(true);
+                            try { await onMint(); onClose(); } catch { /* handled by caller */ } finally { setIsMinting(false); }
+                          }}
+                          disabled={isMinting}
+                          className={`w-full rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-[conic-gradient(at_0%_0%,#34d399_0%,#06b6d4_25%,#3b82f6_50%,#8b5cf6_75%,#34d399_100%)] text-white shadow-lg shadow-emerald-600/20 ${isMinting ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:scale-[1.01] active:scale-[0.99]"}`}
+                        >
+                          {isMinting ? (
+                            <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" /></svg>
+                          )}
+                          <span>{isMinting ? "Minting..." : "Mint Now"}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </motion.div>
         </motion.div>
@@ -296,5 +226,3 @@ export default function PromoCodeModal({ isOpen, onClose, onMint }: PromoCodeMod
     </AnimatePresence>
   );
 }
-
-

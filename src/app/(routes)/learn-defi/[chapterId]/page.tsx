@@ -96,7 +96,7 @@ export default function ChapterPage() {
         const res = await fetch("/api/challenges", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-defi", finalizeChapter: true }),
+          body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-defi" }),
         });
         const json = await res.json().catch(() => ({}));
         console.log("[DeFi] POST /api/challenges response", { status: res.status, json });

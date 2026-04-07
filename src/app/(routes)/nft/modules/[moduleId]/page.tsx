@@ -442,6 +442,7 @@ export default function ModuleDetailPage() {
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
         onMint={handleClaim}
+        address={userAddress}
       />
     </div>
   );

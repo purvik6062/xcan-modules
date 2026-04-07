@@ -465,6 +465,7 @@ export default function LearnWeb3BasicsPage() {
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
         onMint={claimNFT}
+        address={address}
       />
     </div>
   );

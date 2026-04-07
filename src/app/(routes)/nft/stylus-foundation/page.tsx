@@ -290,6 +290,7 @@ export default function StylusFoundationPage() {
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
         onMint={handleClaim}
+        address={userAddress}
       />
     </div>
   );

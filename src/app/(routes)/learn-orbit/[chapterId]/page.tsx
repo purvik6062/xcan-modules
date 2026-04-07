@@ -97,7 +97,7 @@ export default function OrbitChapterPage() {
       const res = await fetch("/api/challenges", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-orbit", finalizeChapter: true }),
+        body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-orbit" }),
       });
       const json = await res.json().catch(() => ({}));
       console.log("[Orbit] POST /api/challenges response", { status: res.status, json });
