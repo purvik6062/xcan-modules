@@ -351,7 +351,7 @@ export default function CertificationViewPage() {
                           ) : (
                             <>
                               <ExternalLink className="w-4 h-4" />
-                              View onchain certificate (Pataram)
+                              View onchain certificate 
                             </>
                           )}
                         </button>
