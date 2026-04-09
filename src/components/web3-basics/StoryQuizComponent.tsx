@@ -6,6 +6,7 @@ import { StoryContent } from "../../data/web3BasicsChapters";
 import GitHubAuthHandler from "../GitHubAuthHandler";
 import toast from "react-hot-toast";
 import { StoryQuizMarkdownPanel } from "../StoryQuizMarkdownPanel";
+import { QuestionText } from "../QuestionText";
 
 interface StoryQuizComponentProps {
   content: StoryContent;
@@ -125,9 +126,7 @@ export default function StoryQuizComponent({
                           <h4 className="mb-1.5 text-base font-semibold text-white sm:mb-2 sm:text-lg lg:text-xs lg:uppercase lg:tracking-wide">
                             Question {currentQuestion + 1}
                           </h4>
-                          <p className="text-sm leading-snug text-gray-200 sm:text-base lg:text-sm lg:leading-normal">
-                            {question.question}
-                          </p>
+                          <QuestionText text={question.question} />
                         </div>
 
                     {/* Answer Options */}

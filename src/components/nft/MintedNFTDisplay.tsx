@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRef, type MouseEvent, useState } from "react";
+import { MODULE_THEME_BG_BR } from "@/theme/moduleTheme";
 
 interface MintedLevel {
   level: number;
@@ -123,9 +124,9 @@ export const MintedNFTDisplay = ({
               repeatType: "reverse",
             }}
           >
-            <div className="w-32 h-32 bg-gradient-to-br from-emerald-400/80 via-green-500/80 to-teal-500/80 rounded-3xl flex items-center justify-center relative">
+            <div className={`w-32 h-32 ${MODULE_THEME_BG_BR} rounded-3xl flex items-center justify-center relative`}>
               <Trophy className="w-16 h-16 text-white" />
-              <div className="absolute inset-0 bg-emerald-400/30 rounded-3xl blur-2xl animate-pulse"></div>
+              <div className="absolute inset-0 bg-[#12B3A8]/30 rounded-3xl blur-2xl animate-pulse"></div>
             </div>
             <motion.div
               className="absolute -inset-8"
@@ -137,13 +138,13 @@ export const MintedNFTDisplay = ({
               }}
             >
               <Sparkles className="absolute top-0 left-1/2 w-8 h-8 text-amber-300" />
-              <CheckCircle className="absolute right-0 top-1/2 w-8 h-8 text-indigo-300" />
+              <CheckCircle className="absolute right-0 top-1/2 w-8 h-8 text-[#79A5FF]" />
               <Crown className="absolute left-0 top-1/2 w-8 h-8 text-slate-300" />
             </motion.div>
           </motion.div>
 
           <motion.h2
-            className="text-5xl font-black bg-gradient-to-r from-emerald-300 via-green-300 to-teal-300 bg-clip-text text-transparent mb-6"
+            className="text-5xl font-black bg-gradient-to-r from-[#79A5FF] via-[#61d5c8] to-[#12B3A8] bg-clip-text text-transparent mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -158,7 +159,7 @@ export const MintedNFTDisplay = ({
             transition={{ delay: 0.4 }}
           >
             You have already minted your
-            <span className="text-emerald-300 font-bold bg-emerald-400/10 px-3 py-1 rounded-lg mx-2">
+            <span className="text-[#79A5FF] font-bold bg-[#12B3A8]/10 px-3 py-1 rounded-lg mx-2">
               {platform} Achievement Badge!
             </span>
           </motion.p>
@@ -188,7 +189,7 @@ export const MintedNFTDisplay = ({
                 transformStyle: "preserve-3d",
                 z: translateZ,
                 boxShadow:
-                  "0 8px 32px rgba(16, 185, 129, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05)", // Added base glow
+                  "0 8px 32px rgba(18, 179, 168, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05)",
               }}
             >
               {/* Enhanced 3D depth layers */}
@@ -273,14 +274,14 @@ export const MintedNFTDisplay = ({
                         [rotateX, rotateY],
                         ([rx, ry]: any) =>
                           `linear-gradient(${45 + ry}deg, 
-                            rgba(16, 185, 129, ${
+                            rgba(18, 179, 168, ${
                               0.15 + Math.abs(rx) * 0.01
-                            }) 0%, // Increased from 0.1
+                            }) 0%,
                             transparent 30%, 
                             transparent 70%, 
-                            rgba(147, 51, 234, ${
+                            rgba(74, 124, 255, ${
                               0.15 + Math.abs(ry) * 0.01
-                            }) 100%)` // Increased from 0.1
+                            }) 100%)`
                       ),
                     }}
                   />
@@ -296,7 +297,7 @@ export const MintedNFTDisplay = ({
                       {[...Array(6)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="absolute w-1 h-1 bg-emerald-400 rounded-full"
+                          className="absolute w-1 h-1 bg-[#79A5FF] rounded-full"
                           style={{
                             left: `${20 + i * 15}%`,
                             top: `${10 + i * 10}%`,
@@ -374,7 +375,7 @@ export const MintedNFTDisplay = ({
             href={`https://sepolia.arbiscan.io/tx/${nft.transactionHash}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200 px-6 py-3 rounded-xl transition-all duration-200 border border-blue-500/30 font-medium"
+            className="inline-flex items-center gap-3 bg-[#4A7CFF]/20 hover:bg-[#4A7CFF]/30 text-[#79A5FF] hover:text-[#c7d8ff] px-6 py-3 rounded-xl transition-all duration-200 border border-[#4A7CFF]/30 font-medium"
             whileHover={{ scale: 1.05, rotateX: 5 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
@@ -390,7 +391,7 @@ export const MintedNFTDisplay = ({
             href={nft.metadataUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 hover:text-purple-200 px-6 py-3 rounded-xl transition-all duration-200 border border-purple-500/30 font-medium"
+            className="inline-flex items-center gap-3 bg-[#12B3A8]/20 hover:bg-[#12B3A8]/30 text-[#7be1d7] hover:text-[#bce9e4] px-6 py-3 rounded-xl transition-all duration-200 border border-[#12B3A8]/30 font-medium"
             whileHover={{ scale: 1.05, rotateX: 5 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}

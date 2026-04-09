@@ -145,7 +145,7 @@ export default function SubmissionsPage() {
   }) || [];
 
   const SkeletonLoader = () => (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 h-12 w-64 animate-pulse rounded-lg bg-slate-700" />
@@ -182,7 +182,7 @@ export default function SubmissionsPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="text-center">
           <p className="text-lg text-red-400">{error}</p>
         </div>
@@ -192,7 +192,7 @@ export default function SubmissionsPage() {
 
   if (!submissionsData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
           <PageHeader
             title="Submissions"
@@ -214,7 +214,7 @@ export default function SubmissionsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <PageHeader
           title="Submissions"

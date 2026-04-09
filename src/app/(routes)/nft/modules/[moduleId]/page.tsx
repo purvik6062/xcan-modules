@@ -25,6 +25,8 @@ import {
 import PromoCodeModal from "../../../../../components/PromoCodeModal";
 import Certificate from "@/components/Certificate";
 import { handleDownloadPDF } from "@/utils/certificate-pdf";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
+import ConnectWallet from "@/components/ConnectWallet";
 
 export default function ModuleDetailPage() {
   const router = useRouter();
@@ -106,13 +108,37 @@ export default function ModuleDetailPage() {
     check();
   }, [currentModule?.id, userAddress]);
 
-  if (!isReady || walletLoading) {
+  if (!isReady) {
     return (
       <div style={{ minHeight: 'calc(100vh - 72px)' }} className="bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden">
         <FloatingParticles />
         <GlassCard className="p-12 text-center">
           <Loader2 className="w-12 h-12 text-blue-400 animate-spin mx-auto mb-4" />
           <p className="text-gray-300">Preparing module...</p>
+        </GlassCard>
+      </div>
+    );
+  }
+
+  if (!isWalletConnected) {
+    return (
+      <div
+        style={{ minHeight: "calc(100vh - 72px)" }}
+        className="bg-gradient-to-br from-[#020816] to-[#0D1221] flex items-center justify-center relative overflow-hidden"
+      >
+        <FloatingParticles />
+        <GlassCard className="p-8 text-center max-w-2xl w-full mx-4">
+          <div className="flex flex-col items-center gap-4">
+            <AlertTriangle className="w-12 h-12 text-amber-400" />
+            <h2 className="text-2xl font-bold text-white">
+              Connect Wallet to Access Module
+            </h2>
+            <p className="text-gray-300 max-w-xl">
+              Connect your wallet to view progress and claim this module&apos;s NFT
+              certification.
+            </p>
+            <ConnectWallet />
+          </div>
         </GlassCard>
       </div>
     );
@@ -268,7 +294,7 @@ export default function ModuleDetailPage() {
                         onClick={() =>
                           router.push(`/nft/certification/${currentModule.id}`)
                         }
-                        className="cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white"
+                        className={`cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${MODULE_THEME_BG_R} hover:brightness-110 text-white`}
                       >
                         View Minted NFT
                       </button>
@@ -288,7 +314,7 @@ export default function ModuleDetailPage() {
                       onClick={() => setIsPromoOpen(true)}
                       className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${isClaimDisabled || !isCompleted
                         ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                        : "cursor-pointer bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
+                        : `cursor-pointer ${MODULE_THEME_BG_R} hover:brightness-110 text-white`
                         }`}
                     >
                       {alreadyClaimed ? (
@@ -337,7 +363,7 @@ export default function ModuleDetailPage() {
                           disabled={!certificateName.trim()}
                           className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${!certificateName.trim()
                             ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                            : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                            : `cursor-pointer ${MODULE_THEME_BG_R} hover:brightness-110 text-white`
                             }`}
                         >
                           <Download className="w-4 h-4" /> Download PDF
@@ -363,12 +389,12 @@ export default function ModuleDetailPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-full blur-3xl" />
-                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-indigo-500/20 to-blue-500/20 rounded-full blur-3xl" />
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-[#12B3A8]/20 to-[#4A7CFF]/20 rounded-full blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-[#4A7CFF]/20 to-[#12B3A8]/20 rounded-full blur-3xl" />
 
                 <div className="relative z-10 space-y-4">
                   <div className="flex items-center gap-3">
-                    <Sparkles className="w-5 h-5 text-blue-300" />
+                    <Sparkles className="w-5 h-5 text-[#79A5FF]" />
                     <p className="text-gray-300">
                       Track your progress and claim your certification NFT once
                       completed.
@@ -381,7 +407,7 @@ export default function ModuleDetailPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Rocket className="w-5 h-5 text-purple-300" />
+                    <Rocket className="w-5 h-5 text-[#79A5FF]" />
                     <p className="text-gray-300">
                       View the minted NFT on the certification page after
                       success.
@@ -416,6 +442,7 @@ export default function ModuleDetailPage() {
         isOpen={isPromoOpen}
         onClose={() => setIsPromoOpen(false)}
         onMint={handleClaim}
+        address={userAddress}
       />
     </div>
   );

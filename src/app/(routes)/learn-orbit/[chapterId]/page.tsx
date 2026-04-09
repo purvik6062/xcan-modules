@@ -14,6 +14,7 @@ import ChallengeComponent from "../../../../components/ChallengeComponent";
 import DeployChainSection from "../../../../components/DeployChainSection";
 import DeployedChainsSection from "../../../../components/DeployedChainsSection";
 import LearningModuleSidebar from "../../../../components/LearningModuleSidebar";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function OrbitChapterPage() {
   const params = useParams();
@@ -96,7 +97,7 @@ export default function OrbitChapterPage() {
       const res = await fetch("/api/challenges", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-orbit", finalizeChapter: true }),
+        body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-orbit" }),
       });
       const json = await res.json().catch(() => ({}));
       console.log("[Orbit] POST /api/challenges response", { status: res.status, json });
@@ -118,7 +119,7 @@ export default function OrbitChapterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="flex min-h-screen flex-col lg:flex-row">
         <LearningModuleSidebar currentModuleId="arbitrum-orbit" backHref="/learn-orbit" />
         <div className="flex-1">
@@ -217,14 +218,14 @@ export default function OrbitChapterPage() {
                   transition={{ duration: 0.6, delay: 0.2 }}
                 >
                   {isChapterComplete && !isProductionDeployment && (
-                    <div className="flex flex-col gap-3 border-b border-emerald-700 bg-emerald-900/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-col gap-3 border-b border-[#4A7CFF]/40 bg-[#1E3A8A]/30 p-4 sm:flex-row sm:items-center sm:justify-between">
                       <div className="min-w-0 text-sm text-emerald-200 sm:text-base">
                         ✅ Chapter complete! {nextChapter ? "You can continue to the next chapter." : "You've reached the end of this module's chapters."}
                       </div>
                       {nextChapter && (
                         <Link
                           href={`/learn-orbit/${nextChapter.id}`}
-                          className="hover:cursor-pointer whitespace-normal rounded-lg bg-emerald-600 px-4 py-2 text-center text-sm text-white transition-colors hover:bg-emerald-700 sm:whitespace-nowrap"
+                          className={`hover:cursor-pointer whitespace-normal rounded-lg ${MODULE_THEME_BG_R} px-4 py-2 text-center text-sm text-white transition-all hover:brightness-110 sm:whitespace-nowrap`}
                         >
                           Continue to {nextChapter.title} →
                         </Link>
@@ -232,7 +233,7 @@ export default function OrbitChapterPage() {
                     </div>
                   )}
                   {/* Section Header */}
-                  <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4 text-white sm:p-6">
+                  <div className={`${MODULE_THEME_BG_R} p-4 text-white sm:p-6`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
                         <h2 className="text-xl font-bold sm:text-2xl">
@@ -315,13 +316,13 @@ export default function OrbitChapterPage() {
                     {/* Special Continue Learning button for production-deployment chapter */}
                     {isProductionDeployment && isLastSectionComplete && nextChapter ? (
                       <div className="flex flex-col gap-4">
-                        <div className="bg-emerald-900/30 border border-emerald-700 p-4 rounded-lg">
+                        <div className="bg-[#1E3A8A]/30 border border-[#4A7CFF]/40 p-4 rounded-lg">
                           <div className="text-emerald-200 mb-3">
                             ✅ Chapter complete! Continue your learning journey with hands-on deployment.
                           </div>
                           <Link
                             href={`/learn-orbit/${nextChapter.id}`}
-                            className="hover:cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 font-semibold w-full justify-center"
+                            className={`hover:cursor-pointer inline-flex items-center gap-2 px-6 py-3 ${MODULE_THEME_BG_R} text-white rounded-lg hover:brightness-110 transition-all duration-200 font-semibold w-full justify-center`}
                           >
                             Continue Learning: {nextChapter.title} →
                           </Link>
@@ -344,7 +345,7 @@ export default function OrbitChapterPage() {
                             disabled={
                               currentSectionIndex === chapter.sections.length - 1
                             }
-                            className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                            className={`hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg ${MODULE_THEME_BG_R} px-4 py-2.5 text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto`}
                           >
                             Next →
                           </button>
@@ -352,13 +353,13 @@ export default function OrbitChapterPage() {
                       </div>
                     ) : isHandsOnDeployment && isLastSectionComplete ? (
                       <div className="flex flex-col gap-4">
-                        <div className="bg-emerald-900/30 border border-emerald-700 p-4 rounded-lg">
+                        <div className="bg-[#1E3A8A]/30 border border-[#4A7CFF]/40 p-4 rounded-lg">
                           <div className="text-emerald-200 mb-3">
                             ✅ Chapter complete! You've successfully completed the hands-on deployment.
                           </div>
                           <Link
                             href="/learn-orbit"
-                            className="hover:cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 font-semibold w-full justify-center"
+                            className={`hover:cursor-pointer inline-flex items-center gap-2 px-6 py-3 ${MODULE_THEME_BG_R} text-white rounded-lg hover:brightness-110 transition-all duration-200 font-semibold w-full justify-center`}
                           >
                             Continue Learning: Back to Modules →
                           </Link>
@@ -381,7 +382,7 @@ export default function OrbitChapterPage() {
                             disabled={
                               currentSectionIndex === chapter.sections.length - 1
                             }
-                            className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                            className={`hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg ${MODULE_THEME_BG_R} px-4 py-2.5 text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto`}
                           >
                             Next →
                           </button>
@@ -406,7 +407,7 @@ export default function OrbitChapterPage() {
                           disabled={
                             currentSectionIndex === chapter.sections.length - 1
                           }
-                          className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                          className={`hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg ${MODULE_THEME_BG_R} px-4 py-2.5 text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto`}
                         >
                           Next →
                         </button>

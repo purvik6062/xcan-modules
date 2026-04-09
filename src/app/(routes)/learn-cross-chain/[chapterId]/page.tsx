@@ -9,6 +9,7 @@ import ChapterCompletionModal from "../../../../components/cross-chain/ChapterCo
 import QuizComponent from "../../../../components/QuizComponent";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 import LearningModuleSidebar from "../../../../components/LearningModuleSidebar";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function CrossChainChapterPage() {
   const params = useParams();
@@ -77,7 +78,7 @@ export default function CrossChainChapterPage() {
 
   if (!chapter) {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="flex min-h-screen flex-col lg:flex-row">
           <LearningModuleSidebar currentModuleId="cross-chain" backHref="/learn-cross-chain" />
           <div className="flex flex-1 items-center justify-center px-6">
@@ -187,7 +188,7 @@ export default function CrossChainChapterPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
         <div className="flex min-h-screen flex-col lg:flex-row">
           <LearningModuleSidebar currentModuleId="cross-chain" backHref="/learn-cross-chain" />
           <div className="flex flex-1 items-center justify-center">
@@ -206,7 +207,7 @@ export default function CrossChainChapterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="flex min-h-screen flex-col lg:flex-row">
         <LearningModuleSidebar currentModuleId="cross-chain" backHref="/learn-cross-chain" />
         <div className="flex-1">
@@ -220,7 +221,7 @@ export default function CrossChainChapterPage() {
                 </div>
                 <div className="flex-shrink-0 text-left sm:text-right">
                   <div className="mb-1 text-xs text-gray-400 sm:text-sm">Chapter Progress</div>
-                  <div className="text-xl font-bold text-blue-400 sm:text-2xl">
+                  <div className="text-xl font-bold text-[#79A5FF] sm:text-2xl">
                     {Math.round(progress)}%
                   </div>
                 </div>
@@ -229,7 +230,7 @@ export default function CrossChainChapterPage() {
               {/* Progress Bar */}
               <div className="h-3 w-full rounded-full bg-gray-700">
                 <motion.div
-                  className="h-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  className={`h-3 rounded-full ${MODULE_THEME_BG_R}`}
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.5 }}

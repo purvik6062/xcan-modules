@@ -8,22 +8,22 @@ const ProjectSubmissionPage = () => {
   const [activeTab, setActiveTab] = useState<"showcase" | "submit">("showcase");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-[#4eb991] to-[#31b085] rounded-2xl mb-6 shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-[linear-gradient(135deg,#1E3A8A_0%,#4A7CFF_100%)] rounded-2xl mb-6 shadow-lg shadow-[#4A7CFF]/40">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#4eb991] to-[#31b085] bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] bg-clip-text text-transparent">
             Project Submission
           </h1>
           <p className="text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed">
             Built something cool with Stylus? Submit your project to get featured and reviewed by the community.
             <br />
-            <span className="text-[#4eb991] font-medium">Highlight your skills, gain visibility, and inspire others in the ecosystem.</span>
+            <span className="text-[#9eb2e8] font-medium">Highlight your skills, gain visibility, and inspire others in the ecosystem.</span>
           </p>
         </div>
 
@@ -34,7 +34,7 @@ const ProjectSubmissionPage = () => {
               <button
                 onClick={() => setActiveTab("showcase")}
                 className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 ${activeTab === "showcase"
-                  ? "bg-gradient-to-r from-[#4eb991] to-[#31b085] text-white shadow-lg shadow-[#4eb992ae]"
+                  ? "bg-[linear-gradient(90deg,#1E3A8A_0%,#4A7CFF_100%)] text-white shadow-lg shadow-[#4A7CFF]/40"
                   : "text-slate-300 hover:text-white hover:bg-slate-700/50"
                   }`}
               >
@@ -46,7 +46,7 @@ const ProjectSubmissionPage = () => {
               <button
                 onClick={() => setActiveTab("submit")}
                 className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 ${activeTab === "submit"
-                  ? "bg-gradient-to-r from-[#4eb991] to-[#31b085] text-white shadow-lg shadow-[#4eb992ae]"
+                  ? "bg-[linear-gradient(90deg,#1E3A8A_0%,#4A7CFF_100%)] text-white shadow-lg shadow-[#4A7CFF]/40"
                   : "text-slate-300 hover:text-white hover:bg-slate-700/50"
                   }`}
               >

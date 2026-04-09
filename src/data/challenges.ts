@@ -241,10 +241,86 @@ getChainId();`,
   
 getChainId();`,
   },
+  "arbos-version": {
+    id: 5,
+    title: "ArbOS Version",
+    level: "Intermediate",
+    description: "Get the current ArbOS version running on Arbitrum Sepolia",
+    category: "System",
+    points: 25,
+    precompileUsed: "ArbSys",
+    instructions: `
+        # ArbOS Version Challenge
+        
+        In this challenge, you'll access the version of ArbOS running on Arbitrum Sepolia.
+        
+        ## Task
+        
+        Create a function called \`getArbOSVersion\` that:
+        1. Connects to the ArbSys precompile on Arbitrum Sepolia
+        2. Calls the appropriate method to get the ArbOS version
+        3. Returns the version as a BigInt
+        
+        ## Example
+        
+        \`\`\`js
+        // This should return the current ArbOS version
+        getArbOSVersion() 
+        \`\`\`
+        
+        ## Notes
+        
+        - Use the ethers.js library which is already imported for you
+        - The ArbSys precompile is located at: 0x0000000000000000000000000000000000000064
+        - Arbitrum provides a specific method to check the ArbOS version
+      `,
+    testCases: [
+      {
+        input: [],
+        expectedOutput: { type: "bigint" },
+        description: "Should return the ArbOS version as a BigInt",
+      },
+    ],
+    startingCode: `import { ethers } from 'ethers';
+  
+  async function getArbOSVersion() {
+    // Write your code here
+    // 1. Connect to the Arbitrum Sepolia provider
+    // 2. Create a contract instance for ArbSys
+    // 3. Call the appropriate method to get the ArbOS version
+    
+  }
+  
+getArbOSVersion();`,
+    solution: `import { ethers } from 'ethers';
+  
+  async function getArbOSVersion() {
+    // Connect to Arbitrum Sepolia
+    const provider = new ethers.JsonRpcProvider("https://sepolia-rollup.arbitrum.io/rpc");
+    
+    // ArbSys precompile address
+    const arbSysAddress = "0x0000000000000000000000000000000000000064";
+    
+    // Define ABI for ArbSys
+    const arbSysAbi = [
+      "function arbOSVersion() view returns (uint256)"
+    ];
+    
+    // Create contract instance
+    const arbSys = new ethers.Contract(arbSysAddress, arbSysAbi, provider);
+    
+    // Call arbOSVersion to get the current ArbOS version
+    const version = await arbSys.arbOSVersion();
+    
+    return version;
+  }
+  
+getArbOSVersion();`,
+  },
   "gas-price-components": {
     id: 4,
     title: "Gas Price Components",
-    level: "Intermediate",
+    level: "Advanced",
     description: "Break down the components of gas pricing on Arbitrum",
     category: "Gas",
     points: 25,
@@ -335,178 +411,6 @@ getGasPriceComponents();`,
   }
   
 getGasPriceComponents();`,
-  },
-  "arbos-version": {
-    id: 5,
-    title: "ArbOS Version",
-    level: "Intermediate",
-    description: "Get the current ArbOS version running on Arbitrum Sepolia",
-    category: "System",
-    points: 25,
-    precompileUsed: "ArbSys",
-    instructions: `
-        # ArbOS Version Challenge
-        
-        In this challenge, you'll access the version of ArbOS running on Arbitrum Sepolia.
-        
-        ## Task
-        
-        Create a function called \`getArbOSVersion\` that:
-        1. Connects to the ArbSys precompile on Arbitrum Sepolia
-        2. Calls the appropriate method to get the ArbOS version
-        3. Returns the version as a BigInt
-        
-        ## Example
-        
-        \`\`\`js
-        // This should return the current ArbOS version
-        getArbOSVersion() 
-        \`\`\`
-        
-        ## Notes
-        
-        - Use the ethers.js library which is already imported for you
-        - The ArbSys precompile is located at: 0x0000000000000000000000000000000000000064
-        - Arbitrum provides a specific method to check the ArbOS version
-      `,
-    testCases: [
-      {
-        input: [],
-        expectedOutput: { type: "bigint" },
-        description: "Should return the ArbOS version as a BigInt",
-      },
-    ],
-    startingCode: `import { ethers } from 'ethers';
-  
-  async function getArbOSVersion() {
-    // Write your code here
-    // 1. Connect to the Arbitrum Sepolia provider
-    // 2. Create a contract instance for ArbSys
-    // 3. Call the appropriate method to get the ArbOS version
-    
-  }
-  
-getArbOSVersion();`,
-    solution: `import { ethers } from 'ethers';
-  
-  async function getArbOSVersion() {
-    // Connect to Arbitrum Sepolia
-    const provider = new ethers.JsonRpcProvider("https://sepolia-rollup.arbitrum.io/rpc");
-    
-    // ArbSys precompile address
-    const arbSysAddress = "0x0000000000000000000000000000000000000064";
-    
-    // Define ABI for ArbSys
-    const arbSysAbi = [
-      "function arbOSVersion() view returns (uint256)"
-    ];
-    
-    // Create contract instance
-    const arbSys = new ethers.Contract(arbSysAddress, arbSysAbi, provider);
-    
-    // Call arbOSVersion to get the current ArbOS version
-    const version = await arbSys.arbOSVersion();
-    
-    return version;
-  }
-  
-getArbOSVersion();`,
-  },
-  "l2-to-l1-message": {
-    id: 7,
-    title: "L2-to-L1 Message Sending",
-    level: "Intermediate",
-    description: "Send a message from L2 to L1 using ArbSys",
-    category: "Messaging",
-    points: 30,
-    precompileUsed: "ArbSys",
-    instructions: `
-        # L2-to-L1 Message Sending Challenge
-        
-        In this challenge, you'll learn how to send a message from Arbitrum (L2) to Ethereum (L1) using ArbSys.
-        
-        ## Task
-        
-        Create a function called \`sendL2ToL1Message\` that:
-        1. Connects to the ArbSys precompile on Arbitrum Sepolia
-        2. Takes a message string as input
-        3. Converts the string to bytes
-        4. Sends the message to L1 using the appropriate ArbSys method
-        5. Returns the transaction receipt
-        
-        ## Example
-        
-        \`\`\`js
-        // This should send a message to L1 and return the receipt
-        await sendL2ToL1Message("Hello from Arbitrum!") 
-        \`\`\`
-        
-        ## Notes
-        
-        - Use the ethers.js library which is already imported for you
-        - The ArbSys precompile is located at: 0x0000000000000000000000000000000000000064
-        - For this exercise, you'll need to use a wallet with funds on Arbitrum Sepolia
-        - The target L1 address can be any valid Ethereum address
-      `,
-    testCases: [
-      {
-        input: ["Hello from Arbitrum!"],
-        expectedOutput: { type: "object" }, // We'll check if it's an object
-        description: "Should return a transaction receipt object",
-      },
-    ],
-    startingCode: `import { ethers } from 'ethers';
-  
-  async function sendL2ToL1Message(message) {
-    // Write your code here
-    // 1. Connect to the Arbitrum Sepolia provider with a private key
-    // 2. Create a contract instance for ArbSys with a signer
-    // 3. Convert message string to bytes
-    // 4. Send the message to L1 and return the receipt
-    
-    // For demo purposes, you can use this private key (DO NOT USE IN PRODUCTION)
-    const privateKey = "0xYourPrivateKey"; // Replace with a test private key
-    
-  }
-  
-sendL2ToL1Message();`,
-    solution: `import { ethers } from 'ethers';
-  
-  async function sendL2ToL1Message(message) {
-    // Connect to Arbitrum Sepolia
-    const provider = new ethers.JsonRpcProvider("https://sepolia-rollup.arbitrum.io/rpc");
-    
-    // For demo purposes only (DO NOT USE IN PRODUCTION)
-    const privateKey = "0xYourPrivateKey"; // Replace with a test private key
-    const wallet = new ethers.Wallet(privateKey, provider);
-    
-    // ArbSys precompile address
-    const arbSysAddress = "0x0000000000000000000000000000000000000064";
-    
-    // Define ABI for ArbSys
-    const arbSysAbi = [
-      "function sendTxToL1(address destAddr, bytes calldata calldataForL1) payable returns (uint256)"
-    ];
-    
-    // Create contract instance with signer
-    const arbSys = new ethers.Contract(arbSysAddress, arbSysAbi, wallet);
-    
-    // Target address on L1 (can be any address)
-    const targetL1Address = "0xYourTargetL1Address"; // Replace with L1 destination
-    
-    // Convert message to bytes
-    const messageBytes = ethers.toUtf8Bytes(message);
-    
-    // Send transaction to L1
-    const tx = await arbSys.sendTxToL1(targetL1Address, messageBytes);
-    
-    // Wait for transaction to be confirmed
-    const receipt = await tx.wait();
-    
-    return receipt;
-  }
-  
-sendL2ToL1Message();`,
   },
 };
 

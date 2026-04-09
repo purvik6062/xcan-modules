@@ -44,7 +44,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
       {/* Project Info */}
       <div className="space-y-4">
-        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-2">
+        <h3 className="text-xl font-bold text-white group-hover:text-[#4A7CFF] transition-colors line-clamp-2">
           {project.projectName}
         </h3>
 
@@ -67,7 +67,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#4eb991] to-[#31b085] rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] rounded-full flex items-center justify-center shadow-lg">
               <span className="text-white text-sm font-bold">
                 {project.submittedBy.name.charAt(0).toUpperCase()}
               </span>

@@ -21,6 +21,8 @@ import Link from "next/link";
 import { SuccessfulMint } from "@/components/nft/SuccessfulMint";
 import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import Certificate from "@/components/Certificate";
+import { handleDownloadPDF } from "@/utils/certificate-pdf";
+import { MODULE_THEME_BG_R, MODULE_THEME_GRADIENT_BR } from "@/theme/moduleTheme";
 
 export default function CertificationViewPage() {
   const router = useRouter();
@@ -33,14 +35,14 @@ export default function CertificationViewPage() {
         id: "xcan-advocate",
         title: "Xcan Advocate",
         icon: Award,
-        gradient: "from-indigo-500/20 to-blue-500/20",
+        gradient: MODULE_THEME_GRADIENT_BR,
       } as any;
     } else if (module === "stylus-foundation") {
       return {
         id: "stylus-foundation",
         title: "Stylus Foundation",
         icon: Award,
-        gradient: "from-indigo-500/20 to-blue-500/20",
+        gradient: MODULE_THEME_GRADIENT_BR,
       } as any;
     }
     return null;
@@ -233,7 +235,7 @@ export default function CertificationViewPage() {
                   </div>
                   <button
                     onClick={() => setShowCertificate((v) => !v)}
-                    className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white"
+                    className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${MODULE_THEME_BG_R} hover:brightness-110 text-white`}
                   >
                     {showCertificate
                       ? "Hide"
@@ -336,7 +338,7 @@ export default function CertificationViewPage() {
                               ? "bg-gray-700 text-gray-400 cursor-not-allowed"
                               : certificateLocked && !certificateOnChainGenerated
                               ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                              : "cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                              : "cursor-pointer bg-gradient-to-r from-[#1E3A8A] to-[#4A7CFF] hover:from-[#5a67d8] hover:to-[#6b46c1] text-white"
                           }`}
                         >
                           {certificateBusy ? (
@@ -385,12 +387,12 @@ export default function CertificationViewPage() {
 
             <div className="w-full mt-6">
               <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 p-6 h-full">
-                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-full blur-3xl" />
-                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-indigo-500/20 to-blue-500/20 rounded-full blur-3xl" />
+                <div className="absolute -top-10 -right-10 w-48 h-48 bg-gradient-to-br from-[#12B3A8]/20 to-[#4A7CFF]/20 rounded-full blur-3xl" />
+                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-to-tr from-[#4A7CFF]/20 to-[#12B3A8]/20 rounded-full blur-3xl" />
 
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-3">
-                    <Sparkles className="w-5 h-5 text-blue-300" />
+                    <Sparkles className="w-5 h-5 text-[#79A5FF]" />
                     <p className="text-gray-300">
                       Your achievement badge preview
                     </p>

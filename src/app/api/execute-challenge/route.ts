@@ -317,7 +317,6 @@ export async function POST(request: NextRequest) {
             "chain-id-verification",
             "gas-price-components",
             "arbos-version",
-            "l2-to-l1-message",
           ];
           const isCompleted = allChallenges.every((challenge) =>
             newChallenges.includes(challenge)

@@ -209,18 +209,18 @@ export default function ArbitrumStylusPage() {
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY }}
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-400/80 to-pink-400/80 rounded-full flex items-center justify-center relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#4A7CFF] to-[#1E3A8A] rounded-full flex items-center justify-center relative">
                 <Cpu className="w-10 h-10 text-white" />
-                <div className="absolute inset-0 bg-purple-400/20 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute inset-0 bg-[#4A7CFF]/20 rounded-full blur-xl animate-pulse"></div>
               </div>
             </motion.div>
 
             <div className="text-center">
-              <h1 className="text-7xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-gray-300 bg-clip-text text-transparent tracking-tight">
+              <h1 className="text-7xl font-black bg-gradient-to-r from-[#4A7CFF] via-[#1E3A8A] to-[#5e7dd9] bg-clip-text text-transparent tracking-tight">
                 Arbitrum Stylus
               </h1>
               <motion.div
-                className="h-1 bg-gradient-to-r from-purple-500/60 via-pink-500/60 to-gray-500/60 rounded-full mt-2"
+                className="h-1 bg-gradient-to-r from-[#4A7CFF] via-[#1E3A8A] to-[#5e7dd9] rounded-full mt-2"
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{ delay: 0.5, duration: 1 }}
@@ -236,9 +236,9 @@ export default function ArbitrumStylusPage() {
                 delay: 2,
               }}
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-pink-400/80 to-purple-400/80 rounded-full flex items-center justify-center relative">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#4A7CFF] to-[#1E3A8A] rounded-full flex items-center justify-center relative">
                 <Gem className="w-10 h-10 text-white" />
-                <div className="absolute inset-0 bg-pink-400/20 rounded-full blur-xl animate-pulse delay-500"></div>
+                <div className="absolute inset-0 bg-[#4A7CFF]/20 rounded-full blur-xl animate-pulse delay-500"></div>
               </div>
             </motion.div>
           </motion.div>

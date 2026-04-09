@@ -16,6 +16,7 @@ import { getChapterGlossary } from "../../../../data/defiGlossary";
 import { getTheoryContent } from "../../../../data/defiContent";
 import { useWalletProtection } from "../../../../hooks/useWalletProtection";
 import LearningModuleSidebar from "../../../../components/LearningModuleSidebar";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 export default function ChapterPage() {
   const params = useParams();
@@ -95,7 +96,7 @@ export default function ChapterPage() {
         const res = await fetch("/api/challenges", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-defi", finalizeChapter: true }),
+          body: JSON.stringify({ userAddress: address, chapterId, sectionId, module: "master-defi" }),
         });
         const json = await res.json().catch(() => ({}));
         console.log("[DeFi] POST /api/challenges response", { status: res.status, json });
@@ -123,7 +124,7 @@ export default function ChapterPage() {
       : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-[#020816] to-[#0D1221]">
       <div className="flex min-h-screen flex-col lg:flex-row">
         <LearningModuleSidebar currentModuleId="defi-arbitrum" backHref="/learn-defi" />
         <div className="flex-1">
@@ -190,7 +191,7 @@ export default function ChapterPage() {
                   className="overflow-hidden rounded-2xl bg-slate-800 shadow-xl"
                 >
                   {/* Section Header */}
-                  <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-4 text-white sm:p-6">
+                  <div className={`${MODULE_THEME_BG_R} p-4 text-white sm:p-6`}>
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
                         <h2 className="mb-2 text-xl font-bold sm:text-2xl">
@@ -212,17 +213,17 @@ export default function ChapterPage() {
                       <div className="flex-shrink-0 sm:text-right">
                         {currentSection.status === "available" ? (
                           completedSections.includes(currentSection.id) ? (
-                            <div className="flex items-center gap-2 bg-green-500 px-3 py-1 rounded-full">
+                            <div className="flex items-center gap-2 bg-[#1E3A8A]/50 px-3 py-1 rounded-full border border-[#4A7CFF]/40">
                               <span>✓</span>
                               <span>Completed</span>
                             </div>
                           ) : (
-                            <div className="bg-blue-500 px-3 py-1 rounded-full">
+                            <div className="rounded-full bg-[#1E3A8A]/50 px-3 py-1 text-sm text-white border border-[#4A7CFF]/40">
                               In Progress
                             </div>
                           )
                         ) : (
-                          <div className="bg-orange-500 px-3 py-1 rounded-full">
+                          <div className="rounded-full bg-[#1E3A8A]/50 px-3 py-1 text-sm text-white border border-[#4A7CFF]/40">
                             Coming Soon
                           </div>
                         )}
@@ -292,7 +293,7 @@ export default function ChapterPage() {
                         disabled={
                           currentSectionIndex === chapter.sections.length - 1
                         }
-                        className="hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                        className={`hover:cursor-pointer order-3 flex w-full items-center justify-center gap-2 rounded-lg ${MODULE_THEME_BG_R} px-4 py-2.5 text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto`}
                       >
                         Next →
                       </button>
@@ -303,7 +304,7 @@ export default function ChapterPage() {
                 {/* Chapter Completion Reward */}
                 {progress === 100 && chapter.badge && (
                   <motion.div
-                    className="mt-8 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-2xl p-8 text-center"
+                    className={`mt-8 ${MODULE_THEME_BG_R} text-white rounded-2xl p-8 text-center`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6 }}
@@ -324,7 +325,7 @@ export default function ChapterPage() {
                       <div className="mt-6">
                         <Link
                           href={`/learn-defi/${nextChapter.id}`}
-                          className="inline-block px-6 py-3 mt-2 rounded-lg bg-white text-blue-700 font-semibold hover:bg-blue-100 transition-colors"
+                          className="inline-block px-6 py-3 mt-2 rounded-lg bg-white text-[#1E3A8A] font-semibold hover:bg-blue-100 transition-colors"
                         >
                           Continue to Next Chapter →
                         </Link>

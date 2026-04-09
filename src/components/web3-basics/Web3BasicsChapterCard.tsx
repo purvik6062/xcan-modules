@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 import { Chapter } from "../../data/web3BasicsChapters";
+import { MODULE_THEME_BG_R } from "@/theme/moduleTheme";
 
 interface Web3BasicsChapterCardProps {
   chapter: Chapter;
@@ -33,11 +34,11 @@ export default function Web3BasicsChapterCard({
   const getLevelColor = (level: string) => {
     switch (level) {
       case "Beginner":
-        return "bg-green-900 text-green-200";
+        return "bg-[#1E3A8A]/35 text-[#b7cbff] border border-[#4A7CFF]/30";
       case "Intermediate":
-        return "bg-yellow-900 text-yellow-200";
+        return "bg-[#1E3A8A]/35 text-[#b7cbff] border border-[#4A7CFF]/30";
       case "Advanced":
-        return "bg-red-900 text-red-200";
+        return "bg-[#1E3A8A]/35 text-[#b7cbff] border border-[#4A7CFF]/30";
       default:
         return "bg-gray-900 text-gray-200";
     }
@@ -118,7 +119,7 @@ export default function Web3BasicsChapterCard({
   const cardContent = (
     <motion.div
       whileHover={chapter.status !== "coming-soon" ? { y: -5 } : {}}
-      className={`relative bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${chapter.status !== "coming-soon" ? "cursor-pointer" : ""} ${progressPercentage === 100 ? "border-2 border-green-500/60 bg-green-300/10" : ""}`}
+      className={`relative bg-gray-800 rounded-xl shadow-lg hover:shadow-[#4A7CFF]/20 transition-all duration-300 overflow-hidden group h-full flex flex-col border border-gray-700 ${chapter.status !== "coming-soon" ? "cursor-pointer" : ""} ${progressPercentage === 100 ? "border-2 border-[#4A7CFF]/60 bg-[#1E3A8A]/15" : ""}`}
     >
       {isNavigating && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60">
@@ -145,18 +146,18 @@ export default function Web3BasicsChapterCard({
               {chapter.level}
             </span>
             {chapter.status === "coming-soon" ? (
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-900 text-orange-200">
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-700 text-slate-300 border border-slate-600">
                 Coming Soon
               </span>
             ) : (
-              <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-900 text-blue-200">
+              <span className="px-3 py-1 rounded-full text-xs font-medium bg-[#1E3A8A]/35 text-[#b7cbff] border border-[#4A7CFF]/30">
                 Available
               </span>
             )}
           </div>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+        <h3 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-[#79A5FF]">
           {chapter.title}
         </h3>
 
@@ -170,7 +171,9 @@ export default function Web3BasicsChapterCard({
         <div className="px-6 py-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <div
+                className="h-2 w-2 rounded-full bg-[#79A5FF]"
+              ></div>
               <span className="text-sm font-medium text-gray-300">
                 Progress
               </span>
@@ -179,20 +182,26 @@ export default function Web3BasicsChapterCard({
               <span className="text-sm text-gray-400">
                 {completedSections}/{availableSections.length} sections
               </span>
-              <span className="text-sm font-medium text-blue-400">
+              <span
+                className="text-sm font-medium text-[#79A5FF]"
+              >
                 {Math.round(progressPercentage)}%
               </span>
             </div>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="h-2 w-full rounded-full bg-gray-700/80">
             <motion.div
-              className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full"
+              className={`h-2 rounded-full ${MODULE_THEME_BG_R}`}
               initial={{ width: 0 }}
               animate={{ width: `${progressPercentage}%` }}
               transition={{ duration: 0.5 }}
             />
           </div>
-          <span className="text-sm font-medium text-blue-400">{chapter.points} points</span>
+          <span
+            className="text-sm font-medium text-[#79A5FF]"
+          >
+            {chapter.points} points
+          </span>
         </div>
       )}
 
@@ -220,7 +229,10 @@ export default function Web3BasicsChapterCard({
       {/* Footer */}
       <div className="p-6 border-t border-gray-700">
         <div
-          className={`w-full ${chapter.status === "coming-soon" ? "bg-gray-700 text-gray-400 cursor-not-allowed" : ctaTheme === "violet" ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white" : ctaTheme === "amber" ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white" : "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"} font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
+          className={`w-full ${chapter.status === "coming-soon"
+            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+            : `${MODULE_THEME_BG_R} hover:brightness-110 text-white`
+            } font-semibold py-3 px-4 rounded-lg transition-all duration-200 text-center block group-hover:shadow-lg`}
         >
           {chapter.status === "coming-soon" ? "Coming Soon" : "Start Learning"}
         </div>

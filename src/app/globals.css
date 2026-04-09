@@ -7,6 +7,7 @@
   /* Submissions / Navigation design tokens */
   --accent-emerald: #10b981;
   --accent-blue: #3b82f6;
+  /* Module UI gradients use emerald→blue (see src/theme/moduleTheme.ts) */
   --accent-amber: #f59e0b;
   --accent-indigo: #6366f1;
 
