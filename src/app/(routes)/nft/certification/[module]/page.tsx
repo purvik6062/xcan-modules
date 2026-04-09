@@ -230,11 +230,7 @@ export default function CertificationViewPage() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-white font-semibold">Certificate</p>
-                    <p className="text-gray-400 text-sm">
-                      Enter the name shown on your certificate here if you have
-                      not saved one in your profile yet, then request the
-                      onchain certificate.
-                    </p>
+
                   </div>
                   <button
                     onClick={() => setShowCertificate((v) => !v)}

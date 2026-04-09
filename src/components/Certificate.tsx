@@ -80,7 +80,7 @@ export default function Certificate({
         <p
           className="max-w-full truncate text-center font-normal tracking-wide"
           style={{
-            fontFamily: "Georgia, 'Times New Roman', Times, serif",
+            fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
             fontSize: "clamp(1.125rem, 2.8vw, 1.875rem)",
             lineHeight: 1.25,
             color: "#1a1a1a",
@@ -101,7 +101,7 @@ export default function Certificate({
         }}
       >
         <p
-          className="max-w-[95%] text-center font-normal leading-snug"
+          className="max-w-[95%] text-center font-bold leading-snug"
           style={{
             fontFamily:
               "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
