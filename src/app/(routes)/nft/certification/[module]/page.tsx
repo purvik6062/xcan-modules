@@ -59,6 +59,7 @@ export default function CertificationViewPage() {
   const [certificateLocked, setCertificateLocked] = useState(false);
   const [certificateBusy, setCertificateBusy] = useState(false);
   const [certificateError, setCertificateError] = useState<string | null>(null);
+  const [showNameConfirmModal, setShowNameConfirmModal] = useState(false);
   const [certificateOnChainGenerated, setCertificateOnChainGenerated] =
     useState(false);
   const [patramCertificateLink, setpatramCertificateLink] = useState<
@@ -139,6 +140,42 @@ export default function CertificationViewPage() {
       if (interval) clearInterval(interval);
     };
   }, [mod?.id, address]);
+
+  const saveCertificateNameAndRequest = async () => {
+    if (!mod?.id || !address) return;
+    const trimmed = certificateName.trim();
+    if (!trimmed || certificateBusy) return;
+    try {
+      setCertificateError(null);
+      setCertificateBusy(true);
+
+      const res = await fetch(`/api/certification/generate/${mod.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userAddress: address,
+          name: trimmed,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to save certificate name");
+      }
+      clearDeferredCertNamePrompt(address);
+      setCertificateLocked(true);
+      if (typeof data?.certificateGeneratedAt === "string") {
+        setCertificateGeneratedAt(data.certificateGeneratedAt);
+      }
+      setShowNameConfirmModal(false);
+    } catch (e: any) {
+      setCertificateError(e?.message || "Something went wrong");
+    } finally {
+      setCertificateBusy(false);
+    }
+  };
 
   if (!isReady || walletLoading) {
     return (
@@ -246,6 +283,55 @@ export default function CertificationViewPage() {
 
                 {showCertificate && (
                   <div className="mt-4 space-y-4">
+                    {showNameConfirmModal && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+                        <div className="w-full max-w-xl rounded-2xl border border-red-500/60 bg-[#1f0b0b] p-5 shadow-2xl">
+                          <div className="flex items-start gap-3">
+                            <AlertTriangle className="w-6 h-6 text-red-400 mt-0.5" />
+                            <div>
+                              <p className="text-red-300 font-semibold text-lg">
+                                Recheck your certificate name
+                              </p>
+                              <p className="text-red-200 text-sm mt-2">
+                                This name will be shown on your certificate and
+                                cannot be changed later.
+                              </p>
+                              <p className="text-red-100 text-sm mt-3">
+                                Name entered:{" "}
+                                <span className="font-semibold">
+                                  {certificateName.trim()}
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-5 flex justify-end gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setShowNameConfirmModal(false)}
+                              disabled={certificateBusy}
+                              className="px-4 py-2 rounded-lg border border-white/20 text-gray-200 hover:bg-white/10 transition-colors disabled:opacity-60"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              onClick={saveCertificateNameAndRequest}
+                              disabled={certificateBusy}
+                              className="px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 transition-colors disabled:opacity-60 inline-flex items-center gap-2"
+                            >
+                              {certificateBusy ? (
+                                <>
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                  Saving...
+                                </>
+                              ) : (
+                                "Confirm and Save"
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                       <div className="md:col-span-2">
                         <label className="block text-sm text-gray-300 mb-1">
@@ -269,53 +355,14 @@ export default function CertificationViewPage() {
                         <button
                           onClick={async () => {
                             if (!mod?.id || !address) return;
-                            const trimmed = certificateName.trim();
 
                             // State 1: first time, save name + request
                             if (!certificateLocked) {
-                              if (!trimmed || certificateBusy) return;
-                              try {
-                                setCertificateError(null);
-                                setCertificateBusy(true);
-
-                                const res = await fetch(
-                                  `/api/certification/generate/${mod.id}`,
-                                  {
-                                    method: "POST",
-                                    headers: {
-                                      "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify({
-                                      userAddress: address,
-                                      name: trimmed,
-                                    }),
-                                  }
-                                );
-
-                                const data = await res.json();
-                                if (!res.ok) {
-                                  throw new Error(
-                                    data?.error ||
-                                      "Failed to save certificate name"
-                                  );
-                                }
-                                clearDeferredCertNamePrompt(address);
-                                setCertificateLocked(true);
-                                if (
-                                  typeof data?.certificateGeneratedAt ===
-                                  "string"
-                                ) {
-                                  setCertificateGeneratedAt(
-                                    data.certificateGeneratedAt
-                                  );
-                                }
-                              } catch (e: any) {
-                                setCertificateError(
-                                  e?.message || "Something went wrong"
-                                );
-                              } finally {
-                                setCertificateBusy(false);
+                              if (!certificateName.trim() || certificateBusy) {
+                                return;
                               }
+                              setShowNameConfirmModal(true);
+                              return;
                             }
 
                             // State 3: onchain certificate ready -> open patram link

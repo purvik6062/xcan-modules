@@ -42,6 +42,19 @@ export default function Certificate({
   const courseName =
     moduleName?.trim() || subtitle?.trim() || title?.trim() || "Module Name";
 
+  const displayRecipientName =
+    recipientName.length > 40 ? `${recipientName.slice(0, 37)}...` : recipientName;
+  const recipientNameFontSize =
+    displayRecipientName.length > 30
+      ? "34px"
+      : displayRecipientName.length > 22
+      ? "38px"
+      : "42px";
+
+  const displayCourseName =
+    courseName.length > 44 ? `${courseName.slice(0, 41)}...` : courseName;
+  const courseNameFontSize = displayCourseName.length > 34 ? "25px" : "27px";
+
   const contentLeft = "26%";
   const contentWidth = "68%";
 
@@ -58,6 +71,8 @@ export default function Certificate({
       style={{
         aspectRatio: "2000 / 1414",
         maxWidth: 1100,
+        fontFamily:
+          "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -80,13 +95,15 @@ export default function Certificate({
         <p
           className="max-w-full truncate text-center font-normal tracking-wide"
           style={{
-            fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-            fontSize: "clamp(1.125rem, 2.8vw, 1.875rem)",
-            lineHeight: 1.25,
-            color: "#1a1a1a",
+            fontFamily:
+              "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+            fontSize: recipientNameFontSize,
+            lineHeight: 1.05,
+            color: "#1f2937",
+            letterSpacing: "0.2px",
           }}
         >
-          {recipientName}
+          {displayRecipientName}
         </p>
       </div>
 
@@ -96,20 +113,23 @@ export default function Certificate({
         style={{
           left: contentLeft,
           width: contentWidth,
-          top: "58%",
+          top: "57.6%",
           transform: "translate(-20%,50%)",
         }}
       >
         <p
-          className="max-w-[95%] text-center font-bold leading-snug"
+          className="max-w-[95%] truncate text-center leading-snug"
           style={{
             fontFamily:
               "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-            fontSize: "clamp(0.8125rem, 1.9vw, 1.125rem)",
-            color: "#2c2c2c",
+            fontSize: courseNameFontSize,
+            color: "#111827",
+            lineHeight: 1.04,
+            letterSpacing: "0.15px",
+            fontWeight: 500,
           }}
         >
-          {courseName}
+          {displayCourseName}
         </p>
       </div>
 
@@ -120,7 +140,7 @@ export default function Certificate({
           style={{
             left: contentLeft,
             width: "40%",
-            top: "77.25%",
+            top: "76.25%",
             transform: "translateX(35%)",
           }}
         >
@@ -129,9 +149,11 @@ export default function Certificate({
             style={{
               fontFamily:
                 "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-              fontSize: "clamp(0.7rem, 1.45vw, 0.8rem)",
-              color: "#1f2937",
+              fontSize: "21px",
+              color: "#111827",
               lineHeight: 1.2,
+              fontWeight: 400,
+              letterSpacing: "0.3px",
             }}
           >
             {issuedLabel}
@@ -145,24 +167,25 @@ export default function Certificate({
         style={{
           left: "54%",
           right: "27.5%",
-          top: "77.25%",
+          top: "76.25%",
         }}
       >
         <p
-          className="text-right font-semibold uppercase tabular-nums"
+          className="text-right uppercase tabular-nums"
           style={{
             fontFamily:
               "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-            fontSize: "clamp(0.7rem, 1.45vw, 0.8rem)",
-            color: "#1f2937",
-            letterSpacing: "0.02em",
+            fontSize: "21px",
+            color: "#111827",
+            letterSpacing: "0.3px",
             lineHeight: 1.2,
+            fontWeight: 400,
           }}
         >
           <span>{showcasePrefix}</span>
-          <span className="font-semibold mx-[0.15em]">-</span>
+          <span className="mx-[0.15em]">-</span>
           <span
-            className="font-semibold"
+            className=""
             style={{ letterSpacing: "0.28em" }}
           >
             XXX
