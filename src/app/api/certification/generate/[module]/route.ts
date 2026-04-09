@@ -8,6 +8,7 @@ import {
   type ModuleIdentifier,
 } from "@/lib/database/module-collections";
 import { getCertificatePrefixFromCanonicalModuleId } from "@/lib/certificate-prefix";
+import { addressMatchQuery } from "@/lib/utils/address";
 
 function toCertificateIssuedAtIso(value: unknown): string | null {
   if (value == null) return null;
@@ -56,6 +57,41 @@ function formatCertificateId(moduleId: string, certificateNumber: number) {
     "0"
   );
   return `${prefix}-${padded}`;
+}
+
+function normalizeCertificateName(value: unknown): string {
+  if (typeof value !== "string") return "";
+  return value.trim().replace(/\s+/g, " ").slice(0, 80);
+}
+
+async function getGlobalCertificateName(db: any, userAddress: string) {
+  const users = db.collection("users");
+  const user = await users.findOne(
+    { address: addressMatchQuery(userAddress) },
+    { projection: { _id: 0, certificateName: 1 } }
+  );
+  return normalizeCertificateName(user?.certificateName) || null;
+}
+
+async function setGlobalCertificateName(
+  db: any,
+  userAddress: string,
+  certificateName: string
+) {
+  const users = db.collection("users");
+  const now = new Date();
+  await users.updateOne(
+    { address: addressMatchQuery(userAddress) },
+    {
+      $set: { certificateName, updatedAt: now },
+      $setOnInsert: {
+        address: userAddress,
+        createdAt: now,
+        isEmailVisible: false,
+      },
+    },
+    { upsert: true }
+  );
 }
 
 // One-time certificate generation per module per address
@@ -110,6 +146,7 @@ export async function GET(
 
     const { db } = await connectToDatabase();
     const moduleData = await getModuleData(db, userAddress, moduleId);
+    const globalCertificateName = await getGlobalCertificateName(db, userAddress);
     const moduleCertificateCount = await getModuleCertificateCount(db, moduleId);
     const certificateId =
       moduleData?.certificateId ||
@@ -119,14 +156,18 @@ export async function GET(
 
     return NextResponse.json({
       generated: Boolean(moduleData?.certificateGenerated),
-      name: moduleData?.certificateName || null,
+      name:
+        normalizeCertificateName(moduleData?.certificateName) ||
+        globalCertificateName ||
+        null,
+      globalCertificateName,
       certificateGeneratedAt: toCertificateIssuedAtIso(
         moduleData?.certificateGeneratedAt
       ),
       certificateOnChainGenerated: Boolean(
         moduleData?.certificateOnChainGenerated
       ),
-      pataramCertificateLink: moduleData?.pataramCertificateLink || null,
+      patramCertificateLink: moduleData?.pataramCertificateLink || null,
       certificateNumber: moduleData?.certificateNumber || null,
       certificateId,
       moduleCertificateCount,
@@ -148,12 +189,12 @@ export async function POST(
     const { module } = await context.params;
     const body = await request.json();
     const userAddress: string = (body.userAddress || "").toLowerCase();
-    const displayName: string | undefined = body.name;
+    const inputDisplayName = normalizeCertificateName(body.name);
     const levelKey: string | undefined = body.levelKey;
 
-    if (!userAddress || !displayName) {
+    if (!userAddress) {
       return NextResponse.json(
-        { error: "Missing userAddress or name" },
+        { error: "Missing userAddress" },
         { status: 400 }
       );
     }
@@ -161,6 +202,17 @@ export async function POST(
     // Special case: arbitrum-stylus uses minted-nft with multiple levels
     if (module === "arbitrum-stylus") {
       const { db } = await connectToDatabase();
+      const globalCertificateName = await getGlobalCertificateName(db, userAddress);
+      const displayName = inputDisplayName || globalCertificateName || "";
+      if (!displayName) {
+        return NextResponse.json(
+          { error: "Please set your certificate name first" },
+          { status: 400 }
+        );
+      }
+      if (inputDisplayName) {
+        await setGlobalCertificateName(db, userAddress, displayName);
+      }
       const collection = db.collection("minted-nft");
       if (!levelKey) {
         return NextResponse.json(
@@ -212,6 +264,18 @@ export async function POST(
     const moduleId = normalizeModuleId(module as ModuleIdentifier);
 
     const { db } = await connectToDatabase();
+    const globalCertificateName = await getGlobalCertificateName(db, userAddress);
+    const displayName = inputDisplayName || globalCertificateName || "";
+
+    if (!displayName) {
+      return NextResponse.json(
+        { error: "Please set your certificate name first" },
+        { status: 400 }
+      );
+    }
+    if (inputDisplayName) {
+      await setGlobalCertificateName(db, userAddress, displayName);
+    }
 
     // Only set if not already generated
     const existing = await getModuleData(db, userAddress, moduleId);

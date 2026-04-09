@@ -58,7 +58,7 @@ export default function CertificationViewPage() {
   const [certificateError, setCertificateError] = useState<string | null>(null);
   const [certificateOnChainGenerated, setCertificateOnChainGenerated] =
     useState(false);
-  const [pataramCertificateLink, setPataramCertificateLink] = useState<
+  const [patramCertificateLink, setpatramCertificateLink] = useState<
     string | null
   >(null);
   const [certificateGeneratedAt, setCertificateGeneratedAt] = useState<
@@ -117,7 +117,7 @@ export default function CertificationViewPage() {
           setCertificateOnChainGenerated(
             Boolean(data.certificateOnChainGenerated)
           );
-          setPataramCertificateLink(data.pataramCertificateLink || null);
+          setpatramCertificateLink(data.patramCertificateLink || null);
           setCertificateGeneratedAt(
             typeof data.certificateGeneratedAt === "string"
               ? data.certificateGeneratedAt
@@ -311,14 +311,14 @@ export default function CertificationViewPage() {
                               }
                             }
 
-                            // State 3: onchain certificate ready -> open Pataram link
+                            // State 3: onchain certificate ready -> open patram link
                             if (
                               certificateLocked &&
                               certificateOnChainGenerated &&
-                              pataramCertificateLink
+                              patramCertificateLink
                             ) {
                               window.open(
-                                pataramCertificateLink as string,
+                                patramCertificateLink as string,
                                 "_blank"
                               );
                             }
@@ -329,7 +329,7 @@ export default function CertificationViewPage() {
                             (certificateLocked && !certificateOnChainGenerated) ||
                             (certificateLocked &&
                               certificateOnChainGenerated &&
-                              !pataramCertificateLink)
+                              !patramCertificateLink)
                           }
                           className={`inline-flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all duration-200 ${
                             !certificateLocked && !certificateName.trim()
@@ -365,7 +365,7 @@ export default function CertificationViewPage() {
                       !certificateOnChainGenerated && (
                         <p className="text-amber-300 text-sm">
                           Your request has been submitted. Onchain certificate
-                          generation is pending from Pataram...
+                          generation is pending from patram...
                         </p>
                       )}
                    

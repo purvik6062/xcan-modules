@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     const user = await collection.findOne(
       { address: walletAddress },
-      { projection: { "socialHandles.githubUsername": 1 } }
+      { projection: { "socialHandles.githubUsername": 1, certificateName: 1 } }
     );
 
     if (!user) {
@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       hasGithub,
       githubUsername,
+      certificateName: user.certificateName || null,
     });
   } catch (error) {
     console.error("Error checking GitHub username:", error);
