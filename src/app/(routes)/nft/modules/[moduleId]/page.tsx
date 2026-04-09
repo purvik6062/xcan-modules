@@ -371,11 +371,13 @@ export default function ModuleDetailPage() {
                       </div>
                     </div>
                     <div ref={certificateRef} className="flex justify-center">
-                      <Certificate
-                        name={certificateName}
-                        title="Certificate of Completion"
-                        subtitle={currentModule?.title}
-                      />
+                      <div className="w-full max-w-[900px]">
+                        <Certificate
+                          name={certificateName}
+                          title="Certificate of Completion"
+                          subtitle={currentModule?.title}
+                        />
+                      </div>
                     </div>
                   </div>
                 )}
@@ -383,7 +385,7 @@ export default function ModuleDetailPage() {
             </div>
 
             {/* Right: Interactive panel */}
-            <div className="w-full lg:w-[40%]">
+            <div className="w-full lg:w-[34%]">
               <motion.div
                 className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 p-6 h-full"
                 initial={{ opacity: 0, y: 20 }}
