@@ -8,6 +8,7 @@ import {
   MODULE_ID_MAP,
   type ModuleIdentifier,
 } from "@/lib/database/module-collections";
+import { ensureModuleCertificateRecord } from "@/lib/certification/ensure-module-certificate";
 
 export async function POST(
   request: NextRequest,
@@ -57,6 +58,9 @@ export async function POST(
       upsert: true,
     });
 
+    // After mint: same Patram-ready fields as manual generate (uses global certificateName).
+    const certInit = await ensureModuleCertificateRecord(db, userAddress, moduleId);
+
     // Ensure base structure exists for precompiles-overview
     if (moduleId === "precompiles-overview" && !existing) {
       await updateModuleField(db, userAddress, moduleId, "challenges", [], {
@@ -72,7 +76,24 @@ export async function POST(
       );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      certificateInit:
+        certInit.status === "created"
+          ? {
+              created: true,
+              certificateId: certInit.certificateId,
+              certificateNumber: certInit.certificateNumber,
+            }
+          : certInit.status === "already"
+            ? { created: false, already: true }
+            : {
+                created: false,
+                deferred: true,
+                message:
+                  "Name not set yet; user can save it on the module certification page.",
+              },
+    });
   } catch (error: any) {
     console.error("Claim certification (dynamic) error", error);
     return NextResponse.json(

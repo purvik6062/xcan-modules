@@ -23,6 +23,7 @@ import { MintedNFTDisplay } from "@/components/nft/MintedNFTDisplay";
 import Certificate from "@/components/Certificate";
 import { handleDownloadPDF } from "@/utils/certificate-pdf";
 import { MODULE_THEME_BG_R, MODULE_THEME_GRADIENT_BR } from "@/theme/moduleTheme";
+import { clearDeferredCertNamePrompt } from "@/lib/cert-name-defer";
 
 export default function CertificationViewPage() {
   const router = useRouter();
@@ -230,7 +231,9 @@ export default function CertificationViewPage() {
                   <div>
                     <p className="text-white font-semibold">Certificate</p>
                     <p className="text-gray-400 text-sm">
-                      Save your name and request an onchain certificate.
+                      Enter the name shown on your certificate here if you have
+                      not saved one in your profile yet, then request the
+                      onchain certificate.
                     </p>
                   </div>
                   <button
@@ -252,6 +255,11 @@ export default function CertificationViewPage() {
                         <label className="block text-sm text-gray-300 mb-1">
                           Enter your name
                         </label>
+                        <p className="text-xs text-gray-500 mb-2">
+                          Use your correct legal name; it will be shown on this
+                          certificate. You can set this here even without a saved
+                          profile name.
+                        </p>
                         <input
                           type="text"
                           value={certificateName}
@@ -295,6 +303,7 @@ export default function CertificationViewPage() {
                                       "Failed to save certificate name"
                                   );
                                 }
+                                clearDeferredCertNamePrompt(address);
                                 setCertificateLocked(true);
                                 if (
                                   typeof data?.certificateGeneratedAt ===

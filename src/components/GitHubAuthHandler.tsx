@@ -1,6 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import {
+  deferCertNameStorageKey,
+  clearDeferredCertNamePrompt,
+} from "@/lib/cert-name-defer";
 import { useWalletProtection } from "@/hooks/useWalletProtection";
 
 interface GitHubAuthHandlerProps {
@@ -32,12 +36,22 @@ export default function GitHubAuthHandler({
   );
   const [isSavingCertificateName, setIsSavingCertificateName] = useState(false);
 
-  /** After GitHub is connected, prompt for certificate name if still missing. */
+  /**
+   * After GitHub is connected, require certificate name unless already saved.
+   * Legacy: if sessionStorage has the old defer flag (past students who skipped), do not show the modal.
+   */
   const maybeOpenCertificateNamePopup = useCallback(
-    (storedCertificateName: string | null, githubConnected: boolean) => {
+    (
+      storedCertificateName: string | null,
+      githubConnected: boolean,
+      walletAddress: string
+    ) => {
       const normalized = (storedCertificateName || "").trim();
       setCertificateName(normalized || null);
-      if (githubConnected && !normalized) {
+      const deferred =
+        typeof window !== "undefined" &&
+        sessionStorage.getItem(deferCertNameStorageKey(walletAddress)) === "1";
+      if (githubConnected && !normalized && !deferred) {
         setCertificateNameInput("");
         setShowCertificateNamePopup(true);
       } else {
@@ -66,7 +80,8 @@ export default function GitHubAuthHandler({
           setGithubUsername(data.githubUsername);
           maybeOpenCertificateNamePopup(
             data.certificateName || null,
-            Boolean(data.hasGithub)
+            Boolean(data.hasGithub),
+            address
           );
         } else {
           console.error("Failed to check GitHub status:", data.error);
@@ -107,6 +122,7 @@ export default function GitHubAuthHandler({
 
       const savedName = String(data?.certificateName || trimmed);
       setCertificateName(savedName);
+      clearDeferredCertNamePrompt(address);
       setShowCertificateNamePopup(false);
       setCertificateNameInput(savedName);
     } catch (error) {
@@ -190,7 +206,7 @@ export default function GitHubAuthHandler({
             } catch {
               storedName = null;
             }
-            maybeOpenCertificateNamePopup(storedName, true);
+            maybeOpenCertificateNamePopup(storedName, true, address);
 
             // Clean up URL parameters
             const newUrl = new URL(window.location.href);
