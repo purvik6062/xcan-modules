@@ -1160,7 +1160,7 @@ Welcome to the future of finance! 🔄✨`,
           questions: [
             {
               id: "q1",
-              question: "What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(&self) -> i32 { self.width * self.height }\n}\nlet r = Rect { width: 10, height: 20 };\nprintln!(\"{}\", r.area());\nprintln!(\"{}\", r.width);\n```",
+              question: "What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\n\nimpl Rect {\n    fn area(&self) -> i32 { self.width * self.height }\n}\n\nfn main() {\n    let r = Rect { width: 10, height: 20 };\n    println!(\"{}\", r.area());\n    println!(\"{}\", r.width);\n}\n```",
               options: [
                 "200, then compile error",
                 "200\n10",
