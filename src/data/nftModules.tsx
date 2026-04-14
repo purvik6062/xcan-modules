@@ -300,7 +300,7 @@ export const nftModules: NFTModule[] = [
     image: "/Precompile Playground.png",
     level: "Beginner to Advanced",
     duration: "1-2 weeks",
-    challenges: 6,
+    challenges: 5,
     status: "available",
     gradient: MODULE_THEME_GRADIENT_BR,
     database: "mongodb",

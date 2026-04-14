@@ -4,6 +4,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
   useSwitchChain,
+  usePublicClient,
 } from "wagmi";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../utils/contracts";
 import toast from "react-hot-toast";
@@ -115,6 +116,22 @@ export const useMint = () => {
 
   const { writeContractAsync } = useWriteContract();
   const { isSuccess: isMined } = useWaitForTransactionReceipt({ hash: txHash });
+  const publicClient = usePublicClient();
+
+  const get10xGasFees = async () => {
+    try {
+      const fees = await publicClient?.estimateFeesPerGas();
+      if (!fees) return {};
+      return {
+        maxFeePerGas: fees.maxFeePerGas ? fees.maxFeePerGas * BigInt(15) : undefined,
+        maxPriorityFeePerGas: fees.maxPriorityFeePerGas
+          ? fees.maxPriorityFeePerGas * BigInt(15)
+          : undefined,
+      };
+    } catch {
+      return {};
+    }
+  };
 
   const uploadFileToPinata = async (file: File) => {
     const formData = new FormData();
@@ -342,12 +359,14 @@ export const useMint = () => {
       // console.log("metadataIpfsUrl", metadataResult.ipfsUrl);
       // console.log("metadataGatewayUrl", metadataResult.gatewayUrl);
 
-      // Mint NFT using the ipfs:// URL for metadata
+      const gasFees = await get10xGasFees();
+
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
         functionName: "safeMint",
         args: [address, `ipfs://${metadataHash}`],
+        ...gasFees,
       });
 
       setTxHash(hash);
@@ -426,11 +445,14 @@ export const useMint = () => {
       // console.log("metadataIpfsUrl", metadataResult.ipfsUrl);
       // console.log("metadataGatewayUrl", metadataResult.gatewayUrl);
 
+      const gasFees = await get10xGasFees();
+
       const hash = await writeContractAsync({
         address: XCAN_CONTRACT_ADDRESS,
         abi: XCAN_ABI,
         functionName: "mintSelf",
         args: [`ipfs://${metadataIpfsHash}`],
+        ...gasFees,
       });
 
       setTxHash(hash);

@@ -293,6 +293,10 @@ export default function Playground() {
                 options={{
                   minimap: { enabled: false },
                   fontSize: 13,
+                  scrollbar: {
+                    alwaysConsumeMouseWheel: false,
+                    handleMouseWheel: false,
+                  },
                   scrollBeyondLastLine: false,
                   wordWrap: "on",
                   formatOnPaste: true,

@@ -359,7 +359,7 @@ export const learningModules: LearningModule[] = [
     image: "/Precompile Playground.png",
     level: "Beginner to Advanced",
     duration: "1-2 weeks",
-    challenges: 6,
+    challenges: 5,
     status: "available",
     href: "/challenges",
     target: "_self",

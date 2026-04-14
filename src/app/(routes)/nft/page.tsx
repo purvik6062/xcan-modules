@@ -365,8 +365,6 @@ export default function HomePage() {
                     </GlassCard>
                   </motion.div>
 
-                  {/* Xcan Advocate Highlight - only when connected and correct network */}
-                  {isCorrectNetwork && <XcanAdvocateHighlight />}
                 </motion.div>
               </>
             ) : (
@@ -381,7 +379,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <GlassCard className="p-10">
+            <GlassCard className="p-10 mt-10">
               <div className="flex items-center gap-6 mb-10">
                 <motion.div
                   className={`w-16 h-16 ${MODULE_THEME_BG_BR} rounded-2xl flex items-center justify-center relative`}
@@ -471,6 +469,11 @@ export default function HomePage() {
                 })}
               </div>
             </GlassCard>
+
+             {/* Xcan Advocate Highlight - only when connected and correct network */}
+             <div className="mt-10">
+                {isCorrectNetwork && <XcanAdvocateHighlight />}
+             </div>
           </motion.div>
         </div>
       </div>
