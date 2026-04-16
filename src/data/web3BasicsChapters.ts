@@ -57,9 +57,9 @@ export interface Quiz {
 export const web3BasicsChapters: Chapter[] = [
   {
     id: "web3-foundations",
-    title: "Web3 Foundations",
+    title: "Web3 Access & Network Basics",
     description:
-      "Discover the evolution from Web1 to Web3 and learn about digital wallets - your gateway to the decentralized internet. Understand how Web3 empowers users with true ownership.",
+      "Learn how wallets, addresses, and networks work in practical Web3 usage. Explore native tokens, transaction flow, and core participation rules without relying on centralized platforms.",
     icon: "🌐",
     level: "Beginner",
     points: 10,
@@ -128,7 +128,29 @@ Key Features:
 
 Web3 represents a fundamental shift from extractive platforms to community-owned networks. Instead of working for Big Tech companies for free (by providing data), users can now own and benefit from the platforms they help build.
 
-This journey from Web1 to Web3 is like humanity's transition from feudalism to democracy - it's about giving power back to the people!`,
+This journey from Web1 to Web3 is like humanity's transition from feudalism to democracy - it's about giving power back to the people!
+
+## Network Fuel and Transaction Flow ⚙️
+
+Every blockchain network needs a native unit that keeps activity moving. Users pay small fees in that unit so transactions can be processed and finalized.
+
+On Ethereum and many Ethereum-based environments, activity often relies on ETH as the payment token for execution costs. Even when users interact with different applications, settlement still depends on network rules and validators.
+
+A transaction lifecycle usually includes:
+- A wallet signs the transaction
+- The network checks validity
+- Validators include it in a block
+- Finalized state appears on chain
+
+## Keys, Addresses, and Safe Sharing 🔑
+
+Wallet usage depends on two different concepts: a secret signer and a public destination.
+
+The secret signer authorizes actions and must stay private. The destination identifier can be shared openly when receiving assets.
+
+Cryptographic systems used in common wallets are designed with one-way properties. This lets software derive public-facing data from secret material while resisting reverse reconstruction in practical settings.
+
+Safe transfers depend on sending to the correct destination and protecting signing credentials from exposure.`,
           questions: [
             {
               id: "q1",
@@ -153,6 +175,56 @@ This journey from Web1 to Web3 is like humanity's transition from feudalism to d
               explanation:
                 "True! Web3's core principle is user ownership - users control their data, identity, and digital assets through wallets and decentralized protocols.",
               type: "true-false",
+            },
+            {
+              id: "q3",
+              question:
+                "Which asset is commonly used to pay transaction execution costs on Ethereum and many Ethereum-based networks?",
+              options: ["BTC", "ETH", "USDC", "SOL"],
+              correctAnswer: 1,
+              explanation:
+                "ETH is the common native asset used for transaction execution on Ethereum and many Ethereum-based environments.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question:
+                "What minimum share of network influence is usually referenced in a majority attack discussion?",
+              options: ["25%", "33%", "51%", "75%"],
+              correctAnswer: 2,
+              explanation:
+                "A 51% majority is the commonly cited threshold for controlling consensus outcomes in many discussions.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q5",
+              question:
+                "Which statement about public and private keys is correct?",
+              options: [
+                "A private key can be directly derived from a public key",
+                "Public and private keys are unrelated random values",
+                "A public key is derived from a private key using one-way cryptography",
+                "Both keys can be safely shared in public chats",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Public keys are derived from private keys through one-way cryptographic functions.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q6",
+              question:
+                "To receive cryptocurrency from another user, what information is typically required?",
+              options: [
+                "Recipient's private key",
+                "Recipient's seed phrase",
+                "Recipient's wallet address/public key",
+                "Recipient's exchange login password",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Only the public receiving destination (wallet address/public key) is needed to send funds.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -244,7 +316,20 @@ After a week of exploring, Maya realizes her digital wallet isn't just about mon
 
 Maya's journey represents millions of people discovering that digital wallets aren't just about storing cryptocurrency - they're about digital sovereignty, true ownership, and participating in a new internet where users control their own data and assets.
 
-Welcome to the wallet revolution! 👛✨`,
+Welcome to the wallet revolution! 👛✨
+
+## Decentralization and Participation 🌍
+
+Distributed systems trade off between several desired properties. Engineering decisions often optimize for one axis while adding tooling to support another.
+
+Community participation is possible because anyone can verify public state and interact through open interfaces, but protocol design still requires compromise among speed, safety, and broad distribution of control.
+
+Practical participation includes:
+- Using self-custodial wallets
+- Verifying transaction status on explorers
+- Comparing protocol risks before interacting
+
+These habits reduce reliance on opaque intermediaries.`,
           questions: [
             {
               id: "q1",
@@ -271,6 +356,36 @@ Welcome to the wallet revolution! 👛✨`,
                 "False! Your seed phrase IS your wallet. If you lose it and don't have other recovery methods, you permanently lose access to your funds and assets.",
               type: "true-false",
             },
+            {
+              id: "q3",
+              question:
+                "Which option is NOT one of the commonly discussed blockchain trilemma dimensions?",
+              options: [
+                "Scalability",
+                "Security",
+                "Decentralization",
+                "Marketing reach",
+              ],
+              correctAnswer: 3,
+              explanation:
+                "The classic trilemma focuses on scalability, security, and decentralization.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question:
+                "Which behavior best reflects permissionless participation?",
+              options: [
+                "Waiting for bank approval to create a wallet",
+                "Using open protocols directly with a compatible wallet",
+                "Submitting passport scans before viewing a block explorer",
+                "Requesting validator permission to read transaction history",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Permissionless systems allow direct interaction through open protocols and wallets.",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -278,20 +393,20 @@ Welcome to the wallet revolution! 👛✨`,
   },
   {
     id: "blockchain-cryptography",
-    title: "Blockchain & Cryptography",
+    title: "Consensus and Cryptography Essentials",
     description:
-      "Dive deep into the technology that powers Web3. Understand how blocks form unbreakable chains, how distributed ledgers create trust without authorities, and how cryptographic keys secure your digital assets.",
+      "Understand how consensus, cryptography, and validation logic protect blockchain systems. Learn practical security boundaries and how attack assumptions are modeled.",
     icon: "🔐",
     level: "Beginner",
     points: 10,
-      duration: "2.5 hours",
+    duration: "2.5 hours",
     status: "available",
     badge: {
       title: "Crypto Guardian",
       description: "Mastered Blockchain and Cryptography",
       image: "/badges/crypto-guardian.png",
     },
-    sections: [
+    sections: [  
       {
         id: "lunas-blockchain-mystery",
         title: "Luna's Blockchain Detective Story",
@@ -430,7 +545,23 @@ Luna has solved the greatest mystery of the digital age: how to create trust wit
 
 "Every block is a piece of unbreakable truth," Luna concludes, "and every chain is a timeline of trust that no one can rewrite!"
 
-Welcome to the age of digital truth! 🧱✨`,
+Welcome to the age of digital truth! 🧱✨
+
+## One-Way Cryptography in Practice 🔐
+
+Public-key systems rely on asymmetric math. A secret value produces a public counterpart that can be shared widely.
+
+Security comes from computational asymmetry: forward operations are practical, reverse operations are infeasible with current methods.
+
+This property allows open receiving addresses, public verification, and private authorization without exposing signing authority.
+
+## Trust and Verification Rules ✅
+
+Blockchains replace centralized approval with shared verification rules. Nodes independently validate signatures, balances, and protocol constraints.
+
+Because many parties verify the same data, users do not rely on a single institution to maintain correctness. Trust shifts from organization reputation to transparent computation and open state checks.
+
+In practice, users still need caution: verify contracts, validate addresses, and understand protocol risks before signing.`,
           questions: [
             {
               id: "q1",
@@ -457,6 +588,81 @@ Welcome to the age of digital truth! 🧱✨`,
                 "False! Blockchain is 'trustless' - it uses cryptography and consensus among many independent nodes to verify transactions, eliminating the need for a central authority.",
               type: "true-false",
             },
+            {
+              id: "q3",
+              question:
+                "What is the main role of a nonce in a Proof-of-Work block?",
+              options: [
+                "It permanently stores the list of transactions in the block",
+                "It is the wallet address of the miner who created the block",
+                "It is a number miners adjust repeatedly until the block hash meets the difficulty target",
+                "It links one block to the next block in the chain",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Miners increment the nonce to change the block hash output until it satisfies the required difficulty target.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q4",
+              question:
+                "You delete a wallet app and buy a new phone. Your seed phrase is safely written down. What is true?",
+              options: [
+                "Your funds are permanently lost because the app is deleted",
+                "You can restore full access by re-entering your seed phrase in any compatible wallet app",
+                "You must contact the blockchain network to recover your balance",
+                "Your wallet address changes when you reinstall the app",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "The seed phrase controls the keys. Reinstalling any compatible wallet and entering the seed phrase fully restores access.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q5",
+              question:
+                "If someone only knows your public address, what can they generally do?",
+              options: [
+                "Sign transactions from your wallet",
+                "View and send assets to that address",
+                "Extract your seed phrase instantly",
+                "Reset your private key",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Public addresses are meant for receiving and visibility, not authorization.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q6",
+              question:
+                "What best describes blockchain verification in a decentralized design?",
+              options: [
+                "A single authority approves all state changes",
+                "Independent nodes apply shared protocol rules to validate changes",
+                "Only exchange operators can verify balances",
+                "Verification is optional and done after settlement",
+              ],
+              correctAnswer: 1,
+              explanation:
+                "Decentralized systems rely on many independent verifiers using common rules.",
+              type: "multiple-choice",
+            },
+            {
+              id: "q7",
+              question:
+                "Which action most improves user-side transaction safety?",
+              options: [
+                "Signing first and checking details later",
+                "Relying only on social media comments",
+                "Verifying contract and address details before signing",
+                "Using a shared private key for team speed",
+              ],
+              correctAnswer: 2,
+              explanation:
+                "Pre-signature verification is a core operational safety habit.",
+              type: "multiple-choice",
+            },
           ],
         },
       },
@@ -464,9 +670,9 @@ Welcome to the age of digital truth! 🧱✨`,
   },
   {
     id: "digital-assets-defi",
-    title: "Digital Assets & DeFi",
+    title: "Digital Assets, Layer 2, and DeFi",
     description:
-      "Explore the world of digital assets and decentralized finance. Learn about cryptocurrency, NFTs, and DeFi protocols through engaging stories about Sam, Zara, and Max.",
+      "Explore digital asset mechanics, Layer 2 execution models, and DeFi market behavior. Learn how users trade, transfer, and manage value across modern Web3 systems.",
     icon: "💎",
     level: "Intermediate",
     points: 15,
@@ -485,145 +691,46 @@ Welcome to the age of digital truth! 🧱✨`,
         status: "available",
         estimatedTime: "30 min",
         content: {
-          story: `# Sam's Cryptocurrency Discovery 💰
+          story: `# Digital Assets in Motion 💱
 
-Sam runs a small online art business and has always struggled with international payments. Let's see how discovering cryptocurrency changes everything!
+Digital assets behave differently depending on network design, liquidity depth, and execution environment.
 
-## Chapter 1: Sam's Payment Problems 😤
+Users interact with:
+- Base-layer settlement networks
+- Application-specific token ecosystems
+- Bridges and rollups for scaled execution
 
-Sam creates digital art and sells it worldwide. Their current payment struggles:
-
-- High Fees: Credit card companies take 3-5% of every sale
-- Slow Transfers: International payments take 3-7 business days
-- Currency Conversion: Losing money on exchange rates
-- Accessibility: Some customers can't access traditional banking
-- Chargebacks: Buyers can reverse payments months later
-
-"There has to be a better way," Sam thinks after losing $50 in fees on a $200 sale to Japan.
-
-## Chapter 2: The Digital Money Revolution 💡
-
-Sam's friend Rio introduces them to cryptocurrency:
-
-"Imagine money that's..."
-- Digital: Exists only in cyberspace, no physical form
-- Borderless: Works the same whether you're sending to your neighbor or someone in another continent
-- Programmable: Can be programmed to do smart things automatically
-- Scarce: Unlike traditional money, you can't just print more
-- Transparent: Every transaction is publicly recorded
-
-## Chapter 3: Understanding Digital Scarcity 🎯
-
-Rio explains a mind-bending concept:
-
-Traditional Digital Items (NOT scarce):
-- You can copy a digital photo infinite times
-- Each copy is identical to the original
-- No way to prove which copy is "original"
-
-Cryptocurrency (DIGITALLY SCARCE):
-- Each coin is unique and can't be duplicated
-- You can't "copy-paste" Bitcoin like you would a photo
-- The network keeps track of who owns what
-- This creates digital scarcity for the first time in history!
-
-"It's like having digital gold," Rio explains, "but better because you can send it instantly anywhere in the world."
-
-## Chapter 4: Sam's First Bitcoin Transaction ⚡
-
-Rio helps Sam set up a wallet and sends them $10 worth of Bitcoin. Sam watches in amazement:
-
-1. Transaction starts at 2:15 PM
-2. Network confirms the transaction within 10 minutes
-3. Sam receives the Bitcoin directly in their wallet
-4. Total cost: About $0.50 in network fees
-5. No middleman: No bank, no credit card company, just direct transfer
-
-"This is revolutionary!" Sam realizes. "I could have received this payment from anywhere in the world, at any time, in the same way!"
-
-## Chapter 5: Types of Cryptocurrency 🌈
-
-Sam learns there are different types of cryptocurrency, each with different purposes:
-
-Bitcoin (BTC) - Digital Gold 🥇
-- The first and most well-known cryptocurrency
-- Limited supply: Only 21 million will ever exist
-- Primarily used as a store of value
-- Like digital gold that you can send anywhere
-
-Ethereum (ETH) - Digital Oil ⛽
-- Not just money, but fuel for a world computer
-- Powers smart contracts and applications
-- Platform for building decentralized apps
-- Like owning shares in the internet's infrastructure
-
-Stablecoins (USDC, USDT) - Digital Dollars 💵
-- Cryptocurrencies pegged to real-world currencies
-- $1 stablecoin = $1 USD (approximately)
-- Combines crypto benefits with stable value
-- Perfect for payments and saving without volatility
-
-## Chapter 6: The Global Impact 🌍
-
-Sam discovers cryptocurrency's global implications:
-
-Financial Inclusion:
-- 1.7 billion people worldwide are unbanked
-- But many have smartphones and can access crypto
-- Cryptocurrency provides financial services to everyone
-
-Economic Freedom:
-- People in countries with unstable currencies use crypto to protect savings
-- Activists can receive donations without government interference
-- Artists like Sam can sell globally without permission
-
-Innovation:
-- Programmable money enables new types of applications
-- Decentralized finance (DeFi) recreates banking without banks
-- New economic models become possible
-
-## Chapter 7: Sam's Business Transformation 📈
-
-Three months later, Sam's business has transformed:
-
-- 30% of customers now pay with cryptocurrency
-- 90% lower fees compared to credit cards
-- Instant payments from anywhere in the world
-- No chargebacks - payments are final
-- New customer base from countries with limited banking
-
-"Cryptocurrency isn't just about money," Sam tells other artists, "it's about economic freedom and connecting directly with customers worldwide!"
-
-## The Money Revolution 🚀
-
-Sam's journey illustrates how cryptocurrency represents the biggest innovation in money since the invention of banking. It's creating a global, inclusive, programmable financial system that works for everyone.
-
-Welcome to the future of money! 💰✨`,
+Price behavior can come from market depth, participant demand, and protocol-level mechanics. This means users should treat each asset by utility and risk profile, not by ticker popularity alone.`,
           questions: [
             {
               id: "q1",
               question:
-                "What makes cryptocurrency different from traditional digital money like your bank account balance?",
+                "Which statement best captures a key property of many cryptocurrencies compared with standard bank balances?",
               options: [
-                "Cryptocurrency is only used for illegal activities",
-                "Cryptocurrency is digitally scarce and can't be copied or duplicated",
-                "Cryptocurrency is always more expensive to use",
-                "Cryptocurrency can only be used online",
+                "They can be freely duplicated without network checks",
+                "They depend on digitally verifiable scarcity rules",
+                "They always have fixed prices by law",
+                "They cannot move across borders",
               ],
               correctAnswer: 1,
               explanation:
-                "The key innovation is digital scarcity - cryptocurrencies can't be copied or duplicated like other digital files, creating true digital ownership.",
+                "Network consensus and cryptographic accounting enable digital scarcity and ownership tracking.",
               type: "multiple-choice",
             },
             {
               id: "q2",
               question:
-                "True or False: Stablecoins are designed to maintain a stable value relative to real-world currencies.",
-              options: ["True", "False"],
-              correctAnswer: 0,
+                "What is the best reason many users choose stable-value tokens?",
+              options: [
+                "Guaranteed profits regardless of market conditions",
+                "Reduced exposure to high short-term volatility",
+                "Permanent immunity from all protocol risks",
+                "Mandatory acceptance in all countries",
+              ],
+              correctAnswer: 1,
               explanation:
-                "True! Stablecoins like USDC are pegged to traditional currencies (like $1 USD = 1 USDC) to provide crypto benefits without price volatility.",
-              type: "true-false",
+                "Stable-value tokens are often used to reduce day-to-day price swings compared to volatile assets.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -635,104 +742,43 @@ Welcome to the future of money! 💰✨`,
         status: "available",
         estimatedTime: "35 min",
         content: {
-          story: `# Zara's NFT Creation Journey 🎨
+          story: `# Layer 2 and Asset Ownership Paths 🛣️
 
-Meet Zara, a talented digital artist who's been struggling with a fundamental problem in the digital world - proving ownership of her creations. Let's follow her journey into NFTs!
+Asset ownership records can span multiple execution layers. Some systems execute transactions away from a base chain and periodically settle proofs or state updates back to it.
 
-## Chapter 1: The Digital Artist's Dilemma 😔
+This model can improve throughput and cost characteristics, but users should understand where finality and security assumptions originate.
 
-Zara creates beautiful digital art, but faces frustrating challenges:
-
-The Copy-Paste Problem:
-- Anyone can right-click and save her artwork
-- People share her art without credit or payment
-- No way to prove she's the original creator
-- Digital art has no scarcity - infinite copies exist
-- How can digital art have value if anyone can copy it?
-
-"I love creating digital art," Zara sighs, "but I can't make a living when everyone just copies my work for free!"
-
-## Chapter 2: Zara Meets NFT Expert Jordan 💡
-
-At an art gallery, Zara meets Jordan, an NFT collector and educator:
-
-"What if I told you," Jordan says, "that blockchain technology can create digital scarcity and provable ownership for the first time in history?"
-
-Zara is skeptical: "But people can still copy my digital art!"
-
-Jordan smiles: "You're thinking about this wrong. Let me explain what NFTs ACTUALLY are..."
-
-## Chapter 3: Understanding NFTs 🧩
-
-Jordan breaks it down:
-
-NFT = Non-Fungible Token
-- Non-Fungible: Unique and irreplaceable (unlike Bitcoin, where 1 BTC = 1 BTC)
-- Token: A digital certificate stored on the blockchain
-
-What an NFT Really Is:
-- A unique digital certificate of ownership
-- Stored permanently on the blockchain
-- Contains metadata pointing to the digital asset
-- Proves authenticity and ownership history
-- Can be transferred to new owners
-
-"Think of an NFT like a certificate of authenticity for a painting," Jordan explains, "except this certificate is stored on an unbreakable, global ledger that everyone can verify."
-
-## Chapter 4: The Lightbulb Moment 💡
-
-Zara suddenly understands:
-
-"So when people 'buy' my NFT, they're not buying the image itself - they're buying a blockchain certificate that proves they own the ORIGINAL version of my digital creation!"
-
-Analogies That Click:
-- Trading Cards: Anyone can print a photo of a rare Pokemon card, but only one person owns the REAL card
-- Autographed Photos: You can copy a celebrity signed photo, but only one person owns the photo they actually signed
-- Concert Tickets: You can photocopy a ticket, but only the real ticket gets you into the venue
-
-## Chapter 5: Zara's First NFT Creation 🚀
-
-Jordan helps Zara create her first NFT:
-
-The Minting Process:
-1. Zara uploads her digital artwork to IPFS (decentralized storage)
-2. She creates metadata describing the artwork
-3. She mints an NFT on Ethereum, creating a unique token ID
-4. The blockchain records Zara as the original creator
-5. The NFT is now tradeable on marketplaces like OpenSea
-
-What's Recorded on the Blockchain:
-- Token ID: #4521
-- Creator: Zara's wallet address
-- Current Owner: Zara's wallet address
-- Metadata: Link to artwork and description
-- Creation Date: Permanently timestamped
-
-Welcome to the age of digital ownership! 🎨✨`,
+In ecosystem conversations, "built on top" often means dependence on the parent chain's settlement or security model, even if day-to-day interaction happens elsewhere.`,
           questions: [
             {
               id: "q1",
-              question: "What does an NFT actually represent?",
+              question:
+                "Which statement best describes how many Layer 2 networks relate to a base chain?",
               options: [
-                "The digital artwork file itself",
-                "A blockchain certificate of ownership and authenticity",
-                "A way to prevent people from copying digital art",
-                "A type of cryptocurrency",
+                "They are completely detached systems with no settlement relationship",
+                "They are execution layers that can anchor results to a base chain",
+                "They are private databases that never post data on-chain",
+                "They replace cryptography with centralized signatures only",
               ],
               correctAnswer: 1,
               explanation:
-                "An NFT is a blockchain certificate that proves ownership and authenticity of a digital asset. People can still copy the image, but only one person owns the official NFT certificate.",
+                "Layer 2 systems generally execute separately while maintaining settlement/security links to a base layer.",
               type: "multiple-choice",
             },
             {
               id: "q2",
               question:
-                "True or False: When an NFT is resold, the original creator can automatically receive royalties.",
-              options: ["True", "False"],
-              correctAnswer: 0,
+                "You own an NFT. The marketplace website that displayed it shuts down permanently. What happens to your ownership?",
+              options: [
+                "The NFT and your ownership are deleted along with the website",
+                "The blockchain record of your ownership remains intact regardless of the website",
+                "You must re-mint the NFT to prove ownership again",
+                "Ownership automatically transfers back to the original creator",
+              ],
+              correctAnswer: 1,
               explanation:
-                "True! One of the revolutionary features of NFTs is programmable royalties - creators can set a percentage they'll receive from all future sales of their NFT.",
-              type: "true-false",
+                "NFT ownership is recorded on-chain and is not dependent on any single website or marketplace remaining online.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -744,84 +790,45 @@ Welcome to the age of digital ownership! 🎨✨`,
         status: "available",
         estimatedTime: "35 min",
         content: {
-          story: `# Max's DeFi Trading Adventure 🔄
+          story: `# DeFi Liquidity and Market Mechanics 🔄
 
-Meet Max, a global merchant who's tired of the limitations of traditional financial systems. Let's follow their journey into the revolutionary world of DeFi (Decentralized Finance)!
+DeFi markets frequently use liquidity pools instead of traditional order books. Pool reserves and formulas influence quoted swap prices as trades move balances.
 
-## Chapter 1: Max's Trading Frustrations 😤
+Participants can trade without centralized matching engines, but outcomes still depend on liquidity depth, slippage, and smart contract behavior.
 
-Max runs an international trading business and faces daily challenges:
-
-Traditional Trading Problems:
-- Bank Hours: Can only trade during business hours
-- Geographic Limits: Different exchanges in different countries
-- High Fees: Banks and exchanges take large cuts
-- Slow Settlements: International transfers take days
-- Account Requirements: Extensive KYC and minimum balances
-- Middleman Control: Banks can freeze accounts or block transactions
-
-"There has to be a better way," Max thinks, "especially for digital assets like cryptocurrency!"
-
-## Chapter 2: Discovery of DeFi 🌟
-
-Max's tech-savvy friend Riley introduces them to DeFi:
-
-"What if I told you there's a financial system that:
-- Never closes (24/7/365)
-- Works anywhere in the world
-- Has no account requirements
-- Settles transactions in minutes
-- Charges minimal fees
-- Can't be controlled by any single entity?"
-
-Max is skeptical: "That sounds too good to be true!"
-
-Riley grins: "Welcome to Decentralized Finance - DeFi!"
-
-## Chapter 3: Understanding Traditional Exchanges vs AMMs 📊
-
-Riley explains the fundamental difference:
-
-Traditional Exchanges (Order Books):
-- Buyers place buy orders: "I'll buy 100 tokens at $10 each"
-- Sellers place sell orders: "I'll sell 100 tokens at $10.50 each"
-- Matching Engine pairs buyers and sellers
-- Requires Market Makers to provide liquidity
-- Centralized - the exchange controls everything
-
-Automated Market Makers (AMMs):
-- Liquidity Pools contain pairs of tokens (like ETH/USDC)
-- Mathematical Formula determines price automatically
-- Anyone Can Trade by swapping tokens with the pool
-- No Order Books - just math!
-- Decentralized - runs on smart contracts
-
-Welcome to the future of finance! 🔄✨`,
+Good practice includes:
+- Checking pool depth before large swaps
+- Comparing execution routes
+- Reviewing protocol and smart contract risk`,
           questions: [
             {
               id: "q1",
-              question:
-                "How do Automated Market Makers (AMMs) determine token prices?",
+              question: "What best describes a blockchain transaction?",
               options: [
-                "Prices are set by the exchange operators",
-                "Through order books matching buyers and sellers",
-                "Using mathematical formulas based on token ratios in liquidity pools",
-                "Prices are fixed and never change",
+                "A private chat message between two validators",
+                "A signed state change request recorded on-chain after validation",
+                "A local wallet note that never reaches the network",
+                "A database update controlled by one company server",
               ],
-              correctAnswer: 2,
+              correctAnswer: 1,
               explanation:
-                "AMMs use mathematical formulas (like x × y = k) based on the ratio of tokens in liquidity pools to automatically determine prices as trades occur.",
+                "A blockchain transaction is a signed request (such as sending assets) that updates network state once validated and included on-chain.",
               type: "multiple-choice",
             },
             {
               id: "q2",
               question:
-                "True or False: In DeFi, you need permission from a bank or financial institution to trade tokens.",
-              options: ["True", "False"],
+                "A Web2 platform shuts down and deletes all user data. In a Web3 model, what most likely differs?",
+              options: [
+                "Web3 platforms can also delete user data since they control the servers",
+                "User-controlled wallets and on-chain assets remain accessible regardless of any single platform shutting down",
+                "Web3 platforms require government approval before shutting down",
+                "Users in Web3 must request data backups before a platform shuts down",
+              ],
               correctAnswer: 1,
               explanation:
-                "False! DeFi is permissionless - anyone with a Web3 wallet can interact with DeFi protocols directly without needing approval from any institution.",
-              type: "true-false",
+                "In Web3, assets and identity are held in user-controlled wallets on-chain, not on a company's server, so no single platform can erase them.",
+              type: "multiple-choice",
             },
           ],
         },
@@ -869,7 +876,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q2",
-              question: "In Rust, variables are immutable by default. How do you make a variable mutable?",
+              question:
+                "In Rust, variables are immutable by default. How do you make a variable mutable?",
               options: [
                 "Add the 'var' keyword",
                 "Add the 'mut' keyword",
@@ -883,7 +891,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q3",
-              question: "What keyword makes a function or struct visible outside its module in Rust?",
+              question:
+                "What keyword makes a function or struct visible outside its module in Rust?",
               options: ["export", "public", "pub", "open"],
               correctAnswer: 2,
               explanation:
@@ -892,7 +901,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q4",
-              question: "What does the following code print?\n\n```rust\nstruct Dog { name: String }\nimpl Dog {\n  fn bark(&self) { println!(\"{} says Woof\", self.name); }\n}\nlet d = Dog { name: String::from(\"Rex\") };\nd.bark();\n```",
+              question:
+                'What does the following code print?\n\n```rust\nstruct Dog { name: String }\nimpl Dog {\n  fn bark(&self) { println!("{} says Woof", self.name); }\n}\nlet d = Dog { name: String::from("Rex") };\nd.bark();\n```',
               options: [
                 "Compile error",
                 "Rex says Woof",
@@ -997,7 +1007,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q2",
-              question: "What does this code print?\n\n```rust\nlet x = Some(10);\nmatch x {\n  Some(v) => println!(\"{}\", v * 2),\n  None    => println!(\"nothing\"),\n}\n```",
+              question:
+                'What does this code print?\n\n```rust\nlet x = Some(10);\nmatch x {\n  Some(v) => println!("{}", v * 2),\n  None    => println!("nothing"),\n}\n```',
               options: ["nothing", "10", "20", "Compile error"],
               correctAnswer: 2,
               explanation:
@@ -1020,7 +1031,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q4",
-              question: "What does this code print?\n\n```rust\nstruct Counter { count: i32 }\nimpl Counter {\n  fn value(&self) -> i32 { self.count }\n  fn inc(&mut self)  { self.count += 1; }\n}\nlet mut c = Counter { count: 0 };\nc.inc();\nc.inc();\nprintln!(\"{}\", c.value());\n```",
+              question:
+                'What does this code print?\n\n```rust\nstruct Counter { count: i32 }\nimpl Counter {\n  fn value(&self) -> i32 { self.count }\n  fn inc(&mut self)  { self.count += 1; }\n}\nlet mut c = Counter { count: 0 };\nc.inc();\nc.inc();\nprintln!("{}", c.value());\n```',
               options: ["0", "1", "2", "Compile error"],
               correctAnswer: 2,
               explanation:
@@ -1055,7 +1067,7 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "45 min",
         content: {
-          story: `# Understanding Ownership 🔐\n\nOwnership is Rust's model for memory safety without a garbage collector. The rules:\n1) Each value has a single owner.\n2) When the owner goes out of scope, the value is dropped.\n3) You can borrow references to a value (immutable or mutable), subject to rules.\n\n## Moves and Clones\nAssignments move ownership by default.\n\n\`\`\`rust\nlet s1 = String::from("hello");\nlet s2 = s1; // move: s1 no longer usable\n// println!("{}", s1); // compile error\nlet s3 = s2.clone(); // deep copy\n\`\`\`\n\n## Borrowing\n- Any number of immutable references (\`&T\`) OR exactly one mutable reference (\`&mut T\`) in a scope.\n- Prevents data races at compile time.\n\n\`\`\`rust\nlet mut name = String::from("Maya");\nlet r1 = &name;\nlet r2 = &name;\nprintln!("{} {}", r1, r2); // OK: multiple immutable borrows\n// let r3 = &mut name; // not allowed while r1/r2 in use\n\`\`\`\n\n## Slices\nBorrowed views into collections (like strings or arrays) that do not take ownership.\n\n\`\`\`rust\nfn first_word(s: &str) -> &str {\n  for (i, c) in s.char_indices() {\n    if c == ' ' { return &s[..i]; }\n  }\n  s\n}\n\`\`\`\n\nOwnership makes resource management explicit and safe, enabling predictable performance.`,
+          story: `# Understanding Ownership 🔐\n\nOwnership is Rust's model for memory safety without a garbage collector. The rules:\n1) Each value has a single owner.\n2) When the owner goes out of scope, the value is dropped.\n3) You can borrow references to a value (immutable or mutable), subject to rules.\n\n## Moves and Clones\nAssignments move ownership by default.\n\n\`\`\`rust\nlet s1 = String::from("hello");\nlet s2 = s1; // move: s1 no longer usable\n// println!("{}", s1); // compile error\nlet s3 = s2.clone(); // deep copy\n\`\`\`\n\n## Borrowing\n- Any number of immutable references (\`&T\`) OR exactly one mutable reference (\`&mut T\`) in a scope.\n- Prevents data races at compile time.\n\n\`\`\`rust\nlet mut name = String::from("Maya");\nlet r1 = &name;\nlet r2 = &name;\nprintln!("{} {}", r1, r2); // OK: multiple immutable borrows\n// let r3 = &mut name; // not allowed while r1/r2 in use\n\`\`\`\n\n## `,
           questions: [
             {
               id: "q1",
@@ -1156,11 +1168,12 @@ Welcome to the future of finance! 🔄✨`,
         status: "available",
         estimatedTime: "45 min",
         content: {
-          story: `# impl, self, trait, pub — Putting It All Together 🧠\n\n## impl — Attach Methods to a Struct\n\`impl\` is how you give a struct its own functions (methods). Without \`impl\`, a struct is just a bag of data.\n\n\`\`\`rust\nstruct Rect {\n  width:  i32,\n  height: i32,\n}\n\nimpl Rect {\n  fn area(&self) -> i32 {\n    self.width * self.height\n  }\n}\n\nfn main() {\n  let r = Rect { width: 10, height: 20 };\n  println!(\"{}\", r.area()); // 200\n}\n\`\`\`\n\n## self — The Three Receiver Types\n| Receiver | What it means |\n|---|---|\n| \`&self\` | Read-only borrow — struct stays alive |\n| \`&mut self\` | Mutable borrow — can change fields |\n| \`self\` | Takes ownership — struct is consumed |\n\n\`\`\`rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(&self) -> i32        { self.width * self.height }   // read\n  fn double_width(&mut self)   { self.width *= 2; }            // write\n}\n\nlet mut r = Rect { width: 5, height: 4 };\nprintln!(\"{}\", r.area()); // 20\nr.double_width();\nprintln!(\"{}\", r.area()); // 40\n\`\`\`\n\n## trait — Shared Behaviour\nA \`trait\` lists method names that many types can implement — like an interface.\n\n\`\`\`rust\ntrait Shape {\n  fn area(&self) -> f64;\n  fn name(&self) -> &str;\n}\n\nstruct Circle { radius: f64 }\nstruct Square { side: f64 }\n\nimpl Shape for Circle {\n  fn area(&self) -> f64  { 3.14 * self.radius * self.radius }\n  fn name(&self) -> &str { \"Circle\" }\n}\n\nimpl Shape for Square {\n  fn area(&self) -> f64  { self.side * self.side }\n  fn name(&self) -> &str { \"Square\" }\n}\n\nfn print_area(s: &dyn Shape) {\n  println!(\"{}: area = {}\", s.name(), s.area());\n}\n\nprint_area(&Circle { radius: 3.0 }); // Circle: area = 28.26\nprint_area(&Square { side: 4.0 });   // Square: area = 16\n\`\`\`\n\n## pub — Visibility Control\nBy default everything is **private** in Rust. Use \`pub\` to make it accessible from outside the module.\n\n\`\`\`rust\nmod bank {\n  pub struct Account {\n    pub owner: String,     // publicly readable\n        balance: f64,      // private — cannot be accessed outside mod\n  }\n\n  impl Account {\n    pub fn new(owner: &str) -> Self {\n      Account { owner: owner.to_string(), balance: 0.0 }\n    }\n    pub fn deposit(&mut self, amount: f64) {\n      self.balance += amount; // internal access is fine\n    }\n    pub fn balance(&self) -> f64 { self.balance }\n  }\n}\n\nuse bank::Account;\nlet mut acc = Account::new(\"Maya\");\nacc.deposit(100.0);\nprintln!(\"{} has \${}\", acc.owner, acc.balance()); // Maya has $100\n\`\`\`\n\n## Memory Safety Without a Garbage Collector\nRust does NOT use a GC. Values are dropped automatically when the owner goes out of scope. This gives you both safety and predictable performance.\n\n\`\`\`rust\nlet s1 = String::from(\"rust\");\nlet s2 = s1;          // ownership moves to s2, s1 is invalid\nlet s3 = s2.clone();  // explicit deep copy — both s2 and s3 are valid\n\`\`\``,
+          story: `# impl, self, trait, pub — Putting It All Together 🧠\n\n## impl — Attach Methods to a Struct\n\`impl\` is how you give a struct its own functions (methods). Without \`impl\`, a struct is just a bag of data.\n\n\`\`\`rust\nstruct Rect {\n  width:  i32,\n  height: i32,\n}\n\nimpl Rect {\n  fn area(&self) -> i32 {\n    self.width * self.height\n  }\n}\n\nfn main() {\n  let r = Rect { width: 10, height: 20 };\n  println!(\"{}\", r.area()); // 200\n}\n\`\`\`\n\n## self — The Three Receiver Types\n- \`&self\`: Read-only borrow - struct stays alive\n- \`&mut self\`: Mutable borrow - can change fields\n- \`self\`: Takes ownership - struct is consumed\n\n\`\`\`rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(&self) -> i32        { self.width * self.height }   // read\n  fn double_width(&mut self)   { self.width *= 2; }            // write\n}\n\nlet mut r = Rect { width: 5, height: 4 };\nprintln!(\"{}\", r.area()); // 20\nr.double_width();\nprintln!(\"{}\", r.area()); // 40\n\`\`\`\n\n## trait — Shared Behaviour\nA \`trait\` lists method names that many types can implement — like an interface.\n\n\`\`\`rust\ntrait Shape {\n  fn area(&self) -> f64;\n  fn name(&self) -> &str;\n}\n\nstruct Circle { radius: f64 }\nstruct Square { side: f64 }\n\nimpl Shape for Circle {\n  fn area(&self) -> f64  { 3.14 * self.radius * self.radius }\n  fn name(&self) -> &str { \"Circle\" }\n}\n\nimpl Shape for Square {\n  fn area(&self) -> f64  { self.side * self.side }\n  fn name(&self) -> &str { \"Square\" }\n}\n\nfn print_area(s: &dyn Shape) {\n  println!(\"{}: area = {}\", s.name(), s.area());\n}\n\nprint_area(&Circle { radius: 3.0 }); // Circle: area = 28.26\nprint_area(&Square { side: 4.0 });   // Square: area = 16\n\`\`\`\n\n## pub — Visibility Control\nBy default everything is **private** in Rust. Use \`pub\` to make it accessible from outside the module.\n\n\`\`\`rust\nmod bank {\n  pub struct Account {\n    pub owner: String,     // publicly readable\n        balance: f64,      // private — cannot be accessed outside mod\n  }\n\n  impl Account {\n    pub fn new(owner: &str) -> Self {\n      Account { owner: owner.to_string(), balance: 0.0 }\n    }\n    pub fn deposit(&mut self, amount: f64) {\n      self.balance += amount; // internal access is fine\n    }\n    pub fn balance(&self) -> f64 { self.balance }\n  }\n}\n\nuse bank::Account;\nlet mut acc = Account::new(\"Maya\");\nacc.deposit(100.0);\nprintln!(\"{} has \${}\", acc.owner, acc.balance()); // Maya has $100\n\`\`\`\n\n## Memory Safety Without a Garbage Collector\nRust does NOT use a GC. Values are dropped automatically when the owner goes out of scope. This gives you both safety and predictable performance.\n\n\`\`\`rust\nlet s1 = String::from(\"rust\");\nlet s2 = s1;          // ownership moves to s2, s1 is invalid\nlet s3 = s2.clone();  // explicit deep copy — both s2 and s3 are valid\n\`\`\``,
           questions: [
             {
               id: "q1",
-              question: "What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\n\nimpl Rect {\n    fn area(&self) -> i32 { self.width * self.height }\n}\n\nfn main() {\n    let r = Rect { width: 10, height: 20 };\n    println!(\"{}\", r.area());\n    println!(\"{}\", r.width);\n}\n```",
+              question:
+                'What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\n\nimpl Rect {\n    fn area(&self) -> i32 { self.width * self.height }\n}\n\nfn main() {\n    let r = Rect { width: 10, height: 20 };\n    println!("{}", r.area());\n    println!("{}", r.width);\n}\n```',
               options: [
                 "200, then compile error",
                 "200\n10",
@@ -1174,7 +1187,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q2",
-              question: "What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(self) -> i32 { self.width * self.height }\n}\nlet r = Rect { width: 10, height: 20 };\nprintln!(\"{}\", r.area());\nprintln!(\"{}\", r.width);\n```",
+              question:
+                'What does the following code print?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn area(self) -> i32 { self.width * self.height }\n}\nlet r = Rect { width: 10, height: 20 };\nprintln!("{}", r.area());\nprintln!("{}", r.width);\n```',
               options: [
                 "200\n10",
                 "200 then compile error — r was moved",
@@ -1188,7 +1202,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q3",
-              question: "Which code correctly defines and calls a mutating method?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn double_width(&mut self) { self.width *= 2; }\n}\n```",
+              question:
+                "Which code correctly defines and calls a mutating method?\n\n```rust\nstruct Rect { width: i32, height: i32 }\nimpl Rect {\n  fn double_width(&mut self) { self.width *= 2; }\n}\n```",
               options: [
                 "let r = Rect { width: 10, height: 20 }; r.double_width();",
                 "let mut r = Rect { width: 10, height: 20 }; r.double_width();",
@@ -1202,7 +1217,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q4",
-              question: "How does Rust provide memory safety without a garbage collector?",
+              question:
+                "How does Rust provide memory safety without a garbage collector?",
               options: [
                 "Background garbage collector",
                 "Reference counting everywhere by default",
@@ -1216,7 +1232,8 @@ Welcome to the future of finance! 🔄✨`,
             },
             {
               id: "q5",
-              question: "A struct field is declared WITHOUT pub inside a mod. What happens if you try to access it from outside the mod?",
+              question:
+                "A struct field is declared WITHOUT pub inside a mod. What happens if you try to access it from outside the mod?",
               options: [
                 "It works fine",
                 "You get a runtime panic",
@@ -1235,160 +1252,249 @@ Welcome to the future of finance! 🔄✨`,
   },
 ];
 
-
 // Quiz questions for each chapter
 export const quizQuestions: { [chapterId: string]: Quiz[] } = {
   "web3-foundations": [
     {
       id: "q1",
-      question: "What was the main characteristic of Web1?",
-      options: [
-        "Users could interact and create content",
-        "Websites were static and read-only",
-        "Users owned their data",
-        "Everything was decentralized",
-      ],
+      question:
+        "Which asset is commonly used to pay transaction execution costs on Ethereum and many Ethereum-based networks?",
+      options: ["BTC", "ETH", "USDC", "SOL"],
       correctAnswer: 1,
       explanation:
-        "Web1 was characterized by static, read-only websites where users could only consume information, like reading books in a library.",
+        "ETH is the common native asset used for transaction execution on Ethereum and many Ethereum-based environments.",
     },
     {
       id: "q2",
-      question: "What is the key innovation of Web3?",
-      options: [
-        "Faster internet speeds",
-        "Better graphics and user interfaces",
-        "User ownership of data and digital assets",
-        "More social media platforms",
-      ],
+      question:
+        "What minimum share of network influence is usually referenced in a majority attack discussion?",
+      options: ["25%", "33%", "51%", "75%"],
       correctAnswer: 2,
       explanation:
-        "Web3's key innovation is giving users true ownership of their data, digital assets, and identity, rather than having them controlled by corporations.",
+        "A 51% majority is the commonly cited threshold for controlling consensus outcomes in many discussions.",
     },
     {
       id: "q3",
-      question:
-        "What's the main difference between a traditional bank account and a digital wallet?",
+      question: "Which statement about public and private keys is correct?",
       options: [
-        "Digital wallets can only store one type of currency",
-        "With digital wallets, you control your own keys and assets",
-        "Banks offer better security than digital wallets",
-        "Digital wallets require permission from authorities to use",
+        "A private key can be directly derived from a public key",
+        "Public and private keys are unrelated random values",
+        "A public key is derived from a private key using one-way cryptography",
+        "Both keys can be safely shared in public chats",
       ],
-      correctAnswer: 1,
+      correctAnswer: 2,
       explanation:
-        "The key difference is self-custody: with digital wallets, you control your own private keys and assets, while banks control your traditional accounts.",
+        "Public keys are derived from private keys through one-way cryptographic functions.",
     },
     {
       id: "q4",
       question:
-        "True or False: A seed phrase is just a backup - you can always recover your wallet without it.",
-      options: ["True", "False"],
+        "To receive cryptocurrency from another user, what information is typically required?",
+      options: [
+        "Recipient's private key",
+        "Recipient's seed phrase",
+        "Recipient's wallet address/public key",
+        "Recipient's exchange login password",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Only the public receiving destination (wallet address/public key) is needed to send funds.",
+    },
+    {
+      id: "q5",
+      question:
+        "Which option is NOT one of the commonly discussed blockchain trilemma dimensions?",
+      options: [
+        "Scalability",
+        "Security",
+        "Decentralization",
+        "Marketing reach",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "The classic trilemma focuses on scalability, security, and decentralization.",
+    },
+    {
+      id: "q6",
+      question: "Which behavior best reflects permissionless participation?",
+      options: [
+        "Waiting for bank approval to create a wallet",
+        "Using open protocols directly with a compatible wallet",
+        "Submitting passport scans before viewing a block explorer",
+        "Requesting validator permission to read transaction history",
+      ],
       correctAnswer: 1,
       explanation:
-        "False! Your seed phrase IS your wallet. If you lose it and don't have other recovery methods, you permanently lose access to your funds and assets.",
+        "Permissionless systems allow direct interaction through open protocols and wallets.",
     },
   ],
   "blockchain-cryptography": [
     {
       id: "q1",
-      question: "What happens if someone tries to change data in an old block?",
+      question: "What is the main role of a nonce in a Proof-of-Work block?",
       options: [
-        "The change is automatically accepted by the network",
-        "The block's hash changes, breaking the chain and alerting the network",
-        "Only the block creator can make changes",
-        "The change is hidden from other users",
+        "It permanently stores the list of transactions in the block",
+        "It is the wallet address of the miner who created the block",
+        "It is a number miners adjust repeatedly until the block hash meets the difficulty target",
+        "It links one block to the next block in the chain",
       ],
-      correctAnswer: 1,
+      correctAnswer: 2,
       explanation:
-        "When data in a block changes, its hash (fingerprint) changes too, which breaks the connection to the next block. This tampering is immediately detected by the network.",
+        "Miners increment the nonce to change the block hash output until it satisfies the required difficulty target.",
     },
     {
       id: "q2",
       question:
-        "What is the main advantage of a distributed ledger compared to a central database?",
+        "In Proof of Stake, what primarily determines which participant gets to produce the next block?",
       options: [
-        "It's faster and cheaper to operate",
-        "It eliminates single points of failure and removes the need to trust central authorities",
-        "It uses less computer storage space",
-        "It can only be used for cryptocurrency",
+        "The raw computing power used to solve a mathematical puzzle",
+        "The amount of cryptocurrency locked as stake/collateral",
+        "The geographic location of the validator node",
+        "The number of transactions the validator has sent before",
       ],
       correctAnswer: 1,
       explanation:
-        "The main advantage is eliminating single points of failure and central authorities - everyone has a copy of the ledger, so no single entity can manipulate records or cause system-wide failure.",
+        "Proof of Stake selects validators based on staked collateral rather than computation power.",
     },
     {
       id: "q3",
-      question: "What's the relationship between public and private keys?",
+      question:
+        "You delete a wallet app and buy a new phone. Your seed phrase is safely written down. What is true?",
       options: [
-        "They're completely independent and unrelated",
-        "The public key is derived from the private key, but you can't reverse-engineer the private key from the public key",
-        "The private key is derived from the public key",
-        "They're the same key used in different ways",
+        "Your funds are permanently lost because the app is deleted",
+        "You can restore full access by re-entering your seed phrase in any compatible wallet app",
+        "You must contact the blockchain network to recover your balance",
+        "Your wallet address changes when you reinstall the app",
       ],
       correctAnswer: 1,
       explanation:
-        "The public key is mathematically derived from the private key using one-way cryptographic functions. It's computationally impossible to reverse-engineer the private key from the public key.",
+        "The seed phrase controls the keys. Reinstalling any compatible wallet and entering the seed phrase fully restores access.",
     },
     {
       id: "q4",
       question:
-        "True or False: If someone has your public key, they can steal your cryptocurrency.",
-      options: ["True", "False"],
+        "If someone only knows your public address, what can they generally do?",
+      options: [
+        "Sign transactions from your wallet",
+        "View and send assets to that address",
+        "Extract your seed phrase instantly",
+        "Reset your private key",
+      ],
       correctAnswer: 1,
       explanation:
-        "False! Your public key (and wallet address derived from it) is meant to be shared publicly. Only your private key can authorize transactions and access your funds.",
+        "Public addresses are meant for receiving and visibility, not authorization.",
+    },
+    {
+      id: "q5",
+      question:
+        "What best describes blockchain verification in a decentralized design?",
+      options: [
+        "A single authority approves all state changes",
+        "Independent nodes apply shared protocol rules to validate changes",
+        "Only exchange operators can verify balances",
+        "Verification is optional and done after settlement",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Decentralized systems rely on many independent verifiers using common rules.",
+    },
+    {
+      id: "q6",
+      question: "Which action most improves user-side transaction safety?",
+      options: [
+        "Signing first and checking details later",
+        "Relying only on social media comments",
+        "Verifying contract and address details before signing",
+        "Using a shared private key for team speed",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Pre-signature verification is a core operational safety habit.",
     },
   ],
   "digital-assets-defi": [
     {
       id: "q1",
       question:
-        "What makes cryptocurrency different from traditional digital money?",
+        "Which statement best captures a key property of many cryptocurrencies compared with standard bank balances?",
       options: [
-        "Cryptocurrency is only used for illegal activities",
-        "Cryptocurrency is digitally scarce and can't be copied or duplicated",
-        "Cryptocurrency is always more expensive to use",
-        "Cryptocurrency can only be used online",
+        "They can be freely duplicated without network checks",
+        "They depend on digitally verifiable scarcity rules",
+        "They always have fixed prices by law",
+        "They cannot move across borders",
       ],
       correctAnswer: 1,
       explanation:
-        "The key innovation is digital scarcity - cryptocurrencies can't be copied or duplicated like other digital files, creating true digital ownership.",
+        "Network consensus and cryptographic accounting enable digital scarcity and ownership tracking.",
     },
     {
       id: "q2",
-      question: "What does an NFT actually represent?",
+      question:
+        "What is the best reason many users choose stable-value tokens?",
       options: [
-        "The digital artwork file itself",
-        "A blockchain certificate of ownership and authenticity",
-        "A way to prevent people from copying digital art",
-        "A type of cryptocurrency",
+        "Guaranteed profits regardless of market conditions",
+        "Reduced exposure to high short-term volatility",
+        "Permanent immunity from all protocol risks",
+        "Mandatory acceptance in all countries",
       ],
       correctAnswer: 1,
       explanation:
-        "An NFT is a blockchain certificate that proves ownership and authenticity of a digital asset. People can still copy the image, but only one person owns the official NFT certificate.",
+        "Stable-value tokens are often used to reduce day-to-day price swings compared to volatile assets.",
     },
     {
       id: "q3",
-      question: "How do Automated Market Makers (AMMs) determine token prices?",
+      question:
+        "Which statement best describes how many Layer 2 networks relate to a base chain?",
       options: [
-        "Prices are set by the exchange operators",
-        "Through order books matching buyers and sellers",
-        "Using mathematical formulas based on token ratios in liquidity pools",
-        "Prices are fixed and never change",
+        "They are completely detached systems with no settlement relationship",
+        "They are execution layers that can anchor results to a base chain",
+        "They are private databases that never post data on-chain",
+        "They replace cryptography with centralized signatures only",
       ],
-      correctAnswer: 2,
+      correctAnswer: 1,
       explanation:
-        "AMMs use mathematical formulas (like x × y = k) based on the ratio of tokens in liquidity pools to automatically determine prices as trades occur.",
+        "Layer 2 systems generally execute separately while maintaining settlement/security links to a base layer.",
     },
     {
       id: "q4",
       question:
-        "True or False: In DeFi, you need permission from a bank or financial institution to trade tokens.",
-      options: ["True", "False"],
+        "You own an NFT. The marketplace website that displayed it shuts down permanently. What happens to your ownership?",
+      options: [
+        "The NFT and your ownership are deleted along with the website",
+        "The blockchain record of your ownership remains intact regardless of the website",
+        "You must re-mint the NFT to prove ownership again",
+        "Ownership automatically transfers back to the original creator",
+      ],
       correctAnswer: 1,
       explanation:
-        "False! DeFi is permissionless - anyone with a Web3 wallet can interact with DeFi protocols directly without needing approval from any institution.",
+        "NFT ownership is recorded on-chain and is not dependent on any single website or marketplace remaining online.",
+    },
+    {
+      id: "q5",
+      question: "What best describes a blockchain transaction?",
+      options: [
+        "A private chat message between two validators",
+        "A signed state change request recorded on-chain after validation",
+        "A local wallet note that never reaches the network",
+        "A database update controlled by one company server",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A blockchain transaction is a signed request (such as sending assets) that updates network state once validated and included on-chain.",
+    },
+    {
+      id: "q6",
+      question:
+        "A Web2 platform shuts down and deletes all user data. In a Web3 model, what most likely differs?",
+      options: [
+        "Web3 platforms can also delete user data since they control the servers",
+        "User-controlled wallets and on-chain assets remain accessible regardless of any single platform shutting down",
+        "Web3 platforms require government approval before shutting down",
+        "Users in Web3 must request data backups before a platform shuts down",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In Web3, assets and identity are held in user-controlled wallets on-chain, not on a company's server, so no single platform can erase them.",
     },
   ],
   "rust-fundamentals": [
