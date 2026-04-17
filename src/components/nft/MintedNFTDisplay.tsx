@@ -1,6 +1,12 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 import { GlassCard } from "./GlassCard";
 import {
   Trophy,
@@ -48,6 +54,7 @@ export const MintedNFTDisplay = ({
 }: MintedNFTDisplayProps) => {
   const imageCardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   // Motion values for smooth 3D transforms
   const x = useMotionValue(0);
@@ -77,7 +84,7 @@ export const MintedNFTDisplay = ({
   const imageParallaxY = useTransform(y, [-300, 300], [-10, 10]);
 
   const handleImageMouseMove = (event: MouseEvent<HTMLDivElement>) => {
-    if (!imageCardRef.current) return;
+    if (!imageCardRef.current || prefersReducedMotion) return;
 
     const wrapper = event.currentTarget;
     const rect = wrapper.getBoundingClientRect();
@@ -109,42 +116,57 @@ export const MintedNFTDisplay = ({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <GlassCard className="p-12 text-center backdrop-blur-xl bg-slate-800/20 border border-slate-700/30">
-        <div className="mb-12 relative">
+      <GlassCard className="p-6 md:p-8 lg:p-10 backdrop-blur-xl bg-slate-800/20 border border-slate-700/30">
+        <div className="mx-auto w-full max-w-6xl relative grid gap-8 lg:gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] items-center">
+          <div className="text-center flex flex-col items-center justify-center h-full">
           {/* 3D Trophy Container */}
           <motion.div
-            className="relative inline-block mb-8"
-            animate={{
-              scale: [1, 1.05, 1],
-              rotate: [0, 2, -2, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatType: "reverse",
-            }}
+            className="relative inline-block mb-5 md:mb-6"
+            animate={
+              prefersReducedMotion
+                ? undefined
+                : {
+                    scale: [1, 1.03, 1],
+                    rotate: [0, 1.5, -1.5, 0],
+                  }
+            }
+            transition={
+              prefersReducedMotion
+                ? undefined
+                : {
+                    duration: 4,
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "reverse",
+                  }
+            }
           >
-            <div className={`w-32 h-32 ${MODULE_THEME_BG_BR} rounded-3xl flex items-center justify-center relative`}>
-              <Trophy className="w-16 h-16 text-white" />
-              <div className="absolute inset-0 bg-[#12B3A8]/30 rounded-3xl blur-2xl animate-pulse"></div>
+            <div
+              className={`w-24 h-24 md:w-28 md:h-28 ${MODULE_THEME_BG_BR} rounded-3xl flex items-center justify-center relative`}
+            >
+              <Trophy className="w-12 h-12 md:w-14 md:h-14 text-white" />
+              <div className="absolute inset-0 bg-[#12B3A8]/30 rounded-3xl blur-xl animate-pulse"></div>
             </div>
             <motion.div
-              className="absolute -inset-8"
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 15,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
-              }}
+              className="absolute -inset-6 md:-inset-7"
+              // animate={prefersReducedMotion ? undefined : { rotate: 360 }}
+              // transition={
+              //   prefersReducedMotion
+              //     ? undefined
+              //     : {
+              //         duration: 15,
+              //         repeat: Number.POSITIVE_INFINITY,
+              //         ease: "linear",
+              //       }
+              // }
             >
-              <Sparkles className="absolute top-0 left-1/2 w-8 h-8 text-amber-300" />
-              <CheckCircle className="absolute right-0 top-1/2 w-8 h-8 text-[#79A5FF]" />
-              <Crown className="absolute left-0 top-1/2 w-8 h-8 text-slate-300" />
+              <Sparkles className="absolute top-0 left-1/2 w-6 h-6 text-amber-300" />
+              <CheckCircle className="absolute right-0 top-1/2 w-6 h-6 text-[#79A5FF]" />
+              <Crown className="absolute left-0 top-1/2 w-6 h-6 text-slate-300" />
             </motion.div>
           </motion.div>
 
           <motion.h2
-            className="text-5xl font-black bg-gradient-to-r from-[#79A5FF] via-[#61d5c8] to-[#12B3A8] bg-clip-text text-transparent mb-6"
+            className="text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-[#79A5FF] via-[#61d5c8] to-[#12B3A8] bg-clip-text text-transparent mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -153,7 +175,7 @@ export const MintedNFTDisplay = ({
           </motion.h2>
 
           <motion.p
-            className="text-slate-100 text-2xl leading-relaxed max-w-3xl mx-auto mb-8"
+            className="text-slate-100 text-base md:text-lg leading-relaxed max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -163,15 +185,49 @@ export const MintedNFTDisplay = ({
               {platform} Achievement Badge!
             </span>
           </motion.p>
-        </div>
 
-        {/* Enhanced 3D NFT Image Card */}
-        <div
-          className="mb-8 flex justify-center"
-          style={{ perspective: "1200px" }}
-        >
+          {/* Action Buttons */}
+          <div className="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <motion.a
+              href={`https://sepolia.arbiscan.io/tx/${nft.transactionHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#4A7CFF]/20 hover:bg-[#4A7CFF]/30 text-[#79A5FF] hover:text-[#c7d8ff] px-5 py-2.5 rounded-xl transition-all duration-200 border border-[#4A7CFF]/30 font-medium text-sm md:text-base"
+              whileHover={{ scale: 1.05, rotateX: 5 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <ExternalLink className="w-5 h-5" />
+              View on Arbiscan
+            </motion.a>
+
+            <motion.a
+              href={nft.metadataUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#12B3A8]/20 hover:bg-[#12B3A8]/30 text-[#7be1d7] hover:text-[#bce9e4] px-5 py-2.5 rounded-xl transition-all duration-200 border border-[#12B3A8]/30 font-medium text-sm md:text-base"
+              whileHover={{ scale: 1.05, rotateX: 5 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <ExternalLink className="w-5 h-5" />
+              View Metadata
+            </motion.a>
+          </div>
+          </div>
+          {/* Enhanced 3D NFT Image Card */}
+          <div
+            className="flex justify-center lg:justify-end"
+            style={{ perspective: "1200px" }}
+          >
           <motion.div
-            className="p-8 cursor-pointer"
+            className="p-2 md:p-3 cursor-pointer w-full max-w-[460px]"
             onMouseMove={handleImageMouseMove}
             onMouseEnter={handleImageMouseEnter}
             onMouseLeave={handleImageMouseLeave}
@@ -179,15 +235,15 @@ export const MintedNFTDisplay = ({
           >
             <motion.div
               ref={imageCardRef}
-              className="relative bg-slate-700/30 rounded-2xl p-6 max-w-md overflow-hidden"
+              className="relative bg-slate-700/30 rounded-2xl p-4 md:p-5 w-full overflow-hidden"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
               style={{
-                rotateX,
-                rotateY,
+                rotateX: prefersReducedMotion ? 0 : rotateX,
+                rotateY: prefersReducedMotion ? 0 : rotateY,
                 transformStyle: "preserve-3d",
-                z: translateZ,
+                z: prefersReducedMotion ? 0 : translateZ,
                 boxShadow:
                   "0 8px 32px rgba(18, 179, 168, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.05)",
               }}
@@ -220,8 +276,7 @@ export const MintedNFTDisplay = ({
                   background: useTransform(
                     [lightX, lightY],
                     ([x, y]: any) =>
-                      `radial-gradient(circle at ${50 + x}% ${
-                        50 + y
+                      `radial-gradient(circle at ${50 + x}% ${50 + y
                       }%, rgba(255,255,255,0.15) 0%, transparent 50%)`
                   ),
                 }}
@@ -231,7 +286,11 @@ export const MintedNFTDisplay = ({
               <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl opacity-0"
                 animate={{
-                  opacity: isHovered ? [0, 0.6, 0] : [0, 0.4, 0], // Increased from 0.3 to 0.4
+                  opacity: prefersReducedMotion
+                    ? 0
+                    : isHovered
+                      ? [0, 0.6, 0]
+                      : [0, 0.25, 0],
                   background: [
                     "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, transparent 100%)",
                     "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%)",
@@ -239,7 +298,7 @@ export const MintedNFTDisplay = ({
                   ],
                 }}
                 transition={{
-                  duration: isHovered ? 2 : 2.5, // Slightly faster when not hovered
+                  duration: isHovered ? 2 : 2.8,
                   repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
                 }}
@@ -250,8 +309,8 @@ export const MintedNFTDisplay = ({
                 <motion.div
                   className="relative"
                   style={{
-                    x: imageParallaxX,
-                    y: imageParallaxY,
+                    x: prefersReducedMotion ? 0 : imageParallaxX,
+                    y: prefersReducedMotion ? 0 : imageParallaxY,
                     transformStyle: "preserve-3d",
                   }}
                 >
@@ -262,7 +321,7 @@ export const MintedNFTDisplay = ({
                     alt="Xcan Module NFT"
                     className="w-full h-full object-cover rounded-xl transition-transform duration-300"
                     style={{
-                      transform: isHovered ? "scale(1.05)" : "scale(1.02)", // Changed from scale(1) to scale(1.02)
+                      transform: isHovered ? "scale(1.03)" : "scale(1.01)",
                     }}
                   />
 
@@ -274,14 +333,12 @@ export const MintedNFTDisplay = ({
                         [rotateX, rotateY],
                         ([rx, ry]: any) =>
                           `linear-gradient(${45 + ry}deg, 
-                            rgba(18, 179, 168, ${
-                              0.15 + Math.abs(rx) * 0.01
-                            }) 0%,
+                            rgba(18, 179, 168, ${0.15 + Math.abs(rx) * 0.01
+                          }) 0%,
                             transparent 30%, 
                             transparent 70%, 
-                            rgba(74, 124, 255, ${
-                              0.15 + Math.abs(ry) * 0.01
-                            }) 100%)`
+                            rgba(74, 124, 255, ${0.15 + Math.abs(ry) * 0.01
+                          }) 100%)`
                       ),
                     }}
                   />
@@ -294,7 +351,7 @@ export const MintedNFTDisplay = ({
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                     >
-                      {[...Array(6)].map((_, i) => (
+                      {[...Array(4)].map((_, i) => (
                         <motion.div
                           key={i}
                           className="absolute w-1 h-1 bg-[#79A5FF] rounded-full"
@@ -310,7 +367,7 @@ export const MintedNFTDisplay = ({
                           transition={{
                             duration: 2,
                             repeat: Number.POSITIVE_INFINITY,
-                            delay: i * 0.2,
+                            delay: i * 0.28,
                           }}
                         />
                       ))}
@@ -320,13 +377,12 @@ export const MintedNFTDisplay = ({
               </div>
 
               <motion.h3
-                className="text-xl font-bold text-slate-100 mb-2"
+                className="text-lg md:text-xl font-bold text-slate-100 mb-2"
                 style={{
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${
-                        ry * 0.1
+                      `translateZ(20px) rotateX(${rx * 0.1}deg) rotateY(${ry * 0.1
                       }deg)`
                   ),
                 }}
@@ -335,13 +391,12 @@ export const MintedNFTDisplay = ({
               </motion.h3>
 
               <motion.p
-                className="text-slate-300 text-sm mb-4"
+                className="text-slate-300 text-sm mb-3"
                 style={{
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(15px) rotateX(${rx * 0.05}deg) rotateY(${
-                        ry * 0.05
+                      `translateZ(15px) rotateX(${rx * 0.05}deg) rotateY(${ry * 0.05
                       }deg)`
                   ),
                 }}
@@ -357,8 +412,7 @@ export const MintedNFTDisplay = ({
                   transform: useTransform(
                     [rotateX, rotateY],
                     ([rx, ry]: any) =>
-                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${
-                        ry * 0.02
+                      `translateZ(10px) rotateX(${rx * 0.02}deg) rotateY(${ry * 0.02
                       }deg)`
                   ),
                 }}
@@ -368,40 +422,6 @@ export const MintedNFTDisplay = ({
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <motion.a
-            href={`https://sepolia.arbiscan.io/tx/${nft.transactionHash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-[#4A7CFF]/20 hover:bg-[#4A7CFF]/30 text-[#79A5FF] hover:text-[#c7d8ff] px-6 py-3 rounded-xl transition-all duration-200 border border-[#4A7CFF]/30 font-medium"
-            whileHover={{ scale: 1.05, rotateX: 5 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <ExternalLink className="w-5 h-5" />
-            View on Arbiscan
-          </motion.a>
-
-          <motion.a
-            href={nft.metadataUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-[#12B3A8]/20 hover:bg-[#12B3A8]/30 text-[#7be1d7] hover:text-[#bce9e4] px-6 py-3 rounded-xl transition-all duration-200 border border-[#12B3A8]/30 font-medium"
-            whileHover={{ scale: 1.05, rotateX: 5 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 }}
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <ExternalLink className="w-5 h-5" />
-            View Metadata
-          </motion.a>
         </div>
       </GlassCard>
     </motion.div>

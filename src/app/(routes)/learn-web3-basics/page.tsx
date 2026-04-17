@@ -240,17 +240,18 @@ export default function LearnWeb3BasicsPage() {
               </div>
             </div>
           </motion.div>
-          <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
-            {/* Explanatory Text */}
-            <div className="text-center w-full">
-              {!address ? (
+          {!address && (
+            <div className="flex flex-col items-center mt-6 space-y-4 w-full bg-[#0B1326]/60 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+              {/* Explanatory Text */}
+              <div className="text-center w-full">
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-gray-400 dark:text-gray-200">
                     Connect your wallet to see your NFT certification status.
                   </h3>
                   <ConnectWallet />
                 </div>
-              ) : isClaimStatusLoading ? (
+                {/* ) 
+              : isClaimStatusLoading ? (
                 <div className="flex items-center justify-center space-x-2 text-gray-400 mb-2">
                   <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -276,18 +277,18 @@ export default function LearnWeb3BasicsPage() {
                     Your NFT certification has been minted to your wallet.
                   </p>
                 </div>
-              ) : (
+              ) : ( 
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold text-[#79A5FF]">Ready to claim</h3>
                   <p className="text-sm text-gray-400 dark:text-gray-400">
                     Great work—everything’s complete. Claim your NFT certification now.
                   </p>
-                </div>
-              )}
-            </div>
+                </div> */}
+              </div>
 
-            {/* Claim Button - only show when wallet connected */}
-            {address && (
+
+              {/* Claim Button - only show when wallet connected */}
+              {/* {address && (
               <button
                 // onClick={claimNFT}
                 onClick={() => setIsPromoOpen(true)}
@@ -333,29 +334,9 @@ export default function LearnWeb3BasicsPage() {
                   <span>Complete All Challenges</span>
                 )}
               </button>
-            )}
-
-            {/* Additional Info for Claimed State */}
-            {/* {alreadyClaimed && (
-              <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0">
-                    <svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 2L3 7v11l7-5 7 5V7l-7-5z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="text-sm">
-                    <p className="text-green-800 dark:text-green-200 font-medium">
-                      Your achievement is now onchain
-                    </p>
-                    <p className="text-green-700 dark:text-green-300 mt-1">
-                      This NFT is permanent proof of completion
-                    </p>
-                  </div>
-                </div>
-              </div>
             )} */}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Filter Controls */}

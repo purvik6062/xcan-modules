@@ -42,62 +42,130 @@ const LEVEL_METADATA_HASHES = {
   "farcaster-miniapps": "QmbHfr4GsSvxFs1C97QwknU4f1zfVRyUBomGonK9Gsnz4b",
 };
 
-const modulesHashes = {
+// Static per-module certification config. The image is fixed per module;
+// the metadata JSON is regenerated on every mint so each NFT gets a unique
+// tokenURI (containing issuer wallet + issue timestamp).
+type ModuleCertificationConfig = {
+  imageIpfsHash: string;
+  name: string;
+  description: string;
+  achievement: string;
+  module: string;
+  // displayName: string;
+};
+
+const MODULE_CERTIFICATION_CONFIG: Record<string, ModuleCertificationConfig> = {
   "web3-basics": {
-    metadataHash: "QmcMmMDS4AdwMkLiLpZTmUW8gC5XZePNvqiRdjq1U2xMYH",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmcyiBHVJtZwzhiF83iWvDouHqbTN2r3RkP7vkXVRxWwdG",
-    name: "Web3 & Rust Foundations",
+    imageIpfsHash: "Qma3fkPP63yLiDqH8kCYrmeQi1YGb6acLLaWBbshWmZKSV",
+    name: "Xcan: Web3 and Rust Foundations Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Web3 Basics Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Web3 and Rust Foundations Challenge",
+    module: "Web3 and Rust Foundations",
+    // displayName: "Web3 & Rust Foundations",
   },
   "stylus-core-concepts": {
-    metadataHash: "QmUR4E9jWWBNGHrrqq6yWJxgnP2vnaF6RDGgqRDhWHBJjG",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmfMdtwVrfph4gvwxAWVQCVEanXN2ECgdrHq4FsrEbHSJR",
-    name: "Stylus Core Concepts",
-  },
-  "arbitrum-orbit": {
-    metadataHash: "QmR17Qvj3U5xtivLvX46SAozuk6QyuNqhyuKMz2FGUf6yu",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmdVc9QdCSEqerG9aRD3D7RJb6a5xhB1FnrzjsKjQ65GmQ",
-    name: "Arbitrum Orbit",
-  },
-  "defi-arbitrum": {
-    metadataHash: "QmPSiUP1KSDzHPTnNUyoxy5EdWPVqTaKmGb6vAvfPCMCa9",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmREkeNjViKammnHkFtH7wau4VmnsfND39Ra7vXvbwQQ5W",
-    name: "DeFi on Arbitrum",
-  },
-  "cross-chain": {
-    metadataHash: "QmXqX85EaGU9DNJdB5YG2kVJnSAYWmiCyBnbJYLQWKFJ7B",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmTZihtUGNZiMvHoYD2fk3tL4JQpXjpZtuQMLBT684wB4p",
-    name: "Cross-Chain Development",
-  },
-  "precompiles-overview": {
-    metadataHash: "QmSQptXKNSQXEfv9nAUxCmqrFGjmEH7VoyfAQ5EiG7GrFJ",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmPpwR7ZZGVYkSeuZrBco1Qo188T2vPkbPvFpgMpnyQ8mx",
-    name: "Precompile Playground",
+    imageIpfsHash: "QmfLEYdtfmxYAwkyaKadFYVEtM1SzCjZEPmqS1C5GNj6Mv",
+    name: "Xcan: Stylus Core Concepts Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Stylus Core Concepts Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Stylus Core Concepts Challenge",
+    module: "Stylus Core Concepts",
+    // displayName: "Stylus Core Concepts",
   },
   "stylus-foundation": {
-    metadataHash: "QmTLaQoTKv1ZZ9jiqeK7x24MTLuSQWZHCxnR7yWf7cE6KT",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/Qmbmio4LRs4CWubvTtYtbhH88ZtxfAAoWwsA29j7126fo4",
-    name: "Arbitrum Foundation Challenge",
+    imageIpfsHash: "QmbedGP4Q8gekzotQSqvxPJewWWmsjvWMANM7HjT3SrRyG",
+    name: "Xcan: Stylus Foundation Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Stylus Foundation Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Stylus Foundation Challenge",
+    module: "Stylus Foundation",
+    // displayName: "Arbitrum Foundation Challenge",
   },
-  "xcan-advocate": {
-    metadataHash: "QmP65TGZVkkHaMkjxzh8oxAcoBEB6tmjgbsaacJqwkjUMa",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmU9Uib2y8fYDFNAukW1CY9SsVmJDXa4jKPMMEumtvk7x8",
-    name: "Xcan Advocate",
+  "arbitrum-orbit": {
+    imageIpfsHash: "QmSdDCzy6SYnJpasZbkUiJnCNDeaBBvhuXi6ChexRBTAXs",
+    name: "Xcan: Master Arbitrum Orbit Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Master Arbitrum Orbit Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Master Arbitrum Orbit Challenge",
+    module: "Arbitrum Orbit",
+    // displayName: "Arbitrum Orbit",
+  },
+  "defi-arbitrum": {
+    imageIpfsHash: "Qma1NZeueDiTgNwuDfc1jQ8LTAsKbxDiemsD6nM5JLUYGf",
+    name: "Xcan: Master DeFi on Arbitrum Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Master DeFi on Arbitrum Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Master DeFi on Arbitrum Challenge",
+    module: "DeFi on Arbitrum",
+    // displayName: "DeFi on Arbitrum",
+  },
+  "cross-chain": {
+    imageIpfsHash: "QmQiWADBEejFQkJdkA3ApMNgkWYFTQHwAKN57AwCPtw4v2",
+    name: "Xcan: Master Cross-Chain Development Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Master Cross-Chain Development Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Master Cross-Chain Development Challenge",
+    module: "Cross-Chain Development",
+    // displayName: "Cross-Chain Development",
+  },
+  "precompiles-overview": {
+    imageIpfsHash: "QmWrmaMvm5KE5ZMX4w8QjY6fQoHN3YadhSKn6GSQnbR1vu",
+    name: "Xcan: Precompile Playground Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Precompile Playground Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Precompile Playground Challenge",
+    module: "Precompile Playground",
+    // displayName: "Precompile Playground",
   },
   "eigen-ai": {
-    metadataHash: "QmXywadCWQcob4xKpeFxurvdizY5BCGmwJkN8pcNDPSQxo",
-    imageUrl:
-      "https://gateway.pinata.cloud/ipfs/QmXN82HEkUdgJsK1YkS1MF4p52Ap2bQaTJmut8EcmPCGEs",
-    name: "Secure AI with Eigen",
+    imageIpfsHash: "QmSiFGneJFZwsmMQez3eTaEQPpSZNpA1jDeQvDx4QUdCrX",
+    name: "Xcan: Secure AI with Eigen Challenge",
+    description:
+      "This NFT certifies that the holder has successfully completed the Secure AI with Eigen Challenge on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Secure AI with Eigen Challenge",
+    module: "Secure AI with Eigen",
+    // displayName: "Secure AI with Eigen",
+  },
+  "xcan-advocate": {
+    imageIpfsHash: "QmQyf8Zde7aGPw1FjEeQrtaWy2ZTSmGiv1fApCq9j4BaB5",
+    name: "Xcan: Xcan Advocate",
+    description:
+      "This NFT certifies that the holder has been recognized as an Xcan Advocate on Xcan — a Web3 learning platform by LamprosDAO. Awarded on Arbitrum Sepolia.",
+    achievement: "Xcan Advocate",
+    module: "Xcan Advocate",
+    // displayName: "Xcan Advocate",
   },
 };
+
+// Build a fresh metadata JSON for a certification mint. The wallet address
+// and issue timestamp make every minted NFT's tokenURI unique.
+const buildCertificationMetadata = (
+  config: ModuleCertificationConfig,
+  userAddress: string
+) => ({
+  name: config.name,
+  description: config.description,
+  image: `ipfs://${config.imageIpfsHash}`,
+  external_url: "https://www.xcan.dev/",
+  attributes: [
+    { trait_type: "Achievement", value: config.achievement },
+    { trait_type: "Platform", value: "Xcan" },
+    { trait_type: "Issuer", value: "LamprosDAO" },
+    { trait_type: "Module", value: config.module },
+    { trait_type: "Network", value: "Arbitrum Sepolia" },
+    {
+      trait_type: "Credential Type",
+      value: "Course Completion Certificate",
+    },
+    { trait_type: "Issued To", value: userAddress },
+    {
+      display_type: "date",
+      trait_type: "Issue Date",
+      value: Math.floor(Date.now() / 1000),
+    },
+  ],
+});
 
 export const useMint = () => {
   const { address, chainId } = useAccount();
@@ -166,7 +234,10 @@ export const useMint = () => {
   };
 
   // Upload JSON to Pinata using REST API
-  const uploadJSONToPinata = async (jsonData: any) => {
+  const uploadJSONToPinata = async (
+    jsonData: any,
+    pinName: string = "Speedrun Stylus NFT Metadata"
+  ) => {
     const response = await fetch(
       "https://api.pinata.cloud/pinning/pinJSONToIPFS",
       {
@@ -178,7 +249,7 @@ export const useMint = () => {
         body: JSON.stringify({
           pinataContent: jsonData,
           pinataMetadata: {
-            name: "Speedrun Stylus NFT Metadata",
+            name: pinName,
           },
         }),
       }
@@ -424,26 +495,24 @@ export const useMint = () => {
 
     setIsCertificationMinting(true);
     try {
-      const metadataIpfsHash =
-        modulesHashes[moduleName as keyof typeof modulesHashes].metadataHash;
-      const imageUrl =
-        modulesHashes[moduleName as keyof typeof modulesHashes].imageUrl;
-      const name = modulesHashes[moduleName as keyof typeof modulesHashes].name;
+      const config = MODULE_CERTIFICATION_CONFIG[moduleName];
+      if (!config) {
+        throw new Error(`No certification config found for module ${moduleName}`);
+      }
 
-      // const imageResult = await uploadImageToIPFS();
-      // if (!imageResult) {
-      //   throw new Error("Failed to upload image to IPFS");
-      // }
-      // console.log("imageIpfsUrl", imageResult.ipfsUrl);
-      // console.log("imageGatewayUrl", imageResult.gatewayUrl);
+      const imageUrl = `https://gateway.pinata.cloud/ipfs/${config.imageIpfsHash}`;
 
-      // // Upload metadata to IPFS (using ipfs:// URL for image in metadata)
-      // const metadataResult = await uploadMetadataToIPFS(imageResult.ipfsUrl);
-      // if (!metadataResult) {
-      //   throw new Error("Failed to upload metadata to IPFS");
-      // }
-      // console.log("metadataIpfsUrl", metadataResult.ipfsUrl);
-      // console.log("metadataGatewayUrl", metadataResult.gatewayUrl);
+      // Build a unique metadata JSON for this mint (embeds wallet + timestamp)
+      // and upload it to IPFS. The image IPFS hash stays static per module.
+      const metadata = buildCertificationMetadata(config, address);
+      const metadataResult = await uploadJSONToPinata(
+        metadata,
+        `Xcan Certification - ${config.module} - ${address}`
+      );
+      const metadataIpfsHash: string = metadataResult.IpfsHash;
+      if (!metadataIpfsHash) {
+        throw new Error("Failed to upload certification metadata to IPFS");
+      }
 
       const gasFees = await get10xGasFees();
 
@@ -460,8 +529,8 @@ export const useMint = () => {
       const minted = {
         transactionHash: hash,
         metadataUrl: `https://gateway.pinata.cloud/ipfs/${metadataIpfsHash}`,
-        imageUrl: imageUrl,
-        name: name,
+        imageUrl,
+        name: config.module,
       };
 
       toast.success("NFT minted successfully!");
