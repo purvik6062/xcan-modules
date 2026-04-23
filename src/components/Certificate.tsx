@@ -53,10 +53,11 @@ export default function Certificate({
 
   const displayCourseName =
     courseName.length > 44 ? `${courseName.slice(0, 41)}...` : courseName;
-  const courseNameFontSize = displayCourseName.length > 34 ? "25px" : "27px";
+  const courseNameFontSize = displayCourseName.length > 34 ? "19px" : "22px";
 
   const contentLeft = "26%";
   const contentWidth = "68%";
+  const dynamicFontFamily = "Garet";
 
   const showcasePrefix = moduleRouteKey?.trim()
     ? getCertificatePrefixForModuleKey(moduleRouteKey)
@@ -71,8 +72,7 @@ export default function Certificate({
       style={{
         aspectRatio: "2000 / 1414",
         maxWidth: 1100,
-        fontFamily:
-          "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+        fontFamily: dynamicFontFamily,
       }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -88,15 +88,14 @@ export default function Certificate({
         style={{
           left: contentLeft,
           width: contentWidth,
-          top: "49%",
+          top: "49.25%",
           transform: "translateY(-50%)",
         }}
       >
         <p
           className="max-w-full truncate text-center font-normal tracking-wide"
           style={{
-            fontFamily:
-              "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+            fontFamily: dynamicFontFamily,
             fontSize: recipientNameFontSize,
             lineHeight: 1.05,
             color: "#1f2937",
@@ -113,15 +112,14 @@ export default function Certificate({
         style={{
           left: contentLeft,
           width: contentWidth,
-          top: "57.6%",
+          top: "57.17%",
           transform: "translate(-20%,50%)",
         }}
       >
         <p
           className="max-w-[95%] truncate text-center leading-snug"
           style={{
-            fontFamily:
-              "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+            fontFamily: dynamicFontFamily,
             fontSize: courseNameFontSize,
             color: "#111827",
             lineHeight: 1.04,
@@ -140,16 +138,15 @@ export default function Certificate({
           style={{
             left: contentLeft,
             width: "40%",
-            top: "76.25%",
+            top: "73.1%",
             transform: "translateX(35%)",
           }}
         >
           <p
             className="text-left font-medium tabular-nums"
             style={{
-              fontFamily:
-                "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-              fontSize: "21px",
+              fontFamily: dynamicFontFamily,
+              fontSize: "19px",
               color: "#111827",
               lineHeight: 1.2,
               fontWeight: 400,
@@ -165,17 +162,16 @@ export default function Certificate({
       <div
         className="absolute flex justify-end"
         style={{
-          left: "54%",
-          right: "27.5%",
-          top: "76.25%",
+          left: "56%",
+          width: "16%",
+          top: "73.1%",
         }}
       >
         <p
           className="text-right uppercase tabular-nums"
           style={{
-            fontFamily:
-              "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-            fontSize: "21px",
+            fontFamily: dynamicFontFamily,
+            fontSize: "19px",
             color: "#111827",
             letterSpacing: "0.3px",
             lineHeight: 1.2,
