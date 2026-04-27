@@ -29,7 +29,6 @@ function extractUserAddress(doc: ChallengeDoc): string | null {
  * only module-related data is stored under modules.<moduleId>.
  */
 function buildModuleData(doc: ChallengeDoc, collectionName: string) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { _id, userAddress, address, walletAddress, wallet, ...rest } =
     doc as any;
 
@@ -157,5 +156,4 @@ async function main() {
 }
 
 // Run if executed directly via ts-node / node (after transpilation)
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();
